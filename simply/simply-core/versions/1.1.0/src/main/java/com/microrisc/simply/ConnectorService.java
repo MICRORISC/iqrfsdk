@@ -1,0 +1,74 @@
+package com.microrisc.simply;
+
+import java.util.UUID;
+
+
+/**
+ * Connector services. Main intended consumers of that services are Device Objects. 
+ * 
+ * @author Michal Konopa
+ */
+public interface ConnectorService {
+    /**
+     * Performs action on underlaying network device, which corresponds to 
+     * specified device object, called method, and parameters of that method.<br>
+     * Result(or error indication) of the performed action is delivered to 
+     * specified device object after some time. User of the Device Object can
+     * get the result using returned value(call ID) of this method. 
+     * @param deviceObject DO on which method has been called
+     * @param deviceIface device interface the called method belongs to
+     * @param methodId identifier of the called method
+     * @param args arguments of the called method
+     * @return unique identifier of this method call request
+     */
+    UUID callMethod(ConnectedDeviceObject deviceObject, Class deviceIface,
+            String methodId, Object[] args
+    );
+    
+    /**
+     * Like {@link ConnectorService#callMethod(com.microrisc.simply.ConnectedDeviceObject, 
+     * java.lang.Class, java.lang.String, java.lang.Object[] ) callMethod} method,
+     * but specifies also a maximal time of processing of a called method.
+     * @param maxProcTime maximal time of processing of the called method
+     */
+    UUID callMethod(ConnectedDeviceObject deviceObject, Class deviceIface,
+            String methodId, Object[] args, long maxProcTime
+    );
+    
+    /**
+     * Sets processing time for specified call request.
+     * @param requestId ID of a call request, whose processing time to set
+     * @param maxProcTime processing time of the specified request 
+     */
+    void setCallRequestProcessingTime(UUID requestId, long maxProcTime);
+    
+    /**
+     * Returns information about processing of executed call request as specified
+     * by {@code callId}.
+     * @param callId ID of call request, which to return information for
+     * @return information about processing of executed call request as specified
+     *         by {@code callId}.
+     */
+    CallRequestProcessingInfo getCallRequestProcessingInfo(UUID callId);
+    
+    /**
+     * Cancels processing of a call request as specified by {@code callId}.
+     * @param callId ID of a call request whose processing to cancell
+     */
+    void cancelCallRequest(UUID callId);
+    
+    /**
+     * Returns maximal time ( in ms ), during which call requests can be present
+     * at a connector without any interaction. When a request is idle for specific
+ time period, it means:
+ - no call result has arrived for the request
+ - no client queried the request
+ for that period of time.
+
+ Connector Service must garantee, that idle request will not be
+ silently cancelled and removed from the connector during this period of time.
+     * 
+     * @return maximal idle time period for the requests present at a connector
+     */
+    long getMaxCallRequestIdleTime();
+}

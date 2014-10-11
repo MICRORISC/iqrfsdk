@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Archiver-Version: Plexus Archiver
+Created-By: Apache Maven
+Built-By: MICRORISC s.r.o.
+Build-Jdk: 1.7.0_45
+Implementation-Title: CDC
+Implementation-Vendor: MICRORISC s.r.o.
+Implementation-Vendor-Id: com.microrisc.cdc
+Implementation-Version: 0
+Specification-Title: CDC
+Specification-Vendor: MICRORISC s.r.o.
+Specification-Version: 1.0

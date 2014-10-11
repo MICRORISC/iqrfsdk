@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : ImplMapping.xml
+    Created on : 13.5. 2012, 20:00
+    Author     : Michal Konopa
+    Description:
+        Contains mapping of Java DI onto its USED implementing classes.
+-->
+
+<implMappings>
+    <implMapping>
+        <interface>com.microrisc.simply.iqrf.dpa.devices.PeripheralInfoGetter</interface>
+        <implClass>com.microrisc.simply.iqrf.dpa.devices.impl.SimplePeripheralInfoGetter</implClass>
+        <note>Some note here.</note>
+    </implMapping>
+	
+	<implMapping>
+        <interface>com.microrisc.simply.iqrf.dpa.devices.Coordinator</interface>
+		<implClass>com.microrisc.simply.iqrf.dpa.devices.impl.SimpleCoordinator</implClass>
+        <note></note>
+    </implMapping>
+	
+	<implMapping>
+        <interface>com.microrisc.simply.iqrf.dpa.devices.Node</interface>
+		<implClass>com.microrisc.simply.iqrf.dpa.devices.impl.SimpleNode</implClass>
+        <note></note>
+    </implMapping>
+	
+	<implMapping>
+        <interface>com.microrisc.simply.iqrf.dpa.devices.OS</interface>
+		<implClass>com.microrisc.simply.iqrf.dpa.devices.impl.SimpleOS</implClass>
+        <note></note>
+    </implMapping>
+	
+	<implMapping>
+        <interface>com.microrisc.simply.iqrf.dpa.devices.LEDR</interface>
+		<implClass>com.microrisc.simply.iqrf.dpa.devices.impl.SimpleLEDR</implClass>
+        <note></note>
+    </implMapping>
+	
+	<implMapping>
+        <interface>com.microrisc.simply.iqrf.dpa.devices.LEDG</interface>
+		<implClass>com.microrisc.simply.iqrf.dpa.devices.impl.SimpleLEDG</implClass>
+        <note></note>
+    </implMapping>
+	
+	<implMapping>
+        <interface>com.microrisc.simply.iqrf.dpa.devices.IO</interface>
+		<implClass>com.microrisc.simply.iqrf.dpa.devices.impl.SimpleIO</implClass>
+        <note></note>
+    </implMapping>
+	
+	<implMapping>
+        <interface>com.microrisc.simply.iqrf.dpa.devices.EEPROM</interface>
+		<implClass>com.microrisc.simply.iqrf.dpa.devices.impl.SimpleEEPROM</implClass>
+        <note></note>
+    </implMapping>
+	
+	<implMapping>
+        <interface>com.microrisc.simply.iqrf.dpa.devices.EEEPROM</interface>
+		<implClass>com.microrisc.simply.iqrf.dpa.devices.impl.SimpleEEEPROM</implClass>
+        <note></note>
+    </implMapping>
+	
+	<implMapping>
+        <interface>com.microrisc.simply.iqrf.dpa.devices.RAM</interface>
+		<implClass>com.microrisc.simply.iqrf.dpa.devices.impl.SimpleRAM</implClass>
+        <note></note>
+    </implMapping>
+	
+	<implMapping>
+        <interface>com.microrisc.simply.iqrf.dpa.devices.SPI</interface>
+		<implClass>com.microrisc.simply.iqrf.dpa.devices.impl.SimpleSPI</implClass>
+        <note></note>
+    </implMapping>
+	
+	<implMapping>
+        <interface>com.microrisc.simply.iqrf.dpa.devices.Thermometer</interface>
+		<implClass>com.microrisc.simply.iqrf.dpa.devices.impl.SimpleThermometer</implClass>
+        <note></note>
+    </implMapping>
+	
+	<implMapping>
+        <interface>com.microrisc.simply.iqrf.dpa.devices.PWM</interface>
+		<implClass>com.microrisc.simply.iqrf.dpa.devices.impl.SimplePWM</implClass>
+        <note></note>
+    </implMapping>
+	
+	<implMapping>
+        <interface>com.microrisc.simply.iqrf.dpa.devices.UART</interface>
+		<implClass>com.microrisc.simply.iqrf.dpa.devices.impl.SimpleUART</implClass>
+        <note></note>
+    </implMapping>
+    
+	<implMapping>
+		<interface>com.microrisc.simply.iqrf.dpa.devices.FRC</interface>
+		<implClass>com.microrisc.simply.iqrf.dpa.devices.impl.SimpleFRC</implClass>
+	<note></note>
+</implMapping>
+    
+</implMappings>

@@ -1,0 +1,112 @@
+
+package com.microrisc.simply;
+
+/**
+ * Base implementation class for Device Objects. 
+ * 
+ * @author Michal Konopa
+ */
+public class BaseDeviceObject implements DeviceObject {
+    /** Identifier of network, which this device object belongs to. */
+    protected final String networkId;
+    
+    /** Identifier of node, which this device object belongs to. */
+    protected final String nodeId;
+    
+    /** Device interface implemented by this device object. */
+    protected final Class implementedDeviceInterface;
+    
+    
+    /** 
+     * Checks network ID for validity.
+     * @param networkId network ID to check
+     */
+    private static String checkNetworkId(String networkId) {
+        if (networkId == null) {
+            throw new IllegalArgumentException("Network ID cannot be null");
+        }
+        return networkId;
+    }
+    
+    /** 
+     * Checks node ID for validity.
+     * @param nodeId node ID to check
+     */
+    private static String checkNodeId(String nodeId) {
+        if (nodeId == null) {
+            throw new IllegalArgumentException("Node ID cannot be null");
+        }
+        return nodeId;
+    }
+    
+    /**
+     * Discovers device interface implemented by this object.
+     * @return device interface implemented by this object
+     * @return {@code null} if no device interface has been found
+     */
+    private Class discoverImplementedDeviceInterface() {
+        Class[] implIfaces = this.getClass().getInterfaces();
+        for (Class implIface : implIfaces) {
+            if (implIface.isAnnotationPresent(DeviceInterface.class)) {
+                return implIface;
+            }
+        }
+        return null;
+    }
+    
+    /** 
+     * Checks node ID for validity.
+     * @param nodeId node ID to check
+     */
+    private static Class checkImplementedDeviceInterface(Class devIface) {
+        if (devIface == null) {
+            throw new IllegalStateException(
+                    "Device object doesn't implement no device interface"
+            );
+        }
+        return devIface;
+    }
+    
+    
+    /**
+     * Creates new device object with defined network ID and node ID.
+     * @param networkId identifier of network, which this device object belongs to.
+     * @param nodeId identifier of node, which this device object belongs to.
+     * @throws IllegalArgumentException if {@code networkId} or {@code nodeId} 
+     *         is {@code null}
+     * @throws IllegalStateException if this device object doesn't implement no
+     *         device interface
+     */
+    public BaseDeviceObject(String networkId, String nodeId) {
+        this.networkId = checkNetworkId(networkId);
+        this.nodeId = checkNodeId(nodeId);
+        this.implementedDeviceInterface = checkImplementedDeviceInterface(
+                discoverImplementedDeviceInterface()
+        );
+    }
+
+    /**
+     * @return identifier of network, which this device object belongs to.
+     */
+    @Override
+    public String getNetworkId() {
+        return networkId;
+    }
+
+    /**
+     * @return identifier of node, which this device object belongs to.
+     */
+    @Override
+    public String getNodeId() {
+        return nodeId;
+    }
+
+    /**
+     * @return device interface implemented by this device object.
+     */
+    @Override
+    public Class getImplementedDeviceInterface() {
+        return implementedDeviceInterface;
+    }
+    
+}
