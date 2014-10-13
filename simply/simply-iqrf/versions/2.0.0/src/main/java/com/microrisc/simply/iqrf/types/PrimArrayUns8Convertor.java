@@ -79,16 +79,21 @@ public final class PrimArrayUns8Convertor extends ArrayConvertor {
             );
         }
         
-        List<Short> retValues = new LinkedList<Short>();
+        List<Short> retValues = new LinkedList<>();
         for ( int byteId = 0; byteId < protoValue.length; byteId += elemSize ) {
             short[] elem = new short[elemSize];
             System.arraycopy(protoValue, byteId, elem, 0, elemSize);
             retValues.add((Short)elemConvertor.toObject(elem));
         }
         
-        Short[] retValuesArr = retValues.toArray( new Short[0] ); 
+        short[] retValuesArr = new short[retValues.size()];
+        int arrId = 0;
+        for ( Short retValue : retValues ) {
+            retValuesArr[arrId] = retValue;
+            arrId++;
+        }
         
-        logger.debug("toObject - end: {}", ArrayUtils.toPrimitive(retValuesArr));
+        logger.debug("toObject - end: {}", retValuesArr);
         return retValuesArr;
     } 
 }

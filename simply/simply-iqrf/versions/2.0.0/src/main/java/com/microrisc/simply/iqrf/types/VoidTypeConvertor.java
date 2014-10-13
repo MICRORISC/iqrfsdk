@@ -57,8 +57,9 @@ public final class VoidTypeConvertor extends PrimitiveConvertor {
         logger.debug("toObject - start: iqValue={}", iqValue);
         
         if (iqValue.length != TYPE_SIZE) {
-            throw new ValueConversionException("Argument length doesn't match with "
-                    + "type size");
+            throw new ValueConversionException(
+                "Argument length doesn't match with type size"
+            );
         }
         
         VoidType voidType = new VoidType();

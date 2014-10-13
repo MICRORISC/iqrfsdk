@@ -10,7 +10,7 @@ public class SubDPARequest {
     
     /** 
      *  Network address of the device in the sub network controlled by the 
-     *  IQMesh – Coordinator of the [NC] device to send the DPA request to. 
+     *  IQMesh - Coordinator of the [NC] device to send the DPA request to. 
      */
     private final int subNAdr;
     

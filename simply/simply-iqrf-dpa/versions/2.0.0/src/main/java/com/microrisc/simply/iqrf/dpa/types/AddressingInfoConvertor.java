@@ -19,8 +19,8 @@ public final class AddressingInfoConvertor extends PrimitiveConvertor {
     /** Size of returned response. */
     static public final int TYPE_SIZE = 2;
     
-    // postitions of fields
     static private final int BONDED_DEV_NUM_POS = 0;
+    static private final int DID_POS = 1;
     
     private AddressingInfoConvertor() {
     }
@@ -57,7 +57,8 @@ public final class AddressingInfoConvertor extends PrimitiveConvertor {
         logger.debug("toObject - start: protoValue={}", protoValue);
         
         int bondedDevicesNum = protoValue[BONDED_DEV_NUM_POS];
-        AddressingInfo addrInfo = new AddressingInfo(bondedDevicesNum);
+        int did = protoValue[DID_POS];
+        AddressingInfo addrInfo = new AddressingInfo(bondedDevicesNum, did);
         
         logger.debug("toObject - end: {}", addrInfo);
         return addrInfo;

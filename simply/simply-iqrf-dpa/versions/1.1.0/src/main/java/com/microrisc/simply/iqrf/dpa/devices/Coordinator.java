@@ -22,7 +22,7 @@ import com.microrisc.simply.iqrf.types.VoidType;
  * DPA Coordinator Device Interface.
  * <p>
  * IMPORTANT NOTE: <br>
- * Every method returns {@code NULL}, if some error has occurred during processing
+ * Every method returns {@code NULL}, if an error has occurred during processing
  * of this method.
  * 
  * @author Michal Konopa

@@ -66,9 +66,9 @@ public class IntToUns8Convertor extends PrimitiveConvertor  {
     public Object toObject(short[] iqrfValue) throws ValueConversionException {
         logger.debug("toObject - start: iqValue={}", iqrfValue);
         
-        if (iqrfValue.length != TYPE_SIZE) {
+        if ( iqrfValue.length != TYPE_SIZE ) {
             throw new ValueConversionException(
-                    "Argument length doesn't match with type size"
+                "Argument length doesn't match with type size"
             );
         }
         

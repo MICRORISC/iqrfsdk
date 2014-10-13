@@ -27,8 +27,9 @@ public final class PeripheralInfo {
      * @param par1 optional peripheral specific information
      * @param par2 optional peripheral specific information
      */
-    public PeripheralInfo(PeripheralType perType, 
-            ExtPerCharacteristic extPerCharacteristic, short par1, short par2
+    public PeripheralInfo(
+            PeripheralType perType, ExtPerCharacteristic extPerCharacteristic, 
+            short par1, short par2
     ) {
         this.peripheralType = perType;
         this.extPerCharacteristic = extPerCharacteristic;

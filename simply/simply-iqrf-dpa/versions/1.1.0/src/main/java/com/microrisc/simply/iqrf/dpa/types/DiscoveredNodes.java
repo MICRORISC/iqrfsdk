@@ -39,7 +39,7 @@ public final class DiscoveredNodes {
     public List<Integer> getList() {
         List<Integer> listToReturn = new LinkedList<Integer>();
         for (Integer nodeId : discoveredNodesList.getList()) {
-            listToReturn.add(new Integer(nodeId));
+            listToReturn.add(nodeId);
         }
         return listToReturn;
     }

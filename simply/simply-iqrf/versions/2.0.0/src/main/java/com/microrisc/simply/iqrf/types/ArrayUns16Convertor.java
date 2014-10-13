@@ -75,8 +75,9 @@ public final class ArrayUns16Convertor extends ArrayConvertor {
         
         int elemSize = elemConvertor.getGenericTypeSize();
         if ((protoValue.length) % elemSize != 0) {
-            throw new ValueConversionException("Base element size doesn't divide "
-                    + "argument length");
+            throw new ValueConversionException(
+                "Base element size doesn't divide argument length"
+            );
         }
         
         List<Integer> retValues = new LinkedList<Integer>();
