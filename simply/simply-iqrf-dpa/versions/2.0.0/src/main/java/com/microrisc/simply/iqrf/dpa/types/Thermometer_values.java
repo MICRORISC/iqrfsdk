@@ -9,17 +9,19 @@ import java.io.Serializable;
  * @author Michal Konopa
  */
 public final class Thermometer_values implements Serializable {
-    /** Value */
+    /** Value in Celsius degree. */
     private final short value;
         
-    /** Fractial value */
+    /** Fractional part of value. */
     private final byte fractialValue; 
     
     
     /**
      * Creates new {@code Thermometer_values} object.
-     * @param value 1 byte value
-     * @param fractialValue 2 byte value
+     * @param value integer part in Celsius degree, not rounded. See return value 
+     * of getTemperature() OS function. If the temperature sensor is not installed 
+     * (see HWP Configuration) then the returned value is 0x80 = -128 Celsius degree.
+     * @param fractialValue fractional part of Celsius degree value 
      */
     public Thermometer_values(short value, byte fractialValue) {
         this.value = value;
@@ -27,14 +29,17 @@ public final class Thermometer_values implements Serializable {
     }
 
     /**
-     * @return value
+     * Integer part in Celsius degree, not rounded. See return value 
+     * of getTemperature() OS function. If the temperature sensor is not installed 
+     * (see HWP Configuration) then the returned value is 0x80 = -128 Celsius degree.
+     * @return integer part in Celsius degree, not rounded
      */
     public short getValue() {
         return value;
     }
 
     /**
-     * @return fractial value
+     * @return fractional part of Celsius degree value
      */
     public byte getFractialValue() {
         return fractialValue;
@@ -47,7 +52,7 @@ public final class Thermometer_values implements Serializable {
         
         strBuilder.append(this.getClass().getSimpleName() + " { " + NEW_LINE);
         strBuilder.append(" Value: " + value + NEW_LINE);
-        strBuilder.append(" Fractial value: " + fractialValue + NEW_LINE);
+        strBuilder.append(" Fractional part: " + fractialValue + NEW_LINE);
         strBuilder.append("}");
         
         return strBuilder.toString();
@@ -58,7 +63,7 @@ public final class Thermometer_values implements Serializable {
         String NEW_LINE = System.getProperty("line.separator");
         
         strBuilder.append("Value: " + value + NEW_LINE);
-        strBuilder.append("Fractial value: " + fractialValue + NEW_LINE);
+        strBuilder.append("Fractional part: " + fractialValue + NEW_LINE);
         
         return strBuilder.toString();
     }
