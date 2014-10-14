@@ -11,7 +11,7 @@ import com.microrisc.simply.iqrf.types.VoidType;
 
 /**
  * DPA UART Device Interface.
- * All methods return {@code null} if some error has occurred during processing
+ * All methods return {@code null} if an error has occurred during processing
  * of corresponding method call.
  * 
  * @author Michal Konopa

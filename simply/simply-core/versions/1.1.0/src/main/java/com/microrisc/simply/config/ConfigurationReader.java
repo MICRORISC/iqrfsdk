@@ -85,7 +85,7 @@ public class ConfigurationReader {
      * @return configuration object corresponding to configuration read from specified file
      * @throws IllegalArgumentException if {@code file} is {@code null}
      * @throws ConfigurationReaderException if type of configuration file could not be determined
-     * @throws ConfigurationException if some error has been detected during processing
+     * @throws ConfigurationException if an error has been detected during processing
      *         of specified configuration file
      */
     public static Configuration fromFile(String file) 

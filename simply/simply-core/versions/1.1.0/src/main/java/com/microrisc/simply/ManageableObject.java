@@ -10,7 +10,7 @@ package com.microrisc.simply;
 public interface ManageableObject {
     /**
      * Starts object life cycle.
-     * @throws SimplyException if some error has occured during starting process
+     * @throws SimplyException if an error has occured during starting process
      */
     void start() throws SimplyException;
     

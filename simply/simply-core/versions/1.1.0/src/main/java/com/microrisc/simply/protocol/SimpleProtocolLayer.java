@@ -202,7 +202,7 @@ public final class SimpleProtocolLayer extends AbstractProtocolLayer {
     
     /**
      * This method works as follows: <br>
-     * 1. Converts specified request into sequence of bytes. If some error has
+     * 1. Converts specified request into sequence of bytes. If an error has
      *    occured during conversion, error of type {@code ProcessingRequestAtProtocolLayerError} 
      *    is created, error response is created and {@code processErrorResponse} 
      *    method is called.
@@ -244,7 +244,7 @@ public final class SimpleProtocolLayer extends AbstractProtocolLayer {
      * 1. Checks, if the listener is registered. If no listener is registered, 
      *    the method finishes.
      * 2. Converts network data using {@code msgConvertor} to AbstractMessage
-     *    instance. If some error has encountered during conversion process, the
+     *    instance. If an error has encountered during conversion process, the
      *    method finishes.
      * 3. Calls {@code processResponse} method
      * 

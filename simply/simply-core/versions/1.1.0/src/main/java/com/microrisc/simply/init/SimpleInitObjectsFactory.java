@@ -43,7 +43,7 @@ extends AbstractInitObjectsFactory<
      * Creates network connection storage.
      * @param configuration input configuration
      * @return network connection storage
-     * @throws java.lang.Exception if some error has occured during creating of 
+     * @throws java.lang.Exception if an error has occured during creating of 
      *         network connection storage
      */
     protected NetworkConnectionStorage createNetworkConnectionStorage(
@@ -57,7 +57,7 @@ extends AbstractInitObjectsFactory<
      * @param connectionStorage connection storage to use
      * @param configuration input configuration
      * @return network layer
-     * @throws java.lang.Exception if some error has occured during creating of 
+     * @throws java.lang.Exception if an error has occured during creating of 
      *         network layer
      */
     protected NetworkLayer createNetworkLayer(
@@ -75,7 +75,7 @@ extends AbstractInitObjectsFactory<
      * Create protocol mapping.
      * @param configuration input configuration
      * @return protocol mapping
-     * @throws java.lang.Exception if some error has occured during creating of 
+     * @throws java.lang.Exception if an error has occured during creating of 
      *         protocol mapping
      */
     protected ProtocolMapping createProtocolMapping(Configuration configuration) 
@@ -93,7 +93,7 @@ extends AbstractInitObjectsFactory<
      * @param protoMapping protocol mapping to use
      * @param configuration input configuration
      * @return message convetor
-     * @throws java.lang.Exception if some error has occured during creating of 
+     * @throws java.lang.Exception if an error has occured during creating of 
      *         message convertor 
      */
     protected MessageConvertor createMessageConvertor(
@@ -113,7 +113,7 @@ extends AbstractInitObjectsFactory<
      * @param msgConvertor message convertor to use
      * @param configuration source configuration
      * @return protocol layer
-     * @throws java.lang.Exception if some error has occured during creating of 
+     * @throws java.lang.Exception if an error has occured during creating of 
      *         protocol layer 
      */
     protected ProtocolLayer createProtocolLayer(
@@ -133,7 +133,7 @@ extends AbstractInitObjectsFactory<
      * @param protocolLayerService protocol layer service to use
      * @param configuration source configuration
      * @return connector
-     * @throws java.lang.Exception if some error has occured during creating of 
+     * @throws java.lang.Exception if an error has occured during creating of 
      *         connector
      */
     protected Connector createConnector(
@@ -151,7 +151,7 @@ extends AbstractInitObjectsFactory<
      * Creates connection stack.
      * @param configuration source configuration
      * @return connection stack
-     * @throws com.microrisc.simply.SimplyException if some error has occured 
+     * @throws com.microrisc.simply.SimplyException if an error has occured 
      *         during creating of connection stack 
      */
     protected ConnectionStack createConnectionStack(Configuration configuration) 
@@ -183,7 +183,7 @@ extends AbstractInitObjectsFactory<
      * Creates and returns mapper of device interfaces to theirs implementing classes.
      * @param configuration source configuration
      * @return mapper of device interfaces to theirs implementing classes.
-     * @throws java.lang.Exception if some error has occured during creating of 
+     * @throws java.lang.Exception if an error has occured during creating of 
      *         mapper
      */
     protected ImplClassesMapper createImplClassesMapper(Configuration configuration) 
@@ -224,7 +224,7 @@ extends AbstractInitObjectsFactory<
      * @param configuration configuration needed for getting network settings
      * @return map of configuration of each network to connect
      * @throws org.apache.commons.configuration.ConfigurationException if 
-     *         if some error has occured during getting connected networks configurations
+     *         if an error has occured during getting connected networks configurations
      */ 
     protected Map<String, Configuration> createNetworksSettings(Configuration configuration) 
             throws ConfigurationException {

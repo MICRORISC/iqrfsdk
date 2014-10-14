@@ -30,7 +30,7 @@ extends DPA_Device, DPA_StandardServices, GenericAsyncCallable, MethodIdTransfor
      * @param data optional data to be written to the SPI
      * @return optional data read from SPI if the reading was requested and 
      *         data is available. <br>
-     *        {@code null}, if some error has occurred during processing
+     *        {@code null}, if an error has occurred during processing
      */
     Short[] writeAndRead(int readTimeout, short[] data);
 }

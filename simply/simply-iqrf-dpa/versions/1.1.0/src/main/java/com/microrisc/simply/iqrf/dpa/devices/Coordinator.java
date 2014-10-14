@@ -91,22 +91,22 @@ extends DPA_Device, DPA_StandardServices, GenericAsyncCallable, MethodIdTransfor
     BondedNode bondNode(int address, int bondingMask);
     
     /**
-     * Removes specified bonded address.
-     * @param address address to remove
+     * Removes already bonded node from the list of bonded nodes at coordinator memory.
+     * @param address address of the node to remove the bond to
      * @return Number of bonded network nodes
      */
     Integer removeBondedNode(int address);
     
     /**
-     * Rebonds specified bonded address.
-     * @param address address to rebond
+     * Puts specified node back to the list of boded nodes in the coordinator memory.
+     * @param address address of the node to be re-bonded
      * @return Number of bonded network nodes
      */
     Integer rebondNode(int address);
     
     /**
-     * Runs discovery process.
-     * @param discoveryParams discoveryParams
+     * Runs IQMESH discovery process.
+     * @param discoveryParams discovery parameters
      * @return results of discovery process
      */
     DiscoveryResult runDiscovery(DiscoveryParams discoveryParams);
@@ -122,21 +122,24 @@ extends DPA_Device, DPA_StandardServices, GenericAsyncCallable, MethodIdTransfor
      * Allows specifying fixed number of routing hops used to send the DPA 
      * request/response or to specify an optimization algorithm to compute 
      * number of routing hops.
-     * @param hops routing hops to set
+     * @param hops routing hops to set <br>
+     *        0x00, 0xFF: See a description of the parameter of function 
+     *                    optimizeHops() in the IQRF documentation. <br>
+     *        0x01 - 0xEF: Sets number of hops to value Requested/ResponseHops - 1. 
      * @return previous values of routing hops
      */
     RoutingHops setHops(RoutingHops hops);
     
     /**
-     * Allows to read coordinator internal discovery data. Discovery data can 
-     * be used for instance for IQMESH network visualization and optimization.
-     * @param address address of discovery data
+     * Allows reading coordinator internal discovery data. Discovery data can be 
+     * used for instance for IQMESH network visualization and traffic optimization. 
+     * @param address address of the discovery data
      * @return Discovery data read from the coordinator private storage
      */
     Short[] discoveryData(int address);
     
     /**
-     * Allows to read coordinator network info data that can be then restored 
+     * Allows reading coordinator network info data that can be then restored 
      * to another coordinator in order to make a clone of the original coordinator.
      * @param index index of the block of data
      * @return one block of the coordinator network info data
@@ -144,7 +147,7 @@ extends DPA_Device, DPA_StandardServices, GenericAsyncCallable, MethodIdTransfor
     Short[] backup(int index);
     
     /**
-     * Allows to write previously backed up coordinator network data to the same 
+     * Allows to writing previously backed up coordinator network data to the same 
      * or another coordinator device. To execute the full restore all data blocks 
      * (in any order) obtained via Backup commands must be written to the device.
      * @param networkData one block of the coordinator network info data previously 
@@ -162,13 +165,15 @@ extends DPA_Device, DPA_StandardServices, GenericAsyncCallable, MethodIdTransfor
     VoidType restore(Short[] networkData);
     
     /**
-     * Authorizes previously remotely bonded node. This give the node the final 
+     * Authorizes previously remotely bonded node. This gives the node the final 
      * network address. See IQRF documentation for more information about remote 
      * bonding concept.
      * @param address a requested address for the bonded node. The address must 
      *        not be used (bonded) yet. If this parameter equals to 0, then 1st 
      *        free address is assigned to the node.
      * @param moduleId Module ID (the lowest 2 bytes) of the node to be authorized.
+     *        Module ID is obtained by calling 
+     *        {@link Node#readRemotelyBondedModuleId() Read remotely bonded module ID }.
      * @return information about bonded node
      */
     BondedNode authorizeBond(int address, short[] moduleId);
@@ -185,7 +190,7 @@ extends DPA_Device, DPA_StandardServices, GenericAsyncCallable, MethodIdTransfor
      * Puts node into a mode, that provides a remote bonding of maximum one new node.
      * @param bondingMask see IQRF OS User's and Reference guides (remote bonding, 
      *        function bondNewNodeRemote).
-     * @param control 0 enables remote bonding mode. If enabled then previously 
+     * @param control bit.0 enables remote bonding mode. If enabled then previously 
      *        bonded node module ID is forgotten.
      * @param userData optional data that can be used at Reset Custom DPA 
      *        Handler event.

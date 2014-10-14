@@ -101,11 +101,11 @@ public final class FRC_Command {
         
         /**
          * Collects bytes. Result byte equals to the temperature value read by getTemperature() 
-         * IQRF OS method. If resulting temperature is 0 degree C, that would normally 
+         * IQRF OS method. If resulting temperature is 0 Celsius degree, that would normally 
          * equal to value 0, then a fixed value 0x7F is returned instead. This makes
-         * possible to distinguish between devices reporting 0 degree C and devices not 
+         * possible to distinguish between devices reporting 0 Celsius degree and devices not 
          * reporting at all. Device would normally never return a temperature 
-         * corresponding to the value 0x7F, because +127 degree C is out of working 
+         * corresponding to the value 0x7F, because +127 Celsius degree is out of working 
          * temperature range.
          */
         TEMPERATURE                     (0x80),
@@ -130,6 +130,14 @@ public final class FRC_Command {
         public int getCommandValue() {
             return cmdValue;
         }
+    }
+    
+    // checks also for unsupported predefined commands
+    private static PredefinedCommand checkPredefinedCommand(PredefinedCommand preCommand) {
+        if ( preCommand == null ) {
+            throw new IllegalArgumentException("Predefined command cannot be null");
+        }
+        return preCommand;
     }
     
     // limits of command value
@@ -183,9 +191,10 @@ public final class FRC_Command {
     /**
      * Creates new FRC Command object using predefined command
      * @param preCommand predefined command
+     * @throws IllegalArgumentException if {@code preCommand} is {@code null}
      */
     public FRC_Command( PredefinedCommand preCommand ) {
-        this.cmdValue = preCommand.getCommandValue();
+        this.cmdValue = checkPredefinedCommand(preCommand).getCommandValue();
     }
     
     /**

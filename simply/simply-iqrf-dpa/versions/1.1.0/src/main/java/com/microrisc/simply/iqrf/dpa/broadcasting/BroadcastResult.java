@@ -10,6 +10,6 @@ package com.microrisc.simply.iqrf.dpa.broadcasting;
 public enum BroadcastResult {
     /** Broadcast has issued OK. */
     OK,
-    /** Some error has encountered during broadcast run. */
+    /** An error has encountered during broadcast run. */
     ERROR
 }

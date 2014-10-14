@@ -39,7 +39,7 @@ extends DPA_Device, DPA_StandardServices, GenericAsyncCallable, MethodIdTransfor
      * @param blockNumber number of (zero based) block to read from
      * @param length length of the data to read (in bytes), must be equal to the block size
      * @return read data <br>
-     *         {@code null}, if some error has occurred during processing
+     *         {@code null}, if an error has occurred during processing
      */
     Short[] read(int blockNumber, int length);
     
@@ -47,7 +47,8 @@ extends DPA_Device, DPA_StandardServices, GenericAsyncCallable, MethodIdTransfor
     /**
      * Sends method call request for writing to peripheral.
      * @param blockNumber number of (zero based) block to write the data into
-     * @param data actual data to be written to the memory, must be equal to the block size
+     * @param data actual data to be written to the memory, its length must be 
+     *             equal to the block size
      * @return unique identifier of sent request
      */
     UUID async_write(int blockNumber, short[] data);
@@ -56,9 +57,10 @@ extends DPA_Device, DPA_StandardServices, GenericAsyncCallable, MethodIdTransfor
      * Writes specified data to specified address.
      * Synchronous wrapper for {@link #async_write() async_write} method.
      * @param blockNumber number of (zero based) block to write the data into
-     * @param data actual data to be written to the memory, must be equal to the block size
+     * @param data actual data to be written to the memory, its length must be 
+     *             equal to the block size
      * @return {@code VoidType} object, if method call has processed allright <br>
-     *         {@code null}, if some error has occurred during processing
+     *         {@code null}, if an error has occurred during processing
      */
     VoidType write(int blockNumber, short[] data);
 }

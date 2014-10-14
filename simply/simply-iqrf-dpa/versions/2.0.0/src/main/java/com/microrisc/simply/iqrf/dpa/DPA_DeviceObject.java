@@ -24,7 +24,7 @@ implements DPA_Device, DPA_StandardServices {
     private static final Logger logger = LoggerFactory.getLogger(DPA_DeviceObject.class);
     
     /** Default request HW profile. */
-    public static int DEFAULT_REQUEST_HW_PROFILE = 0xFFFF;
+    public static final int DEFAULT_REQUEST_HW_PROFILE = 0xFFFF;
     
     /** Request HW profile. */
     private int requestHwProfile = DEFAULT_REQUEST_HW_PROFILE;

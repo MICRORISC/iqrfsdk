@@ -17,7 +17,7 @@ public abstract class AbstractInitializer
      * Creates and returns map of initialized networks to use in Simply. 
      * @param initObjects objects needed in the initialization's process of Simply
      * @return map of networks
-     * @throws Exception if some error has occured during initialization process
+     * @throws Exception if an error has occured during initialization process
      */
     public abstract Map<String, U> initialize(T initObjects) throws Exception;
 }

@@ -113,7 +113,7 @@ extends DPA_DeviceObject implements Coordinator {
         checkNodeAddress(address);
         checkBondingMask(bondingMask);
         UUID uid = dispatchCall(
-                "5", new Object[] { getHwProfile(), new Integer(address), new Integer(bondingMask) },
+                "5", new Object[] { getHwProfile(), address, bondingMask},
                 getDefaultWaitingTimeout()
         );
         if ( uid == null ) {
@@ -129,7 +129,7 @@ extends DPA_DeviceObject implements Coordinator {
     public Integer removeBondedNode(int address) {
         checkNodeAddress(address);
         UUID uid = dispatchCall(
-                "6", new Object[] { getHwProfile(), new Integer(address) }, getDefaultWaitingTimeout()
+                "6", new Object[] { getHwProfile(), address}, getDefaultWaitingTimeout()
         );
         if ( uid == null ) {
             return null;
@@ -141,7 +141,7 @@ extends DPA_DeviceObject implements Coordinator {
     public Integer rebondNode(int address) {
         checkNodeAddress(address);
         UUID uid = dispatchCall(
-                "7", new Object[] { getHwProfile(), new Integer(address) }, getDefaultWaitingTimeout()
+                "7", new Object[] { getHwProfile(), address}, getDefaultWaitingTimeout()
         );
         if ( uid == null ) {
             return null;
@@ -186,7 +186,7 @@ extends DPA_DeviceObject implements Coordinator {
     public Short[] discoveryData(int address) {
         checkNodeAddress(address);
         UUID uid = dispatchCall(
-                "11", new Object[] { getHwProfile(), new Integer(address) }, getDefaultWaitingTimeout() 
+                "11", new Object[] { getHwProfile(), address}, getDefaultWaitingTimeout() 
         );
         if ( uid == null ) {
             return null;
@@ -206,7 +206,7 @@ extends DPA_DeviceObject implements Coordinator {
     public Short[] backup(int index) {
         checkIndex(index);
         UUID uid = dispatchCall(
-                "12", new Object[] { getHwProfile(), new Integer(index) }, getDefaultWaitingTimeout() 
+                "12", new Object[] { getHwProfile(), index}, getDefaultWaitingTimeout() 
         );
         if ( uid == null ) {
             return null;
@@ -272,7 +272,7 @@ extends DPA_DeviceObject implements Coordinator {
         checkNodeAddress(address);
         checkModuleId(moduleId);
         UUID uid = dispatchCall(
-                "14", new Object[] { getHwProfile(), new Integer(address), moduleId }, 
+                "14", new Object[] { getHwProfile(), address, moduleId }, 
                 getDefaultWaitingTimeout()
         );
         if ( uid == null ) {
@@ -281,8 +281,14 @@ extends DPA_DeviceObject implements Coordinator {
         return getCallResult(uid, BondedNode.class, getDefaultWaitingTimeout());
     }
     
+    /**
+     * NOT SUPPORTED. Throws {@code UnsupportedOperationException} exception. 
+     * @throws UnsupportedOperationException
+     */
     @Override
     public Short[] bridge(SubDPARequest subRequest) {
+        throw new UnsupportedOperationException("Not supported.");
+        /*
         UUID uid = dispatchCall("15", new Object[] { getHwProfile(), subRequest }, 
                 getDefaultWaitingTimeout()
         );
@@ -290,6 +296,7 @@ extends DPA_DeviceObject implements Coordinator {
             return null;
         }
         return getCallResult(uid, Short[].class, getDefaultWaitingTimeout());
+        */
     }
     
     
@@ -320,7 +327,7 @@ extends DPA_DeviceObject implements Coordinator {
         checkControl(control);
         checkUserData(userData);
         UUID uid = dispatchCall(
-                "16", new Object[] { getHwProfile(), new Integer(bondingMask), new Integer(control), userData}, 
+                "16", new Object[] { getHwProfile(), bondingMask, control, userData}, 
                 getDefaultWaitingTimeout()
         );
         if ( uid == null ) {

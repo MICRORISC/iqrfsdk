@@ -8,7 +8,7 @@ import com.microrisc.simply.asynchrony.BaseAsynchronousMessagePropertiesChecker;
 /**
  * DPA asynchronous message properties checker.
  * <p>
- * Its functionality is same as the functionality of Base asynchronous
+ * Its functionality is the same as the functionality of Base asynchronous
  * message properties checker - for {@code BaseAsynchronousMessage} and
  * {@code AsynchronousMessageProperties} parts of the message and of the 
  * required properties.
@@ -52,6 +52,10 @@ implements AsynchronousMessagePropertiesChecker<
     public boolean messageHasRequiredProperties(
             DPA_AsynchronousMessage message, DPA_AsynchronousMessageProperties reqProps
     ) {
+        if ( reqProps == null ) {
+            return true;
+        }
+        
         if ( !baseChecker.messageHasRequiredProperties(message, reqProps)) {
             return false;
         }

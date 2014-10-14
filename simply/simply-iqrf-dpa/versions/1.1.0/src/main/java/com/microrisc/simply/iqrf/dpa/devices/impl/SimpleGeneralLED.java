@@ -76,4 +76,19 @@ extends DPA_DeviceObject implements GeneralLED {
         return getCallResult(uid, LED_State.class, getDefaultWaitingTimeout());
     }
     
+    @Override
+    public UUID async_pulse() {
+        return dispatchCall("3", new Object[] { getHwProfile() } );
+    }
+
+    @Override
+    public VoidType pulse() {
+        UUID uid = dispatchCall(
+                "3", new Object[] { getHwProfile() }, getDefaultWaitingTimeout()
+        );
+        if ( uid == null ) {
+            return null;
+        }
+        return getCallResult(uid, VoidType.class, getDefaultWaitingTimeout());
+    }
 }

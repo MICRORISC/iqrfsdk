@@ -87,7 +87,7 @@ public final class DPA_SimplyFactory {
      * Returns instance of Simply.
      * @param configFile configuration file with setting for creating Simply
      * @return DPA Simply
-     * @throws com.microrisc.simply.SimplyException if some error has occured 
+     * @throws com.microrisc.simply.SimplyException if an error has occured 
      *         during creating of DPA Simply object
      */
     public static DPA_Simply getSimply(String configFile) throws SimplyException {

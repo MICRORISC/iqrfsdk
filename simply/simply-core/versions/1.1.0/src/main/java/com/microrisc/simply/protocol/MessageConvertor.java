@@ -17,7 +17,7 @@ public interface MessageConvertor {
      * returns it.
      * @param callRequest call request to convert
      * @return request converted to message of used protocol
-     * @throws SimplyException if some error has occured during conversion
+     * @throws SimplyException if an error has occured during conversion
      */
     short[] convertToProtoFormat(CallRequest callRequest) throws SimplyException;
     
@@ -26,7 +26,7 @@ public interface MessageConvertor {
      * returns it.
      * @param networkData network data containing protocol message to convert
      * @return converted form of specified protocol message data
-     * @throws SimplyException if some error has occured during conversion
+     * @throws SimplyException if an error has occured during conversion
      */
     AbstractMessage convertToDOFormat(NetworkData networkData) throws SimplyException;
 }

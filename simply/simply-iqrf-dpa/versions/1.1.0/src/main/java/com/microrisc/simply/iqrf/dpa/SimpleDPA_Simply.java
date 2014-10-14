@@ -10,7 +10,6 @@ import com.microrisc.simply.asynchrony.AsynchronousMessagesGeneratorListener;
 import com.microrisc.simply.asynchrony.AsynchronousMessagingManager;
 import com.microrisc.simply.iqrf.dpa.asynchrony.DPA_AsynchronousMessage;
 import com.microrisc.simply.iqrf.dpa.asynchrony.DPA_AsynchronousMessageProperties;
-import com.microrisc.simply.iqrf.dpa.asynchrony.DPA_AsynchronousMessagingManager;
 import com.microrisc.simply.iqrf.dpa.broadcasting.services.BroadcastServices;
 import java.util.Map;
 import org.slf4j.Logger;
@@ -76,16 +75,18 @@ extends BaseSimply implements DPA_Simply {
     public void destroy() {
         logger.debug("destroy - start: ");
         
-        super.destroy();
-        broadcastServices = null;
-        
         ((AsynchronousMessagesGenerator)connStack.getConnector()).unregisterListener(
                 (AsynchronousMessagesGeneratorListener) asyncManager
         );
         asyncManager = null;
         
+        super.destroy();
+        broadcastServices = null;
+        
         logger.info("Destroy complete");
         logger.debug("destroy - end ");
+        
+        // think about stopping logback context
     }
 
 }

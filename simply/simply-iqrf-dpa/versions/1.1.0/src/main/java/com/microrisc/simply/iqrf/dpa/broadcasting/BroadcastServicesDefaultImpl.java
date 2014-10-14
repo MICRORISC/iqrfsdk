@@ -11,10 +11,7 @@ import com.microrisc.simply.di_services.MethodIdTransformer;
 import com.microrisc.simply.errors.CallRequestProcessingError;
 import com.microrisc.simply.errors.DispatchingRequestToConnectorError;
 import com.microrisc.simply.iqrf.dpa.broadcasting.services.BroadcastServices;
-import com.microrisc.simply.iqrf.dpa.devices.Coordinator;
-import com.microrisc.simply.iqrf.dpa.di_services.method_id_transformers.CoordinatorStandardTransformer;
-import java.util.HashMap;
-import java.util.Map;
+import com.microrisc.simply.iqrf.dpa.di_services.method_id_transformers.StandardMethodIdTransformers;
 import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,9 +31,6 @@ implements ConnectorListener, BroadcastServices
     /** Connector Service to the underlaying network. */
     private final BroadcastingConnectorService broadcastingConnService;
     
-    /** Map of standard method ID transformers. */
-    private Map<Class, MethodIdTransformer> standardMethodIdTransformers;
-    
     /** Incomming results of performed broadcasts. */
     private final CallRequestProcessingInfoContainer results;
     
@@ -53,12 +47,6 @@ implements ConnectorListener, BroadcastServices
     /** Actual default waiting timeout. */
     private long defaultWaitingTimeout = INITIAL_DEFAULT_WAITING_TIMEOUT;
     
-    
-    /** Initialize standard method ID transformers. */
-    private void initializeStandardMethodIdTransformers() {
-        standardMethodIdTransformers = new HashMap<Class, MethodIdTransformer>();
-        standardMethodIdTransformers.put(Coordinator.class, CoordinatorStandardTransformer.getInstance());
-    }
     
     private static UUID checkCallId(UUID callId) {
         if ( callId == null ) {
@@ -156,7 +144,6 @@ implements ConnectorListener, BroadcastServices
     ) {
         this.broadcastingConnService = broadcastingConnService;
         this.results = checkResultsContainer(resultsContainer);
-        initializeStandardMethodIdTransformers();
     }
     
     @Override
@@ -207,7 +194,8 @@ implements ConnectorListener, BroadcastServices
         checkMethodId(methodId);
         
         if ( methodIdTransformer == null ) {
-            methodIdTransformer = standardMethodIdTransformers.get(deviceInterface);
+            methodIdTransformer = StandardMethodIdTransformers.getInstance().
+                    getTransformer(deviceInterface);
             if ( methodIdTransformer == null ) {
                 throw new IllegalStateException("Method transformer has not been found");
             }
@@ -291,7 +279,8 @@ implements ConnectorListener, BroadcastServices
         checkMethodId(methodId);
         
         if ( methodIdTransformer == null ) {
-            methodIdTransformer = standardMethodIdTransformers.get(deviceInterface);
+            methodIdTransformer = StandardMethodIdTransformers.getInstance().
+                    getTransformer(deviceInterface);
             if ( methodIdTransformer == null ) {
                 throw new IllegalStateException("Method transformer has not been found");
             }

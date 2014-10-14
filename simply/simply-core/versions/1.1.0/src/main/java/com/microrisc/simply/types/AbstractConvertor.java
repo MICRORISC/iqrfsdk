@@ -27,7 +27,7 @@ abstract public class AbstractConvertor {
      * generic type value, to corresponding Java type value.
      * @param protoValue application protocol value to convert
      * @return Java-type value of converted value
-     * @throws ValueConversionException if some error is encountered inside input sequence
+     * @throws ValueConversionException if an error is encountered inside input sequence
      */
     abstract public Object toObject(short[] protoValue) throws ValueConversionException;
 }

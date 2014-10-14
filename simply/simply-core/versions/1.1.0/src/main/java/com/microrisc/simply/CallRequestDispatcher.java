@@ -16,7 +16,7 @@ public interface CallRequestDispatcher {
      * @param methodId ID of called method
      * @param args arguments of method
      * @return unique identifier of the method call
-     *         {@code null}, if some error has occured during this call processing
+     *         {@code null}, if an error has occured during this call processing
      */
     public UUID dispatchCall(String methodId, Object[] args);
     
@@ -28,7 +28,7 @@ public interface CallRequestDispatcher {
      * @param args arguments of method
      * @param timeout timeout of method call processing
      * @return unique identifier of the method call
-     *         {@code null}, if some error has occured during this call processing
+     *         {@code null}, if an error has occured during this call processing
      */
     public UUID dispatchCall(String methodId, Object[] args, long timeout);
 }

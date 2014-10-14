@@ -34,11 +34,11 @@ public enum DPA_ResponseCode {
     /** Incorrect Nadr. */
     NADR_ERROR          (8),
     
-    /** Data from interface consumed by Custom DPA. */
+    /** Data from interface consumed by Custom DPA handler. */
     CUSTOM_HANDLER      (9),
     
     /** Error code used to mark confirmation. */
-    CONFIRMATION        ( (int) Math.pow(2, 8) - 1 )
+    CONFIRMATION        ( 0xFF )
     ;
     
     

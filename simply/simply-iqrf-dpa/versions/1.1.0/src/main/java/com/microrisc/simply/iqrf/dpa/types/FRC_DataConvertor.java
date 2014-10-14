@@ -51,7 +51,7 @@ public final class FRC_DataConvertor extends AbstractConvertor {
         
         int status = protoValue[STATUS_POS];
         
-        int dataLen = protoValue.length - DATA_POS - 1;
+        int dataLen = protoValue.length - DATA_POS;
         if ( dataLen < 0 ) {
             dataLen = 0;
         }

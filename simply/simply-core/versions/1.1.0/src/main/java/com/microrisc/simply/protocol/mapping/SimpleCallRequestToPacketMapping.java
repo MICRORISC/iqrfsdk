@@ -82,7 +82,7 @@ implements CallRequestToPacketMapping {
      * Serializes specified network ID and returns it.
      * @param netowrkID network ID
      * @return serialized network data
-     * @throws ValueConversionException if some error has occurred during serialization
+     * @throws ValueConversionException if an error has occurred during serialization
      */
     @Override
     public List<PacketFragment> getSerializedNetworkData(String networkId) 
@@ -105,7 +105,7 @@ implements CallRequestToPacketMapping {
      * Serializes specified Node ID and returns it.
      * @param nodeId node ID
      * @return serialized node data
-     * @throws ValueConversionException if some error has occurred during serialization
+     * @throws ValueConversionException if an error has occurred during serialization
      */
     @Override
     public List<PacketFragment> getSerializedNodeData(String nodeId) 

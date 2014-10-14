@@ -3,6 +3,8 @@ package com.microrisc.simply.iqrf.dpa.types;
 
 /**
  * Encapsulates information about subDPA request of IQMesh network.
+ * <p>
+ * <b>ATTENTION: NOT COMPATIBLE WITH DPA 2.01</b>
  * 
  * @author Rostislav Spinar
  */

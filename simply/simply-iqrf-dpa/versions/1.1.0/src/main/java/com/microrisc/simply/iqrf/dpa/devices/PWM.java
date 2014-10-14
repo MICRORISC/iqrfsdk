@@ -25,9 +25,9 @@ extends DPA_Device, DPA_StandardServices, GenericAsyncCallable, MethodIdTransfor
     }
     
     /**
-     * Sets PWM parameters to specified value.
+     * Sets PWM parameters.
      * @param param PWM to use for settting
-     * @return {@code null}, if some error has occurred during processing
+     * @return {@code null}, if an error has occurred during processing
      */
     VoidType set(PWM_Parameters param);
 }

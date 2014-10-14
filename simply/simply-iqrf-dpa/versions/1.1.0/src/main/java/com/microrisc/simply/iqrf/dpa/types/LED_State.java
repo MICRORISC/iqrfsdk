@@ -19,7 +19,7 @@ public enum LED_State {
     }
     
     /**
-     * @return integer value of LED state.
+     * @return integer value of the LED state.
      */
     public int getStateValue() {
         return state;

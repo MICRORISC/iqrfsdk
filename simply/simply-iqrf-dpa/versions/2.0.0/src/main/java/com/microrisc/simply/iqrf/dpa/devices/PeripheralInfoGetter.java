@@ -39,7 +39,7 @@ extends DPA_Device, DPA_StandardServices, GenericAsyncCallable, MethodIdTransfor
      * Synchronous wrapper for {@link #async_getPeripheralEnumeration() 
      * async_getPeripheralEnumeration} method.
      * @return information about peripheral enumeration <br>
-     *         {@code null}, if some error has occurred during processing
+     *         {@code null}, if an error has occurred during processing
      */
     PeripheralEnumeration getPeripheralEnumeration();
     
@@ -56,7 +56,7 @@ extends DPA_Device, DPA_StandardServices, GenericAsyncCallable, MethodIdTransfor
      * async_getPeripheralInfo} method.
      * @param peripheralNumber number of peripheral, whose info is requested
      * @return information about specified peripheral <br>
-     *         {@code null}, if some error has occurred during processing
+     *         {@code null}, if an error has occurred during processing
      */
     PeripheralInfo getPeripheralInfo(int peripheralNumber);
     
@@ -75,7 +75,7 @@ extends DPA_Device, DPA_StandardServices, GenericAsyncCallable, MethodIdTransfor
      * async_getMorePeripheralsInfo} method.
      * @param startPeripheralNumber starting peripheral's number
      * @return information about peripherals <br>
-     *         {@code null}, if some error has occurred during processing
+     *         {@code null}, if an error has occurred during processing
      */
     PeripheralInfo[] getMorePeripheralsInfo(int startPeripheralNumber);
 }

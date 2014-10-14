@@ -27,38 +27,38 @@ extends DPA_Device, DPA_StandardServices, GenericAsyncCallable, MethodIdTransfor
     
     /**
      * Sends method call request for reading from peripheral.
-     * @param address address to read from
+     * @param address address to read data from
      * @param length length of the data in bytes
      * @return unique identifier of sent request
      */
     UUID async_read(int address, int length);
     
     /**
-     * Reads in data of specified length from specified address.
+     * Reads data from memory.
      * Synchronous wrapper for {@link #async_read(int, int) async_read} method.
-     * @param address address to read from
+     * @param address address to read data from
      * @param length length of the data in bytes
      * @return read data <br>
-     *         {@code null}, if some error has occurred during processing
+     *         {@code null}, if an error has occurred during processing
      */
     Short[] read(int address, int length);
     
     
     /**
-     * Sends method call request for writing to peripheral.
-     * @param address address to write the data into
-     * @param data Actual data to be written to the memory
+     * Sends method call request for writing data to peripheral.
+     * @param address address to write data to
+     * @param data actual data to be written to the memory
      * @return unique identifier of sent request
      */
     UUID async_write(int address, short[] data);
     
     /**
-     * Writes specified data to specified address.
+     * Writes data to memory.
      * Synchronous wrapper for {@link #async_write(int, short[]) async_write} method.
-     * @param address address to write the data into
-     * @param data Actual data to be written to the memory
+     * @param address address to write data to
+     * @param data actual data to be written to the memory
      * @return <br>
-     *        {@code null}, if some error has occurred during processing
+     *        {@code null}, if an error has occurred during processing
      */
     VoidType write(int address, short[] data);
 }

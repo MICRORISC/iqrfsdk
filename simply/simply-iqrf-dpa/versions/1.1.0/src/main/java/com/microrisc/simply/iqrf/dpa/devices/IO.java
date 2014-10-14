@@ -30,7 +30,9 @@ extends DPA_Device, DPA_StandardServices, GenericAsyncCallable, MethodIdTransfor
     
     /**
      * Sends method call request for setting the direction of the individual 
-     * IO pins of the individual ports.
+     * IO pins of the individual ports. Additionally, the same request can be
+     * used to setup weak pull-ups at the pins where available. 
+     * See datasheet of the PIC MCU for a description of IO ports.
      * @param directionSettings direction settings
      * @return unique identifier of sent request
      */
@@ -41,14 +43,23 @@ extends DPA_Device, DPA_StandardServices, GenericAsyncCallable, MethodIdTransfor
      * Synchronous wrapper for {@link #async_setDirection() async_setDirection} method.
      * @param directionSettings direction settings
      * @return {@code VoidType} object, if operation has processed correctly <br>
-     *         {@code null}, if some error has occurred during processing
+     *         {@code null}, if an error has occurred during processing
      */
     VoidType setDirection(IO_DirectionSettings[] directionSettings);
     
     
     /**
-     * Sends method call request for setting the output state of the IO pins.
-     * @param ioCommands IO commands
+     * Sends method call request for setting the output state of the IO pins. 
+     * It also allows inserting an active waiting delay between IO pins settings. 
+     * This feature can be used to generate an arbitrary time defined signals 
+     * on the IO pins of the MCU. During the active waiting the device is blocked 
+     * and any network traffic will not be processed. 
+     * <p>
+     * This command is executed after the DPA response is sent back to the device 
+     * that sent the original DPA IO Set request. Therefore if an invalid port is 
+     * specified an error code is not returned inside DPA response but the rest of 
+     * the request execution is skipped.
+     * @param ioCommands IO commands to execute
      * @return unique identifier of sent request
      */
     UUID async_setOutputState(IO_Command[] ioCommands);
@@ -56,16 +67,16 @@ extends DPA_Device, DPA_StandardServices, GenericAsyncCallable, MethodIdTransfor
     /**
      * Sets the output state of the IO pins.
      * Synchronous wrapper for {@link #async_setOutputState() async_setOutputState} method.
-     * @param ioCommands IO commands
+     * @param ioCommands IO commands to execute
      * @return {@code VoidType} object, if operation has processed correctly <br>
-     *         {@code null}, if some error has occurred during processing
+     *         {@code null}, if an error has occurred during processing
      */
     VoidType setOutputState(IO_Command[] ioCommands);
     
     
     /**
      * Sends method call request for getting the input state of all supported 
-     * the MCU ports.
+     * the MCU ports (PORTx).
      * @return unique identifier of sent request
      */
     UUID async_get();
@@ -75,7 +86,7 @@ extends DPA_Device, DPA_StandardServices, GenericAsyncCallable, MethodIdTransfor
      * Synchronous wrapper for {@link #async_getState() async_getState} method.
      * @return array of bytes representing state of port PORTA, PORTB, …, 
      *         ending with the last supported MCU port. <br>
-     *         {@code null}, if some error has occurred during processing
+     *         {@code null}, if an error has occurred during processing
      */
     Short[] get();
 }

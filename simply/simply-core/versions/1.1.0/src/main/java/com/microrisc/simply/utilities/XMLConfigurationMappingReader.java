@@ -27,7 +27,7 @@ public final class XMLConfigurationMappingReader {
      *            of returned mapping
      * @return configuration mapping <br>
      *         empty mapping if no node with {@code sourceNodeName} exist within the source file
-     * @throws ConfigurationException if some error has encountered during reading 
+     * @throws ConfigurationException if an error has encountered during reading 
      *                               source file
      */
     public static Map<String, Configuration> getConfigMapping(

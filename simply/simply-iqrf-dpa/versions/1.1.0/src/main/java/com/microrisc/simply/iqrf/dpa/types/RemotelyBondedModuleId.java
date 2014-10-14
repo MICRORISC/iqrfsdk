@@ -16,8 +16,8 @@ public class RemotelyBondedModuleId {
     
     /**
      * Creates new remotely bonded module ID.
-     * @param moduleId module ID
-     * @param userData user data
+     * @param moduleId module ID of remotely bonded node.
+     * @param userData bonding user data specified at Reset Custom DPA Handler event
      */
     public RemotelyBondedModuleId(short[] moduleId, short[] userData) {
         this.moduleId = new short[moduleId.length];

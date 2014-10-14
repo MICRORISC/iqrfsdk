@@ -34,7 +34,7 @@ extends DPA_Device, DPA_StandardServices, GenericAsyncCallable, MethodIdTransfor
      * Reads on-board thermometer sensor value.
      * Synchronous wrapper for {@link #async_getState() async_getState} method.
      * @return actual state of Thermometer<br>
-     *         {@code null}, if some error has occurred during processing
+     *         {@code null}, if an error has occurred during processing
      */
     Thermometer_values get();
 }

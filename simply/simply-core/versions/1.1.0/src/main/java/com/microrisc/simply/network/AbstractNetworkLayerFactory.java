@@ -12,7 +12,7 @@ public abstract class AbstractNetworkLayerFactory<T extends Object, U extends Ne
      * @param connectionStorage network connection storage
      * @param T configuration of network layer to create
      * @return network layer implementation
-     * @throws Exception if some error has occured
+     * @throws Exception if an error has occured
      */
     public abstract U getNetworkLayer(
             NetworkConnectionStorage connectionStorage, 

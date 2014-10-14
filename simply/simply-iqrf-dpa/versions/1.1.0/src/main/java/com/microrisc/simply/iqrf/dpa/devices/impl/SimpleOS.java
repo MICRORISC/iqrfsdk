@@ -96,6 +96,10 @@ extends DPA_DeviceObject implements OS {
         return getCallResult(uid, VoidType.class, getDefaultWaitingTimeout());
     }
     
+    /**
+     * NOT SUPPORTED. Throws {@code UnsupportedOperationException} exception. 
+     * @throws UnsupportedOperationException
+     */
     @Override
     public VoidType batch() {
         throw new UnsupportedOperationException("Currently not implemented");

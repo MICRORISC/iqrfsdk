@@ -15,7 +15,7 @@ import com.microrisc.simply.iqrf.types.VoidType;
  * DPA OS Device Interface.
  * <p>
  * IMPORTANT NOTE: <br>
- * Every method returns {@code NULL}, if some error has occurred during processing
+ * Every method returns {@code NULL}, if an error has occurred during processing
  * of this method.
  * 
  * @author Michal Konopa
@@ -38,13 +38,13 @@ extends DPA_Device, DPA_StandardServices, GenericAsyncCallable, MethodIdTransfor
     }
     
     /**
-     * Reads information about module and OS.
+     * Returns some useful system information about the node.
      * @return information about module and OS
      */
     OsInfo read();
     
     /**
-     * Resets transceiver module.
+     * Forces TR transceiver module to carry out reset.
      * @return {@code VoidType} object, if method call has processed allright
      */
     VoidType reset();
@@ -56,13 +56,16 @@ extends DPA_Device, DPA_StandardServices, GenericAsyncCallable, MethodIdTransfor
     HWP_Configuration readHWPConfiguration();
     
     /**
-     * Puts transceiver module into RFPGM mode.
+     * Puts device into RFPGM mode with approx. 1 minute timeout. The device 
+	 * is reset when RFPGM process is finished or if it ends due to timeout. 
+	 * RFPGM runs at the same main channel (configured at HWP configuration) 
+	 * the network runs at.
      * @return {@code VoidType} object, if method call has processed allright
      */
     VoidType runRFPGM();
     
     /**
-     * Putting device into sleep mode.
+     * Puts device into sleep (power saving) mode.
      * @param sleepInfo information about sleeping
      * @return {@code VoidType} object, if method call has processed allright
      */

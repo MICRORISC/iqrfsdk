@@ -44,7 +44,7 @@ extends DPA_Device, DPA_StandardServices, GenericAsyncCallable, MethodIdTransfor
      * Synchronous wrapper for {@link #async_setDirection() async_setDirection} method.
      * @param directionSettings direction settings
      * @return {@code VoidType} object, if operation has processed correctly <br>
-     *         {@code null}, if some error has occurred during processing
+     *         {@code null}, if an error has occurred during processing
      */
     VoidType setDirection(IO_DirectionSettings[] directionSettings);
     
@@ -61,7 +61,7 @@ extends DPA_Device, DPA_StandardServices, GenericAsyncCallable, MethodIdTransfor
      * Synchronous wrapper for {@link #async_setOutputState() async_setOutputState} method.
      * @param ioCommands IO commands
      * @return {@code VoidType} object, if operation has processed correctly <br>
-     *         {@code null}, if some error has occurred during processing
+     *         {@code null}, if an error has occurred during processing
      */
     VoidType setOutputState(IO_Command[] ioCommands);
     
@@ -78,7 +78,7 @@ extends DPA_Device, DPA_StandardServices, GenericAsyncCallable, MethodIdTransfor
      * Synchronous wrapper for {@link #async_getState() async_getState} method.
      * @return array of bytes representing state of port PORTA, PORTB, ..., 
      *         ending with the last supported MCU port. <br>
-     *         {@code null}, if some error has occurred during processing
+     *         {@code null}, if an error has occurred during processing
      */
     Short[] get();
 }

@@ -14,7 +14,7 @@ import com.microrisc.simply.iqrf.types.VoidType;
  * DPA Node Device Interface.
  * <p>
  * IMPORTANT NOTE: <br>
- * Every method returns {@code NULL}, if some error has occurred during processing
+ * Every method returns {@code NULL}, if an error has occurred during processing
  * of this method.
  * 
  * @author Michal Konopa
@@ -43,7 +43,9 @@ extends DPA_Device, DPA_StandardServices, GenericAsyncCallable, MethodIdTransfor
     NodeStatusInfo read();
     
     /**
-     * The bond is marked as unbonded (removed from network) using 
+     * Removes bond on node side.
+	 * <p>
+	 * The bond is marked as unbonded (removed from network) using 
      * removeBond() IQRF call. Bonding state of the node at the coordinator side 
      * is not effected at all.
      * @return {@code VoidType} object, if method call has processed allright
@@ -65,7 +67,7 @@ extends DPA_Device, DPA_StandardServices, GenericAsyncCallable, MethodIdTransfor
     /**
      * Returns module ID of the remotely bonded node.
      * @return module ID of the remotely bonded node. <br>
-     *         {@code null}, if some error occurrs during processing
+     *         {@code null}, if an error occurrs during processing
      */
     RemotelyBondedModuleId readRemotelyBondedModuleId();
     

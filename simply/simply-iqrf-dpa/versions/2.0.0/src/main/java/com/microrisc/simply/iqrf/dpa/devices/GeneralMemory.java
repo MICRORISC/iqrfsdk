@@ -39,7 +39,7 @@ extends DPA_Device, DPA_StandardServices, GenericAsyncCallable, MethodIdTransfor
      * @param address address to read data from
      * @param length length of the data in bytes
      * @return read data <br>
-     *         {@code null}, if some error has occurred during processing
+     *         {@code null}, if an error has occurred during processing
      */
     Short[] read(int address, int length);
     
@@ -58,7 +58,7 @@ extends DPA_Device, DPA_StandardServices, GenericAsyncCallable, MethodIdTransfor
      * @param address address to write data to
      * @param data actual data to be written to the memory
      * @return <br>
-     *        {@code null}, if some error has occurred during processing
+     *        {@code null}, if an error has occurred during processing
      */
     VoidType write(int address, short[] data);
 }

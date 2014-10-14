@@ -25,16 +25,16 @@ extends DPA_Device, DPA_StandardServices, GenericAsyncCallable, MethodIdTransfor
     }
     
     /**
-     * Sends method call request for getting actual state of Thermometer.  
+     * Sends method call request for reading on-board thermometer sensor value.  
      * @return unique identifier of sent request
      */
     UUID async_get();
     
     /**
-     * Gets actual state of Thermometer.
+     * Reads on-board thermometer sensor value.
      * Synchronous wrapper for {@link #async_getState() async_getState} method.
      * @return actual state of Thermometer<br>
-     *         {@code null}, if some error has occurred during processing
+     *         {@code null}, if an error has occurred during processing
      */
     Thermometer_values get();
 }

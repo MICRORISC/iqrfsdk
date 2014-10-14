@@ -49,8 +49,7 @@ implements
         AsynchronousMessagesGenerator<DPA_AsynchronousMessage>
 {
     /** Logger. */
-    private static final Logger logger = 
-            LoggerFactory.getLogger(DPA_Connector.class);
+    private static final Logger logger = LoggerFactory.getLogger(DPA_Connector.class);
     
     
     /**
@@ -89,7 +88,7 @@ implements
         
         
         public AsyncMsgGeneratorImpl() {
-            this.regListeners = new LinkedList<AsynchronousMessagesGeneratorListener<DPA_AsynchronousMessage>>();
+            this.regListeners = new LinkedList<>();
         }
         
         public void registerListener(
@@ -123,7 +122,7 @@ implements
         public List<AsynchronousMessagesGeneratorListener<DPA_AsynchronousMessage>> getListeners() 
         {
             List<AsynchronousMessagesGeneratorListener<DPA_AsynchronousMessage>> listToReturn 
-                    = new LinkedList<AsynchronousMessagesGeneratorListener<DPA_AsynchronousMessage>>();
+                    = new LinkedList<>();
             synchronized ( synchroRegListeners ) {
                 listToReturn.addAll(regListeners);
             }
@@ -181,22 +180,12 @@ implements
                 
                 // pause between sending request to protocol layer
                 if ( sleepTime > 0) {
-                    try {
-                        Thread.sleep(sleepTime);
-                    } catch ( InterruptedException ex ) {
-                        logger.error("Send request to protocol layer - pause interrupted");
-                        throw ex;
-                    }
+                    Thread.sleep(sleepTime);
                 }
- 
-                try {
-                    protocolLayerService.sendRequest(request);
-                    sentOK = true;
-                } catch ( SimplyException ex ) {
-                    logger.error("Send request to protocol layer error", ex);
-                    throw ex;
-                }
-
+                
+                protocolLayerService.sendRequest(request);
+                sentOK = true;
+               
                 lastSendTime = System.currentTimeMillis();                
                 sendAttempt++;
             }
@@ -211,7 +200,7 @@ implements
         private CallRequestProcessingInfo createCallRequestProcessingInfo( 
                 BaseCallResponse response 
         ) {
-            logger.debug("createCallRequestProcessingInfo - start: ", response);
+            logger.debug("createCallRequestProcessingInfo - start: {}", response);
             
             CallResult callResult = new CallResult( response.getMainData(), 
                     response.getAdditionalData()
@@ -284,7 +273,7 @@ implements
         private void processAllIncommingAsynchronousMessages() {
             logger.debug("processAllIncommingAsynchronousMessages - start:");
             
-            while ( asyncMsgFromProtoLayer.isEmpty() ) {
+            while ( !asyncMsgFromProtoLayer.isEmpty() ) {
                 DPA_AsynchronousMessage asyncMsg = asyncMsgFromProtoLayer.poll();
                 for ( AsynchronousMessagesGeneratorListener regListener : 
                         asyncMsgGenerator.getListeners()
@@ -554,6 +543,7 @@ implements
                     requestSentOk = true;
                 } catch ( Exception ex ) {
                     // dispatching error
+                    logger.error("Send request to protocol layer error", ex);
                     currProcRequestInfo.setAll( lastRequestToProc.callRequest.getId(), ERROR, 
                             null, new DispatchingRequestToProtocolLayerError(ex)
                     );
@@ -622,8 +612,7 @@ implements
     /** 
      * Queue of incomming call requests to process.
      */
-    private Queue<CallRequestToProcess> requestsToProcess = 
-            new ConcurrentLinkedQueue<CallRequestToProcess>();
+    private Queue<CallRequestToProcess> requestsToProcess = new ConcurrentLinkedQueue<>();
     
     /**
      * Synchronization object for {@code requestsToProcess}. 
@@ -634,7 +623,7 @@ implements
     /**
      * Idle requests.
      */
-    private Queue<IdleRequest> idleRequests = new ConcurrentLinkedQueue<IdleRequest>();
+    private Queue<IdleRequest> idleRequests = new ConcurrentLinkedQueue<>();
     
     /**
      * Synchronization object for {@code idleRequests}. 
@@ -646,7 +635,7 @@ implements
     /** 
      * Queue of messages received from protocol layer.  
      */  
-    private Queue<AbstractMessage> msgFromProtoLayer = new ConcurrentLinkedQueue<AbstractMessage>(); 
+    private Queue<AbstractMessage> msgFromProtoLayer = new ConcurrentLinkedQueue<>(); 
     
     /**
      * Synchronization object for messages incomming from protocol layer.
@@ -665,7 +654,7 @@ implements
      * Queue of asynchronous messages received from protocol layer.  
      */  
     private Queue<DPA_AsynchronousMessage> asyncMsgFromProtoLayer = 
-            new ConcurrentLinkedQueue<DPA_AsynchronousMessage>();
+            new ConcurrentLinkedQueue<>();
     
     /**
      * Synchronization object for asynchronous messages incomming from protocol layer.
@@ -751,7 +740,7 @@ implements
         logArgs[1] = deviceIface.getName();
         logArgs[2] = methodId;
         logArgs[3] = args;
-        logArgs[4] = new Long( maxProcTime );
+        logArgs[4] = maxProcTime;
         logger.debug("callMethod - start: devObject={}, devIface={}, methodId={}, "
                 + "args={}, timeout={}", logArgs
         );
@@ -827,7 +816,7 @@ implements
         logArgs[2] = deviceIface;
         logArgs[3] = methodId;
         logArgs[4] = args;
-        logArgs[5] = new Long( maxProcTime );
+        logArgs[5] = maxProcTime;
         logger.debug("broadcastCallMethod - start: connListener={}, networkId={}, "
                 + "devIface={}, methodId={}, args={}, maxProcTime={}", logArgs
         );

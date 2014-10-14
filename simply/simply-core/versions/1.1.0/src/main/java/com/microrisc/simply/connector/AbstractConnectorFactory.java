@@ -18,7 +18,7 @@ public abstract class AbstractConnectorFactory
      * @param protocolLayer protocol layer to use
      * @param configuration configuration of connector
      * @return network layer implementation
-     * @throws Exception if some error has occured
+     * @throws Exception if an error has occured
      */
     public abstract V getConnector(
             T protocolLayer, 

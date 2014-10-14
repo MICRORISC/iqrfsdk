@@ -24,7 +24,7 @@ public interface ProtocolLayerService {
     /**
      * Sends specified call request to protocol layer.
      * @param request call request to send
-     * @throws SimplyException if some error has occured during request sending
+     * @throws SimplyException if an error has occured during request sending
      */
     public void sendRequest(CallRequest request) throws SimplyException;
 }

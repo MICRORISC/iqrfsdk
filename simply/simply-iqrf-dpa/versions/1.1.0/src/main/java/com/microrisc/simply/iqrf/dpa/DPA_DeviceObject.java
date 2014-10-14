@@ -57,11 +57,11 @@ implements DPA_Device, DPA_StandardServices {
     
     @Override
     public DPA_AdditionalInfo getDPA_AdditionalInfo(UUID callId) {
-        logger.debug(logPrefix + "getDPA_AdditionalInfo - start: callId={}", callId);
+        logger.debug("{}getDPA_AdditionalInfo - start: callId={}", logPrefix, callId);
         
         Object addInfo = getCallResultAdditionalInfo(callId);
-        if (addInfo == null) {
-            logger.debug(logPrefix + "getDPA_AdditionalInfo - end: null");
+        if ( addInfo == null ) {
+            logger.debug("{}getDPA_AdditionalInfo - end: null", logPrefix);
             return null;
         }
         
@@ -71,17 +71,17 @@ implements DPA_Device, DPA_StandardServices {
         
         DPA_AdditionalInfo dpaAddInfo = (DPA_AdditionalInfo) addInfo;
         
-        logger.debug(logPrefix + "getDPA_AdditionalInfo - end: {}", dpaAddInfo);
+        logger.debug("{}getDPA_AdditionalInfo - end: {}", logPrefix, dpaAddInfo);
         return dpaAddInfo;
     }
 
     @Override
     public DPA_AdditionalInfo getDPA_AdditionalInfoOfLastCall() {
-        logger.debug(logPrefix + "getDPA_AdditionalInfoOfLastCall - start: ");
+        logger.debug("{}getDPA_AdditionalInfoOfLastCall - start: ", logPrefix);
         
         Object addInfo = getCallResultAdditionalInfoOfLastCall();
-        if (addInfo == null) {
-            logger.debug(logPrefix + "getDPA_AdditionalInfoOfLastCall - end: null");
+        if ( addInfo == null ) {
+            logger.debug("{}getDPA_AdditionalInfoOfLastCall - end: null", logPrefix);
             return null;
         }
         
@@ -91,7 +91,7 @@ implements DPA_Device, DPA_StandardServices {
         
         DPA_AdditionalInfo dpaAddInfo = (DPA_AdditionalInfo) addInfo;
         
-        logger.debug(logPrefix + "getDPA_AdditionalInfoOfLastCall - end: {}", dpaAddInfo);
+        logger.debug("{}getDPA_AdditionalInfoOfLastCall - end: {}", logPrefix, dpaAddInfo);
         return dpaAddInfo;
     }
 

@@ -16,7 +16,7 @@ public interface GenericAsyncCallable {
      * @param methodId ID of a called method
      * @param args arguments of the method
      * @return unique identifier of the method call <br>
-     *         {@code null} if some error has occured during this call processing
+     *         {@code null} if an error has occured during this call processing
      */
     UUID call(Object methodId, Object[] args);
 }

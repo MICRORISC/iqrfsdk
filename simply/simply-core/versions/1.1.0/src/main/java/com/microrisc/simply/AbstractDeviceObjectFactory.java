@@ -19,7 +19,7 @@ public abstract class AbstractDeviceObjectFactory
      * @param connector connector to use
      * @param configuration configuration settings
      * @return device object
-     * @throws Exception if some error has occured
+     * @throws Exception if an error has occured
      */
     public abstract V getDeviceObject(
             String networkId, 

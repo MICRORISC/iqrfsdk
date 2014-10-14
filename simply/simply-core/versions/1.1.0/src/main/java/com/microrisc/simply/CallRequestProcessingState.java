@@ -20,6 +20,6 @@ public enum CallRequestProcessingState {
     /** Processing of a call request has been cancelled. */
     CANCELLED,
     
-    /** Some error has encountered during processing of a call request. */
+    /** an error has encountered during processing of a call request. */
     ERROR
 }

@@ -19,9 +19,13 @@ public class IO_DirectionSettings {
     
     /**
      * Creates new objects encapsulating IO settings.
-     * @param port Port to setup a direction to.
+     * @param port a)Specifies port to setup a direction to. 0x00=TRISA, 0x01=TRISB, <br>
+     *                  or <br>
+     *             b) Specifies port to setup a pull-up. 0x10=TRISA, 0x11=TRISB, …
      * @param mask Masks pins of the port.
-     * @param value Actual direction bits for the masked pins. 0=output, 1=input.
+     * @param value a) Actual direction bits for the masked pins. 0=output, 1=input.<br>
+     *                  or <br>
+     *              b) Pull-up state. 0=disabled, 1=enabled.
      */
     public IO_DirectionSettings(int port, int mask, int value) {
         this.port = port;
@@ -30,7 +34,8 @@ public class IO_DirectionSettings {
     }
 
     /**
-     * @return port to setup a direction to. 0=TRISA, 1=TRISB, …
+     * @return port to setup a direction to. 0=TRISA, 1=TRISB, …<br>
+     *         or port to setup a pull-up. 0x10=TRISA, 0x11=TRISB, …
      */
     public int getPort() {
         return port;
@@ -44,7 +49,8 @@ public class IO_DirectionSettings {
     }
 
     /**
-     * @return actual direction bits for the masked pins. 0=output, 1=input.
+     * @return actual direction bits for the masked pins. 0=output, 1=input. <br>
+     *         or port to setup a pull-up. 0x10=TRISA, 0x11=TRISB, …
      */
     public int getValue() {
         return value;

@@ -11,7 +11,7 @@ import com.microrisc.simply.iqrf.types.VoidType;
 
 /**
  * DPA UART Device Interface.
- * All methods return {@code null} if some error has occurred during processing
+ * All methods return {@code null} if an error has occurred during processing
  * of corresponding method call.
  * 
  * @author Michal Konopa
@@ -30,6 +30,7 @@ extends DPA_Device, DPA_StandardServices, GenericAsyncCallable, MethodIdTransfor
     
     /**
      * Opens UART at specified baudrate and flushes internal read and write buffers.
+     * The size of the read and write buffers is 32 bytes.
      * @param baudRate baudrate to use
      * @return {@code VoidType} object, if method call has processed allright
      */
@@ -43,6 +44,7 @@ extends DPA_Device, DPA_StandardServices, GenericAsyncCallable, MethodIdTransfor
     
     /**
      * Reads and/or writes data to/from UART interface.
+     * If UART is not open, the request fails with ERROR_FAIL.
      * @param readTimeout specifies timeout in 10 ms unit to wait for data to 
      *        be read from UART after data is (optionally) written. <br>
      *        {@code 0xff} specifies that no data should be read.

@@ -53,14 +53,14 @@ public class BondedNodesConvertor extends PrimitiveConvertor {
         final int MAX_BONDED_NODE_NUMBER = 0xEF; 
         final int MAX_BYTES_USED = MAX_BONDED_NODE_NUMBER / 8;
         
-        List<Integer> bondedNodesList = new LinkedList<Integer>();
+        List<Integer> bondedNodesList = new LinkedList<>();
         
-        for (int byteId = 0; byteId < 32; byteId++) {
-            if (byteId >= MAX_BYTES_USED) {
+        for ( int byteId = 0; byteId < 32; byteId++ ) {
+            if ( byteId >= MAX_BYTES_USED ) {
                 break;
             }
             
-            if (protoValue[byteId] == 0) {
+            if ( protoValue[byteId] == 0 ) {
                 continue;
             }
             

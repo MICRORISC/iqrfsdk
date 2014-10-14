@@ -15,7 +15,7 @@ public abstract class AbstractInitObjectsFactory
      * Returns Simply initialization objects.
      * @param configuration configuration of initialization objects
      * @return Simply initialization objects
-     * @throws Exception if some error has occured
+     * @throws Exception if an error has occured
      */
     public abstract U getInitObjects(T configuration) throws Exception;
 }

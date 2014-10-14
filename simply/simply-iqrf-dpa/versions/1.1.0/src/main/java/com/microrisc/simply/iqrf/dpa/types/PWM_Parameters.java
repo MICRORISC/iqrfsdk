@@ -82,6 +82,7 @@ public class PWM_Parameters {
     
     /**
      * Creates new PWM parameters object.
+     * When all 3 parameters equal to 0, PWM is stopped.
      * @param prescaler prescaler
      * @param period period
      * @param dutyCycle duty cycle
@@ -97,6 +98,7 @@ public class PWM_Parameters {
     
     /**
      * Creates new PWM parameters object.
+     * When all 3 parameters equal to 0, PWM is stopped.
      * @param prescalerValue prescaler value
      * @param period period
      * @param dutyCycle duty cycle

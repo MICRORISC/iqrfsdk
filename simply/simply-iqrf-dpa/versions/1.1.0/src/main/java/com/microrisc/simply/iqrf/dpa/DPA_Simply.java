@@ -6,7 +6,6 @@ import com.microrisc.simply.Simply;
 import com.microrisc.simply.asynchrony.AsynchronousMessagingManager;
 import com.microrisc.simply.iqrf.dpa.asynchrony.DPA_AsynchronousMessage;
 import com.microrisc.simply.iqrf.dpa.asynchrony.DPA_AsynchronousMessageProperties;
-import com.microrisc.simply.iqrf.dpa.asynchrony.DPA_AsynchronousMessagingManager;
 import com.microrisc.simply.iqrf.dpa.broadcasting.services.BroadcastServices;
 
 

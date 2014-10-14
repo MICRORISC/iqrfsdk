@@ -26,7 +26,7 @@ public interface NetworkLayerService {
     /**
      * Sends specified network data to the network.
      * @param data data to send
-     * @throws NetworkLayerException if some error has occured during sending
+     * @throws NetworkLayerException if an error has occured during sending
      *         the data
      */
     void sendData(NetworkData data) throws NetworkLayerException;

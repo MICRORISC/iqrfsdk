@@ -14,7 +14,7 @@ import com.microrisc.simply.iqrf.types.VoidType;
  * DPA Node Device Interface.
  * <p>
  * IMPORTANT NOTE: <br>
- * Every method returns {@code NULL}, if some error has occurred during processing
+ * Every method returns {@code NULL}, if an error has occurred during processing
  * of this method.
  * 
  * @author Michal Konopa
@@ -38,16 +38,16 @@ extends DPA_Device, DPA_StandardServices, GenericAsyncCallable, MethodIdTransfor
     
     /**
      * Returns IQMESH specific node information.
-     * Synchronous wrapper for {@link #async_read() 
-     * async_read} method.
      * @return node's information
      */
     NodeStatusInfo read();
     
     /**
      * Removes bond on node side.
-     * Synchronous wrapper for {@link #async_removeBond() 
-     * async_removeBond} method.
+	 * <p>
+	 * The bond is marked as unbonded (removed from network) using 
+     * removeBond() IQRF call. Bonding state of the node at the coordinator side 
+     * is not effected at all.
      * @return {@code VoidType} object, if method call has processed allright
      */
     VoidType removeBond();
@@ -56,7 +56,7 @@ extends DPA_Device, DPA_StandardServices, GenericAsyncCallable, MethodIdTransfor
      * Puts node into a mode, that provides a remote bonding of maximum one new node.
      * @param bondingMask see IQRF OS User's and Reference guides (remote bonding, 
      *        function bondNewNodeRemote).
-     * @param control 0 enables remote bonding mode. If enabled then previously 
+     * @param control bit.0 enables remote bonding mode. If enabled then previously 
      *        bonded node module ID is forgotten.
      * @param userData optional data that can be used at Reset Custom DPA 
      *        Handler event.
@@ -67,7 +67,7 @@ extends DPA_Device, DPA_StandardServices, GenericAsyncCallable, MethodIdTransfor
     /**
      * Returns module ID of the remotely bonded node.
      * @return module ID of the remotely bonded node. <br>
-     *         {@code null}, if some error occurrs during processing
+     *         {@code null}, if an error occurrs during processing
      */
     RemotelyBondedModuleId readRemotelyBondedModuleId();
     
@@ -85,7 +85,7 @@ extends DPA_Device, DPA_StandardServices, GenericAsyncCallable, MethodIdTransfor
     VoidType removeBondAddress();
     
     /**
-     * Allows to read node network info data that can be then restored 
+     * Allows reading node network info data that can be then restored 
      * to another node in order to make a clone of the original node.
      * @param index index of the block of data
      * @return one block of the node network info data
@@ -93,7 +93,7 @@ extends DPA_Device, DPA_StandardServices, GenericAsyncCallable, MethodIdTransfor
     Short[] backup(int index);
     
     /**
-     * Allows to write previously backed up node network data to the same 
+     * Allows writing previously backed up node network data to the same 
      * or another node device. To execute the full restore all data blocks 
      * (in any order) obtained via Backup commands must be written to the device.
      * @param networkData one block of the node network info data previously 

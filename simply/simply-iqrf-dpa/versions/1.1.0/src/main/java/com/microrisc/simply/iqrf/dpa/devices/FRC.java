@@ -12,7 +12,7 @@ import java.util.UUID;
 
 /**
  * DPA FRC Device Interface.
- * All methods return {@code null} if some error has occurred during processing
+ * All methods return {@code null} if an error has occurred during processing
  * of corresponding method call.
  * 
  * @author Rostislav Spinar

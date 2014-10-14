@@ -19,7 +19,7 @@ public final class Serializer {
      * @param valueMapping value mapping, according to which serialize the value 
      * @param value value to serialize
      * @return serialized value
-     * @throws ValueConversionException if some error has occurred during conversion
+     * @throws ValueConversionException if an error has occurred during conversion
      */
     static public short[] serialize(ValueToPacketMapping valueMapping, Object value) 
             throws ValueConversionException {
