@@ -65,7 +65,7 @@ extends DPA_DeviceObject implements EEEPROM {
         checkBlockNumber(blockNumber);
         checkDataLenToRead(length);
         return dispatchCall(
-                "1", new Object[] { getHwProfile(), new Integer(blockNumber), new Integer(length) }
+                "1", new Object[] { getHwProfile(), blockNumber, length}
         );
     }
     
@@ -74,7 +74,7 @@ extends DPA_DeviceObject implements EEEPROM {
         checkBlockNumber(blockNumber);
         checkDataLenToRead(length);
         UUID uid = dispatchCall(
-                "1", new Object[] { getHwProfile(), new Integer(blockNumber), new Integer(length) },
+                "1", new Object[] { getHwProfile(), blockNumber, length},
                 getDefaultWaitingTimeout()
         );
         if ( uid == null ) {
@@ -97,8 +97,7 @@ extends DPA_DeviceObject implements EEEPROM {
         checkBlockNumber(blockNumber);
         checkDataToWrite(data);
         return dispatchCall(
-                "2", new Object[] { getHwProfile(), new Integer(blockNumber), 
-                data }
+                "2", new Object[] { getHwProfile(), blockNumber, data }
         );
     }
     
@@ -107,8 +106,8 @@ extends DPA_DeviceObject implements EEEPROM {
         checkBlockNumber(blockNumber);
         checkDataToWrite(data);
         UUID uid = dispatchCall(
-                "2", new Object[] { getHwProfile(), new Integer(blockNumber), 
-                data }, getDefaultWaitingTimeout()
+                "2", new Object[] { getHwProfile(), blockNumber, data }, 
+                getDefaultWaitingTimeout()
         );
         if ( uid == null ) {
             return null;

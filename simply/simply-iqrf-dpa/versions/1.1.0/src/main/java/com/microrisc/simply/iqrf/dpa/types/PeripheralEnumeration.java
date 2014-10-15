@@ -82,6 +82,15 @@ public final class PeripheralEnumeration {
         return sb.toString();
     }
     
+    /**
+     * Creates new object of {@code PeripheralEnumeration}.
+     * @param dpaProtocolVersion DPA protocol version
+     * @param userDefPeripheralsNum number of user defined peripherals
+     * @param defaultPeripherals numbers of enabled default peripherals
+     * @param hwProfleType HW profile type
+     * @param hwProfileVersion HW profile version
+     * @param flags flags
+     */
     public PeripheralEnumeration(DPA_ProtocolVersion dpaProtocolVersion, 
             short userDefPeripheralsNum, int[] defaultPeripherals, int hwProfleType, 
             int hwProfileVersion, int flags 

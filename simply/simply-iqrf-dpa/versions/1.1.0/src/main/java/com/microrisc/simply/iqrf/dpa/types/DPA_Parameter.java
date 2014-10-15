@@ -55,7 +55,7 @@ public class DPA_Parameter {
      * activities:
      * - Red LED flashes: when Node or Coordinator receive network message <br>
      * - Green LED flashes: when Coordinator sends network message or when Node 
-     *                      routes network message <br>
+     *                      routes network message
      */
     private boolean isLedActivityOn = false;
     

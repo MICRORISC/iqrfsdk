@@ -2,7 +2,7 @@
 package com.microrisc.simply.iqrf.dpa.types;
 
 /**
- * Encapsulates inforamtion for putting device into sleep mode.
+ * Encapsulates information for putting device into sleep mode.
  * 
  * @author Michal Konopa
  */

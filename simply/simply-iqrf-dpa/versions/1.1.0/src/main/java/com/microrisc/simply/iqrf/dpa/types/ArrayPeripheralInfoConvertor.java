@@ -51,7 +51,7 @@ public final class ArrayPeripheralInfoConvertor extends ArrayConvertor {
                     + "argument length");
         }
         
-        List<PeripheralInfo> retValues = new LinkedList<PeripheralInfo>();
+        List<PeripheralInfo> retValues = new LinkedList<>();
         for (int byteId = 0; byteId < protoValue.length; byteId+= elemSize) {
             short[] elem = new short[elemSize];
             System.arraycopy(protoValue, byteId, elem, 0, elemSize);

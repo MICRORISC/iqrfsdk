@@ -65,7 +65,7 @@ extends DPA_DeviceObject implements GeneralMemory {
         checkAddress(address);
         checkDataLenToRead(length);
         return dispatchCall(
-                "1", new Object[] { getHwProfile(), new Integer(address), new Integer(length) }
+                "1", new Object[] { getHwProfile(), address, length }
         );
     }
     
@@ -74,7 +74,7 @@ extends DPA_DeviceObject implements GeneralMemory {
         checkAddress(address);
         checkDataLenToRead(length);
         UUID uid = dispatchCall(
-                "1", new Object[] { getHwProfile(), new Integer(address), new Integer(length) },
+                "1", new Object[] { getHwProfile(), address, length },
                 getDefaultWaitingTimeout()
         );
         if ( uid == null ) {
@@ -97,7 +97,7 @@ extends DPA_DeviceObject implements GeneralMemory {
         checkAddress(address);
         checkDataToWrite(data);
         return dispatchCall(
-                "2", new Object[] { getHwProfile(), new Integer(address), data }
+                "2", new Object[] { getHwProfile(), address, data }
         );
     }
     
@@ -106,7 +106,7 @@ extends DPA_DeviceObject implements GeneralMemory {
         checkAddress(address);
         checkDataToWrite(data);
         UUID uid = dispatchCall(
-                "2", new Object[] { getHwProfile(), new Integer(address), data }, 
+                "2", new Object[] { getHwProfile(), address, data }, 
                 getDefaultWaitingTimeout()
         );
         if ( uid == null ) {

@@ -65,7 +65,7 @@ extends DPA_DeviceObject implements SPI {
         checkReadTimeout(readTimeout);
         checkDataToWrite(data);
         UUID uid = dispatchCall(
-                "2", new Object[] { getHwProfile(), new Integer(readTimeout), data }, 
+                "2", new Object[] { getHwProfile(), readTimeout, data }, 
                 getDefaultWaitingTimeout() 
         );
         if ( uid == null ) {

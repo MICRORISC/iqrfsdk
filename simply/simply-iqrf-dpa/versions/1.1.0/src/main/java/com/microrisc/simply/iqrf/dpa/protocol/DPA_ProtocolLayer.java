@@ -37,8 +37,7 @@ import org.slf4j.LoggerFactory;
  */
 public final class DPA_ProtocolLayer extends AbstractProtocolLayer {
     /** Logger. */
-    private static final Logger logger = 
-            LoggerFactory.getLogger(DPA_ProtocolLayer.class);
+    private static final Logger logger = LoggerFactory.getLogger(DPA_ProtocolLayer.class);
     
     /**
      * Binds sent requests with theirs time of sending.
@@ -195,7 +194,7 @@ public final class DPA_ProtocolLayer extends AbstractProtocolLayer {
     }
     
     /** List of broadcast requests, which was sent to network layer. */
-    private Queue<TimeRequest> sentBroadcastRequests = new ConcurrentLinkedQueue<TimeRequest>();
+    private Queue<TimeRequest> sentBroadcastRequests = new ConcurrentLinkedQueue<>();
     
     /** Synchronization object for {@code sentBroadcastRequest} data structure. */
     private final Object synchroSentBroadcastRequest = new Object();
@@ -312,13 +311,7 @@ public final class DPA_ProtocolLayer extends AbstractProtocolLayer {
         logger.debug("sendRequest - start: request={}", request);
         
         // conversion to format used by application protocol
-        short[] protoMsg = null;
-        try {
-            protoMsg = msgConvertor.convertToProtoFormat(request);
-        } catch ( SimplyException e ) {
-            logger.error("sendRequest - converting to protocol format error: " + e.getMessage());
-            throw e;
-        }
+        short[] protoMsg = msgConvertor.convertToProtoFormat(request);
         
         if ( request instanceof BroadcastRequest ) {
             synchronized ( synchroSentBroadcastRequest ) {

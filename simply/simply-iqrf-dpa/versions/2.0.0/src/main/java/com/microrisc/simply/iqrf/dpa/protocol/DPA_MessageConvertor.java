@@ -19,6 +19,7 @@ import com.microrisc.simply.protocol.mapping.PacketFragment;
 import com.microrisc.simply.protocol.mapping.PacketToCallResponseMapping;
 import com.microrisc.simply.protocol.mapping.ProtocolMapping;
 import com.microrisc.simply.types.ValueConversionException;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import org.slf4j.Logger;
@@ -115,7 +116,9 @@ public final class DPA_MessageConvertor extends SimpleMessageConvertor {
         
         String nodeId = devObjMapping.getNodeId(protoMsg);
         if ( nodeId == null ) {
-            throw new ValueConversionException("Node Id was not found, source packet: " + protoMsg);
+            throw new ValueConversionException(
+                "Node Id was not found, source packet: " + Arrays.toString(protoMsg)
+            );
         }
         
         Class devIface = null;
@@ -125,14 +128,16 @@ public final class DPA_MessageConvertor extends SimpleMessageConvertor {
             devIface = devObjMapping.getDeviceInterface(protoMsg);
             if ( devIface == null ) {
                 throw new ValueConversionException(
-                        "Device Interface was not found source packet: " + protoMsg
+                    "Device Interface was not found source packet: " + Arrays.toString(protoMsg)
                 );
             }
         }
         
         String methodId = devObjMapping.getMethodId(devIface, protoMsg);
         if ( methodId == null ) {
-            throw new ValueConversionException("Method was not found, source packet: " + protoMsg);
+            throw new ValueConversionException(
+                "Method was not found, source packet: " + Arrays.toString(protoMsg)
+            );
         }
         
         Object additionalData = devObjMapping.getAdditionalData(protoMsg);
@@ -156,7 +161,7 @@ public final class DPA_MessageConvertor extends SimpleMessageConvertor {
         Object methodResult = devObjMapping.getMethodResult(devIface, methodId, protoMsg);
         if ( methodResult == null ) {
             throw new ValueConversionException(
-                    "Method result was not found, source packet: " + protoMsg
+                "Method result was not found, source packet: " + Arrays.toString(protoMsg)
             );
         }
         

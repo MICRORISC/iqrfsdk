@@ -50,6 +50,15 @@ extends DPA_DeviceObject implements FRC {
     /** Length of user data in {@code send} methods.  */
     public static final int USER_DATA_LENGTH = 2;
     
+    
+    // checks specified user data length
+    private FRC_Command checkCommand(FRC_Command command) {
+        if ( command == null ) {
+            throw new IllegalArgumentException("FRC command cannot be null");
+        }
+        return command;
+    }
+    
     // checks specified user data length
     private short[] checkUserDataLength(short[] userData) {
         if ( userData == null ) {
@@ -66,13 +75,15 @@ extends DPA_DeviceObject implements FRC {
     /**
      * If {@code userData} argument is {@NULL} or its length is {0}, array of
      * {@code USER_DATA_LENGTH} with all elements set to {0} is used.
-     * @param frcCmd
-     * @param userData
-     * @throws IllegalArgumentException if length of {@code userData} is distinct from
-     *         {@code USER_DATA_LENGTH}
+     * @param frcCmd FRC command
+     * @param userData user data
+     * @throws IllegalArgumentException if: <br>
+     *         - {@code frcCmd} is {@code null} <br>
+     *         - length of {@code userData} is distinct from {@code USER_DATA_LENGTH}
      */
     @Override
     public FRC_Data send(FRC_Command frcCmd, short[] userData) {
+        checkCommand(frcCmd);
         checkUserDataLength(userData);
         UUID uid = dispatchCall("1", new Object[] { getHwProfile(), frcCmd, userData }, 
                 getDefaultWaitingTimeout() 
@@ -95,13 +106,15 @@ extends DPA_DeviceObject implements FRC {
     /**
      * If {@code userData} argument is {@NULL} or its length is {0}, array of
      * {@code USER_DATA_LENGTH} with all elements set to {0} is used.
-     * @param frcCmd
-     * @param userData
-     * @throws IllegalArgumentException if length of {@code userData} is distinct from
-     *         {@code USER_DATA_LENGTH}
+     * @param frcCmd FRC command
+     * @param userData user data
+     * @throws IllegalArgumentException if: <br>
+     *         - {@code frcCmd} is {@code null} <br>
+     *         - length of {@code userData} is distinct from {@code USER_DATA_LENGTH}
      */
     @Override
     public UUID async_send(FRC_Command frcCmd, short[] userData) {
+        checkCommand(frcCmd);
         checkUserDataLength(userData);
         return dispatchCall("1", new Object[] { getHwProfile(), frcCmd, userData } );
     }

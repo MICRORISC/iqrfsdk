@@ -2,12 +2,6 @@
 
 package com.microrisc.simply.iqrf.dpa.types;
 
-import com.microrisc.simply.di_services.MethodIdTransformer;
-import com.microrisc.simply.iqrf.dpa.di_services.method_id_transformers.StandardMethodIdTransformers;
-import com.microrisc.simply.iqrf.dpa.protocol.ProtocolObjects;
-import com.microrisc.simply.protocol.RequestPacketCreator;
-import com.microrisc.simply.protocol.mapping.PacketFragment;
-import com.microrisc.simply.protocol.mapping.ProtocolMappingException;
 import com.microrisc.simply.types.AbstractConvertor;
 import com.microrisc.simply.types.ValueConversionException;
 import java.util.LinkedList;

@@ -13,10 +13,10 @@ public enum IO_State {
     HIGH_INPUT      (1, 1);
     
     // low or high
-    private int state;
+    private final int state;
     
     // input or output
-    private int direction;
+    private final int direction;
     
     
     private IO_State(int state, int direction) {

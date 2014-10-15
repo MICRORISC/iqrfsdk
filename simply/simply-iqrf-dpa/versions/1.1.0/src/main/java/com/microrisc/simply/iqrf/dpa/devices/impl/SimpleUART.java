@@ -67,7 +67,7 @@ extends DPA_DeviceObject implements UART {
     }
     
     private static int checkReadTimeout(int readTimeout) {
-        if (!DataTypesChecker.isByteValue(readTimeout)) {
+        if ( !DataTypesChecker.isByteValue(readTimeout) ) {
             throw new IllegalArgumentException("Read timeout out of bounds.");
         }
         return readTimeout;
@@ -87,7 +87,7 @@ extends DPA_DeviceObject implements UART {
         checkReadTimeout(readTimeout);
         checkDataToWrite(data);
         UUID uid = dispatchCall(
-                "3", new Object[] { getHwProfile(), new Integer(readTimeout), data }, 
+                "3", new Object[] { getHwProfile(), readTimeout, data }, 
                 getDefaultWaitingTimeout() 
         );
         if ( uid == null ) {

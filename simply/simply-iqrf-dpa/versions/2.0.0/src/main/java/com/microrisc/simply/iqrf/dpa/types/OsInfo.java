@@ -72,6 +72,7 @@ public final class OsInfo {
     }
 
     /**
+     * Returns module ID. See moduleInfo() at IQRF OS Reference Guide.
      * @return module ID
      */
     public short[] getModuleId() {
@@ -79,6 +80,7 @@ public final class OsInfo {
     }
 
     /**
+     * Returns OS version. See moduleInfo() at IQRF OS Reference Guide.
      * @return OS version
      */
     public int getOsVersion() {
@@ -86,6 +88,7 @@ public final class OsInfo {
     }
 
     /**
+     * Returns MCU type. See moduleInfo() at IQRF OS Reference Guide.
      * @return MCU type
      */
     public MCU_Type getMcuType() {
@@ -93,6 +96,7 @@ public final class OsInfo {
     }
 
     /**
+     * Returns OS build. See moduleInfo() at IQRF OS Reference Guide.
      * @return OS build
      */
     public short[] getOsBuild() {
@@ -107,6 +111,7 @@ public final class OsInfo {
     }
     
     /**
+     * Returns supply voltage. See getSupplyVoltage() at IQRF Reference Guide.
      * @return supply voltage
      */
     public int getSupplyVoltage() {
@@ -114,6 +119,7 @@ public final class OsInfo {
     }
     
     /**
+     * Flags.0 is 1 if there is an insufficient OsBuild for the used DPA version
      * @return flags
      */
     public int getFlags() {

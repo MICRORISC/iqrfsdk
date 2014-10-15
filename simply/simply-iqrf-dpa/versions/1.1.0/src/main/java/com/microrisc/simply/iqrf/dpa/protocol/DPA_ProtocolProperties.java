@@ -93,13 +93,13 @@ public final class DPA_ProtocolProperties {
     
     
     /** IQMESH Coordinator address. */
-    static public final int IQMESH_COORDINATOR_ADDRESS = 0x00;
+    public static final int IQMESH_COORDINATOR_ADDRESS = 0x00;
     
     /** Local ( over SPI ) device address. */
-    static public final int LOCAL_DEVICE_ADDRESS = 0xFC;
+    public static final int LOCAL_DEVICE_ADDRESS = 0xFC;
     
     /** IQMESH Broadcast address. */
-    static public final int BROADCAST_ADDRESS = 0xFF;
+    public static final int BROADCAST_ADDRESS = 0xFF;
     
     
     // Suppress default constructor for noninstantiability

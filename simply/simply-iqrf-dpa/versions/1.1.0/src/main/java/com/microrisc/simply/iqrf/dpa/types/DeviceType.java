@@ -12,7 +12,7 @@ public enum DeviceType {
     NODE            (0x03);
   
     /** device type */
-    private int type;
+    private final int type;
     
     
     private DeviceType(int type) {

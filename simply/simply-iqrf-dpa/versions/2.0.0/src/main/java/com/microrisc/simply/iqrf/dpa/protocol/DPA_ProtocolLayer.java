@@ -299,7 +299,7 @@ public final class DPA_ProtocolLayer extends AbstractProtocolLayer {
     
     /**
      * This method works as follows: <br>
-     * 1. Converts specified request into sequence of bytes. If some error has
+     * 1. Converts specified request into sequence of bytes. If an error has
      *    occured during the conversion, error of type {@code ProcessingRequestAtProtocolLayerError} 
      *    is created, error response is created and {@code processErrorResponse} 
      *    method is called.

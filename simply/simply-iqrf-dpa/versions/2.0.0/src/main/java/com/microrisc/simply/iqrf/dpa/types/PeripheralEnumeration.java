@@ -59,8 +59,8 @@ public final class PeripheralEnumeration {
     /** Numbers of default peripherals present on the device. */
     private final int[] defaultPeripherals;
     
-    /** HW Profile Type. 0x0000 if not present. */
-    private final int hwProfileType;
+    /** HW Profile ID. 0x0000 if not present. */
+    private final int hwProfleID;
     
     /** HW Profile version. */
     private final int hwProfileVersion;
@@ -98,7 +98,7 @@ public final class PeripheralEnumeration {
         this.dpaProtocolVersion = dpaProtocolVersion;
         this.userDefPeripheralsNum = userDefPeripheralsNum;
         this.defaultPeripherals = defaultPeripherals;
-        this.hwProfileType = hwProfleID;
+        this.hwProfleID = hwProfleID;
         this.hwProfileVersion = hwProfileVersion;
         this.flags = flags;
     }
@@ -129,8 +129,8 @@ public final class PeripheralEnumeration {
     /**
      * @return HW profile ID
      */
-    public int getHwProfileType() {
-        return hwProfileType;
+    public int getHwProfileID() {
+        return hwProfleID;
     }
 
     /**
@@ -156,7 +156,7 @@ public final class PeripheralEnumeration {
         strBuilder.append(" DPA protocol version: " + dpaProtocolVersion + NEW_LINE);
         strBuilder.append(" Number of user defined peripherals: " + userDefPeripheralsNum + NEW_LINE);
         strBuilder.append(" Default peripherals: " + getDefaultPeripheralsString() + NEW_LINE);
-        strBuilder.append(" HW profile ID: " + hwProfileType + NEW_LINE);
+        strBuilder.append(" HW profile ID: " + hwProfleID + NEW_LINE);
         strBuilder.append(" HW profile version: " + hwProfileVersion + NEW_LINE);
         strBuilder.append(" Flags: " + flags + NEW_LINE);
         strBuilder.append("}");

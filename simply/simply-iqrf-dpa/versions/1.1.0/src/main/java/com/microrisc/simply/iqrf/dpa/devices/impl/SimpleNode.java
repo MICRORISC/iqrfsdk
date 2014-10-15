@@ -101,7 +101,7 @@ extends DPA_DeviceObject implements Node {
         checkControl(control);
         checkUserData(userData);
         UUID uid = dispatchCall(
-                "3", new Object[] { getHwProfile(), new Integer(bondingMask), new Integer(control), userData}, 
+                "3", new Object[] { getHwProfile(), bondingMask, control, userData}, 
                 getDefaultWaitingTimeout()
         );
         if ( uid == null ) {
@@ -149,7 +149,7 @@ extends DPA_DeviceObject implements Node {
     public Short[] backup(int index) {
         checkIndex(index);
         UUID uid = dispatchCall(
-                "7", new Object[] { getHwProfile(), new Integer(index) }, getDefaultWaitingTimeout() 
+                "7", new Object[] { getHwProfile(), index }, getDefaultWaitingTimeout() 
         );
         if ( uid == null ) {
             return null;

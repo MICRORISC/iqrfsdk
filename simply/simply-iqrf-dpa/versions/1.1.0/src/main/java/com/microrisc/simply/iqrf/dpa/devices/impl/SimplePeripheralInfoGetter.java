@@ -71,7 +71,7 @@ extends DPA_DeviceObject implements PeripheralInfoGetter {
     public UUID async_getPeripheralInfo(int peripheralId) {
         checkPeripheralId(peripheralId);
         return dispatchCall(
-                "2", new Object[] { getHwProfile(), new Integer(peripheralId) } 
+                "2", new Object[] { getHwProfile(), peripheralId} 
         );
     }
     
@@ -79,7 +79,7 @@ extends DPA_DeviceObject implements PeripheralInfoGetter {
     public PeripheralInfo getPeripheralInfo(int peripheralId) {
         checkPeripheralId(peripheralId);
         UUID uid = dispatchCall(
-                "2", new Object[] { getHwProfile(), new Integer(peripheralId) }, 
+                "2", new Object[] { getHwProfile(), peripheralId}, 
                 getDefaultWaitingTimeout() 
         );
         if ( uid == null ) {
@@ -92,7 +92,7 @@ extends DPA_DeviceObject implements PeripheralInfoGetter {
     public UUID async_getMorePeripheralsInfo(int startPeripheralId) {
         checkPeripheralId(startPeripheralId);
         return dispatchCall(
-                "3", new Object[] { getHwProfile(), new Integer(startPeripheralId) }
+                "3", new Object[] { getHwProfile(), startPeripheralId}
         );
     }
     
@@ -100,7 +100,7 @@ extends DPA_DeviceObject implements PeripheralInfoGetter {
     public PeripheralInfo[] getMorePeripheralsInfo(int startPeripheralId) {
         checkPeripheralId(startPeripheralId);
         UUID uid = dispatchCall(
-                "3", new Object[] { getHwProfile(), new Integer(startPeripheralId) }, 
+                "3", new Object[] { getHwProfile(), startPeripheralId}, 
                 getDefaultWaitingTimeout()
         );
         if ( uid == null ) {

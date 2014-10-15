@@ -23,27 +23,10 @@ public final class FRC_CommandConvertor extends AbstractConvertor {
     
     
     /**
-     * @return FRC_ConnandConvertor instance 
+     * @return FRC_CommandConvertor instance 
      */
     static public FRC_CommandConvertor getInstance() {
         return instance;
-    }
-    
-    private FRC_Command_Old.CollectionType getFRCValueType(short sourceByte) 
-            throws ValueConversionException {
-        int frcBit = sourceByte & 0x80;
-        
-        for (FRC_Command_Old.CollectionType frcValueType : FRC_Command_Old.CollectionType.values()) {
-            if (frcBit == frcValueType.getValue()) {
-                return frcValueType;
-            }
-        }
-        throw new ValueConversionException("Unknown FRC value type: " + frcBit);
-    }
-    
-    private int getFRCCmd(short sourceByte) {
-        int frcCmd = (sourceByte & 0x7F);
-        return frcCmd;
     }
     
     /**
@@ -73,14 +56,5 @@ public final class FRC_CommandConvertor extends AbstractConvertor {
     @Override
     public Object toObject(short[] protoValue) throws ValueConversionException {
         throw new UnsupportedOperationException("Currently not supported.");
-        /*
-        logger.debug("toObject - start: protoValue={}", protoValue);
-        
-        FRC_Command_Old.CollectionType frcValueType = getFRCValueType(protoValue[0]);
-        FRC_Command_Old frcCmd = new FRC_Command_Old(frcValueType, getFRCCmd(protoValue[0]));
-        
-        logger.debug("toObject - end: {}", frcCmd);
-        return frcCmd;
-        */
     }         
 }

@@ -1591,7 +1591,7 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
     // LEDR interface
     static private PacketToMethodMapping createResponseLEDSetState() {
         List<PacketPositionValues> packetValues = new LinkedList<PacketPositionValues>();
-        // 2 alternatives possible for: 0x80 and 0x81
+        // 2 alternatives possible: 0x80 and 0x81
         packetValues.add( new PacketPositionValues(3, new short[] { 0x80, 0x81 } ));
         
         PacketToValueMapping resultMapping = new PacketToValueMapping(
@@ -1612,7 +1612,6 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
     
     static private PacketToMethodMapping createResponsePulse() {
         List<PacketPositionValues> packetValues = new LinkedList<PacketPositionValues>();
-        // 2 alternatives possible for: 0x80 and 0x81
         packetValues.add(new PacketPositionValues(3, (short)0x83));
         
         PacketToValueMapping resultMapping = new PacketToValueMapping(

@@ -128,7 +128,7 @@ extends AbstractInitializer<SimpleDPA_InitObjects, Network> {
         System.out.println("Creating node services: ");
         
         // services map
-        Map<Class, DeviceObject> services = new HashMap<Class, DeviceObject>();
+        Map<Class, DeviceObject> services = new HashMap<>();
         
         // creating Peripheral Information object
         PeripheralInfoGetter perInfoObject = createPerInfoObject(networkId, nodeId);
@@ -150,13 +150,12 @@ extends AbstractInitializer<SimpleDPA_InitObjects, Network> {
             // IMPORTANT: if no device interface for specified peripheral number is found,
             // continue, not throw an exception
             if ( devIface == null ) {
-                logger.warn("Interface not found for peripheral: " + perId);
+                logger.warn("Interface not found for peripheral: {}", perId);
                 continue;
             }
             
             Class implClass = initObjects.getImplClassMapper().getImplClass(devIface);
             if ( implClass == null ) {
-                logger.debug("Implementation for " + devIface.getName() + " not found");
                 throw new RuntimeException("Implementation for " + devIface.getName() + " not found");
             }
             
@@ -245,7 +244,7 @@ extends AbstractInitializer<SimpleDPA_InitObjects, Network> {
         // maximal node number to use
         final int MAX_BONDED_NODE_NUMBER = 0xEF;
         
-        Map<String, Node> nodesMap = new HashMap<String, Node>();
+        Map<String, Node> nodesMap = new HashMap<>();
         for ( Integer bondedNodeId : bondedNodesIds ) {
             if (bondedNodeId > MAX_BONDED_NODE_NUMBER) {
                 break;
@@ -275,7 +274,7 @@ extends AbstractInitializer<SimpleDPA_InitObjects, Network> {
         System.out.println("Run discovery...");
         
         DiscoveryConfiguration discConfig = dpaInitConfig.getDiscoveryConfiguration();
-        if (discConfig == null) {
+        if ( discConfig == null ) {
             throw new SimplyException("No configuration for discovery found");
         }
         
@@ -316,25 +315,25 @@ extends AbstractInitializer<SimpleDPA_InitObjects, Network> {
         
         // checking, if coordinator is present at the master
         Coordinator masterCoord = masterNode.getDeviceObject(Coordinator.class);
-        if (masterCoord == null) {
+        if ( masterCoord == null ) {
             logger.warn("Master node doesn't contain Coordinator interface."
                     + "No bonded nodes will be created");
-            nodesMap = new HashMap<String, Node>();
+            nodesMap = new HashMap<>();
             nodesMap.put("0", masterNode);
             return new BaseNetwork(networkId, nodesMap);
         }
         
         // getting currently bonded nodes
         List<Integer> bondedNodesIds = null;
-        if (dpaInitConfig.getBondedNodesConfiguration() != null) {
+        if ( dpaInitConfig.getBondedNodesConfiguration() != null ) {
             bondedNodesIds = getBondedNodesIds(masterCoord);
             System.out.println("Bonded nodes: " + Arrays.toString(bondedNodesIds.toArray(new Integer[0])));
         } else {
-            bondedNodesIds = new LinkedList<Integer>();
+            bondedNodesIds = new LinkedList<>();
         }
         
         // running discovery process
-        if (dpaInitConfig.getDiscoveryConfiguration() != null) {
+        if ( dpaInitConfig.getDiscoveryConfiguration() != null ) {
             DiscoveryResult discoResult = runDiscovery(masterCoord);
             if (discoResult == null) {
                 throw new SimplyException("Discovery failed");
@@ -344,7 +343,7 @@ extends AbstractInitializer<SimpleDPA_InitObjects, Network> {
         
         // setting routing hops
         RoutingHopsConfiguration routingHopsConfig = dpaInitConfig.getRoutingHopsConfiguration();
-        if (routingHopsConfig != null) {
+        if ( routingHopsConfig != null ) {
             System.out.println("Setting routing hops: ... ");
             RoutingHops prevRoutingHops = masterCoord.setHops(
                     new RoutingHops(routingHopsConfig.getRequestHops(), routingHopsConfig.getResponseHops())
@@ -378,7 +377,7 @@ extends AbstractInitializer<SimpleDPA_InitObjects, Network> {
         this.initObjects.getConnectionStack().start();
         
         // result map of networks
-        Map<String, Network> networksMap = new HashMap<String, Network>();
+        Map<String, Network> networksMap = new HashMap<>();
         
         // initialize each network
         Map<String, Configuration> networksSettings = initObjects.getConfigSettings().getNetworksSettings(); 
