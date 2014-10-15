@@ -69,12 +69,10 @@
       <artifactId>simply-network-spi</artifactId>
       <version>1.0.0</version>
     </dependency>
-
     <dependency>
       <groupId>com.microrisc.simply.network.udp</groupId>
       <artifactId>simply-network-udp</artifactId>
       <version>1.0.0</version>
     </dependency>
-    
   </dependencies>
 </project>
