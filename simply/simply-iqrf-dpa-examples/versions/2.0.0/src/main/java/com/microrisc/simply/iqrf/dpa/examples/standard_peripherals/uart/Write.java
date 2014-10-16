@@ -98,7 +98,7 @@ public class Write {
         int timeout = 0xFF; // no reading, only writing
         short[] data = {0x48, 0x65, 0x6C, 0x6C, 0x6F };
         
-        Short[] writeResult  = uart.writeAndRead(timeout, data);
+        short[] writeResult  = uart.writeAndRead(timeout, data);
         if ( writeResult == null ) {
             processNullResult(uart, "Writing to UART on a node failed", 
                     "Writing to UART on a node hasn't been processed yet"

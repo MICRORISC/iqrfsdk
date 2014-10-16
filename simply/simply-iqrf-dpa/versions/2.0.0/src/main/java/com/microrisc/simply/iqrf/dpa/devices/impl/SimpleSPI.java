@@ -61,7 +61,7 @@ extends DPA_DeviceObject implements SPI {
     }
     
     @Override
-    public Short[] writeAndRead(int readTimeout, short[] data) {
+    public short[] writeAndRead(int readTimeout, short[] data) {
         checkReadTimeout(readTimeout);
         checkDataToWrite(data);
         UUID uid = dispatchCall(
@@ -71,6 +71,6 @@ extends DPA_DeviceObject implements SPI {
         if ( uid == null ) {
             return null;
         }
-        return getCallResult(uid, Short[].class, getDefaultWaitingTimeout() );
+        return getCallResult(uid, short[].class, getDefaultWaitingTimeout() );
     }
 }

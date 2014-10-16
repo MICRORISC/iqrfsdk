@@ -90,7 +90,7 @@ extends DPA_Device, DPA_StandardServices, GenericAsyncCallable, MethodIdTransfor
      * @param index index of the block of data
      * @return one block of the node network info data
      */
-    Short[] backup(int index);
+    short[] backup(int index);
     
     /**
      * Allows writing previously backed up node network data to the same 
@@ -101,12 +101,4 @@ extends DPA_Device, DPA_StandardServices, GenericAsyncCallable, MethodIdTransfor
      * @return {@code VoidType} object, if method call has processed allright
      */
     VoidType restore(short[] networkData);
-    
-    /**
-     * See {@link #restore(short[]) restore} method.
-     * @param networkData one block of the node network info data previously 
-     *                    obtained via Backup command.
-     * @return {@code VoidType} object, if method call has processed allright
-     */
-    VoidType restore(Short[] networkData);
 }

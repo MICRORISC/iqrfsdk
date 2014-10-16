@@ -70,7 +70,7 @@ extends DPA_DeviceObject implements GeneralMemory {
     }
     
     @Override
-    public Short[] read(int address, int length) {
+    public short[] read(int address, int length) {
         checkAddress(address);
         checkDataLenToRead(length);
         UUID uid = dispatchCall(
@@ -80,7 +80,7 @@ extends DPA_DeviceObject implements GeneralMemory {
         if ( uid == null ) {
             return null;
         }
-        return getCallResult(uid, Short[].class, getDefaultWaitingTimeout());
+        return getCallResult(uid, short[].class, getDefaultWaitingTimeout());
     }
     
     private static void checkDataToWrite(short[] dataToWrite) {

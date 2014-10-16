@@ -41,7 +41,7 @@ extends DPA_Device, DPA_StandardServices, GenericAsyncCallable, MethodIdTransfor
      * @return read data <br>
      *         {@code null}, if an error has occurred during processing
      */
-    Short[] read(int address, int length);
+    short[] read(int address, int length);
     
     
     /**

@@ -47,14 +47,14 @@ extends DPA_DeviceObject implements EEEPROM {
     
     
     private static int checkBlockNumber(int blockNumber) {
-        if (!DataTypesChecker.isByteValue(blockNumber)) {
+        if ( !DataTypesChecker.isByteValue(blockNumber) ) {
             throw new IllegalArgumentException("Block number out of bounds.");
         }
         return blockNumber;
     }
     
     private static int checkDataLenToRead(int dataLen) {
-        if (!DataTypesChecker.isByteValue(dataLen)) {
+        if ( !DataTypesChecker.isByteValue(dataLen) ) {
             throw new IllegalArgumentException("Data length out of bounds.");
         }
         return dataLen;
@@ -70,7 +70,7 @@ extends DPA_DeviceObject implements EEEPROM {
     }
     
     @Override
-    public Short[] read(int blockNumber, int length) {
+    public short[] read(int blockNumber, int length) {
         checkBlockNumber(blockNumber);
         checkDataLenToRead(length);
         UUID uid = dispatchCall(
@@ -80,7 +80,7 @@ extends DPA_DeviceObject implements EEEPROM {
         if ( uid == null ) {
             return null;
         }
-        return getCallResult(uid, Short[].class, getDefaultWaitingTimeout());
+        return getCallResult(uid, short[].class, getDefaultWaitingTimeout());
     }
     
     private static void checkDataToWrite(short[] dataToWrite) {

@@ -78,7 +78,7 @@ public final class ArrayUns8Convertor extends ArrayConvertor{
                     + "argument length");
         }
         
-        List<Short> retValues = new LinkedList<Short>();
+        List<Short> retValues = new LinkedList<>();
         for (int byteId = 0; byteId < protoValue.length; byteId+= elemSize) {
             short[] elem = new short[elemSize];
             System.arraycopy(protoValue, byteId, elem, 0, elemSize);

@@ -146,7 +146,7 @@ extends DPA_DeviceObject implements Node {
     }
     
     @Override
-    public Short[] backup(int index) {
+    public short[] backup(int index) {
         checkIndex(index);
         UUID uid = dispatchCall(
                 "7", new Object[] { getRequestHwProfile(), index }, getDefaultWaitingTimeout() 
@@ -154,7 +154,7 @@ extends DPA_DeviceObject implements Node {
         if ( uid == null ) {
             return null;
         }
-        return getCallResult(uid, Short[].class, getDefaultWaitingTimeout());
+        return getCallResult(uid, short[].class, getDefaultWaitingTimeout());
     }
     
     /** Network data length. */
@@ -174,18 +174,6 @@ extends DPA_DeviceObject implements Node {
     @Override
     public VoidType restore(short[] networkData) {
         checkNetworkData(networkData);
-        UUID uid = dispatchCall(
-                "8", new Object[] { getRequestHwProfile(), networkData }, getDefaultWaitingTimeout()
-        );
-        if ( uid == null ) {
-            return null;
-        }
-        return getCallResult(uid, VoidType.class, getDefaultWaitingTimeout());
-    }
-    
-    @Override
-    public VoidType restore(Short[] networkData) {
-        checkNetworkData(ArrayUtils.toPrimitive(networkData));
         UUID uid = dispatchCall(
                 "8", new Object[] { getRequestHwProfile(), networkData }, getDefaultWaitingTimeout()
         );

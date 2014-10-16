@@ -71,7 +71,7 @@ public class GetAllPinsState {
         }
         
         // get state of IO
-        Short[] ioState = io.get();
+        short[] ioState = io.get();
         if ( ioState == null ) {            
             CallRequestProcessingState procState = io.getCallRequestProcessingStateOfLastCall();
             if ( procState == CallRequestProcessingState.ERROR ) {
@@ -84,7 +84,7 @@ public class GetAllPinsState {
         
         // printing the actual state of IO
         System.out.print("IO state: ");
-        for (Short stateItem : ioState) {
+        for (short stateItem : ioState) {
             System.out.printf("%1$02X ", stateItem); 
         }
         System.out.println();

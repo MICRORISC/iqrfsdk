@@ -87,11 +87,11 @@ extends DPA_DeviceObject implements IO {
     }
 
     @Override
-    public Short[] get() {
+    public short[] get() {
         UUID uid = dispatchCall("3", new Object[] { getRequestHwProfile() }, getDefaultWaitingTimeout() );
         if ( uid == null ) {
             return null;
         }
-        return getCallResult(uid, Short[].class, getDefaultWaitingTimeout() );
+        return getCallResult(uid, short[].class, getDefaultWaitingTimeout() );
     }
 }

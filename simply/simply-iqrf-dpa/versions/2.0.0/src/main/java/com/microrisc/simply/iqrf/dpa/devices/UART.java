@@ -50,5 +50,5 @@ extends DPA_Device, DPA_StandardServices, GenericAsyncCallable, MethodIdTransfor
      * @return optional data read from UART if the reading was requested and 
      *         data is available.
      */
-    Short[] writeAndRead(int readTimeout, short[] data);
+    short[] writeAndRead(int readTimeout, short[] data);
 }

@@ -18,7 +18,6 @@ import com.microrisc.simply.iqrf.dpa.types.RoutingHops;
 import com.microrisc.simply.iqrf.dpa.types.SubDPARequest;
 import com.microrisc.simply.iqrf.types.VoidType;
 import java.util.UUID;
-import org.apache.commons.lang.ArrayUtils;
 
 /**
  * Simple Coordinator implementation.
@@ -183,7 +182,7 @@ extends DPA_DeviceObject implements Coordinator {
     }
     
     @Override
-    public Short[] discoveryData(int address) {
+    public short[] discoveryData(int address) {
         checkNodeAddress(address);
         UUID uid = dispatchCall(
                 "11", new Object[] { getRequestHwProfile(), address }, getDefaultWaitingTimeout() 
@@ -191,7 +190,7 @@ extends DPA_DeviceObject implements Coordinator {
         if ( uid == null ) {
             return null;
         }
-        return getCallResult(uid, Short[].class, getDefaultWaitingTimeout());
+        return getCallResult(uid, short[].class, getDefaultWaitingTimeout());
     }
     
     
@@ -203,7 +202,7 @@ extends DPA_DeviceObject implements Coordinator {
     }
     
     @Override
-    public Short[] backup(int index) {
+    public short[] backup(int index) {
         checkIndex(index);
         UUID uid = dispatchCall(
                 "12", new Object[] { getRequestHwProfile(), index }, getDefaultWaitingTimeout() 
@@ -211,7 +210,7 @@ extends DPA_DeviceObject implements Coordinator {
         if ( uid == null ) {
             return null;
         }
-        return getCallResult(uid, Short[].class, getDefaultWaitingTimeout());
+        return getCallResult(uid, short[].class, getDefaultWaitingTimeout());
     }
     
     /** Network data length. */
@@ -231,18 +230,6 @@ extends DPA_DeviceObject implements Coordinator {
     @Override
     public VoidType restore(short[] networkData) {
         checkNetworkData(networkData);
-        UUID uid = dispatchCall(
-                "13", new Object[] { getRequestHwProfile(), networkData }, getDefaultWaitingTimeout()
-        );
-        if ( uid == null ) {
-            return null;
-        }
-        return getCallResult(uid, VoidType.class, getDefaultWaitingTimeout());
-    }
-    
-    @Override
-    public VoidType restore(Short[] networkData) {
-        checkNetworkData(ArrayUtils.toPrimitive(networkData));
         UUID uid = dispatchCall(
                 "13", new Object[] { getRequestHwProfile(), networkData }, getDefaultWaitingTimeout()
         );
@@ -282,14 +269,14 @@ extends DPA_DeviceObject implements Coordinator {
     }
     
     @Override
-    public Short[] bridge(SubDPARequest subRequest) {
+    public short[] bridge(SubDPARequest subRequest) {
         UUID uid = dispatchCall("15", new Object[] { getRequestHwProfile(), subRequest }, 
                 getDefaultWaitingTimeout()
         );
         if ( uid == null ) {
             return null;
         }
-        return getCallResult(uid, Short[].class, getDefaultWaitingTimeout());
+        return getCallResult(uid, short[].class, getDefaultWaitingTimeout());
     }
     
     

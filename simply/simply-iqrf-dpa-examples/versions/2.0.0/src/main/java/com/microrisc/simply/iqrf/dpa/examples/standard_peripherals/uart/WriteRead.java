@@ -98,7 +98,7 @@ public class WriteRead {
         int timeout = 0x0A; // after 100ms reading
         short[] data = {0x48, 0x65, 0x6C, 0x6C, 0x6F };
         
-        Short[] readResult  = uart.writeAndRead(timeout, data);
+        short[] readResult  = uart.writeAndRead(timeout, data);
         if ( readResult == null ) {
             processNullResult(uart, "Writing and reading to UART on a node failed", 
                     "Writing and reading to UART on a node hasn't been processed yet"
@@ -107,7 +107,7 @@ public class WriteRead {
         System.out.println("UART data written correctly");
         
         System.out.print("Received data from UART: ");
-        for (Short readResultLoop : readResult) {
+        for ( short readResultLoop : readResult ) {
             System.out.print(Integer.toHexString(readResultLoop).toUpperCase() + " "); 
         }
         System.out.println();

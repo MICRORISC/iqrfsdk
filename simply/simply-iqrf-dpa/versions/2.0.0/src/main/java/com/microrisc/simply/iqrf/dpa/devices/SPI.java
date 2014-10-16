@@ -32,5 +32,5 @@ extends DPA_Device, DPA_StandardServices, GenericAsyncCallable, MethodIdTransfor
      *         data is available. <br>
      *        {@code null}, if an error has occurred during processing
      */
-    Short[] writeAndRead(int readTimeout, short[] data);
+    short[] writeAndRead(int readTimeout, short[] data);
 }

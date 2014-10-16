@@ -180,20 +180,20 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
     }
     
     static private MethodToPacketMapping createClearAllBondsMapping() {
-        List<ConstValueToPacketMapping> constMapping = new LinkedList<ConstValueToPacketMapping>();
+        List<ConstValueToPacketMapping> constMapping = new LinkedList<>();
         constMapping.add( new ConstValueToPacketMapping(3, new short[] { 0x03 } ));
         
-        List<ValueToPacketMapping> argMapping = new LinkedList<ValueToPacketMapping>();
+        List<ValueToPacketMapping> argMapping = new LinkedList<>();
         argMapping.add( new ValueToPacketMapping(4, Uns16Convertor.getInstance()));
         
         return new MethodToPacketMapping(constMapping, argMapping);
     }
     
     static private MethodToPacketMapping createBondNodeMapping() {
-        List<ConstValueToPacketMapping> constMapping = new LinkedList<ConstValueToPacketMapping>();
+        List<ConstValueToPacketMapping> constMapping = new LinkedList<>();
         constMapping.add( new ConstValueToPacketMapping(3, new short[] { 0x04 } ));
         
-        List<ValueToPacketMapping> argMapping = new LinkedList<ValueToPacketMapping>();
+        List<ValueToPacketMapping> argMapping = new LinkedList<>();
         argMapping.add( new ValueToPacketMapping(4, Uns16Convertor.getInstance()));
         argMapping.add( new ValueToPacketMapping(6, IntToUns8Convertor.getInstance()));
         argMapping.add( new ValueToPacketMapping(7, IntToUns8Convertor.getInstance()));
@@ -202,10 +202,10 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
     }
     
     static private MethodToPacketMapping createRemoveBondedNodeMapping() {
-        List<ConstValueToPacketMapping> constMapping = new LinkedList<ConstValueToPacketMapping>();
+        List<ConstValueToPacketMapping> constMapping = new LinkedList<>();
         constMapping.add( new ConstValueToPacketMapping(3, new short[] { 0x05 } ));
         
-        List<ValueToPacketMapping> argMapping = new LinkedList<ValueToPacketMapping>();
+        List<ValueToPacketMapping> argMapping = new LinkedList<>();
         argMapping.add( new ValueToPacketMapping(4, Uns16Convertor.getInstance()));
         argMapping.add( new ValueToPacketMapping(6, IntToUns8Convertor.getInstance() ));
    
@@ -213,10 +213,10 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
     }
     
     static private MethodToPacketMapping createRebondNodeMapping() {
-        List<ConstValueToPacketMapping> constMapping = new LinkedList<ConstValueToPacketMapping>();
+        List<ConstValueToPacketMapping> constMapping = new LinkedList<>();
         constMapping.add( new ConstValueToPacketMapping(3, new short[] { 0x06 } ));
         
-        List<ValueToPacketMapping> argMapping = new LinkedList<ValueToPacketMapping>();
+        List<ValueToPacketMapping> argMapping = new LinkedList<>();
         argMapping.add( new ValueToPacketMapping(4, Uns16Convertor.getInstance()));
         argMapping.add( new ValueToPacketMapping(6, IntToUns8Convertor.getInstance() ));
         
@@ -224,10 +224,10 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
     }
     
     static private MethodToPacketMapping createRunDiscoveryMapping() {
-        List<ConstValueToPacketMapping> constMapping = new LinkedList<ConstValueToPacketMapping>();
+        List<ConstValueToPacketMapping> constMapping = new LinkedList<>();
         constMapping.add( new ConstValueToPacketMapping(3, new short[] { 0x07 } ));
         
-        List<ValueToPacketMapping> argMapping = new LinkedList<ValueToPacketMapping>();
+        List<ValueToPacketMapping> argMapping = new LinkedList<>();
         argMapping.add( new ValueToPacketMapping(4, Uns16Convertor.getInstance()));
         argMapping.add( new ValueToPacketMapping(6, DiscoveryParamsConvertor.getInstance() ));
         
@@ -235,10 +235,10 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
     }
     
     static private MethodToPacketMapping createSetDPAParamsMapping() {
-        List<ConstValueToPacketMapping> constMapping = new LinkedList<ConstValueToPacketMapping>();
+        List<ConstValueToPacketMapping> constMapping = new LinkedList<>();
         constMapping.add( new ConstValueToPacketMapping(3, new short[] { 0x08 } ));
         
-        List<ValueToPacketMapping> argMapping = new LinkedList<ValueToPacketMapping>();
+        List<ValueToPacketMapping> argMapping = new LinkedList<>();
         argMapping.add( new ValueToPacketMapping(4, Uns16Convertor.getInstance()));
         argMapping.add( new ValueToPacketMapping(6, DPA_ParameterConvertor.getInstance() ));
         
@@ -246,10 +246,10 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
     }
     
     static private MethodToPacketMapping createSetHopsMapping() {
-        List<ConstValueToPacketMapping> constMapping = new LinkedList<ConstValueToPacketMapping>();
+        List<ConstValueToPacketMapping> constMapping = new LinkedList<>();
         constMapping.add( new ConstValueToPacketMapping(3, new short[] { 0x09 } ));
         
-        List<ValueToPacketMapping> argMapping = new LinkedList<ValueToPacketMapping>();
+        List<ValueToPacketMapping> argMapping = new LinkedList<>();
         argMapping.add( new ValueToPacketMapping(4, Uns16Convertor.getInstance()));
         argMapping.add( new ValueToPacketMapping(6, RoutingHopsConvertor.getInstance() ));
         
@@ -257,10 +257,10 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
     }
     
     static private MethodToPacketMapping createDiscoveryDataMapping() {
-        List<ConstValueToPacketMapping> constMapping = new LinkedList<ConstValueToPacketMapping>();
+        List<ConstValueToPacketMapping> constMapping = new LinkedList<>();
         constMapping.add( new ConstValueToPacketMapping(3, new short[] { 0x0A } ));
         
-        List<ValueToPacketMapping> argMapping = new LinkedList<ValueToPacketMapping>();
+        List<ValueToPacketMapping> argMapping = new LinkedList<>();
         argMapping.add( new ValueToPacketMapping(4, Uns16Convertor.getInstance()));
         argMapping.add( new ValueToPacketMapping(6, IntToUns8Convertor.getInstance() ));
         
@@ -268,10 +268,10 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
     }
     
     static private MethodToPacketMapping createBackupMapping() {
-        List<ConstValueToPacketMapping> constMapping = new LinkedList<ConstValueToPacketMapping>();
+        List<ConstValueToPacketMapping> constMapping = new LinkedList<>();
         constMapping.add( new ConstValueToPacketMapping(3, new short[] { 0x0B } ));
         
-        List<ValueToPacketMapping> argMapping = new LinkedList<ValueToPacketMapping>();
+        List<ValueToPacketMapping> argMapping = new LinkedList<>();
         argMapping.add( new ValueToPacketMapping(4, Uns16Convertor.getInstance()));
         argMapping.add( new ValueToPacketMapping(6, IntToUns8Convertor.getInstance() ));
         
@@ -279,10 +279,10 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
     }
     
     static private MethodToPacketMapping createRestoreMapping() {
-        List<ConstValueToPacketMapping> constMapping = new LinkedList<ConstValueToPacketMapping>();
+        List<ConstValueToPacketMapping> constMapping = new LinkedList<>();
         constMapping.add( new ConstValueToPacketMapping(3, new short[] { 0x0C } ));
         
-        List<ValueToPacketMapping> argMapping = new LinkedList<ValueToPacketMapping>();
+        List<ValueToPacketMapping> argMapping = new LinkedList<>();
         argMapping.add( new ValueToPacketMapping(4, Uns16Convertor.getInstance()));
         argMapping.add( new ValueToPacketMapping(6, ArrayUns8Convertor.getInstance() ));
         
@@ -290,10 +290,10 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
     }
     
     static private MethodToPacketMapping createAuthorizeBondMapping() {
-        List<ConstValueToPacketMapping> constMapping = new LinkedList<ConstValueToPacketMapping>();
+        List<ConstValueToPacketMapping> constMapping = new LinkedList<>();
         constMapping.add( new ConstValueToPacketMapping(3, new short[] { 0x0D } ));
         
-        List<ValueToPacketMapping> argMapping = new LinkedList<ValueToPacketMapping>();
+        List<ValueToPacketMapping> argMapping = new LinkedList<>();
         argMapping.add( new ValueToPacketMapping(4, Uns16Convertor.getInstance()));
         argMapping.add( new ValueToPacketMapping(6, IntToUns8Convertor.getInstance() ));
         argMapping.add( new ValueToPacketMapping(7, ArrayUns8Convertor.getInstance() ));
@@ -302,10 +302,10 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
     }
     
     static private MethodToPacketMapping createBridgeMapping() {
-        List<ConstValueToPacketMapping> constMapping = new LinkedList<ConstValueToPacketMapping>();
+        List<ConstValueToPacketMapping> constMapping = new LinkedList<>();
         constMapping.add( new ConstValueToPacketMapping(3, new short[] { 0x0E } ));
         
-        List<ValueToPacketMapping> argMapping = new LinkedList<ValueToPacketMapping>();
+        List<ValueToPacketMapping> argMapping = new LinkedList<>();
         argMapping.add( new ValueToPacketMapping(4, Uns16Convertor.getInstance()));
         argMapping.add( new ValueToPacketMapping(6, Uns16Convertor.getInstance() ));
         argMapping.add( new ValueToPacketMapping(8, IntToUns8Convertor.getInstance() ));
@@ -317,10 +317,10 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
     }
     
     static private MethodToPacketMapping createEnableRemoteBondingCMapping() {
-        List<ConstValueToPacketMapping> constMapping = new LinkedList<ConstValueToPacketMapping>();
+        List<ConstValueToPacketMapping> constMapping = new LinkedList<>();
         constMapping.add( new ConstValueToPacketMapping(3, new short[] { 0x11 } ));
         
-        List<ValueToPacketMapping> argMapping = new LinkedList<ValueToPacketMapping>();
+        List<ValueToPacketMapping> argMapping = new LinkedList<>();
         argMapping.add( new ValueToPacketMapping(4, Uns16Convertor.getInstance()));
         argMapping.add( new ValueToPacketMapping(6, IntToUns8Convertor.getInstance() ));
         argMapping.add( new ValueToPacketMapping(7, IntToUns8Convertor.getInstance() ));
@@ -330,30 +330,29 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
     }
     
     static private MethodToPacketMapping createReadRemotelyBondedModuleIdCMapping() {
-        List<ConstValueToPacketMapping> constMapping = new LinkedList<ConstValueToPacketMapping>();
+        List<ConstValueToPacketMapping> constMapping = new LinkedList<>();
         constMapping.add( new ConstValueToPacketMapping(3, new short[] { 0x0F } ));
         
-        List<ValueToPacketMapping> argMapping = new LinkedList<ValueToPacketMapping>();
+        List<ValueToPacketMapping> argMapping = new LinkedList<>();
         argMapping.add( new ValueToPacketMapping(4, Uns16Convertor.getInstance()));
         
         return new MethodToPacketMapping(constMapping, argMapping);
     }
     
     static private MethodToPacketMapping createClearRemotelyBondedModuleIdCMapping() {
-        List<ConstValueToPacketMapping> constMapping = new LinkedList<ConstValueToPacketMapping>();
+        List<ConstValueToPacketMapping> constMapping = new LinkedList<>();
         constMapping.add(new ConstValueToPacketMapping(3, new short[] { 0x10 } ));
         
-        List<ValueToPacketMapping> argMapping = new LinkedList<ValueToPacketMapping>();
+        List<ValueToPacketMapping> argMapping = new LinkedList<>();
         argMapping.add(new ValueToPacketMapping(4, Uns16Convertor.getInstance()));
         return new MethodToPacketMapping(constMapping, argMapping);
     }
     
     static private InterfaceToPacketMapping createRequestCoordinatorMapping() {
-        List<ConstValueToPacketMapping> constMappings = new LinkedList<ConstValueToPacketMapping>();
+        List<ConstValueToPacketMapping> constMappings = new LinkedList<>();
         constMappings.add(new ConstValueToPacketMapping(2, new short[] { 0 })); 
         
-        Map<String, MethodToPacketMapping> methodMappings = 
-                new HashMap<String, MethodToPacketMapping>();
+        Map<String, MethodToPacketMapping> methodMappings = new HashMap<>();
         
         methodMappings.put("1", createGetAddrInfoMapping());
         methodMappings.put("2", createGetDiscoveredNodesMapping());
@@ -380,30 +379,30 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
     
     // Node interface 
     static private MethodToPacketMapping createReadMapping() {
-        List<ConstValueToPacketMapping> constMapping = new LinkedList<ConstValueToPacketMapping>();
+        List<ConstValueToPacketMapping> constMapping = new LinkedList<>();
         constMapping.add( new ConstValueToPacketMapping(3, new short[] { 0x00 } ));
         
-        List<ValueToPacketMapping> argMapping = new LinkedList<ValueToPacketMapping>();
+        List<ValueToPacketMapping> argMapping = new LinkedList<>();
         argMapping.add( new ValueToPacketMapping(4, Uns16Convertor.getInstance()));
         
         return new MethodToPacketMapping(constMapping, argMapping);
     }
     
     static private MethodToPacketMapping createRemoveBondMapping() {
-        List<ConstValueToPacketMapping> constMapping = new LinkedList<ConstValueToPacketMapping>();
+        List<ConstValueToPacketMapping> constMapping = new LinkedList<>();
         constMapping.add( new ConstValueToPacketMapping(3, new short[] { 0x01 } ));
         
-        List<ValueToPacketMapping> argMapping = new LinkedList<ValueToPacketMapping>();
+        List<ValueToPacketMapping> argMapping = new LinkedList<>();
         argMapping.add( new ValueToPacketMapping(4, Uns16Convertor.getInstance()));
         
         return new MethodToPacketMapping(constMapping, argMapping);
     }
     
     static private MethodToPacketMapping createEnableRemoteBondingMapping() {
-        List<ConstValueToPacketMapping> constMapping = new LinkedList<ConstValueToPacketMapping>();
+        List<ConstValueToPacketMapping> constMapping = new LinkedList<>();
         constMapping.add( new ConstValueToPacketMapping(3, new short[] { 0x04 } ));
         
-        List<ValueToPacketMapping> argMapping = new LinkedList<ValueToPacketMapping>();
+        List<ValueToPacketMapping> argMapping = new LinkedList<>();
         argMapping.add( new ValueToPacketMapping(4, Uns16Convertor.getInstance()));
         argMapping.add( new ValueToPacketMapping(6, IntToUns8Convertor.getInstance() ));
         argMapping.add( new ValueToPacketMapping(7, IntToUns8Convertor.getInstance() ));
@@ -413,40 +412,40 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
     }
     
     static private MethodToPacketMapping createReadRemotelyBondedModuleIdMapping() {
-        List<ConstValueToPacketMapping> constMapping = new LinkedList<ConstValueToPacketMapping>();
+        List<ConstValueToPacketMapping> constMapping = new LinkedList<>();
         constMapping.add( new ConstValueToPacketMapping(3, new short[] { 0x02 } ));
         
-        List<ValueToPacketMapping> argMapping = new LinkedList<ValueToPacketMapping>();
+        List<ValueToPacketMapping> argMapping = new LinkedList<>();
         argMapping.add( new ValueToPacketMapping(4, Uns16Convertor.getInstance()));
         
         return new MethodToPacketMapping(constMapping, argMapping);
     }
     
     static private MethodToPacketMapping createClearRemotelyBondedModuleIdMapping() {
-        List<ConstValueToPacketMapping> constMapping = new LinkedList<ConstValueToPacketMapping>();
+        List<ConstValueToPacketMapping> constMapping = new LinkedList<>();
         constMapping.add( new ConstValueToPacketMapping(3, new short[] { 0x03 } ));
         
-        List<ValueToPacketMapping> argMapping = new LinkedList<ValueToPacketMapping>();
+        List<ValueToPacketMapping> argMapping = new LinkedList<>();
         argMapping.add( new ValueToPacketMapping(4, Uns16Convertor.getInstance()));
         
         return new MethodToPacketMapping(constMapping, argMapping);
     }
     
     static private MethodToPacketMapping removeBondAddress() {
-        List<ConstValueToPacketMapping> constMapping = new LinkedList<ConstValueToPacketMapping>();
+        List<ConstValueToPacketMapping> constMapping = new LinkedList<>();
         constMapping.add( new ConstValueToPacketMapping(3, new short[] { 0x05 } ));
         
-        List<ValueToPacketMapping> argMapping = new LinkedList<ValueToPacketMapping>();
+        List<ValueToPacketMapping> argMapping = new LinkedList<>();
         argMapping.add( new ValueToPacketMapping(4, Uns16Convertor.getInstance()));
         
         return new MethodToPacketMapping(constMapping, argMapping);
     }
     
     static private MethodToPacketMapping createNodeBackupMapping() {
-        List<ConstValueToPacketMapping> constMapping = new LinkedList<ConstValueToPacketMapping>();
+        List<ConstValueToPacketMapping> constMapping = new LinkedList<>();
         constMapping.add( new ConstValueToPacketMapping(3, new short[] { 0x06 } ));
         
-        List<ValueToPacketMapping> argMapping = new LinkedList<ValueToPacketMapping>();
+        List<ValueToPacketMapping> argMapping = new LinkedList<>();
         argMapping.add( new ValueToPacketMapping(4, Uns16Convertor.getInstance()));
         argMapping.add( new ValueToPacketMapping(6, IntToUns8Convertor.getInstance() ));
         
@@ -454,10 +453,10 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
     }
     
     static private MethodToPacketMapping createNodeRestoreMapping() {
-        List<ConstValueToPacketMapping> constMapping = new LinkedList<ConstValueToPacketMapping>();
+        List<ConstValueToPacketMapping> constMapping = new LinkedList<>();
         constMapping.add( new ConstValueToPacketMapping(3, new short[] { 0x07 } ));
         
-        List<ValueToPacketMapping> argMapping = new LinkedList<ValueToPacketMapping>();
+        List<ValueToPacketMapping> argMapping = new LinkedList<>();
         argMapping.add( new ValueToPacketMapping(4, Uns16Convertor.getInstance()));
         argMapping.add( new ValueToPacketMapping(6, ArrayUns8Convertor.getInstance() ));
         
@@ -465,11 +464,11 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
     }
     
     static private InterfaceToPacketMapping createRequestNodeMapping() {
-        List<ConstValueToPacketMapping> constMappings = new LinkedList<ConstValueToPacketMapping>();
+        List<ConstValueToPacketMapping> constMappings = new LinkedList<>();
         constMappings.add(new ConstValueToPacketMapping(2, new short[] { 1 })); 
         
         Map<String, MethodToPacketMapping> methodMappings = 
-                new HashMap<String, MethodToPacketMapping>();
+                new HashMap<>();
         
         methodMappings.put("1", createReadMapping());
         methodMappings.put("2", createRemoveBondMapping());
@@ -487,50 +486,50 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
     // OS interface
     
     static private MethodToPacketMapping createOsReadMapping() {
-        List<ConstValueToPacketMapping> constMapping = new LinkedList<ConstValueToPacketMapping>();
+        List<ConstValueToPacketMapping> constMapping = new LinkedList<>();
         constMapping.add( new ConstValueToPacketMapping(3, new short[] { 0x00 } ));
         
-        List<ValueToPacketMapping> argMapping = new LinkedList<ValueToPacketMapping>();
+        List<ValueToPacketMapping> argMapping = new LinkedList<>();
         argMapping.add( new ValueToPacketMapping(4, Uns16Convertor.getInstance()));
         
         return new MethodToPacketMapping(constMapping, argMapping);
     }
     
     static private MethodToPacketMapping createResetMapping() {
-        List<ConstValueToPacketMapping> constMapping = new LinkedList<ConstValueToPacketMapping>();
+        List<ConstValueToPacketMapping> constMapping = new LinkedList<>();
         constMapping.add( new ConstValueToPacketMapping(3, new short[] { 0x01 } ));
         
-        List<ValueToPacketMapping> argMapping = new LinkedList<ValueToPacketMapping>();
+        List<ValueToPacketMapping> argMapping = new LinkedList<>();
         argMapping.add( new ValueToPacketMapping(4, Uns16Convertor.getInstance()));
         
         return new MethodToPacketMapping(constMapping, argMapping);
     }
     
     static private MethodToPacketMapping createReadHWPConfigMapping() {
-        List<ConstValueToPacketMapping> constMapping = new LinkedList<ConstValueToPacketMapping>();
+        List<ConstValueToPacketMapping> constMapping = new LinkedList<>();
         constMapping.add( new ConstValueToPacketMapping(3, new short[] { 0x02 } ));
         
-        List<ValueToPacketMapping> argMapping = new LinkedList<ValueToPacketMapping>();
+        List<ValueToPacketMapping> argMapping = new LinkedList<>();
         argMapping.add( new ValueToPacketMapping(4, Uns16Convertor.getInstance()));
         
         return new MethodToPacketMapping(constMapping, argMapping);
     }
     
     static private MethodToPacketMapping createRunRFPGMMapping() {
-        List<ConstValueToPacketMapping> constMapping = new LinkedList<ConstValueToPacketMapping>();
+        List<ConstValueToPacketMapping> constMapping = new LinkedList<>();
         constMapping.add( new ConstValueToPacketMapping(3, new short[] { 0x03 } ));
         
-        List<ValueToPacketMapping> argMapping = new LinkedList<ValueToPacketMapping>();
+        List<ValueToPacketMapping> argMapping = new LinkedList<>();
         argMapping.add( new ValueToPacketMapping(4, Uns16Convertor.getInstance()));
         
         return new MethodToPacketMapping(constMapping, argMapping);
     }
     
     static private MethodToPacketMapping createSleepMapping() {
-        List<ConstValueToPacketMapping> constMapping = new LinkedList<ConstValueToPacketMapping>();
+        List<ConstValueToPacketMapping> constMapping = new LinkedList<>();
         constMapping.add( new ConstValueToPacketMapping(3, new short[] { 0x04 } ));
         
-        List<ValueToPacketMapping> argMapping = new LinkedList<ValueToPacketMapping>();
+        List<ValueToPacketMapping> argMapping = new LinkedList<>();
         argMapping.add( new ValueToPacketMapping(4, Uns16Convertor.getInstance()));
         argMapping.add( new ValueToPacketMapping(6, SleepInfoConvertor.getInstance() ));
         
@@ -538,10 +537,10 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
     }
     
     static private MethodToPacketMapping createBatchMapping() {
-        List<ConstValueToPacketMapping> constMapping = new LinkedList<ConstValueToPacketMapping>();
+        List<ConstValueToPacketMapping> constMapping = new LinkedList<>();
         constMapping.add( new ConstValueToPacketMapping(3, new short[] { 0x05 } ));
         
-        List<ValueToPacketMapping> argMapping = new LinkedList<ValueToPacketMapping>();
+        List<ValueToPacketMapping> argMapping = new LinkedList<>();
         argMapping.add( new ValueToPacketMapping(4, Uns16Convertor.getInstance()));
         argMapping.add( new ValueToPacketMapping(6, BatchCommandConvertor.getInstance() ));
         
@@ -549,10 +548,10 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
     }
     
     static private MethodToPacketMapping createSetUSEC_UserMapping() {
-        List<ConstValueToPacketMapping> constMapping = new LinkedList<ConstValueToPacketMapping>();
+        List<ConstValueToPacketMapping> constMapping = new LinkedList<>();
         constMapping.add( new ConstValueToPacketMapping(3, new short[] { 0x06 } ));
         
-        List<ValueToPacketMapping> argMapping = new LinkedList<ValueToPacketMapping>();
+        List<ValueToPacketMapping> argMapping = new LinkedList<>();
         argMapping.add( new ValueToPacketMapping(4, Uns16Convertor.getInstance()));
         argMapping.add( new ValueToPacketMapping(6, Uns16Convertor.getInstance() ));
         
@@ -560,10 +559,10 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
     }
     
     static private MethodToPacketMapping createSetMIDMapping() {
-        List<ConstValueToPacketMapping> constMapping = new LinkedList<ConstValueToPacketMapping>();
+        List<ConstValueToPacketMapping> constMapping = new LinkedList<>();
         constMapping.add( new ConstValueToPacketMapping(3, new short[] { 0x07 } ));
         
-        List<ValueToPacketMapping> argMapping = new LinkedList<ValueToPacketMapping>();
+        List<ValueToPacketMapping> argMapping = new LinkedList<>();
         argMapping.add( new ValueToPacketMapping(4, Uns16Convertor.getInstance()));
         argMapping.add( new ValueToPacketMapping(6, ArrayUns8Convertor.getInstance() ));
         
@@ -571,11 +570,10 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
     }
     
     static private InterfaceToPacketMapping createRequestOsMapping() {
-        List<ConstValueToPacketMapping> constMappings = new LinkedList<ConstValueToPacketMapping>();
+        List<ConstValueToPacketMapping> constMappings = new LinkedList<>();
         constMappings.add(new ConstValueToPacketMapping(2, new short[] { 2 })); 
         
-        Map<String, MethodToPacketMapping> methodMappings = 
-                new HashMap<String, MethodToPacketMapping>();
+        Map<String, MethodToPacketMapping> methodMappings = new HashMap<>();
         
         methodMappings.put("1", createOsReadMapping());
         methodMappings.put("2", createResetMapping());
@@ -593,10 +591,10 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
     // EEPROM interface
     
     static private MethodToPacketMapping createEEPROMReadMapping() {
-        List<ConstValueToPacketMapping> constMapping = new LinkedList<ConstValueToPacketMapping>();
+        List<ConstValueToPacketMapping> constMapping = new LinkedList<>();
         constMapping.add( new ConstValueToPacketMapping(3, new short[] { 0x00 })); 
         
-        List<ValueToPacketMapping> argMapping = new LinkedList<ValueToPacketMapping>();
+        List<ValueToPacketMapping> argMapping = new LinkedList<>();
         argMapping.add( new ValueToPacketMapping(4, Uns16Convertor.getInstance()));
         argMapping.add( new ValueToPacketMapping(6, IntToUns8Convertor.getInstance() ));
         argMapping.add( new ValueToPacketMapping(7, IntToUns8Convertor.getInstance() ));
@@ -605,10 +603,10 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
     }
     
     static private MethodToPacketMapping createEEPROMWriteMapping() {
-        List<ConstValueToPacketMapping> constMapping = new LinkedList<ConstValueToPacketMapping>();
+        List<ConstValueToPacketMapping> constMapping = new LinkedList<>();
         constMapping.add( new ConstValueToPacketMapping(3, new short[] { 0x01 }));
         
-        List<ValueToPacketMapping> argMapping = new LinkedList<ValueToPacketMapping>();
+        List<ValueToPacketMapping> argMapping = new LinkedList<>();
         argMapping.add( new ValueToPacketMapping(4, Uns16Convertor.getInstance()));
         argMapping.add( new ValueToPacketMapping(6, IntToUns8Convertor.getInstance() ));
         // written user data
@@ -618,11 +616,10 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
     }
     
     static private InterfaceToPacketMapping createRequestEEPROMMapping() {
-        List<ConstValueToPacketMapping> constMappings = new LinkedList<ConstValueToPacketMapping>();
+        List<ConstValueToPacketMapping> constMappings = new LinkedList<>();
         constMappings.add( new ConstValueToPacketMapping(2, new short[] { 3 })); 
         
-        Map<String, MethodToPacketMapping> methodMappings = 
-                new HashMap<String, MethodToPacketMapping>();
+        Map<String, MethodToPacketMapping> methodMappings = new HashMap<>();
         
         methodMappings.put("1", createEEPROMReadMapping());
         methodMappings.put("2", createEEPROMWriteMapping());
@@ -634,10 +631,10 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
     // EEEPROM interface
     
     static private MethodToPacketMapping createEEEPROMReadMapping() {
-        List<ConstValueToPacketMapping> constMapping = new LinkedList<ConstValueToPacketMapping>();
+        List<ConstValueToPacketMapping> constMapping = new LinkedList<>();
         constMapping.add( new ConstValueToPacketMapping(3, new short[] { 0x00 })); 
         
-        List<ValueToPacketMapping> argMapping = new LinkedList<ValueToPacketMapping>();
+        List<ValueToPacketMapping> argMapping = new LinkedList<>();
         argMapping.add( new ValueToPacketMapping(4, Uns16Convertor.getInstance()));
         argMapping.add( new ValueToPacketMapping(6, IntToUns8Convertor.getInstance() ));
         argMapping.add( new ValueToPacketMapping(7, IntToUns8Convertor.getInstance() ));
@@ -646,10 +643,10 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
     }
     
     static private MethodToPacketMapping createEEEPROMWriteMapping() {
-        List<ConstValueToPacketMapping> constMapping = new LinkedList<ConstValueToPacketMapping>();
+        List<ConstValueToPacketMapping> constMapping = new LinkedList<>();
         constMapping.add( new ConstValueToPacketMapping(3, new short[] { 0x01 }));
         
-        List<ValueToPacketMapping> argMapping = new LinkedList<ValueToPacketMapping>();
+        List<ValueToPacketMapping> argMapping = new LinkedList<>();
         argMapping.add( new ValueToPacketMapping(4, Uns16Convertor.getInstance()));
         argMapping.add( new ValueToPacketMapping(6, IntToUns8Convertor.getInstance() ));
         
@@ -660,11 +657,10 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
     }
     
     static private InterfaceToPacketMapping createRequestEEEPROMMapping() {
-        List<ConstValueToPacketMapping> constMappings = new LinkedList<ConstValueToPacketMapping>();
+        List<ConstValueToPacketMapping> constMappings = new LinkedList<>();
         constMappings.add(new ConstValueToPacketMapping(2, new short[] { 4 })); 
         
-        Map<String, MethodToPacketMapping> methodMappings = 
-                new HashMap<String, MethodToPacketMapping>();
+        Map<String, MethodToPacketMapping> methodMappings = new HashMap<>();
         
         methodMappings.put("1", createEEEPROMReadMapping());
         methodMappings.put("2", createEEEPROMWriteMapping());
@@ -676,10 +672,10 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
     // RAM interface
     
     static private MethodToPacketMapping createRAMReadMapping() {
-        List<ConstValueToPacketMapping> constMapping = new LinkedList<ConstValueToPacketMapping>();
+        List<ConstValueToPacketMapping> constMapping = new LinkedList<>();
         constMapping.add( new ConstValueToPacketMapping(3, new short[] { 0x00 })); 
         
-        List<ValueToPacketMapping> argMapping = new LinkedList<ValueToPacketMapping>();
+        List<ValueToPacketMapping> argMapping = new LinkedList<>();
         argMapping.add( new ValueToPacketMapping(4, Uns16Convertor.getInstance()));
         argMapping.add( new ValueToPacketMapping(6, IntToUns8Convertor.getInstance() ));
         argMapping.add( new ValueToPacketMapping(7, IntToUns8Convertor.getInstance() ));
@@ -688,10 +684,10 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
     }
     
     static private MethodToPacketMapping createRAMWriteMapping() {
-        List<ConstValueToPacketMapping> constMapping = new LinkedList<ConstValueToPacketMapping>();
+        List<ConstValueToPacketMapping> constMapping = new LinkedList<>();
         constMapping.add( new ConstValueToPacketMapping(3, new short[] { 0x01 }));
         
-        List<ValueToPacketMapping> argMapping = new LinkedList<ValueToPacketMapping>();
+        List<ValueToPacketMapping> argMapping = new LinkedList<>();
         argMapping.add( new ValueToPacketMapping(4, Uns16Convertor.getInstance()));
         argMapping.add( new ValueToPacketMapping(6, IntToUns8Convertor.getInstance() ));
         // written user data
@@ -701,11 +697,10 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
     }
     
     static private InterfaceToPacketMapping createRequestRAMMapping() {
-        List<ConstValueToPacketMapping> constMappings = new LinkedList<ConstValueToPacketMapping>();
+        List<ConstValueToPacketMapping> constMappings = new LinkedList<>();
         constMappings.add(new ConstValueToPacketMapping(2, new short[] { 5 })); 
         
-        Map<String, MethodToPacketMapping> methodMappings = 
-                new HashMap<String, MethodToPacketMapping>();
+        Map<String, MethodToPacketMapping> methodMappings = new HashMap<>();
         
         methodMappings.put("1", createRAMReadMapping());
         methodMappings.put("2", createRAMWriteMapping());
@@ -1024,7 +1019,7 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
     }
     
     static private PacketToMethodMapping createResponsePerEnumeration() {
-        List<PacketPositionValues> packetValues = new LinkedList<PacketPositionValues>();
+        List<PacketPositionValues> packetValues = new LinkedList<>();
         packetValues.add( new PacketPositionValues(2, (short)0xFF));
         packetValues.add( new PacketPositionValues(3, (short)0xBF));
         
@@ -1035,7 +1030,7 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
     }
     
     static private PacketToMethodMapping createResponseGetPerInfo() {
-        List<PacketPositionValues> packetValues = new LinkedList<PacketPositionValues>();
+        List<PacketPositionValues> packetValues = new LinkedList<>();
         packetValues.add( new PacketPositionValues(3, (short)0xBF));
         
         PacketToValueMapping resultMapping = new PacketToValueMapping(
@@ -1045,7 +1040,7 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
     }
     
     static private PacketToMethodMapping createResponseGetMorePerInfo() {
-        List<PacketPositionValues> packetValues = new LinkedList<PacketPositionValues>();
+        List<PacketPositionValues> packetValues = new LinkedList<>();
         packetValues.add( new PacketPositionValues(2, (short)0xFF) );
         
         // the remainder of the packet will be taken for conversion
@@ -1057,24 +1052,24 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
     
     // Peripheral info getter - there isn't equivalent peripheral in DPA.
     static private PacketToInterfaceMapping createResponseInfoGetterMapping() {
-        List<PacketPositionValues> packetValues = new LinkedList<PacketPositionValues>();
+        List<PacketPositionValues> packetValues = new LinkedList<>();
         
-        Map<String, PacketToMethodMapping> methodMappings = 
-                new HashMap<String, PacketToMethodMapping>();
+        Map<String, PacketToMethodMapping> methodMappings = new HashMap<>();
     
         methodMappings.put("1", createResponsePerEnumeration());
         methodMappings.put("2", createResponseGetPerInfo());
         methodMappings.put("3", createResponseGetMorePerInfo());
         
-        return new PacketToInterfaceMapping(PeripheralInfoGetter.class, 
-                packetValues, methodMappings);
+        return new PacketToInterfaceMapping(
+                PeripheralInfoGetter.class, packetValues, methodMappings
+        );
     }
     
     
     // Coordinator
     
     static private PacketToMethodMapping createResponseGetAddrInfo() {
-        List<PacketPositionValues> packetValues = new LinkedList<PacketPositionValues>();
+        List<PacketPositionValues> packetValues = new LinkedList<>();
         packetValues.add( new PacketPositionValues(3, (short)0x80));
         
         PacketToValueMapping resultMapping = new PacketToValueMapping(
@@ -1084,7 +1079,7 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
     }
     
     static private PacketToMethodMapping createResponseGetDiscoveredDevices() {
-        List<PacketPositionValues> packetValues = new LinkedList<PacketPositionValues>();
+        List<PacketPositionValues> packetValues = new LinkedList<>();
         packetValues.add( new PacketPositionValues(3, (short)0x81));
         
         PacketToValueMapping resultMapping = new PacketToValueMapping(
@@ -1094,7 +1089,7 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
     }
     
     static private PacketToMethodMapping createResponseGetBondedDevices() {
-        List<PacketPositionValues> packetValues = new LinkedList<PacketPositionValues>();
+        List<PacketPositionValues> packetValues = new LinkedList<>();
         packetValues.add( new PacketPositionValues(3, (short)0x82));
         
         PacketToValueMapping resultMapping = new PacketToValueMapping(
@@ -1104,7 +1099,7 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
     }
     
     static private PacketToMethodMapping createResponseClearAllBonds() {
-        List<PacketPositionValues> packetValues = new LinkedList<PacketPositionValues>();
+        List<PacketPositionValues> packetValues = new LinkedList<>();
         packetValues.add( new PacketPositionValues(3, (short)0x83));
         
         // how about response, where aren't any result data? VoidType 
@@ -1115,7 +1110,7 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
     }
     
     static private PacketToMethodMapping createResponseBondDevice() {
-        List<PacketPositionValues> packetValues = new LinkedList<PacketPositionValues>();
+        List<PacketPositionValues> packetValues = new LinkedList<>();
         packetValues.add( new PacketPositionValues(3, (short)0x84));
         
         PacketToValueMapping resultMapping = new PacketToValueMapping(
@@ -1125,7 +1120,7 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
     }
     
     static private PacketToMethodMapping createResponseRemoveBondedDevice() {
-        List<PacketPositionValues> packetValues = new LinkedList<PacketPositionValues>();
+        List<PacketPositionValues> packetValues = new LinkedList<>();
         packetValues.add( new PacketPositionValues(3, (short)0x85));
         
         PacketToValueMapping resultMapping = new PacketToValueMapping(
@@ -1135,7 +1130,7 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
     }
     
     static private PacketToMethodMapping createResponseRebondDevice() {
-        List<PacketPositionValues> packetValues = new LinkedList<PacketPositionValues>();
+        List<PacketPositionValues> packetValues = new LinkedList<>();
         packetValues.add( new PacketPositionValues(3, (short)0x86));
         
         PacketToValueMapping resultMapping = new PacketToValueMapping(
@@ -1179,7 +1174,7 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
         packetValues.add( new PacketPositionValues(3, (short)0x8A));
         
         PacketToValueMapping resultMapping = new PacketToValueMapping(
-                8, ArrayUns8Convertor.getInstance()
+                8, PrimArrayUns8Convertor.getInstance()
         );
         return new PacketToMethodMapping("11", packetValues, resultMapping);
     }
@@ -1189,13 +1184,13 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
         packetValues.add( new PacketPositionValues(3, (short)0x8B));
         
         PacketToValueMapping resultMapping = new PacketToValueMapping(
-                8, ArrayUns8Convertor.getInstance()
+                8, PrimArrayUns8Convertor.getInstance()
         );
         return new PacketToMethodMapping("12", packetValues, resultMapping);
     }
     
     static private PacketToMethodMapping createResponseRestore() {
-        List<PacketPositionValues> packetValues = new LinkedList<PacketPositionValues>();
+        List<PacketPositionValues> packetValues = new LinkedList<>();
         packetValues.add( new PacketPositionValues(3, (short)0x8C));
         
         PacketToValueMapping resultMapping = new PacketToValueMapping(
@@ -1205,7 +1200,7 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
     }
     
     static private PacketToMethodMapping createResponseAuthorizeBond() {
-        List<PacketPositionValues> packetValues = new LinkedList<PacketPositionValues>();
+        List<PacketPositionValues> packetValues = new LinkedList<>();
         packetValues.add(new PacketPositionValues(3, (short)0x8D));
         
         PacketToValueMapping resultMapping = new PacketToValueMapping(
@@ -1215,17 +1210,17 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
     }
     
     static private PacketToMethodMapping createResponseBridge() {
-        List<PacketPositionValues> packetValues = new LinkedList<PacketPositionValues>();
+        List<PacketPositionValues> packetValues = new LinkedList<>();
         packetValues.add(new PacketPositionValues(3, (short)0x8E));
         
         PacketToValueMapping resultMapping = new PacketToValueMapping(
-                8, SubDPARequestConvertor.getInstance()
+                8, PrimArrayUns8Convertor.getInstance()
         );
         return new PacketToMethodMapping("15", packetValues, resultMapping);
     }
     
     static private PacketToMethodMapping createEnableRemoteBondingC() {
-        List<PacketPositionValues> packetValues = new LinkedList<PacketPositionValues>();
+        List<PacketPositionValues> packetValues = new LinkedList<>();
         packetValues.add( new PacketPositionValues(3, (short)0x91));
         
         PacketToValueMapping resultMapping = new PacketToValueMapping(
@@ -1235,7 +1230,7 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
     }
     
     static private PacketToMethodMapping createReadRemotelyBondedModuleIdC() {
-        List<PacketPositionValues> packetValues = new LinkedList<PacketPositionValues>();
+        List<PacketPositionValues> packetValues = new LinkedList<>();
         packetValues.add( new PacketPositionValues(3, (short)0x8F));
         
         PacketToValueMapping resultMapping = new PacketToValueMapping(
@@ -1245,7 +1240,7 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
     }
     
     static private PacketToMethodMapping createClearRemotelyBondedModuleIdC() {
-        List<PacketPositionValues> packetValues = new LinkedList<PacketPositionValues>();
+        List<PacketPositionValues> packetValues = new LinkedList<>();
         packetValues.add( new PacketPositionValues(3, (short)0x90));
         
         PacketToValueMapping resultMapping = new PacketToValueMapping(
@@ -1255,7 +1250,7 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
     }
     
     static private PacketToInterfaceMapping createResponseCoordinatorMapping() {
-        List<PacketPositionValues> packetValues = new LinkedList<PacketPositionValues>();
+        List<PacketPositionValues> packetValues = new LinkedList<>();
         packetValues.add( new PacketPositionValues(2, (short)0));
         
         Map<String, PacketToMethodMapping> methodMappings = new HashMap<>();
@@ -1285,7 +1280,7 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
     
     // Node interface
     static private PacketToMethodMapping createResponseNodeRead() {
-        List<PacketPositionValues> packetValues = new LinkedList<PacketPositionValues>();
+        List<PacketPositionValues> packetValues = new LinkedList<>();
         packetValues.add( new PacketPositionValues(3, (short)0x80));
         
         PacketToValueMapping resultMapping = new PacketToValueMapping(
@@ -1295,7 +1290,7 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
     }
     
     static private PacketToMethodMapping createResponseRemoveBond() {
-        List<PacketPositionValues> packetValues = new LinkedList<PacketPositionValues>();
+        List<PacketPositionValues> packetValues = new LinkedList<>();
         packetValues.add( new PacketPositionValues(3, (short)0x81));
         
         PacketToValueMapping resultMapping = new PacketToValueMapping(
@@ -1305,7 +1300,7 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
     }
     
     static private PacketToMethodMapping createEnableRemoteBonding() {
-        List<PacketPositionValues> packetValues = new LinkedList<PacketPositionValues>();
+        List<PacketPositionValues> packetValues = new LinkedList<>();
         packetValues.add( new PacketPositionValues(3, (short)0x84));
         
         PacketToValueMapping resultMapping = new PacketToValueMapping(
@@ -1315,7 +1310,7 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
     }
     
     static private PacketToMethodMapping createReadRemotelyBondedModuleId() {
-        List<PacketPositionValues> packetValues = new LinkedList<PacketPositionValues>();
+        List<PacketPositionValues> packetValues = new LinkedList<>();
         packetValues.add( new PacketPositionValues(3, (short)0x82));
         
         PacketToValueMapping resultMapping = new PacketToValueMapping(
@@ -1325,7 +1320,7 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
     }
     
     static private PacketToMethodMapping createClearRemotelyBondedModuleId() {
-        List<PacketPositionValues> packetValues = new LinkedList<PacketPositionValues>();
+        List<PacketPositionValues> packetValues = new LinkedList<>();
         packetValues.add( new PacketPositionValues(3, (short)0x83));
         
         PacketToValueMapping resultMapping = new PacketToValueMapping(
@@ -1335,7 +1330,7 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
     }
     
     static private PacketToMethodMapping createRemoveBondAddress() {
-        List<PacketPositionValues> packetValues = new LinkedList<PacketPositionValues>();
+        List<PacketPositionValues> packetValues = new LinkedList<>();
         packetValues.add( new PacketPositionValues(3, (short)0x85));
         
         PacketToValueMapping resultMapping = new PacketToValueMapping(
@@ -1345,17 +1340,17 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
     }
     
     static private PacketToMethodMapping createNodeResponseBackup() {
-        List<PacketPositionValues> packetValues = new LinkedList<PacketPositionValues>();
+        List<PacketPositionValues> packetValues = new LinkedList<>();
         packetValues.add( new PacketPositionValues(3, (short)0x86));
         
         PacketToValueMapping resultMapping = new PacketToValueMapping(
-                8, ArrayUns8Convertor.getInstance()
+                8, PrimArrayUns8Convertor.getInstance()
         );
         return new PacketToMethodMapping("7", packetValues, resultMapping);
     }
     
     static private PacketToMethodMapping createNodeResponseRestore() {
-        List<PacketPositionValues> packetValues = new LinkedList<PacketPositionValues>();
+        List<PacketPositionValues> packetValues = new LinkedList<>();
         packetValues.add( new PacketPositionValues(3, (short)0x87));
         
         PacketToValueMapping resultMapping = new PacketToValueMapping(
@@ -1365,7 +1360,7 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
     }
     
     static private PacketToInterfaceMapping createResponseIQMeshNodeMapping() {
-        List<PacketPositionValues> packetValues = new LinkedList<PacketPositionValues>();
+        List<PacketPositionValues> packetValues = new LinkedList<>();
         packetValues.add( new PacketPositionValues(2, (short)1));
         
         Map<String, PacketToMethodMapping> methodMappings = new HashMap<>();
@@ -1384,7 +1379,7 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
     
     // OS interface
     static private PacketToMethodMapping createResponseRead() {
-        List<PacketPositionValues> packetValues = new LinkedList<PacketPositionValues>();
+        List<PacketPositionValues> packetValues = new LinkedList<>();
         packetValues.add( new PacketPositionValues(3, (short)0x80));
         
         PacketToValueMapping resultMapping = new PacketToValueMapping(
@@ -1394,7 +1389,7 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
     }
     
     static private PacketToMethodMapping createResponseReset() {
-        List<PacketPositionValues> packetValues = new LinkedList<PacketPositionValues>();
+        List<PacketPositionValues> packetValues = new LinkedList<>();
         packetValues.add( new PacketPositionValues(3, (short)0x81));
         
         PacketToValueMapping resultMapping = new PacketToValueMapping(
@@ -1404,7 +1399,7 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
     }
     
     static private PacketToMethodMapping createResponseHWPConfig() {
-        List<PacketPositionValues> packetValues = new LinkedList<PacketPositionValues>();
+        List<PacketPositionValues> packetValues = new LinkedList<>();
         packetValues.add( new PacketPositionValues(3, (short)0x82));
         
         PacketToValueMapping resultMapping = new PacketToValueMapping(
@@ -1414,7 +1409,7 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
     }
     
     static private PacketToMethodMapping createResponseRunRFPGM() {
-        List<PacketPositionValues> packetValues = new LinkedList<PacketPositionValues>();
+        List<PacketPositionValues> packetValues = new LinkedList<>();
         packetValues.add( new PacketPositionValues(3, (short)0x83));
         
         PacketToValueMapping resultMapping = new PacketToValueMapping(
@@ -1424,7 +1419,7 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
     }
     
     static private PacketToMethodMapping createResponseSleep() {
-        List<PacketPositionValues> packetValues = new LinkedList<PacketPositionValues>();
+        List<PacketPositionValues> packetValues = new LinkedList<>();
         packetValues.add(new PacketPositionValues(3, (short)0x84));
         
         PacketToValueMapping resultMapping = new PacketToValueMapping(
@@ -1434,7 +1429,7 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
     }
    
     static private PacketToMethodMapping createResponseBatch() {
-        List<PacketPositionValues> packetValues = new LinkedList<PacketPositionValues>();
+        List<PacketPositionValues> packetValues = new LinkedList<>();
         packetValues.add(new PacketPositionValues(3, (short)0x85));
         
         PacketToValueMapping resultMapping = new PacketToValueMapping(
@@ -1444,7 +1439,7 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
     }
     
     static private PacketToMethodMapping createResponseSetUSEC() {
-        List<PacketPositionValues> packetValues = new LinkedList<PacketPositionValues>();
+        List<PacketPositionValues> packetValues = new LinkedList<>();
         packetValues.add( new PacketPositionValues(3, (short)0x86));
         
         PacketToValueMapping resultMapping = new PacketToValueMapping(
@@ -1454,7 +1449,7 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
     }
     
     static private PacketToMethodMapping createResponseSetMID() {
-        List<PacketPositionValues> packetValues = new LinkedList<PacketPositionValues>();
+        List<PacketPositionValues> packetValues = new LinkedList<>();
         packetValues.add( new PacketPositionValues(3, (short)0x87));
         
         PacketToValueMapping resultMapping = new PacketToValueMapping(
@@ -1464,7 +1459,7 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
     }
     
     static private PacketToInterfaceMapping createResponseOsMapping() {
-        List<PacketPositionValues> packetValues = new LinkedList<PacketPositionValues>();
+        List<PacketPositionValues> packetValues = new LinkedList<>();
         packetValues.add(new PacketPositionValues(2, (short)2));
         
         Map<String, PacketToMethodMapping> methodMappings = new HashMap<>();
@@ -1484,18 +1479,17 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
     
     // EEPROM interface
     static private PacketToMethodMapping createResponseEEPROMRead() {
-        List<PacketPositionValues> packetValues = new LinkedList<PacketPositionValues>();
+        List<PacketPositionValues> packetValues = new LinkedList<>();
         packetValues.add( new PacketPositionValues(3, (short)0x80));
         
-        // TODO: how to determine length of read data?
         PacketToValueMapping resultMapping = new PacketToValueMapping(
-                8, ArrayUns8Convertor.getInstance()
+                8, PrimArrayUns8Convertor.getInstance()
         );
         return new PacketToMethodMapping("1", packetValues, resultMapping);
     }
     
     static private PacketToMethodMapping createResponseEEPROMWrite() {
-        List<PacketPositionValues> packetValues = new LinkedList<PacketPositionValues>();
+        List<PacketPositionValues> packetValues = new LinkedList<>();
         packetValues.add( new PacketPositionValues(3, (short)0x81));
         
         PacketToValueMapping resultMapping = new PacketToValueMapping(
@@ -1505,11 +1499,11 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
     }
     
     static private PacketToInterfaceMapping createResponseEEPROMMapping() {
-        List<PacketPositionValues> packetValues = new LinkedList<PacketPositionValues>();
+        List<PacketPositionValues> packetValues = new LinkedList<>();
         packetValues.add(new PacketPositionValues(2, (short)3));
         
         Map<String, PacketToMethodMapping> methodMappings = 
-                new HashMap<String, PacketToMethodMapping>();
+                new HashMap<>();
         
         methodMappings.put("1", createResponseEEPROMRead());
         methodMappings.put("2", createResponseEEPROMWrite());
@@ -1520,17 +1514,17 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
     
     // EEEPROM interface
     static private PacketToMethodMapping createResponseEEEPROMRead() {
-        List<PacketPositionValues> packetValues = new LinkedList<PacketPositionValues>();
+        List<PacketPositionValues> packetValues = new LinkedList<>();
         packetValues.add(new PacketPositionValues(3, (short)0x80));
         
         PacketToValueMapping resultMapping = new PacketToValueMapping(
-                8, ArrayUns8Convertor.getInstance()
+                8, PrimArrayUns8Convertor.getInstance()
         );
         return new PacketToMethodMapping("1", packetValues, resultMapping);
     }
     
     static private PacketToMethodMapping createResponseEEEPROMWrite() {
-        List<PacketPositionValues> packetValues = new LinkedList<PacketPositionValues>();
+        List<PacketPositionValues> packetValues = new LinkedList<>();
         packetValues.add( new PacketPositionValues(3, (short)0x81));
         
         PacketToValueMapping resultMapping = new PacketToValueMapping(
@@ -1540,11 +1534,11 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
     }
     
     static private PacketToInterfaceMapping createResponseEEEPROMMapping() {
-        List<PacketPositionValues> packetValues = new LinkedList<PacketPositionValues>();
+        List<PacketPositionValues> packetValues = new LinkedList<>();
         packetValues.add(new PacketPositionValues(2, (short)4));
         
         Map<String, PacketToMethodMapping> methodMappings = 
-                new HashMap<String, PacketToMethodMapping>();
+                new HashMap<>();
         
         methodMappings.put("1", createResponseEEEPROMRead());
         methodMappings.put("2", createResponseEEEPROMWrite());
@@ -1555,17 +1549,17 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
     
     // RAM interface
     static private PacketToMethodMapping createResponseRAMRead() {
-        List<PacketPositionValues> packetValues = new LinkedList<PacketPositionValues>();
+        List<PacketPositionValues> packetValues = new LinkedList<>();
         packetValues.add( new PacketPositionValues(3, (short)0x80));
         
         PacketToValueMapping resultMapping = new PacketToValueMapping(
-                8, ArrayUns8Convertor.getInstance()
+                8, PrimArrayUns8Convertor.getInstance()
         );
         return new PacketToMethodMapping("1", packetValues, resultMapping);
     }
     
     static private PacketToMethodMapping createResponseRAMWrite() {
-        List<PacketPositionValues> packetValues = new LinkedList<PacketPositionValues>();
+        List<PacketPositionValues> packetValues = new LinkedList<>();
         packetValues.add(new PacketPositionValues(3, (short)0x81));
         
         PacketToValueMapping resultMapping = new PacketToValueMapping(
@@ -1575,11 +1569,10 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
     }
     
     static private PacketToInterfaceMapping createResponseRAMMapping() {
-        List<PacketPositionValues> packetValues = new LinkedList<PacketPositionValues>();
+        List<PacketPositionValues> packetValues = new LinkedList<>();
         packetValues.add( new PacketPositionValues(2, (short)5));
         
-        Map<String, PacketToMethodMapping> methodMappings = 
-                new HashMap<String, PacketToMethodMapping>();
+        Map<String, PacketToMethodMapping> methodMappings = new HashMap<>();
         
         methodMappings.put("1", createResponseRAMRead());
         methodMappings.put("2", createResponseRAMWrite());
@@ -1590,7 +1583,7 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
     
     // LEDR interface
     static private PacketToMethodMapping createResponseLEDSetState() {
-        List<PacketPositionValues> packetValues = new LinkedList<PacketPositionValues>();
+        List<PacketPositionValues> packetValues = new LinkedList<>();
         // 2 alternatives possible: 0x80 and 0x81
         packetValues.add( new PacketPositionValues(3, new short[] { 0x80, 0x81 } ));
         
@@ -1601,7 +1594,7 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
     }
     
     static private PacketToMethodMapping createResponseLEDGetState() {
-        List<PacketPositionValues> packetValues = new LinkedList<PacketPositionValues>();
+        List<PacketPositionValues> packetValues = new LinkedList<>();
         packetValues.add( new PacketPositionValues(3, (short)0x82));
         
         PacketToValueMapping resultMapping = new PacketToValueMapping(
@@ -1611,7 +1604,7 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
     }
     
     static private PacketToMethodMapping createResponsePulse() {
-        List<PacketPositionValues> packetValues = new LinkedList<PacketPositionValues>();
+        List<PacketPositionValues> packetValues = new LinkedList<>();
         packetValues.add(new PacketPositionValues(3, (short)0x83));
         
         PacketToValueMapping resultMapping = new PacketToValueMapping(
@@ -1621,11 +1614,11 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
     }
     
     static private PacketToInterfaceMapping createResponseLEDRMapping() {
-        List<PacketPositionValues> packetValues = new LinkedList<PacketPositionValues>();
+        List<PacketPositionValues> packetValues = new LinkedList<>();
         packetValues.add(new PacketPositionValues(2, (short)6));
         
         Map<String, PacketToMethodMapping> methodMappings = 
-                new HashMap<String, PacketToMethodMapping>();
+                new HashMap<>();
         
         methodMappings.put("1", createResponseLEDSetState());
         methodMappings.put("2", createResponseLEDGetState());
@@ -1637,11 +1630,10 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
     
     // LEDG interface
     static private PacketToInterfaceMapping createResponseLEDGMapping() {
-        List<PacketPositionValues> packetValues = new LinkedList<PacketPositionValues>();
+        List<PacketPositionValues> packetValues = new LinkedList<>();
         packetValues.add(new PacketPositionValues(2, (short)7));
         
-        Map<String, PacketToMethodMapping> methodMappings = 
-                new HashMap<String, PacketToMethodMapping>();
+        Map<String, PacketToMethodMapping> methodMappings = new HashMap<>();
     
         methodMappings.put("1", createResponseLEDSetState());
         methodMappings.put("2", createResponseLEDGetState());
@@ -1653,21 +1645,20 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
     
     // SPI interface
     static private PacketToMethodMapping createResponseSPIWriteAndRead() {
-        List<PacketPositionValues> packetValues = new LinkedList<PacketPositionValues>();
+        List<PacketPositionValues> packetValues = new LinkedList<>();
         packetValues.add( new PacketPositionValues(3, (short)0x80));
         
         PacketToValueMapping resultMapping = new PacketToValueMapping(
-                8, ArrayUns8Convertor.getInstance()
+                8, PrimArrayUns8Convertor.getInstance()
         );
         return new PacketToMethodMapping("1", packetValues, resultMapping);
     }
     
     static private PacketToInterfaceMapping createResponseSPIMapping() {
-        List<PacketPositionValues> packetValues = new LinkedList<PacketPositionValues>();
+        List<PacketPositionValues> packetValues = new LinkedList<>();
         packetValues.add( new PacketPositionValues(2, (short)0x08));
         
-        Map<String, PacketToMethodMapping> methodMappings = 
-                new HashMap<String, PacketToMethodMapping>();
+        Map<String, PacketToMethodMapping> methodMappings = new HashMap<>();
     
         methodMappings.put("1", createResponseSPIWriteAndRead());
         return new PacketToInterfaceMapping(SPI.class, packetValues, methodMappings);
@@ -1677,7 +1668,7 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
     
     // IO interface
     static private PacketToMethodMapping createResponseDirection() {
-        List<PacketPositionValues> packetValues = new LinkedList<PacketPositionValues>();
+        List<PacketPositionValues> packetValues = new LinkedList<>();
         packetValues.add( new PacketPositionValues(3, (short)0x80));
         
         PacketToValueMapping resultMapping = new PacketToValueMapping(
@@ -1687,7 +1678,7 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
     }
     
     static private PacketToMethodMapping createResponseIOSet() {
-        List<PacketPositionValues> packetValues = new LinkedList<PacketPositionValues>();
+        List<PacketPositionValues> packetValues = new LinkedList<>();
         packetValues.add( new PacketPositionValues(3, (short)0x81));
         
         PacketToValueMapping resultMapping = new PacketToValueMapping(
@@ -1697,21 +1688,20 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
     }
     
     static private PacketToMethodMapping createResponseIOGet() {
-        List<PacketPositionValues> packetValues = new LinkedList<PacketPositionValues>();
+        List<PacketPositionValues> packetValues = new LinkedList<>();
         packetValues.add( new PacketPositionValues(3, (short)0x82));
         
         PacketToValueMapping resultMapping = new PacketToValueMapping(
-                8, ArrayUns8Convertor.getInstance()
+                8, PrimArrayUns8Convertor.getInstance()
         );
         return new PacketToMethodMapping("3", packetValues, resultMapping);
     }
     
     static private PacketToInterfaceMapping createResponseIOMapping() {
-        List<PacketPositionValues> packetValues = new LinkedList<PacketPositionValues>();
+        List<PacketPositionValues> packetValues = new LinkedList<>();
         packetValues.add( new PacketPositionValues(2, (short)9));
         
-        Map<String, PacketToMethodMapping> methodMappings = 
-                new HashMap<String, PacketToMethodMapping>();
+        Map<String, PacketToMethodMapping> methodMappings = new HashMap<>();
     
         methodMappings.put("1", createResponseDirection());
         methodMappings.put("2", createResponseIOSet());
@@ -1723,7 +1713,7 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
     
     // Thermometer
     static private PacketToMethodMapping createResponseThermometerRead() {
-        List<PacketPositionValues> packetValues = new LinkedList<PacketPositionValues>();
+        List<PacketPositionValues> packetValues = new LinkedList<>();
         packetValues.add( new PacketPositionValues(3, (short)0x80));
         
         PacketToValueMapping resultMapping = new PacketToValueMapping(
@@ -1733,11 +1723,10 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
     }
     
     static private PacketToInterfaceMapping createResponseThermometerMapping() {
-        List<PacketPositionValues> packetValues = new LinkedList<PacketPositionValues>();
+        List<PacketPositionValues> packetValues = new LinkedList<>();
         packetValues.add( new PacketPositionValues(2, (short)10));
         
-        Map<String, PacketToMethodMapping> methodMappings = 
-                new HashMap<String, PacketToMethodMapping>();
+        Map<String, PacketToMethodMapping> methodMappings = new HashMap<>();
     
         methodMappings.put("1", createResponseThermometerRead());
         return new PacketToInterfaceMapping(Thermometer.class, packetValues, methodMappings);
@@ -1746,7 +1735,7 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
     
     // PWM
     static private PacketToMethodMapping createResponsePWMSet() {
-        List<PacketPositionValues> packetValues = new LinkedList<PacketPositionValues>();
+        List<PacketPositionValues> packetValues = new LinkedList<>();
         packetValues.add( new PacketPositionValues(3, (short)0x80));
         
         PacketToValueMapping resultMapping = new PacketToValueMapping(
@@ -1756,11 +1745,11 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
     }
     
     static private PacketToInterfaceMapping createResponsePWMMapping() {
-        List<PacketPositionValues> packetValues = new LinkedList<PacketPositionValues>();
+        List<PacketPositionValues> packetValues = new LinkedList<>();
         packetValues.add( new PacketPositionValues(2, (short)0x0B));
         
         Map<String, PacketToMethodMapping> methodMappings = 
-                new HashMap<String, PacketToMethodMapping>();
+                new HashMap<>();
     
         methodMappings.put("1", createResponsePWMSet());
         return new PacketToInterfaceMapping(PWM.class, packetValues, methodMappings);
@@ -1769,7 +1758,7 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
     
     // UART
     static private PacketToMethodMapping createResponseUARTOpen() {
-        List<PacketPositionValues> packetValues = new LinkedList<PacketPositionValues>();
+        List<PacketPositionValues> packetValues = new LinkedList<>();
         packetValues.add( new PacketPositionValues(3, (short)0x80));
         
         PacketToValueMapping resultMapping = new PacketToValueMapping(
@@ -1779,7 +1768,7 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
     }
     
     static private PacketToMethodMapping createResponseUARTClose() {
-        List<PacketPositionValues> packetValues = new LinkedList<PacketPositionValues>();
+        List<PacketPositionValues> packetValues = new LinkedList<>();
         packetValues.add( new PacketPositionValues(3, (short)0x81));
         
         PacketToValueMapping resultMapping = new PacketToValueMapping(
@@ -1789,11 +1778,11 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
     }
     
     static private PacketToMethodMapping createResponseUARTWriteAndRead() {
-        List<PacketPositionValues> packetValues = new LinkedList<PacketPositionValues>();
+        List<PacketPositionValues> packetValues = new LinkedList<>();
         packetValues.add( new PacketPositionValues(3, (short)0x82));
         
         PacketToValueMapping resultMapping = new PacketToValueMapping(
-                8, ArrayUns8Convertor.getInstance()
+                8, PrimArrayUns8Convertor.getInstance()
         );
         return new PacketToMethodMapping("3", packetValues, resultMapping);
     }

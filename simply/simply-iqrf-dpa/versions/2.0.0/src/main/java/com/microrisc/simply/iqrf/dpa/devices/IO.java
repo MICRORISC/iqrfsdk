@@ -80,5 +80,5 @@ extends DPA_Device, DPA_StandardServices, GenericAsyncCallable, MethodIdTransfor
      *         ending with the last supported MCU port. <br>
      *         {@code null}, if an error has occurred during processing
      */
-    Short[] get();
+    short[] get();
 }

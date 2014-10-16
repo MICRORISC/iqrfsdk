@@ -86,7 +86,7 @@ public class WriteRead {
         }
         
         // reading 5 bytes from RAM peripheral 
-        Short[] readData = ram.read(0x00, 0x05);
+        short[] readData = ram.read(0x00, 0x05);
         if ( readData == null ) {
             processNullResult(ram, "Getting RAM bytes failed", 
                     "Getting RAM hasn't been processed yet"
@@ -94,7 +94,7 @@ public class WriteRead {
         }
         
         System.out.print("Reading before writing 5 bytes to the RAM: ");
-        for (Short dataItem : readData) {
+        for ( short dataItem : readData ) {
             System.out.printf("%1$02X ", dataItem); 
         }
         System.out.println();
@@ -116,7 +116,7 @@ public class WriteRead {
         }
         
         System.out.print("Reading after writing 5 bytes to the RAM: ");
-        for (Short dataItem : readData) {
+        for ( short dataItem : readData ) {
             System.out.printf("%1$02X ", dataItem); 
         }
         System.out.println();

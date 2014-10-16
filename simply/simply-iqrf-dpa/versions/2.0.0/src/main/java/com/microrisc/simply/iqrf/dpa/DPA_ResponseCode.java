@@ -8,37 +8,40 @@ package com.microrisc.simply.iqrf.dpa;
  */
 public enum DPA_ResponseCode {
     /** No error. */
-    NO_ERROR            (0),
+    NO_ERROR                    (0),
     
     /** General fail. */
-    GENERAL_FAIL        (1),
+    GENERAL_FAIL                (1),
     
     /** Incorrect PCMD. */
-    PCMD_ERROR          (2),
+    PCMD_ERROR                  (2),
     
     /** Incorrect PNUM or PCMD. */
-    PNUM_ERROR          (3),
+    PNUM_ERROR                  (3),
     
     /** Incorrect Address. */
-    ADDRESS_ERROR       (4),
+    ADDRESS_ERROR               (4),
     
     /** Incorrect Data length. */
-    DATA_LEN_ERROR      (5),
+    DATA_LEN_ERROR              (5),
     
     /** Incorrect data. */
-    DATA_ERROR          (6),
+    DATA_ERROR                  (6),
     
     /** Incorrect HW Profile ID used. */
-    HWPROFILE_ERROR     (7),
+    HWPROFILE_ERROR             (7),
     
     /** Incorrect NADR. */
-    NADR_ERROR          (8),
+    NADR_ERROR                  (8),
     
     /** Data from interface consumed by Custom DPA Handler. */
-    CUSTOM_HANDLER      (9),
+    IFACE_CUSTOM_HANDLER        (9),
+    
+    /** Custom DPA Handler is missing. */
+    MISSING_CUSTOM_DPA_HANDLER  (10),
     
     /** Error code used to mark confirmation. */
-    CONFIRMATION        ( 0xFF )
+    CONFIRMATION                ( 0xFF )
     ;
     
     
