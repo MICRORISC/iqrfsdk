@@ -16,11 +16,12 @@ public final class GeneralLEDStandardTransformer implements MethodIdTransformer 
      * Mapping of method IDs to theirs string representations.
      */
     private static final Map<GeneralLED.MethodID, String> methodIdsMap = 
-            new EnumMap<GeneralLED.MethodID, String>(GeneralLED.MethodID.class);
+            new EnumMap<>(GeneralLED.MethodID.class);
     
     private static void initMethodIdsMap() {
         methodIdsMap.put(GeneralLED.MethodID.SET, "1");
         methodIdsMap.put(GeneralLED.MethodID.GET, "2");
+        methodIdsMap.put(GeneralLED.MethodID.PULSE, "3");
     }
     
     static  {
