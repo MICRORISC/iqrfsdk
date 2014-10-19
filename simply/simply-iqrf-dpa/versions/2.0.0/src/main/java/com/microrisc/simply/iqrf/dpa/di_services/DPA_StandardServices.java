@@ -10,5 +10,5 @@ import com.microrisc.simply.di_services.StandardServices;
  * @author Michal Konopa
  */
 public interface DPA_StandardServices 
-extends StandardServices, DPA_AdditionalInfoService, HwProfileService {
+extends StandardServices, HwProfileService {
 }

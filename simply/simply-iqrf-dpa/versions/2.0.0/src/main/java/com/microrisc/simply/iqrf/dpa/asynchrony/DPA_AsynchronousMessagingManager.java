@@ -35,9 +35,7 @@ extends AbstractAsynchronousMessagingManager<
             > checker
     ) {
         super(checker);
-        simpleManager = new SimpleAsynchronousMessagingManager<
-                        DPA_AsynchronousMessage, DPA_AsynchronousMessageProperties
-                    >(checker);
+        simpleManager = new SimpleAsynchronousMessagingManager<>(checker);
     }
     
     /**

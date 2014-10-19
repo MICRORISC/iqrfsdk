@@ -34,3 +34,5 @@ simply/simply-network-spi/versions/1.0.0/target/
 simply/simply-network-udp/versions/1.0.0/target/
 simply/simply-network-usbcdc/versions/1.0.1/target/
 /simply/simply-iqrf-dpa-examples/versions/1.1.0/simply-iqrf-dpa-examples/target/
+/simply/simply-iqrf-dpa-v210/versions/1.0.0/target/
+/simply/simply-iqrf-dpa-v201/versions/1.0.0/target/
