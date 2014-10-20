@@ -45,80 +45,201 @@ public final class DPA_ProtocolProperties {
     private static final Logger logger = LoggerFactory.getLogger(DPA_ProtocolProperties.class);
     
     /**
-    * HW Profile ID properties.
-    * 
-    * @author Michal Konopa
-    */
-   public static class HWProfileID_Properties {
-       /**
-        * Types of HW profiles.
-        */
-       public static enum TYPE {
-           DEFAULT,
-           CERTIFIED,
-           RESERVED
-       }
+     * NAdr properties.
+     */
+    public static class NAdr_Properties {
+        // Suppress default constructor for noninstantiability
+        private NAdr_Properties() {
+            throw new AssertionError();
+        }
+        
+        /** IQMESH Coordinator address. */
+        public static final int IQMESH_COORDINATOR_ADDRESS = 0x00;
+        
+        /** IQMESH Node addresses. */
+        public static final int IQMESH_NODE_ADDRESS_MIN = 0x01;
+        public static final int IQMESH_NODE_ADDRESS_MAX = 0xEF;
 
-       /** Default HW profile. */
-       public static final int DEFAULT = 0x00;
+        /** Local ( over SPI ) device address. */
+        public static final int LOCAL_DEVICE_ADDRESS = 0xFC;
 
-       // Suppress default constructor for noninstantiability
-       private HWProfileID_Properties() {
-           throw new AssertionError();
-       }
+        /** IQMESH Temporary address. */
+        public static final int IQMESH_TEMPORARY_ADDRESS = 0xFE;
 
-       /**
-        * Indicates, wheather the specified value of HW profile is cirtified.
-        * @param hwpId HW profile to check
-        * @return {@code true} if {@code hwpId} is certified HW profile <br>
-        *         {@code false} otherwise
-        */
-       public static boolean isCertified(int hwpId) {
-           return ( hwpId >= 0x0101 ) && ( hwpId <= 0xF000 );
-       }
+        /** IQMESH Broadcast address. */
+        public static final int IQMESH_BROADCAST_ADDRESS = 0xFF;
+        
+        /**
+         * Indicates, wheather the specified value of NAdr is reserved.
+         * @param nadr NAdr value to check
+         * @return {@code true} if {@code nadr} is reserved <br>
+         *         {@code false} otherwise
+         */
+        public static boolean isReserved(int nadr) {
+            return (
+                    ( nadr >= 0xF0 ) && ( nadr <= 0xFB )
+                    || ( nadr >= 0xFD ) && ( nadr <= 0xFE )
+                    || ( nadr >= 0x100 ) && ( nadr <= 0xFFFF )
+            );
+        }
+    }
+    
+    /**
+     * PNum properties.
+     */
+    public static class PNum_Properties {
+        // Suppress default constructor for noninstantiability
+        private PNum_Properties() {
+            throw new AssertionError();
+        }
+        
+        /** Peripherals numbers. */
+        public static final int COORDINATOR =   0x00;
+        public static final int NODE =          0x01;
+        public static final int OS =            0x02;
+        public static final int EEPROM =        0x03;
+        public static final int EEEPROM =       0x04;
+        public static final int RAM =           0x05;
+        public static final int LEDR =          0x06;
+        public static final int LEDG =          0x07;
+        public static final int SPI =           0x08;
+        public static final int IO =            0x09;
+        public static final int THERMOMETER =   0x0A;
+        public static final int PWM =           0x0B;
+        public static final int UART =          0x0C;
+        public static final int FRC =           0x0D;
+        
+        /**
+         * Indicates, wheather the specified value of PNum is a user peripheral.
+         * @param pnum PNum value to check
+         * @return {@code true} if {@code pnum} is a user peripheral <br>
+         *         {@code false} otherwise
+         */
+        public static boolean isUser(int pnum) {
+            return (( pnum >= 0x20 ) && ( pnum <= 0x6F ));
+        }
+        
+        /**
+         * Indicates, wheather the specified value of PNum is reserved.
+         * @param pnum PNum value to check
+         * @return {@code true} if {@code pnum} is reserved <br>
+         *         {@code false} otherwise
+         */
+        public static boolean isReserved(int pnum) {
+            return (( pnum >= 0x70 ) && ( pnum <= 0xFF ));
+        }
+        
+        /**
+         * Indicates, wheather the specified value of PNum is reserved for standard
+         * peripheral.
+         * @param pnum PNum value to check
+         * @return {@code true} if {@code pnum} is reserved for standard peripheral <br>
+         *         {@code false} otherwise
+         */
+        public static boolean isReservedForStandard(int pnum) {
+            return (( pnum >= 0x00 ) && ( pnum <= 0x1F ));
+        }
+    }
+    
+    /**
+     * PCmd properties.
+     */
+    public static class PCmd_Properties {
+        // Suppress default constructor for noninstantiability
+        private PCmd_Properties() {
+            throw new AssertionError();
+        }
+        
+        /** PCmd values range. */
+        public static final int VALUE_MIN = 0x00;
+        public static final int VALUE_MAX = 0x3E;
+        
+        /**
+         * Indicates, wheather the specified value of PCmd is reserved.
+         * @param pcmd PCmd value to check
+         * @return {@code true} if {@code pcmd} is reserved <br>
+         *         {@code false} otherwise
+         */
+        public static boolean isReserved(int pcmd) {
+            return ( pcmd == 0x3F );
+        }
+    }
+    
+    /**
+     * HW Profile properties.
+     * 
+     * @author Michal Konopa
+     */
+    public static class HWProfile_Properties {
+        // Suppress default constructor for noninstantiability
+        private HWProfile_Properties() {
+            throw new AssertionError();
+        }
+        
+        /**
+         * Types of HW profiles.
+         */
+        public static enum TYPE {
+            DEFAULT,
+            CERTIFIED,
+            RESERVED
+        }
+
+        /** Default HW profile. */
+        public static final int DEFAULT = 0x00;
+
+        /**
+         * Indicates, wheather the specified value of HW profile is cirtified.
+         * @param hwp HW profile to check
+         * @return {@code true} if {@code hwpId} is certified HW profile <br>
+         *         {@code false} otherwise
+         */
+        public static boolean isCertified(int hwp) {
+            return ( hwp >= 0x0101 ) && ( hwp <= 0xF000 );
+        }
 
 
-       /**
-        * Indicates, wheather the specified value of HW profile is reserved.
-        * @param hwpId HW profile to check
-        * @return {@code true} if {@code hwpId} is reserved HW profile <br>
-        *         {@code false} otherwise
-        */
-       public static boolean isReserved(int hwpId) {
-           return (
-                   ( hwpId >= 0x0001 ) && ( hwpId <= 0x0100 )
-                   || ( hwpId >= 0xF001 ) && ( hwpId <= 0xFFFF )
-                  );
-       }
+        /**
+         * Indicates, wheather the specified value of HW profile is reserved.
+         * @param hwp HW profile to check
+         * @return {@code true} if {@code hwpId} is reserved HW profile <br>
+         *         {@code false} otherwise
+         */
+        public static boolean isReserved(int hwp) {
+            return (
+                    ( hwp >= 0x0001 ) && ( hwp <= 0x0100 )
+                    || ( hwp >= 0xF001 ) && ( hwp <= 0xFFFF )
+            );
+        }
 
-       /**
-        * Returns type of the specified value of HW profile. 
-        * @param hwpId HW profile, which the type to return for
-        * @return type of HW profile
-        * @throws IllegalArgumentException if {@code hwpId} is out of [0 .. 0xFFFF] interval
-        */
-       public static TYPE getType(int hwpId) {
-           if ( (hwpId < 0) || (hwpId > 0xFFFF) ) {
-               throw new IllegalArgumentException("Value of HW profile out of bounds: " + hwpId);
-           }
+        /**
+         * Returns type of the specified value of HW profile. 
+         * @param hwp HW profile, which the type to return for
+         * @return type of HW profile
+         * @throws IllegalArgumentException if {@code hwpId} is out of [0 .. 0xFFFF] interval
+         */
+        public static TYPE getType(int hwp) {
+            if ( (hwp < 0) || (hwp > 0xFFFF) ) {
+                throw new IllegalArgumentException("Value of HW profile out of bounds: " + hwp);
+            }
 
-           if ( hwpId == DEFAULT ) {
-               return TYPE.DEFAULT;
-           }
+            if ( hwp == DEFAULT ) {
+                return TYPE.DEFAULT;
+            }
 
-           if ( isCertified(hwpId) ) {
-               return TYPE.CERTIFIED;
-           }
+            if ( isCertified(hwp) ) {
+                return TYPE.CERTIFIED;
+            }
 
-           if ( isReserved(hwpId) ) {
-               return TYPE.RESERVED;
-           }
+            if ( isReserved(hwp) ) {
+                return TYPE.RESERVED;
+            }
 
-           // run should not reach this place
-           throw new IllegalStateException("Uknown value of HW profile: " + hwpId);
-       }
+            // run should not reach this place
+            throw new IllegalStateException("Uknown value of HW profile: " + hwp);
+        }
 
-   }
+    }
     
     /** Start index of node address field. */
     public static final int NADR_START = 0;
@@ -139,12 +260,6 @@ public final class DPA_ProtocolProperties {
     
     /** Length of data address field. */
     public static final int PCMD_LENGTH = 1;
-    
-    /** Minimum value of PCMD field. */
-    public static final int PCMD_VALUE_MIN = 0x00;
-    
-    /** Maximal value of PCMD field. */
-    public static final int PCMD_VALUE_MAX = 0x3E;
     
     
     /** Start of HW Profile. */
@@ -178,21 +293,6 @@ public final class DPA_ProtocolProperties {
     /** Start index of response data. */
     public static final int RESPONSE_DATA_START = DPA_VALUE_START + DPA_VALUE_LENGTH;
     
-    /** IQMESH Coordinator address. */
-    public static final int IQMESH_COORDINATOR_ADDRESS = 0x00;
-    
-    /** IQMESH Node address properties. */
-    public static final int IQMESH_NODE_ADDRESS_MIN = 0x01;
-    public static final int IQMESH_NODE_ADDRESS_MAX = 0xEF;
-    
-    /** Local ( over SPI ) device address. */
-    public static final int LOCAL_DEVICE_ADDRESS = 0xFC;
-    
-    /** IQMESH Temporary address. */
-    public static final int IQMESH_TEMPORARY_ADDRESS = 0xFE;
-    
-    /** IQMESH Broadcast address. */
-    public static final int IQMESH_BROADCAST_ADDRESS = 0xFF;
     
     
     // Suppress default constructor for noninstantiability

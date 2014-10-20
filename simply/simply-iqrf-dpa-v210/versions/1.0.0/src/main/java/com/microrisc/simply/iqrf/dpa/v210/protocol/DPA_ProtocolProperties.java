@@ -45,12 +45,133 @@ public final class DPA_ProtocolProperties {
     /** Logger. */
     private static final Logger logger = LoggerFactory.getLogger(DPA_ProtocolProperties.class);
     
+    /**
+     * NADR properties.
+     */
+    public static class NADR_Properties {
+        // Suppress default constructor for noninstantiability
+        private NADR_Properties() {
+            throw new AssertionError();
+        }
+        
+        /** IQMESH Coordinator address. */
+        public static final int IQMESH_COORDINATOR_ADDRESS = 0x00;
+        
+        /** IQMESH Node addresses. */
+        public static final int IQMESH_NODE_ADDRESS_MIN = 0x01;
+        public static final int IQMESH_NODE_ADDRESS_MAX = 0xEF;
+
+        /** Local ( over SPI ) device address. */
+        public static final int LOCAL_DEVICE_ADDRESS = 0xFC;
+
+        /** IQMESH Temporary address. */
+        public static final int IQMESH_TEMPORARY_ADDRESS = 0xFE;
+
+        /** IQMESH Broadcast address. */
+        public static final int IQMESH_BROADCAST_ADDRESS = 0xFF;
+        
+        /**
+         * Indicates, wheather the specified value of NADR is reserved.
+         * @param nadr NADR value to check
+         * @return {@code true} if {@code nadr} is reserved <br>
+         *         {@code false} otherwise
+         */
+        public static boolean isReserved(int nadr) {
+            return (
+                    ( nadr >= 0xF0 ) && ( nadr <= 0xFB )
+                    || ( nadr == 0xFD )
+                    || ( nadr >= 0x100 ) && ( nadr <= 0xFFFF )
+            );
+        }
+    }
+    
+    /**
+     * PNUM properties.
+     */
+    public static class PNUM_Properties {
+        // Suppress default constructor for noninstantiability
+        private PNUM_Properties() {
+            throw new AssertionError();
+        }
+        
+        /** Peripherals numbers. */
+        public static final int COORDINATOR =   0x00;
+        public static final int NODE =          0x01;
+        public static final int OS =            0x02;
+        public static final int EEPROM =        0x03;
+        public static final int EEEPROM =       0x04;
+        public static final int RAM =           0x05;
+        public static final int LEDR =          0x06;
+        public static final int LEDG =          0x07;
+        public static final int SPI =           0x08;
+        public static final int IO =            0x09;
+        public static final int THERMOMETER =   0x0A;
+        public static final int PWM =           0x0B;
+        public static final int UART =          0x0C;
+        public static final int FRC =           0x0D;
+        
+        /**
+         * Indicates, wheather the specified value of PNUM is a user peripheral.
+         * @param pnum PNUM value to check
+         * @return {@code true} if {@code pnum} is a user peripheral <br>
+         *         {@code false} otherwise
+         */
+        public static boolean isUser(int pnum) {
+            return (( pnum >= 0x20 ) && ( pnum <= 0x6F ));
+        }
+        
+        /**
+         * Indicates, wheather the specified value of PNUM is reserved.
+         * @param pnum PNUM value to check
+         * @return {@code true} if {@code pnum} is reserved <br>
+         *         {@code false} otherwise
+         */
+        public static boolean isReserved(int pnum) {
+            return (( pnum >= 0x70 ) && ( pnum <= 0xFF ));
+        }
+        
+        /**
+         * Indicates, wheather the specified value of PNum is reserved for standard
+         * peripheral.
+         * @param pnum PNUM value to check
+         * @return {@code true} if {@code pnum} is reserved for standard peripheral <br>
+         *         {@code false} otherwise
+         */
+        public static boolean isReservedForStandard(int pnum) {
+            return (( pnum >= 0x00 ) && ( pnum <= 0x1F ));
+        }
+    }
+    
+    /**
+     * PCMD properties.
+     */
+    public static class PCMD_Properties {
+        // Suppress default constructor for noninstantiability
+        private PCMD_Properties() {
+            throw new AssertionError();
+        }
+        
+        /** PCmd values range. */
+        public static final int VALUE_MIN = 0x00;
+        public static final int VALUE_MAX = 0x3E;
+        
+        /**
+         * Indicates, wheather the specified value of PCMD is reserved.
+         * @param pcmd PCMD value to check
+         * @return {@code true} if {@code pcmd} is reserved <br>
+         *         {@code false} otherwise
+         */
+        public static boolean isReserved(int pcmd) {
+            return ( pcmd >= 0x3F ) && ( pcmd <= 0xFF ) ;
+        }
+    }
+    
    /**
     * HW Profile ID properties.
     * 
     * @author Michal Konopa
     */
-   public static class HWProfileID_Properties {
+   public static class HWPID_Properties {
        /**
         * Types of HW profiles.
         */
@@ -65,13 +186,13 @@ public final class DPA_ProtocolProperties {
        public static final int DEFAULT = 0x00;
 
        // Suppress default constructor for noninstantiability
-       private HWProfileID_Properties() {
+       private HWPID_Properties() {
            throw new AssertionError();
        }
 
        /**
-        * Indicates, wheather the specified value of HW profile is cirtified.
-        * @param hwpId HW profile to check
+        * Indicates, wheather the specified value of HWPID is cirtified HW profile.
+        * @param hwpId HWPID to check
         * @return {@code true} if {@code hwpId} is certified HW profile <br>
         *         {@code false} otherwise
         */
@@ -80,7 +201,7 @@ public final class DPA_ProtocolProperties {
        }
 
        /**
-        * Indicates, wheather the specified value of HW profile is user HW profile.
+        * Indicates, wheather the specified value of HWPID is user HW profile.
         * @param hwpId HW profile to check
         * @return {@code true} if {@code hwpId} is user HW profile <br>
         *         {@code false} otherwise
@@ -93,8 +214,8 @@ public final class DPA_ProtocolProperties {
        }
 
        /**
-        * Indicates, wheather the specified value of HW profile is reserved.
-        * @param hwpId HW profile to check
+        * Indicates, wheather the specified value of HWPID is reserved.
+        * @param hwpId HWPID to check
         * @return {@code true} if {@code hwpId} is reserved HW profile <br>
         *         {@code false} otherwise
         */
@@ -197,23 +318,6 @@ public final class DPA_ProtocolProperties {
     
     /** Start index of response data. */
     public static final int RESPONSE_DATA_START = DPA_VALUE_START + DPA_VALUE_LENGTH;
-    
-    
-    /** IQMESH Coordinator address. */
-    public static final int IQMESH_COORDINATOR_ADDRESS = 0x00;
-    
-    /** IQMESH Node address properties. */
-    public static final int IQMESH_NODE_ADDRESS_MIN = 0x01;
-    public static final int IQMESH_NODE_ADDRESS_MAX = 0xEF;
-    
-    /** Local ( over SPI ) device address. */
-    public static final int LOCAL_DEVICE_ADDRESS = 0xFC;
-    
-    /** IQMESH Temporary address. */
-    public static final int IQMESH_TEMPORARY_ADDRESS = 0xFE;
-    
-    /** IQMESH Broadcast address. */
-    public static final int IQMESH_BROADCAST_ADDRESS = 0xFF;
     
     
     // Suppress default constructor for noninstantiability
