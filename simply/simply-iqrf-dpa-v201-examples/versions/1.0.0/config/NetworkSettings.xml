@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : NetworkSettings.xml
+    Created on : 27. June 2013
+    Author     : Michal Konopa
+    Description:
+		Contains description of network settings.
+-->
+
+<networkSettings>
+
+    <network>
+		<id>1</id>
+		<type>COM</type>
+		<port>COM5</port>
+		<note>Some note here.</note>
+    </network>
+
+<!--    
+    <network>
+		<id>1</id>
+		<type>UDP</type>
+		<host>10.1.30.76</host>
+                <port>55300</port>
+		<note>Some note here.</note>
+    </network>
+-->
+
+<!--
+    <network>
+                <id>1</id>
+    		<type>SPI</type>
+		<port>/dev/spidev0.0</port>
+                <note>Some note here.</note>
+    </network>
+-->
+
+</networkSettings>

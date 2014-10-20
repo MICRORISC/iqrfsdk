@@ -1,11 +1,12 @@
 
 package com.microrisc.simply.iqrf.dpa.v201.devices.impl;
 
-import com.microrisc.simply.ConnectorService;
 import com.microrisc.simply.CallRequestProcessingInfoContainer;
+import com.microrisc.simply.ConnectorService;
 import com.microrisc.simply.iqrf.dpa.v201.DPA_DeviceObject;
 import com.microrisc.simply.iqrf.dpa.v201.devices.OS;
 import com.microrisc.simply.iqrf.dpa.v201.di_services.method_id_transformers.OSStandardTransformer;
+import com.microrisc.simply.iqrf.dpa.v201.types.DPA_Request;
 import com.microrisc.simply.iqrf.dpa.v201.types.HWP_Configuration;
 import com.microrisc.simply.iqrf.dpa.v201.types.OsInfo;
 import com.microrisc.simply.iqrf.dpa.v201.types.SleepInfo;
@@ -101,8 +102,14 @@ extends DPA_DeviceObject implements OS {
      * @throws UnsupportedOperationException
      */
     @Override
-    public VoidType batch() {
-        throw new UnsupportedOperationException("Currently not implemented");
+    public VoidType batch(DPA_Request[] requests) {
+        UUID uid = dispatchCall(
+            "6", new Object[] { getRequestHwProfile(), requests }, getDefaultWaitingTimeout() 
+        );
+        if ( uid == null ) {
+            return null;
+        }
+        return getCallResult(uid, VoidType.class, getDefaultWaitingTimeout());
     }
     
     private static final int USER_ADDR_LOWER_BOUND = 0x00;

@@ -20,6 +20,7 @@ import com.microrisc.simply.iqrf.dpa.v201.types.AddressingInfoConvertor;
 import com.microrisc.simply.iqrf.dpa.v201.types.ArrayIO_CommandConvertor;
 import com.microrisc.simply.iqrf.dpa.v201.types.ArrayIO_DirectionSettingsConvertor;
 import com.microrisc.simply.iqrf.dpa.v201.types.ArrayPeripheralInfoConvertor;
+import com.microrisc.simply.iqrf.dpa.v201.types.BatchCommandConvertor;
 import com.microrisc.simply.iqrf.dpa.v201.types.BaudRateConvertor;
 import com.microrisc.simply.iqrf.dpa.v201.types.BondedDeviceConvertor;
 import com.microrisc.simply.iqrf.dpa.v201.types.BondedNodesConvertor;
@@ -534,8 +535,16 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
         return new MethodToPacketMapping(constMapping, argMapping);
     }
     
-    // mapping of the BATCH request is missing - not implemented in 
-    // this version of simply-iqrf-dpa
+    static private MethodToPacketMapping createBatchMapping() {
+        List<ConstValueToPacketMapping> constMapping = new LinkedList<>();
+        constMapping.add( new ConstValueToPacketMapping(3, new short[] { 0x05 } ));
+        
+        List<ValueToPacketMapping> argMapping = new LinkedList<>();
+        argMapping.add( new ValueToPacketMapping(4, Uns16Convertor.getInstance()));
+        argMapping.add( new ValueToPacketMapping(6, BatchCommandConvertor.getInstance() ));
+        
+        return new MethodToPacketMapping(constMapping, argMapping);
+    }
     
     static private MethodToPacketMapping createSetUSEC_UserMapping() {
         List<ConstValueToPacketMapping> constMapping = new LinkedList<>();
@@ -570,6 +579,7 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
         methodMappings.put("3", createReadHWPConfigMapping());
         methodMappings.put("4", createRunRFPGMMapping());
         methodMappings.put("5", createSleepMapping());
+        methodMappings.put("6", createBatchMapping());
         methodMappings.put("7", createSetUSEC_UserMapping());
         methodMappings.put("8", createSetMIDMapping());
         
@@ -1420,7 +1430,15 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
         return new PacketToMethodMapping("5", packetValues, resultMapping);
     }
     
-    // batch not currently implemented
+    static private PacketToMethodMapping createResponseBatch() {
+        List<PacketPositionValues> packetValues = new LinkedList<>();
+        packetValues.add(new PacketPositionValues(3, (short)0x85));
+        
+        PacketToValueMapping resultMapping = new PacketToValueMapping(
+                8, 0, VoidTypeConvertor.getInstance()
+        );
+        return new PacketToMethodMapping("6", packetValues, resultMapping);
+    }
     
     static private PacketToMethodMapping createResponseSetUSEC() {
         List<PacketPositionValues> packetValues = new LinkedList<>();
@@ -1453,6 +1471,7 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
         methodMappings.put("3", createResponseHWPConfig());
         methodMappings.put("4", createResponseRunRFPGM());
         methodMappings.put("5", createResponseSleep());
+        methodMappings.put("6", createResponseBatch());
         methodMappings.put("7", createResponseSetUSEC());
         methodMappings.put("8", createResponseSetMID());
         

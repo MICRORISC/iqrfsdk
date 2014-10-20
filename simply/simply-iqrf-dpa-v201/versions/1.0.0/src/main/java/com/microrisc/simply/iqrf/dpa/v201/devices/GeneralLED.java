@@ -5,7 +5,7 @@ import com.microrisc.simply.DeviceInterface;
 import com.microrisc.simply.DeviceInterfaceMethodId;
 import com.microrisc.simply.di_services.GenericAsyncCallable;
 import com.microrisc.simply.di_services.MethodIdTransformer;
-import com.microrisc.simply.iqrf.dpa.di_services.DPA_StandardServices;
+import com.microrisc.simply.iqrf.dpa.v201.di_services.DPA_StandardServices;
 import com.microrisc.simply.iqrf.dpa.v201.types.LED_State;
 import com.microrisc.simply.iqrf.types.VoidType;
 import java.util.UUID;

@@ -6,6 +6,7 @@ import com.microrisc.simply.DeviceInterfaceMethodId;
 import com.microrisc.simply.di_services.GenericAsyncCallable;
 import com.microrisc.simply.di_services.MethodIdTransformer;
 import com.microrisc.simply.iqrf.dpa.di_services.DPA_StandardServices;
+import com.microrisc.simply.iqrf.dpa.v201.types.DPA_Request;
 import com.microrisc.simply.iqrf.dpa.v201.types.HWP_Configuration;
 import com.microrisc.simply.iqrf.dpa.v201.types.OsInfo;
 import com.microrisc.simply.iqrf.dpa.v201.types.SleepInfo;
@@ -76,9 +77,10 @@ extends DPA_StandardServices, GenericAsyncCallable, MethodIdTransformer {
      * DPA request. It is not allowed to embed Batch command itself within series 
      * of individual DPA requests. Using Run discover is not allowed inside 
      * batch command list too.
+     * @param requests DPA requests to be executed
      * @return {@code VoidType} object, if method call has processed allright
      */
-    VoidType batch();
+    VoidType batch(DPA_Request[] requests);
     
     /**
      * Sets value shared by both User Security Code (USEC) and User address. 
