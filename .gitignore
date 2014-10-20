@@ -11,16 +11,16 @@
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 
-libs/ck-usb-cdc-uart-dpa/jssc-examples/versions/1.0.0/target/
-libs/ck-usb-cdc-uart-dpa/hdlc-framing/versions/1.0.0/target/
-libs/gw-eth-wifi-udp-iqrf/judp-examples/versions/1.0.0/target/
-libs/gw-usb-cdc-iqrf/jlibcdc/versions/1.0.0/target/
-libs/gw-usb-cdc-iqrf/jlibcdc-examples/versions/1.0.0/target/
-libs/raspberry-spi-io-iqrf/jlibrpi-io/versions/1.0.0/target/
-libs/raspberry-spi-io-iqrf/jlibrpi-spi-iqrf/versions/1.0.0/target/
-libs/raspberry-spi-io-iqrf/jlibrpi-spi/versions/1.0.0/target/
-libs/raspberry-spi-io-iqrf/jlibrpi-io-examples/versions/1.0.0/target/
-libs/raspberry-spi-io-iqrf/jlibrpi-spi-iqrf-examples/versions/1.0.0/target/
+libs/iqrf/cdc-uart/jssc-examples/versions/1.0.0/target/
+libs/iqrf/cdc-uart/hdlc-framing/versions/1.0.0/target/
+libs/iqrf/udp/judp-examples/versions/1.0.0/target/
+libs/iqrf/cdc-iqrf/jlibcdc/versions/1.0.0/target/
+libs/iqrf/cdc-iqrf/jlibcdc-examples/versions/1.0.0/target/
+libs/raspberry/io/jlibrpi-io/versions/1.0.0/target/
+libs/raspberry/io/jlibrpi-io-examples/versions/1.0.0/target/
+libs/raspberry/spi/jlibrpi-spi/versions/1.0.0/target/
+libs/raspberry/spi/jlibrpi-spi-iqrf/versions/1.0.0/target/
+libs/raspberry/spi/jlibrpi-spi-iqrf-examples/versions/1.0.0/target/
 
 simply/simply-asynchrony/versions/1.0.0/target/
 simply/simply-core/versions/1.1.0/target/
@@ -28,14 +28,11 @@ simply/simply-iqrf/versions/1.0.0/target/
 simply/simply-iqrf/versions/2.0.0/target/
 simply/simply-iqrf-dpa/versions/1.1.0/target/
 simply/simply-iqrf-dpa/versions/2.0.0/target/
-simply/simply-iqrf-dpa-examples/versions/2.0.0/target/
+simply/simply-iqrf-dpa-v201/versions/1.0.0/target/
+simply/simply-iqrf-dpa-v201-examples/versions/1.0.0/target/
+simply/simply-iqrf-dpa-v210/versions/1.0.0/target/
+simply/simply-iqrf-dpa-v210-examples/versions/1.0.0/target/
 simply/simply-network-serial/versions/1.0.0/target/
 simply/simply-network-spi/versions/1.0.0/target/
 simply/simply-network-udp/versions/1.0.0/target/
 simply/simply-network-usbcdc/versions/1.0.1/target/
-/simply/simply-iqrf-dpa-examples/versions/1.1.0/simply-iqrf-dpa-examples/target/
-/simply/simply-iqrf-dpa-v210/versions/1.0.0/target/
-/simply/simply-iqrf-dpa-v201/versions/1.0.0/target/
-/simply/simply-iqrf-dpa-v201-examples/versions/1.0.0/simply-iqrf-dpa-v201-examples/target/
-/simply/simply-iqrf-dpa-v201-examples/versions/1.0.0/target/
-/simply/simply-iqrf-dpa-v210-examples/versions/1.0.0/target/
