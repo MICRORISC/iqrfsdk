@@ -307,11 +307,7 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
         
         List<ValueToPacketMapping> argMapping = new LinkedList<>();
         argMapping.add( new ValueToPacketMapping(4, Uns16Convertor.getInstance()));
-        argMapping.add( new ValueToPacketMapping(6, Uns16Convertor.getInstance() ));
-        argMapping.add( new ValueToPacketMapping(8, IntToUns8Convertor.getInstance() ));
-        argMapping.add( new ValueToPacketMapping(9, IntToUns8Convertor.getInstance() ));
-        argMapping.add( new ValueToPacketMapping(10, Uns16Convertor.getInstance() ));
-        argMapping.add( new ValueToPacketMapping(12, ArrayUns8Convertor.getInstance() ));
+        argMapping.add( new ValueToPacketMapping(6, SubDPARequestConvertor.getInstance() ));
         
         return new MethodToPacketMapping(constMapping, argMapping);
     }
@@ -1216,7 +1212,7 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
         packetValues.add(new PacketPositionValues(3, (short)0x8E));
         
         PacketToValueMapping resultMapping = new PacketToValueMapping(
-                8, SubDPARequestConvertor.getInstance()
+                8, PrimArrayUns8Convertor.getInstance()
         );
         return new PacketToMethodMapping("15", packetValues, resultMapping);
     }

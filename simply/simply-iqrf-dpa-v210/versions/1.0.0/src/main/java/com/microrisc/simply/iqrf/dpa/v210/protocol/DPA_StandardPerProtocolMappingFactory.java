@@ -307,11 +307,7 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
         
         List<ValueToPacketMapping> argMapping = new LinkedList<>();
         argMapping.add( new ValueToPacketMapping(4, Uns16Convertor.getInstance()));
-        argMapping.add( new ValueToPacketMapping(6, Uns16Convertor.getInstance() ));
-        argMapping.add( new ValueToPacketMapping(8, IntToUns8Convertor.getInstance() ));
-        argMapping.add( new ValueToPacketMapping(9, IntToUns8Convertor.getInstance() ));
-        argMapping.add( new ValueToPacketMapping(10, Uns16Convertor.getInstance() ));
-        argMapping.add( new ValueToPacketMapping(12, ArrayUns8Convertor.getInstance() ));
+        argMapping.add( new ValueToPacketMapping(6, SubDPARequestConvertor.getInstance() ));
         
         return new MethodToPacketMapping(constMapping, argMapping);
     }
