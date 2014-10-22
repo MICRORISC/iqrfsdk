@@ -5,8 +5,15 @@
     <artifactId>simply-network-udp</artifactId>
     <packaging>jar</packaging>
     <version>1.0.0</version>
+    
     <name>simply-network-udp</name>
-    <url>http://maven.apache.org</url>
+    <description>UDP implementation of network layer for Simply framework.</description>
+    <url>http://iqrf.org/weben/index.php?sekce=products&amp;id=iqrf-sdk&amp;ot=development-tools&amp;ot2=development-sw</url>
+    
+    <organization>
+        <name>MICRORISC s.r.o.</name>
+        <url>http://www.microrisc.com</url>
+    </organization>
 
     <dependencies>
         <dependency>
@@ -45,8 +52,8 @@
             <artifactId>simply-core</artifactId>
             <version>1.1.0</version>
         </dependency>
-        
     </dependencies>
+    
     <build>
         <plugins>
             <plugin>
@@ -63,7 +70,46 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>2.3.1</version>
+                <configuration>
+                    <archive>
+                        <manifestFile>src/conf/MANIFEST.MF</manifestFile>
+                    </archive>
+                </configuration>
             </plugin>
+	    <plugin>
+            	<groupId>org.apache.maven.plugins</groupId>
+            	<artifactId>maven-javadoc-plugin</artifactId>
+            	<version>2.10.1</version>
+                <configuration> 
+                    <outputDirectory>${project.build.directory}/javadoc</outputDirectory>
+                    <reportOutputDirectory>${project.reporting.outputDirectory}/javadoc</reportOutputDirectory>
+            	</configuration>
+            	<executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                        <configuration>
+                            <includeDependencySources>true</includeDependencySources>
+                        </configuration>
+                    </execution>
+            	</executions>
+            </plugin>
+	    <plugin>
+  		<groupId>org.apache.maven.plugins</groupId>
+  		<artifactId>maven-source-plugin</artifactId>
+		<version>2.2.1</version>
+  		<executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+  		</executions>
+	    </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
@@ -74,6 +120,7 @@
             </plugin>
         </plugins>
     </build>
+    
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>

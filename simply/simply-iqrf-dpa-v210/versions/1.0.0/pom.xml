@@ -5,6 +5,16 @@
     <artifactId>simply-iqrf-dpa-v210</artifactId>
     <version>1.0.0</version>
     <packaging>jar</packaging>
+    
+    <name>simply-iqrf-dpa-v210</name>
+    <description>IQRF DPA v2.10 extension of Simply framework.</description>
+    <url>http://iqrf.org/weben/index.php?sekce=products&amp;id=iqrf-sdk&amp;ot=development-tools&amp;ot2=development-sw</url>
+    
+    <organization>
+        <name>MICRORISC s.r.o.</name>
+        <url>http://www.microrisc.com</url>
+    </organization>
+    
     <dependencies>
         <dependency>
             <groupId>com.microrisc.simply.iqrf.dpa</groupId>
@@ -12,9 +22,75 @@
             <version>2.0.0</version>
         </dependency>
     </dependencies>
+    
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.3.2</version>
+                <configuration>
+                    <source>1.7</source>
+                    <target>1.7</target>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.3.1</version>
+                <configuration>
+                    <archive>
+                        <manifestFile>src/conf/MANIFEST.MF</manifestFile>
+                    </archive>
+                </configuration>
+            </plugin>
+	    <plugin>
+            	<groupId>org.apache.maven.plugins</groupId>
+            	<artifactId>maven-javadoc-plugin</artifactId>
+            	<version>2.10.1</version>
+                <configuration> 
+                    <outputDirectory>${project.build.directory}/javadoc</outputDirectory>
+                    <reportOutputDirectory>${project.reporting.outputDirectory}/javadoc</reportOutputDirectory>
+            	</configuration>
+            	<executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                        <configuration>
+                            <includeDependencySources>true</includeDependencySources>
+                        </configuration>
+                    </execution>
+            	</executions>
+            </plugin>
+	    <plugin>
+  		<groupId>org.apache.maven.plugins</groupId>
+  		<artifactId>maven-source-plugin</artifactId>
+		<version>2.2.1</version>
+  		<executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+  		</executions>
+	    </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>2.4.3</version>
+                <configuration>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+    
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>1.7</maven.compiler.source>
-        <maven.compiler.target>1.7</maven.compiler.target>
     </properties>
 </project>

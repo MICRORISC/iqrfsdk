@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Archiver-Version: Plexus Archiver
+Created-By: Apache Maven
+Built-By: MICRORISC s.r.o.
+Build-Jdk: 1.7.0_45
+Implementation-Title: UDP implementation of network layer for Simply framework
+Implementation-Vendor: MICRORISC s.r.o.
+Implementation-Vendor-Id: com.microrisc.simply
+Implementation-Version: 0
+Specification-Title: UDP implementation of network layer for Simply framework
+Specification-Vendor: MICRORISC s.r.o.
+Specification-Version: 1.0
