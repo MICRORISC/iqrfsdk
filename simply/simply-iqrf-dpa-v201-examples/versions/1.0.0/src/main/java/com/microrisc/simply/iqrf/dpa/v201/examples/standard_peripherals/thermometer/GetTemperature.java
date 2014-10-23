@@ -43,9 +43,11 @@ public class GetTemperature {
     // prints out specified message, destroys the Simply and exits
     private static void printMessageAndExit(String message) {
         System.out.println(message);
+        
         if ( simply != null) {
             simply.destroy();
         }
+        
         System.exit(1);
     }
     
@@ -103,7 +105,7 @@ public class GetTemperature {
                 
                 printMessageAndExit("Getting temperature failed: " + error + ", DPA error: " + dpaResponseCode);
             } else {
-                printMessageAndExit("Getting temperature hasn't been processed yet: " + procState);
+                System.out.println("Getting temperature hasn't been processed yet: " + procState);
             }
             
             Thread.sleep(500);

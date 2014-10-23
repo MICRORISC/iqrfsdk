@@ -42,13 +42,15 @@ public class GetTemperature {
     
     // prints out specified message, destroys the Simply and exits
     private static void printMessageAndExit(String message) {
+        
         System.out.println(message);
         if ( simply != null) {
             simply.destroy();
         }
+        
         System.exit(1);
     }
-    
+        
     public static void main(String[] args) throws InterruptedException {
         // creating Simply instance
         try {
@@ -83,9 +85,11 @@ public class GetTemperature {
         final int MAX_RESULT_GETTING = 10;
         int attempt = 0;
         while ( attempt++ < MAX_RESULT_GETTING ) {
+            
             CallRequestProcessingState procState = thermo.getCallRequestProcessingState(
                     tempRequestUid
             );
+            
             if ( procState == CallRequestProcessingState.RESULT_ARRIVED ) {
                 thermoValues = thermo.getCallResultImmediately(tempRequestUid, Thermometer_values.class);
                 //result = thermo.getCallResultInDefaultWaitingTimeout(getStateRequestUid, LED_State.class);
@@ -103,7 +107,7 @@ public class GetTemperature {
                 
                 printMessageAndExit("Getting temperature failed: " + error + ", DPA error: " + dpaResponseCode);
             } else {
-                printMessageAndExit("Getting temperature hasn't been processed yet: " + procState);
+                System.out.println("Getting temperature hasn't been processed yet: " + procState);
             }
             
             Thread.sleep(500);

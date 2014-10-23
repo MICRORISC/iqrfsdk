@@ -1,14 +1,162 @@
-11:44:28.549 [main] INFO  c.m.s.network.usbcdc.CDCNetworkLayer: Listener registered
-11:44:28.565 [main] INFO  c.m.s.protocol.AbstractProtocolLayer: Protocol layer started
-11:44:28.567 [main] INFO  c.m.s.i.d.v.protocol.DPA_ProtocolLayer: Started
-11:44:28.568 [main] INFO  c.m.simply.connector.CallResultsSender: Sending started
-11:44:28.568 [main] INFO  c.m.s.protocol.AbstractProtocolLayer: Listener registered
-11:44:28.569 [main] INFO  c.m.s.iqrf.dpa.connector.DPA_Connector: Messaging started
-11:44:28.702 [main] INFO  c.m.s.iqrf.dpa.v210.init.DPA_Initializer: Getting peripheral enumeration: 1 attempt
-11:44:28.863 [main] INFO  c.m.s.iqrf.dpa.connector.DPA_Connector: New call request created: { id=20df405b-5492-4407-8d0a-e52881eb6435, network ID=1, node ID=0, device interface=com.microrisc.simply.iqrf.dpa.v210.devices.PeripheralInfoGetter, method ID=1, arguments=[65535] }
-11:44:28.864 [main] INFO  c.microrisc.simply.ConnectedDeviceObject: 1:0-PeripheralInfoGetter: Method 1 call dispatched, id=20df405b-5492-4407-8d0a-e52881eb6435
-11:44:28.894 [main] WARN  c.m.simply.HashMapResultsContainer: No result found.
-11:44:29.201 [Thread-4] INFO  c.m.s.iqrf.dpa.connector.DPA_Connector: New message from protocol layer get: { { main data=PeripheralEnumeration { 
+22:05:06.884 [main] DEBUG c.m.s.iqrf.dpa.v210.init.DPA_Initializer: initialize - start: innerObjects=com.microrisc.simply.iqrf.dpa.v210.init.SimpleDPA_InitObjects@1e54eb7
+22:05:06.915 [main] DEBUG c.m.s.network.usbcdc.CDCNetworkLayer: startReceivingData - start:
+22:05:06.915 [main] DEBUG c.m.s.network.usbcdc.CDCNetworkLayer: startReceivingData - end
+22:05:06.915 [main] DEBUG c.m.s.i.d.v.protocol.DPA_ProtocolLayer: start - start:
+22:05:06.915 [main] DEBUG c.m.s.protocol.AbstractProtocolLayer: start - start:
+22:05:06.915 [main] INFO  c.m.s.network.usbcdc.CDCNetworkLayer: Listener registered
+22:05:06.918 [main] INFO  c.m.s.protocol.AbstractProtocolLayer: Protocol layer started
+22:05:06.918 [main] DEBUG c.m.s.protocol.AbstractProtocolLayer: start - end
+22:05:06.919 [main] INFO  c.m.s.i.d.v.protocol.DPA_ProtocolLayer: Started
+22:05:06.919 [main] DEBUG c.m.s.i.d.v.protocol.DPA_ProtocolLayer: start - end
+22:05:06.919 [main] DEBUG c.m.s.iqrf.dpa.connector.DPA_Connector: startMessaging - start:
+22:05:06.919 [main] DEBUG c.m.simply.connector.CallResultsSender: start - start:
+22:05:06.920 [main] INFO  c.m.simply.connector.CallResultsSender: Sending started
+22:05:06.920 [main] DEBUG c.m.simply.connector.CallResultsSender: start - end
+22:05:06.921 [main] INFO  c.m.s.protocol.AbstractProtocolLayer: Listener registered
+22:05:06.921 [main] INFO  c.m.s.iqrf.dpa.connector.DPA_Connector: Messaging started
+22:05:06.921 [main] DEBUG c.m.s.iqrf.dpa.connector.DPA_Connector: startMessaging - end
+22:05:06.921 [main] DEBUG c.m.s.iqrf.dpa.v210.init.DPA_Initializer: createNetwork - start: networkId=1, networkSettings=org.apache.commons.configuration.SubnodeConfiguration@14b5739
+22:05:06.922 [main] DEBUG c.m.s.iqrf.dpa.v210.init.DPA_Initializer: createNode - start: networkId=1, nodeId=0
+22:05:06.922 [main] DEBUG c.m.s.iqrf.dpa.v210.init.DPA_Initializer: createNodeServices - start: nodeId=0
+22:05:06.922 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: getDeviceObject - start: networkId=1, nodeId=0, connector=com.microrisc.simply.iqrf.dpa.connector.DPA_Connector@14b7042, implClass=class com.microrisc.simply.iqrf.dpa.v210.devices.impl.SimplePeripheralInfoGetter, configuration=org.apache.commons.configuration.PropertiesConfiguration@1b72ada
+22:05:06.922 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: createResultsContainer - start: configuration=org.apache.commons.configuration.PropertiesConfiguration@1b72ada
+22:05:06.930 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: createResultsContainer - end: com.microrisc.simply.HashMapCallRequestProcessingInfoContainer@4b35d5
+22:05:06.956 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: getDeviceObject - end: com.microrisc.simply.iqrf.dpa.v210.devices.impl.SimplePeripheralInfoGetter@e51b72
+22:05:06.956 [main] DEBUG c.m.s.iqrf.dpa.v210.init.DPA_Initializer: getPeripheralNumbers - start: infoDeviceObj=com.microrisc.simply.iqrf.dpa.v210.devices.impl.SimplePeripheralInfoGetter@e51b72
+22:05:06.956 [main] INFO  c.m.s.iqrf.dpa.v210.init.DPA_Initializer: Getting peripheral enumeration: 1 attempt
+22:05:06.956 [main] DEBUG c.microrisc.simply.ConnectedDeviceObject: 1:0-PeripheralInfoGetter: dispatchCall - start: methodId=1, arguments=[65535], timeout=10000
+22:05:06.957 [main] DEBUG c.m.s.iqrf.dpa.connector.DPA_Connector: callMethod - start: devObject=0, devIface=com.microrisc.simply.iqrf.dpa.v210.devices.PeripheralInfoGetter, methodId=1, args=[65535], timeout=10000
+22:05:07.030 [main] INFO  c.m.s.iqrf.dpa.connector.DPA_Connector: New call request created: { id=7debad25-1afa-43c2-9163-b92de5152aaf, network ID=1, node ID=0, device interface=com.microrisc.simply.iqrf.dpa.v210.devices.PeripheralInfoGetter, method ID=1, arguments=[65535] }
+22:05:07.030 [main] DEBUG c.m.s.iqrf.dpa.connector.DPA_Connector: callMethod - end: 7debad25-1afa-43c2-9163-b92de5152aaf
+22:05:07.030 [main] DEBUG c.microrisc.simply.ConnectedDeviceObject: 1:0-PeripheralInfoGetter: dispatchCall - end: 7debad25-1afa-43c2-9163-b92de5152aaf
+22:05:07.030 [main] INFO  c.microrisc.simply.ConnectedDeviceObject: 1:0-PeripheralInfoGetter: Method 1 call dispatched, id=7debad25-1afa-43c2-9163-b92de5152aaf
+22:05:07.032 [Thread-3] DEBUG c.m.s.iqrf.dpa.connector.DPA_Connector: sendRequestToProtocolLayer - start: request={ id=7debad25-1afa-43c2-9163-b92de5152aaf, network ID=1, node ID=0, device interface=com.microrisc.simply.iqrf.dpa.v210.devices.PeripheralInfoGetter, method ID=1, arguments=[65535] }
+22:05:07.032 [Thread-3] DEBUG c.m.s.i.d.v.protocol.DPA_ProtocolLayer: sendRequest - start: request={ id=7debad25-1afa-43c2-9163-b92de5152aaf, network ID=1, node ID=0, device interface=com.microrisc.simply.iqrf.dpa.v210.devices.PeripheralInfoGetter, method ID=1, arguments=[65535] }
+22:05:07.033 [Thread-3] DEBUG c.m.s.i.d.v.p.DPA_MessageConvertor: convertToProtoFormat - start: callRequest={ id=7debad25-1afa-43c2-9163-b92de5152aaf, network ID=1, node ID=0, device interface=com.microrisc.simply.iqrf.dpa.v210.devices.PeripheralInfoGetter, method ID=1, arguments=[65535] }
+22:05:07.033 [Thread-3] DEBUG c.m.s.p.m.SimpleCallRequestToPacketMapping: getSerializedProtocolData - start: 
+22:05:07.033 [Thread-3] DEBUG c.m.s.p.m.SimpleCallRequestToPacketMapping: getSerializedProtocolData - end: []
+22:05:07.033 [Thread-3] DEBUG c.m.s.p.m.SimpleCallRequestToPacketMapping: getSerializedNetworkData - start: nodeId=1
+22:05:07.033 [Thread-3] DEBUG c.m.s.p.m.SimpleCallRequestToPacketMapping: getSerializedNetworkData - end: []
+22:05:07.033 [Thread-3] DEBUG c.m.s.p.m.SimpleCallRequestToPacketMapping: getSerializedNodeData - start: nodeId=0
+22:05:07.033 [main] DEBUG c.m.simply.StandardServicesDeviceObject: 1:0-PeripheralInfoGetter: getCallResult - start: callId=7debad25-1afa-43c2-9163-b92de5152aaf, timeout=10000
+22:05:07.034 [main] DEBUG c.m.simply.HashMapResultsContainer: get - start: uid=7debad25-1afa-43c2-9163-b92de5152aaf
+22:05:07.035 [main] DEBUG c.m.simply.HashMapResultsContainer: update - start: 
+22:05:07.035 [main] DEBUG c.m.simply.HashMapResultsContainer: update - end: 
+22:05:07.035 [main] WARN  c.m.simply.HashMapResultsContainer: No result found.
+22:05:07.035 [main] DEBUG c.m.simply.HashMapResultsContainer: get - end: null
+22:05:07.035 [Thread-3] DEBUG c.m.simply.protocol.mapping.Serializer: serialize - start: valueMapping={ starting position =0, convertor=com.microrisc.simply.types.StringToByteConvertor@3580ab }, value=0
+22:05:07.036 [Thread-3] DEBUG c.m.simply.types.StringToByteConvertor: toProtoValue - start: valueToConv=0
+22:05:07.036 [Thread-3] DEBUG c.m.simply.types.StringToByteConvertor: toProtoValue - end: [0]
+22:05:07.036 [Thread-3] DEBUG c.m.simply.protocol.mapping.Serializer: serialize - end: [0]
+22:05:07.038 [Thread-3] DEBUG c.m.s.p.m.SimpleCallRequestToPacketMapping: getSerializedNodeData - end: [{ starting position=0, data=[S@1bb7081 }]
+22:05:07.039 [Thread-3] DEBUG c.m.s.p.m.SimpleCallRequestToPacketMapping: getSerializedInterfaceData - start: devInterface=interface com.microrisc.simply.iqrf.dpa.v210.devices.PeripheralInfoGetter
+22:05:07.039 [Thread-3] DEBUG c.m.s.p.m.SimpleCallRequestToPacketMapping: getSerializedInterfaceData - end: []
+22:05:07.039 [Thread-3] DEBUG c.m.s.p.m.SimpleCallRequestToPacketMapping: getSerializedMethodData - start: devInterface=interface com.microrisc.simply.iqrf.dpa.v210.devices.PeripheralInfoGetter, methodId=1
+22:05:07.039 [Thread-3] DEBUG c.m.s.p.m.SimpleCallRequestToPacketMapping: getSerializedMethodData - end: [{ starting position=2, data=[S@d72e3f }]
+22:05:07.039 [Thread-3] DEBUG c.m.s.p.m.SimpleCallRequestToPacketMapping: getSerializedMethodArgs - start: devInterface=interface com.microrisc.simply.iqrf.dpa.v210.devices.PeripheralInfoGetter, methodId=1, args=[65535]
+22:05:07.039 [Thread-3] DEBUG c.m.simply.protocol.mapping.Serializer: serialize - start: valueMapping={ starting position =4, convertor=com.microrisc.simply.iqrf.types.Uns16Convertor@11d3f0b }, value=65535
+22:05:07.040 [Thread-3] DEBUG c.m.simply.iqrf.types.Uns16Convertor: toIQValue - start: valueToConv=65535
+22:05:07.040 [Thread-3] DEBUG c.m.simply.iqrf.types.Uns16Convertor: toIQValue - end: [255, 255]
+22:05:07.040 [Thread-3] DEBUG c.m.simply.protocol.mapping.Serializer: serialize - end: [255, 255]
+22:05:07.040 [Thread-3] DEBUG c.m.s.p.m.SimpleCallRequestToPacketMapping: getSerializedMethodArgs - end: [{ starting position=4, data=[S@1160fa6 }]
+22:05:07.042 [Thread-3] DEBUG c.m.simply.protocol.RequestPacketCreator: createRequestPacket - start: packetFragments[{ starting position=0, data=[S@1bb7081 }, { starting position=2, data=[S@d72e3f }, { starting position=4, data=[S@1160fa6 }]
+22:05:07.043 [Thread-3] DEBUG c.m.simply.protocol.RequestPacketCreator: getMaxPosition - start: packetFragments[{ starting position=0, data=[S@1bb7081 }, { starting position=2, data=[S@d72e3f }, { starting position=4, data=[S@1160fa6 }]
+22:05:07.043 [Thread-3] DEBUG c.m.simply.protocol.RequestPacketCreator: getMaxPosition - end: 6
+22:05:07.043 [Thread-3] DEBUG c.m.simply.protocol.RequestPacketCreator: createRequestPacket - end: [0, 0, 255, 63, 255, 255]
+22:05:07.043 [Thread-3] DEBUG c.m.s.i.d.v.p.DPA_MessageConvertor: convertToProtoFormat - end: [0, 0, 255, 63, 255, 255]
+22:05:07.043 [Thread-3] DEBUG c.m.s.i.d.v.protocol.DPA_ProtocolLayer: deleteInvalidRequests - start: newRequest={ id=7debad25-1afa-43c2-9163-b92de5152aaf, network ID=1, node ID=0, device interface=com.microrisc.simply.iqrf.dpa.v210.devices.PeripheralInfoGetter, method ID=1, arguments=[65535] }
+22:05:07.043 [Thread-3] DEBUG c.m.s.i.d.v.protocol.DPA_ProtocolLayer: deleteInvalidRequests - end
+22:05:07.045 [Thread-3] DEBUG c.m.s.network.usbcdc.CDCNetworkLayer: sendData - start: networkData={ data=[0, 0, 255, 63, 255, 255], network ID=1 }
+22:05:07.085 [Thread-3] DEBUG c.m.s.network.usbcdc.CDCNetworkLayer: sendData - end
+22:05:07.088 [Thread-3] DEBUG c.m.s.i.d.v.protocol.DPA_ProtocolLayer: sendRequest - end
+22:05:07.089 [Thread-3] DEBUG c.m.s.iqrf.dpa.connector.DPA_Connector: sendRequestToProtocolLayer - end:
+22:05:07.133 [Thread-4] DEBUG c.m.s.network.usbcdc.CDCNetworkLayer: onGetMessage - start: data=[0, 0, 255, 191, 0, 0, 0, 85, 16, 2, 0, 253, 54, 0, 0, 0, 0, 0, 0, 1]
+22:05:07.215 [Thread-4] DEBUG c.m.s.i.d.v.protocol.DPA_ProtocolLayer: onGetData - start: { data=[0, 0, 255, 191, 0, 0, 0, 85, 16, 2, 0, 253, 54, 0, 0, 0, 0, 0, 0, 1], network ID=1 }
+22:05:07.221 [Thread-4] DEBUG c.m.s.i.d.v.p.DPA_ProtocolProperties: getResponseCode - start: protoMsg=[0, 0, 255, 191, 0, 0, 0, 85, 16, 2, 0, 253, 54, 0, 0, 0, 0, 0, 0, 1]
+22:05:07.222 [Thread-4] DEBUG c.m.s.i.d.v.p.DPA_ProtocolProperties: getMessageData_Integer - start:
+22:05:07.222 [Thread-4] DEBUG c.m.s.i.d.v.p.DPA_ProtocolProperties: getMessageData_Integer - end: 0
+22:05:07.226 [Thread-4] DEBUG c.m.s.i.d.v.p.DPA_ProtocolProperties: getResponseCode - end: NO_ERROR
+22:05:07.227 [Thread-4] DEBUG c.m.s.i.d.v.p.DPA_MessageConvertor: convertToDOFormat - start: networkData={ data=[0, 0, 255, 191, 0, 0, 0, 85, 16, 2, 0, 253, 54, 0, 0, 0, 0, 0, 0, 1], network ID=1 }
+22:05:07.227 [Thread-4] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: getNodeId - start: packet=[0, 0, 255, 191, 0, 0, 0, 85, 16, 2, 0, 253, 54, 0, 0, 0, 0, 0, 0, 1]
+22:05:07.231 [Thread-4] DEBUG c.m.simply.protocol.mapping.Deserializer: deserialize - start: packetToValueMapping={ startig position=0, length=1, convertor=com.microrisc.simply.types.StringToByteConvertor@3580ab }, protoMsg=[0, 0, 255, 191, 0, 0, 0, 85, 16, 2, 0, 253, 54, 0, 0, 0, 0, 0, 0, 1]
+22:05:07.231 [Thread-4] DEBUG c.m.simply.types.StringToByteConvertor: toObject - start: iqValue=[0]
+22:05:07.232 [Thread-4] DEBUG c.m.simply.types.StringToByteConvertor: toObject - end: 0
+22:05:07.232 [Thread-4] DEBUG c.m.simply.protocol.mapping.Deserializer: deserialize - end: 0
+22:05:07.232 [Thread-4] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: getNodeId - end: 0
+22:05:07.232 [Thread-4] DEBUG c.m.s.i.d.v.p.DPA_ProtocolProperties: getPeripheralNumber - start: protoMsg=[0, 0, 255, 191, 0, 0, 0, 85, 16, 2, 0, 253, 54, 0, 0, 0, 0, 0, 0, 1]
+22:05:07.233 [Thread-4] DEBUG c.m.s.i.d.v.p.DPA_ProtocolProperties: getMessageData_Integer - start:
+22:05:07.233 [Thread-4] DEBUG c.m.s.i.d.v.p.DPA_ProtocolProperties: getMessageData_Integer - end: 255
+22:05:07.233 [Thread-4] DEBUG c.m.s.i.d.v.p.DPA_ProtocolProperties: getPeripheralNumber - end: 255
+22:05:07.233 [Thread-4] DEBUG c.m.s.i.d.v.p.DPA_ProtocolProperties: getCommand - start: protoMsg=[0, 0, 255, 191, 0, 0, 0, 85, 16, 2, 0, 253, 54, 0, 0, 0, 0, 0, 0, 1]
+22:05:07.234 [Thread-4] DEBUG c.m.s.i.d.v.p.DPA_ProtocolProperties: getMessageData_Integer - start:
+22:05:07.234 [Thread-4] DEBUG c.m.s.i.d.v.p.DPA_ProtocolProperties: getMessageData_Integer - end: 191
+22:05:07.234 [Thread-4] DEBUG c.m.s.i.d.v.p.DPA_ProtocolProperties: getCommand - end: 191
+22:05:07.235 [Thread-4] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: getMethodId - start: devInterface=interface com.microrisc.simply.iqrf.dpa.v210.devices.PeripheralInfoGetter, packet=[0, 0, 255, 191, 0, 0, 0, 85, 16, 2, 0, 253, 54, 0, 0, 0, 0, 0, 0, 1]
+22:05:07.235 [Thread-4] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - start: packet=[0, 0, 255, 191, 0, 0, 0, 85, 16, 2, 0, 253, 54, 0, 0, 0, 0, 0, 0, 1], packetValues=[{ position=2, values={255, } }]
+22:05:07.236 [Thread-4] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - end: true
+22:05:07.237 [Thread-4] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isResultCompatible - start: packet=[0, 0, 255, 191, 0, 0, 0, 85, 16, 2, 0, 253, 54, 0, 0, 0, 0, 0, 0, 1], resultMapping={ startig position=8, length=0, convertor=com.microrisc.simply.iqrf.dpa.v210.types.ArrayPeripheralInfoConvertor@3adfb4 }
+22:05:07.237 [Thread-4] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isResultCompatible - end: true
+22:05:07.237 [Thread-4] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - start: packet=[0, 0, 255, 191, 0, 0, 0, 85, 16, 2, 0, 253, 54, 0, 0, 0, 0, 0, 0, 1], packetValues=[{ position=3, values={191, } }]
+22:05:07.238 [Thread-4] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - end: true
+22:05:07.238 [Thread-4] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isResultCompatible - start: packet=[0, 0, 255, 191, 0, 0, 0, 85, 16, 2, 0, 253, 54, 0, 0, 0, 0, 0, 0, 1], resultMapping={ startig position=8, length=0, convertor=com.microrisc.simply.iqrf.dpa.v210.types.PeripheralInfoConvertor@134be3c }
+22:05:07.238 [Thread-4] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isResultCompatible - end: true
+22:05:07.238 [Thread-4] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - start: packet=[0, 0, 255, 191, 0, 0, 0, 85, 16, 2, 0, 253, 54, 0, 0, 0, 0, 0, 0, 1], packetValues=[{ position=2, values={255, } }, { position=3, values={191, } }]
+22:05:07.239 [Thread-4] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - end: true
+22:05:07.239 [Thread-4] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isResultCompatible - start: packet=[0, 0, 255, 191, 0, 0, 0, 85, 16, 2, 0, 253, 54, 0, 0, 0, 0, 0, 0, 1], resultMapping={ startig position=8, length=0, convertor=com.microrisc.simply.iqrf.dpa.v210.types.PeripheralEnumerationConvertor@1b57fd1 }
+22:05:07.239 [Thread-4] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isResultCompatible - end: true
+22:05:07.239 [Thread-4] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: getMethodId - end: 1
+22:05:07.239 [Thread-4] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: getAdditionalData - start: packet=[0, 0, 255, 191, 0, 0, 0, 85, 16, 2, 0, 253, 54, 0, 0, 0, 0, 0, 0, 1]
+22:05:07.240 [Thread-4] DEBUG c.m.simply.protocol.mapping.Deserializer: deserialize - start: packetToValueMapping={ startig position=4, length=0, convertor=com.microrisc.simply.iqrf.dpa.v210.types.DPA_AdditionalInfoConvertor@da88c2 }, protoMsg=[0, 0, 255, 191, 0, 0, 0, 85, 16, 2, 0, 253, 54, 0, 0, 0, 0, 0, 0, 1]
+22:05:07.240 [Thread-4] DEBUG c.m.s.i.d.v.t.DPA_AdditionalInfoConvertor: toObject - start: protoValue=[0, 0, 0, 85, 16, 2, 0, 253, 54, 0, 0, 0, 0, 0, 0, 1]
+22:05:07.240 [Thread-4] DEBUG c.m.simply.iqrf.types.Uns16Convertor: toObject - start: iqValue=[0, 0]
+22:05:07.241 [Thread-4] DEBUG c.m.simply.iqrf.types.Uns16Convertor: toIQValue - end: 0
+22:05:07.245 [Thread-4] DEBUG c.m.s.i.d.v.t.DPA_AdditionalInfoConvertor: toObject - end: DPA_AdditionalInfo { 
+ HW profile ID: 0
+ Response code: NO_ERROR
+ DPA value: 85
+}
+22:05:07.246 [Thread-4] DEBUG c.m.simply.protocol.mapping.Deserializer: deserialize - end: DPA_AdditionalInfo { 
+ HW profile ID: 0
+ Response code: NO_ERROR
+ DPA value: 85
+}
+22:05:07.246 [Thread-4] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: getAdditionalData - end: DPA_AdditionalInfo { 
+ HW profile ID: 0
+ Response code: NO_ERROR
+ DPA value: 85
+}
+22:05:07.252 [Thread-4] DEBUG c.m.s.i.d.v.p.DPA_ProtocolProperties: getResponseCode - start: protoMsg=[0, 0, 255, 191, 0, 0, 0, 85, 16, 2, 0, 253, 54, 0, 0, 0, 0, 0, 0, 1]
+22:05:07.252 [Thread-4] DEBUG c.m.s.i.d.v.p.DPA_ProtocolProperties: getMessageData_Integer - start:
+22:05:07.252 [Thread-4] DEBUG c.m.s.i.d.v.p.DPA_ProtocolProperties: getMessageData_Integer - end: 0
+22:05:07.252 [Thread-4] DEBUG c.m.s.i.d.v.p.DPA_ProtocolProperties: getResponseCode - end: NO_ERROR
+22:05:07.252 [Thread-4] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: getMethodResult - start: devInterface=interface com.microrisc.simply.iqrf.dpa.v210.devices.PeripheralInfoGetter, methodId=1,protoMsg=[0, 0, 255, 191, 0, 0, 0, 85, 16, 2, 0, 253, 54, 0, 0, 0, 0, 0, 0, 1]
+22:05:07.252 [Thread-4] DEBUG c.m.simply.protocol.mapping.Deserializer: deserialize - start: packetToValueMapping={ startig position=8, length=0, convertor=com.microrisc.simply.iqrf.dpa.v210.types.PeripheralEnumerationConvertor@1b57fd1 }, protoMsg=[0, 0, 255, 191, 0, 0, 0, 85, 16, 2, 0, 253, 54, 0, 0, 0, 0, 0, 0, 1]
+22:05:07.253 [Thread-4] DEBUG c.m.s.i.d.v.t.PeripheralEnumerationConvertor: toObject - start: protoValue=[16, 2, 0, 253, 54, 0, 0, 0, 0, 0, 0, 1]
+22:05:07.257 [Thread-4] DEBUG c.m.s.i.d.v.t.PeripheralEnumerationConvertor: toObject - end: PeripheralEnumeration { 
+ DPA protocol version: { minor number=16, major number=2 }
+ Number of user defined peripherals: 0
+ Default peripherals: [0, 2, 3, 4, 5, 6, 7, 9, 10, 12, 13, ]
+ HW profile ID: 0
+ HW profile version: 0
+ Flags: 1
+}
+22:05:07.257 [Thread-4] DEBUG c.m.simply.protocol.mapping.Deserializer: deserialize - end: PeripheralEnumeration { 
+ DPA protocol version: { minor number=16, major number=2 }
+ Number of user defined peripherals: 0
+ Default peripherals: [0, 2, 3, 4, 5, 6, 7, 9, 10, 12, 13, ]
+ HW profile ID: 0
+ HW profile version: 0
+ Flags: 1
+}
+22:05:07.258 [Thread-4] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: getMethodResult - end: PeripheralEnumeration { 
+ DPA protocol version: { minor number=16, major number=2 }
+ Number of user defined peripherals: 0
+ Default peripherals: [0, 2, 3, 4, 5, 6, 7, 9, 10, 12, 13, ]
+ HW profile ID: 0
+ HW profile version: 0
+ Flags: 1
+}
+22:05:07.258 [Thread-4] DEBUG c.m.s.i.d.v.p.DPA_MessageConvertor: convertToDOFormat - end: { { main data=PeripheralEnumeration { 
  DPA protocol version: { minor number=16, major number=2 }
  Number of user defined peripherals: 0
  Default peripherals: [0, 2, 3, 4, 5, 6, 7, 9, 10, 12, 13, ]
@@ -18,9 +166,9 @@
 }, additional data=DPA_AdditionalInfo { 
  HW profile ID: 0
  Response code: NO_ERROR
- DPA value: 89
-}, source={ { networkId=1, node ID=0 }dev interface=interface com.microrisc.simply.iqrf.dpa.v210.devices.PeripheralInfoGetter, method ID=1 } }, proc error=null, request ID=20df405b-5492-4407-8d0a-e52881eb6435 }
-11:44:29.201 [Thread-3] INFO  c.m.s.iqrf.dpa.connector.DPA_Connector: Processed message: { { main data=PeripheralEnumeration { 
+ DPA value: 85
+}, source={ { networkId=1, node ID=0 }dev interface=interface com.microrisc.simply.iqrf.dpa.v210.devices.PeripheralInfoGetter, method ID=1 } }, proc error=null, request ID=null }
+22:05:07.260 [Thread-4] DEBUG c.m.s.i.d.v.protocol.DPA_ProtocolLayer: processMessage - start: message={ { main data=PeripheralEnumeration { 
  DPA protocol version: { minor number=16, major number=2 }
  Number of user defined peripherals: 0
  Default peripherals: [0, 2, 3, 4, 5, 6, 7, 9, 10, 12, 13, ]
@@ -30,11 +178,149 @@
 }, additional data=DPA_AdditionalInfo { 
  HW profile ID: 0
  Response code: NO_ERROR
- DPA value: 89
-}, source={ { networkId=1, node ID=0 }dev interface=interface com.microrisc.simply.iqrf.dpa.v210.devices.PeripheralInfoGetter, method ID=1 } }, proc error=null, request ID=20df405b-5492-4407-8d0a-e52881eb6435 }
-11:44:29.203 [Thread-3] INFO  c.m.s.iqrf.dpa.connector.DPA_Connector: Response found
-11:44:29.250 [Thread-2] INFO  c.microrisc.simply.ConnectedDeviceObject: 1:0-PeripheralInfoGetter: New result from connector, id=20df405b-5492-4407-8d0a-e52881eb6435
-11:44:29.250 [main] INFO  c.m.simply.StandardServicesDeviceObject: 1:0-PeripheralInfoGetter: Get call result: PeripheralEnumeration { 
+ DPA value: 85
+}, source={ { networkId=1, node ID=0 }dev interface=interface com.microrisc.simply.iqrf.dpa.v210.devices.PeripheralInfoGetter, method ID=1 } }, proc error=null, request ID=null }
+22:05:07.260 [Thread-4] DEBUG c.m.s.i.d.v.protocol.DPA_ProtocolLayer: getCauseRequest - start: response={ { main data=PeripheralEnumeration { 
+ DPA protocol version: { minor number=16, major number=2 }
+ Number of user defined peripherals: 0
+ Default peripherals: [0, 2, 3, 4, 5, 6, 7, 9, 10, 12, 13, ]
+ HW profile ID: 0
+ HW profile version: 0
+ Flags: 1
+}, additional data=DPA_AdditionalInfo { 
+ HW profile ID: 0
+ Response code: NO_ERROR
+ DPA value: 85
+}, source={ { networkId=1, node ID=0 }dev interface=interface com.microrisc.simply.iqrf.dpa.v210.devices.PeripheralInfoGetter, method ID=1 } }, proc error=null, request ID=null }
+22:05:07.262 [Thread-4] DEBUG c.m.s.i.d.v.protocol.DPA_ProtocolLayer: getCauseRequest - end: { id=7debad25-1afa-43c2-9163-b92de5152aaf, network ID=1, node ID=0, device interface=com.microrisc.simply.iqrf.dpa.v210.devices.PeripheralInfoGetter, method ID=1, arguments=[65535] }
+22:05:07.263 [Thread-4] DEBUG c.m.s.iqrf.dpa.connector.DPA_Connector: onGetMessage - start: data={ { main data=PeripheralEnumeration { 
+ DPA protocol version: { minor number=16, major number=2 }
+ Number of user defined peripherals: 0
+ Default peripherals: [0, 2, 3, 4, 5, 6, 7, 9, 10, 12, 13, ]
+ HW profile ID: 0
+ HW profile version: 0
+ Flags: 1
+}, additional data=DPA_AdditionalInfo { 
+ HW profile ID: 0
+ Response code: NO_ERROR
+ DPA value: 85
+}, source={ { networkId=1, node ID=0 }dev interface=interface com.microrisc.simply.iqrf.dpa.v210.devices.PeripheralInfoGetter, method ID=1 } }, proc error=null, request ID=7debad25-1afa-43c2-9163-b92de5152aaf }
+22:05:07.263 [Thread-4] INFO  c.m.s.iqrf.dpa.connector.DPA_Connector: New message from protocol layer get: { { main data=PeripheralEnumeration { 
+ DPA protocol version: { minor number=16, major number=2 }
+ Number of user defined peripherals: 0
+ Default peripherals: [0, 2, 3, 4, 5, 6, 7, 9, 10, 12, 13, ]
+ HW profile ID: 0
+ HW profile version: 0
+ Flags: 1
+}, additional data=DPA_AdditionalInfo { 
+ HW profile ID: 0
+ Response code: NO_ERROR
+ DPA value: 85
+}, source={ { networkId=1, node ID=0 }dev interface=interface com.microrisc.simply.iqrf.dpa.v210.devices.PeripheralInfoGetter, method ID=1 } }, proc error=null, request ID=7debad25-1afa-43c2-9163-b92de5152aaf }
+22:05:07.263 [Thread-4] DEBUG c.m.s.iqrf.dpa.connector.DPA_Connector: onGetMessage - end
+22:05:07.263 [Thread-3] DEBUG c.m.s.iqrf.dpa.connector.DPA_Connector: processNextIncommingMessage - start:
+22:05:07.263 [Thread-4] DEBUG c.m.s.i.d.v.protocol.DPA_ProtocolLayer: processResponse - end
+22:05:07.264 [Thread-4] DEBUG c.m.s.i.d.v.protocol.DPA_ProtocolLayer: onGetData - end
+22:05:07.264 [Thread-3] INFO  c.m.s.iqrf.dpa.connector.DPA_Connector: Processed message: { { main data=PeripheralEnumeration { 
+ DPA protocol version: { minor number=16, major number=2 }
+ Number of user defined peripherals: 0
+ Default peripherals: [0, 2, 3, 4, 5, 6, 7, 9, 10, 12, 13, ]
+ HW profile ID: 0
+ HW profile version: 0
+ Flags: 1
+}, additional data=DPA_AdditionalInfo { 
+ HW profile ID: 0
+ Response code: NO_ERROR
+ DPA value: 85
+}, source={ { networkId=1, node ID=0 }dev interface=interface com.microrisc.simply.iqrf.dpa.v210.devices.PeripheralInfoGetter, method ID=1 } }, proc error=null, request ID=7debad25-1afa-43c2-9163-b92de5152aaf }
+22:05:07.265 [Thread-4] DEBUG c.m.s.network.usbcdc.CDCNetworkLayer: onGetMessage - end
+22:05:07.265 [Thread-3] INFO  c.m.s.iqrf.dpa.connector.DPA_Connector: Response found
+22:05:07.265 [Thread-3] DEBUG c.m.s.iqrf.dpa.connector.DPA_Connector: createCallRequestProcessingInfo - start: { { main data=PeripheralEnumeration { 
+ DPA protocol version: { minor number=16, major number=2 }
+ Number of user defined peripherals: 0
+ Default peripherals: [0, 2, 3, 4, 5, 6, 7, 9, 10, 12, 13, ]
+ HW profile ID: 0
+ HW profile version: 0
+ Flags: 1
+}, additional data=DPA_AdditionalInfo { 
+ HW profile ID: 0
+ Response code: NO_ERROR
+ DPA value: 85
+}, source={ { networkId=1, node ID=0 }dev interface=interface com.microrisc.simply.iqrf.dpa.v210.devices.PeripheralInfoGetter, method ID=1 } }, proc error=null, request ID=7debad25-1afa-43c2-9163-b92de5152aaf }
+22:05:07.270 [Thread-3] DEBUG c.m.s.iqrf.dpa.connector.DPA_Connector: createCallRequestProcessingInfo - end: { , request ID=7debad25-1afa-43c2-9163-b92de5152aaf, state=RESULT_ARRIVED, call result={ , method result=PeripheralEnumeration { 
+ DPA protocol version: { minor number=16, major number=2 }
+ Number of user defined peripherals: 0
+ Default peripherals: [0, 2, 3, 4, 5, 6, 7, 9, 10, 12, 13, ]
+ HW profile ID: 0
+ HW profile version: 0
+ Flags: 1
+}, additional info=DPA_AdditionalInfo { 
+ HW profile ID: 0
+ Response code: NO_ERROR
+ DPA value: 85
+} }, error=null }
+22:05:07.271 [Thread-3] DEBUG c.m.s.iqrf.dpa.connector.DPA_Connector: processNextIncommingMessage - end
+22:05:07.271 [Thread-2] DEBUG c.microrisc.simply.ConnectedDeviceObject: 1:0-PeripheralInfoGetter: onCallRequestProcessingInfo - start: procInfo={ , request ID=7debad25-1afa-43c2-9163-b92de5152aaf, state=RESULT_ARRIVED, call result={ , method result=PeripheralEnumeration { 
+ DPA protocol version: { minor number=16, major number=2 }
+ Number of user defined peripherals: 0
+ Default peripherals: [0, 2, 3, 4, 5, 6, 7, 9, 10, 12, 13, ]
+ HW profile ID: 0
+ HW profile version: 0
+ Flags: 1
+}, additional info=DPA_AdditionalInfo { 
+ HW profile ID: 0
+ Response code: NO_ERROR
+ DPA value: 85
+} }, error=null }, callId=7debad25-1afa-43c2-9163-b92de5152aaf
+22:05:07.271 [Thread-2] DEBUG c.m.simply.HashMapResultsContainer: put - start: uid=7debad25-1afa-43c2-9163-b92de5152aaf, callResult={ , request ID=7debad25-1afa-43c2-9163-b92de5152aaf, state=RESULT_ARRIVED, call result={ , method result=PeripheralEnumeration { 
+ DPA protocol version: { minor number=16, major number=2 }
+ Number of user defined peripherals: 0
+ Default peripherals: [0, 2, 3, 4, 5, 6, 7, 9, 10, 12, 13, ]
+ HW profile ID: 0
+ HW profile version: 0
+ Flags: 1
+}, additional info=DPA_AdditionalInfo { 
+ HW profile ID: 0
+ Response code: NO_ERROR
+ DPA value: 85
+} }, error=null }
+22:05:07.272 [Thread-2] DEBUG c.m.simply.HashMapResultsContainer: update - start: 
+22:05:07.272 [Thread-2] DEBUG c.m.simply.HashMapResultsContainer: update - end: 
+22:05:07.274 [Thread-2] DEBUG c.m.simply.HashMapResultsContainer: put - end: 
+22:05:07.274 [Thread-2] DEBUG c.microrisc.simply.ConnectedDeviceObject: 1:0-PeripheralInfoGetter: onCallRequestProcessingInfo - end
+22:05:07.274 [Thread-2] INFO  c.microrisc.simply.ConnectedDeviceObject: 1:0-PeripheralInfoGetter: New result from connector, id=7debad25-1afa-43c2-9163-b92de5152aaf
+22:05:07.274 [main] DEBUG c.m.simply.HashMapResultsContainer: get - start: uid=7debad25-1afa-43c2-9163-b92de5152aaf
+22:05:07.274 [main] DEBUG c.m.simply.HashMapResultsContainer: update - start: 
+22:05:07.275 [main] DEBUG c.m.simply.HashMapResultsContainer: update - end: 
+22:05:07.275 [main] DEBUG c.m.simply.HashMapResultsContainer: get - end: { , request ID=7debad25-1afa-43c2-9163-b92de5152aaf, state=RESULT_ARRIVED, call result={ , method result=PeripheralEnumeration { 
+ DPA protocol version: { minor number=16, major number=2 }
+ Number of user defined peripherals: 0
+ Default peripherals: [0, 2, 3, 4, 5, 6, 7, 9, 10, 12, 13, ]
+ HW profile ID: 0
+ HW profile version: 0
+ Flags: 1
+}, additional info=DPA_AdditionalInfo { 
+ HW profile ID: 0
+ Response code: NO_ERROR
+ DPA value: 85
+} }, error=null }
+22:05:07.275 [main] DEBUG c.m.simply.StandardServicesDeviceObject: 1:0-PeripheralInfoGetter: getCallResultImmediately - start: callId=7debad25-1afa-43c2-9163-b92de5152aaf
+22:05:07.275 [main] DEBUG c.m.simply.HashMapResultsContainer: get - start: uid=7debad25-1afa-43c2-9163-b92de5152aaf
+22:05:07.275 [main] DEBUG c.m.simply.HashMapResultsContainer: update - start: 
+22:05:07.275 [main] DEBUG c.m.simply.HashMapResultsContainer: update - end: 
+22:05:07.275 [main] DEBUG c.m.simply.HashMapResultsContainer: get - end: { , request ID=7debad25-1afa-43c2-9163-b92de5152aaf, state=RESULT_ARRIVED, call result={ , method result=PeripheralEnumeration { 
+ DPA protocol version: { minor number=16, major number=2 }
+ Number of user defined peripherals: 0
+ Default peripherals: [0, 2, 3, 4, 5, 6, 7, 9, 10, 12, 13, ]
+ HW profile ID: 0
+ HW profile version: 0
+ Flags: 1
+}, additional info=DPA_AdditionalInfo { 
+ HW profile ID: 0
+ Response code: NO_ERROR
+ DPA value: 85
+} }, error=null }
+22:05:07.276 [main] DEBUG c.m.simply.StandardServicesDeviceObject: 1:0-PeripheralInfoGetter: getCallResultImmediately - end: PeripheralEnumeration { 
  DPA protocol version: { minor number=16, major number=2 }
  Number of user defined peripherals: 0
  Default peripherals: [0, 2, 3, 4, 5, 6, 7, 9, 10, 12, 13, ]
@@ -42,35 +328,511 @@
  HW profile version: 0
  Flags: 1
 }
-11:44:29.275 [main] INFO  c.m.s.iqrf.dpa.v210.init.DPA_Initializer: Master node created
-11:44:29.275 [main] INFO  c.m.s.iqrf.dpa.v210.init.DPA_Initializer: Get bonded nodes: 1 attempt
-11:44:29.329 [main] INFO  c.m.s.iqrf.dpa.connector.DPA_Connector: New call request created: { id=2f7a07da-2c34-4d9b-99b6-1fe4eebe6171, network ID=1, node ID=0, device interface=com.microrisc.simply.iqrf.dpa.v210.devices.Coordinator, method ID=3, arguments=[65535] }
-11:44:29.329 [main] INFO  c.microrisc.simply.ConnectedDeviceObject: 1:0-Coordinator: Method 3 call dispatched, id=2f7a07da-2c34-4d9b-99b6-1fe4eebe6171
-11:44:29.344 [main] WARN  c.m.simply.HashMapResultsContainer: No result found.
-11:44:30.171 [Thread-5] INFO  c.m.s.iqrf.dpa.connector.DPA_Connector: New message from protocol layer get: { { main data=BondedNodes { 
- Bonded nodes: 1, 2
-}, additional data=DPA_AdditionalInfo { 
+22:05:07.276 [main] INFO  c.m.simply.StandardServicesDeviceObject: 1:0-PeripheralInfoGetter: Get call result: PeripheralEnumeration { 
+ DPA protocol version: { minor number=16, major number=2 }
+ Number of user defined peripherals: 0
+ Default peripherals: [0, 2, 3, 4, 5, 6, 7, 9, 10, 12, 13, ]
+ HW profile ID: 0
+ HW profile version: 0
+ Flags: 1
+}
+22:05:07.276 [main] DEBUG c.m.simply.StandardServicesDeviceObject: 1:0-PeripheralInfoGetter: getCallResult - end: PeripheralEnumeration { 
+ DPA protocol version: { minor number=16, major number=2 }
+ Number of user defined peripherals: 0
+ Default peripherals: [0, 2, 3, 4, 5, 6, 7, 9, 10, 12, 13, ]
+ HW profile ID: 0
+ HW profile version: 0
+ Flags: 1
+}
+22:05:07.276 [main] DEBUG c.m.s.iqrf.dpa.v210.init.DPA_Initializer: getPeripheralNumbers - end: [0, 2, 3, 4, 5, 6, 7, 9, 10, 12, 13]
+22:05:07.276 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: getDeviceObject - start: networkId=1, nodeId=0, connector=com.microrisc.simply.iqrf.dpa.connector.DPA_Connector@14b7042, implClass=class com.microrisc.simply.iqrf.dpa.v210.devices.impl.SimpleCoordinator, configuration=org.apache.commons.configuration.PropertiesConfiguration@1b72ada
+22:05:07.277 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: createResultsContainer - start: configuration=org.apache.commons.configuration.PropertiesConfiguration@1b72ada
+22:05:07.277 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: createResultsContainer - end: com.microrisc.simply.HashMapCallRequestProcessingInfoContainer@1747b17
+22:05:07.277 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: getDeviceObject - end: com.microrisc.simply.iqrf.dpa.v210.devices.impl.SimpleCoordinator@3d50e2
+22:05:07.278 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: getDeviceObject - start: networkId=1, nodeId=0, connector=com.microrisc.simply.iqrf.dpa.connector.DPA_Connector@14b7042, implClass=class com.microrisc.simply.iqrf.dpa.v210.devices.impl.SimpleOS, configuration=org.apache.commons.configuration.PropertiesConfiguration@1b72ada
+22:05:07.278 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: createResultsContainer - start: configuration=org.apache.commons.configuration.PropertiesConfiguration@1b72ada
+22:05:07.278 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: createResultsContainer - end: com.microrisc.simply.HashMapCallRequestProcessingInfoContainer@1895df8
+22:05:07.279 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: getDeviceObject - end: com.microrisc.simply.iqrf.dpa.v210.devices.impl.SimpleOS@1788424
+22:05:07.279 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: getDeviceObject - start: networkId=1, nodeId=0, connector=com.microrisc.simply.iqrf.dpa.connector.DPA_Connector@14b7042, implClass=class com.microrisc.simply.iqrf.dpa.v210.devices.impl.SimpleEEPROM, configuration=org.apache.commons.configuration.PropertiesConfiguration@1b72ada
+22:05:07.279 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: createResultsContainer - start: configuration=org.apache.commons.configuration.PropertiesConfiguration@1b72ada
+22:05:07.279 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: createResultsContainer - end: com.microrisc.simply.HashMapCallRequestProcessingInfoContainer@12b94c3
+22:05:07.280 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: getDeviceObject - end: com.microrisc.simply.iqrf.dpa.v210.devices.impl.SimpleEEPROM@3392e9
+22:05:07.280 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: getDeviceObject - start: networkId=1, nodeId=0, connector=com.microrisc.simply.iqrf.dpa.connector.DPA_Connector@14b7042, implClass=class com.microrisc.simply.iqrf.dpa.v210.devices.impl.SimpleEEEPROM, configuration=org.apache.commons.configuration.PropertiesConfiguration@1b72ada
+22:05:07.280 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: createResultsContainer - start: configuration=org.apache.commons.configuration.PropertiesConfiguration@1b72ada
+22:05:07.280 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: createResultsContainer - end: com.microrisc.simply.HashMapCallRequestProcessingInfoContainer@1f20541
+22:05:07.281 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: getDeviceObject - end: com.microrisc.simply.iqrf.dpa.v210.devices.impl.SimpleEEEPROM@36f58e
+22:05:07.281 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: getDeviceObject - start: networkId=1, nodeId=0, connector=com.microrisc.simply.iqrf.dpa.connector.DPA_Connector@14b7042, implClass=class com.microrisc.simply.iqrf.dpa.v210.devices.impl.SimpleRAM, configuration=org.apache.commons.configuration.PropertiesConfiguration@1b72ada
+22:05:07.281 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: createResultsContainer - start: configuration=org.apache.commons.configuration.PropertiesConfiguration@1b72ada
+22:05:07.281 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: createResultsContainer - end: com.microrisc.simply.HashMapCallRequestProcessingInfoContainer@3343e5
+22:05:07.282 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: getDeviceObject - end: com.microrisc.simply.iqrf.dpa.v210.devices.impl.SimpleRAM@1aea6e2
+22:05:07.282 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: getDeviceObject - start: networkId=1, nodeId=0, connector=com.microrisc.simply.iqrf.dpa.connector.DPA_Connector@14b7042, implClass=class com.microrisc.simply.iqrf.dpa.v210.devices.impl.SimpleLEDR, configuration=org.apache.commons.configuration.PropertiesConfiguration@1b72ada
+22:05:07.282 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: createResultsContainer - start: configuration=org.apache.commons.configuration.PropertiesConfiguration@1b72ada
+22:05:07.282 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: createResultsContainer - end: com.microrisc.simply.HashMapCallRequestProcessingInfoContainer@14e4c9a
+22:05:07.283 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: getDeviceObject - end: com.microrisc.simply.iqrf.dpa.v210.devices.impl.SimpleLEDR@1871f70
+22:05:07.283 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: getDeviceObject - start: networkId=1, nodeId=0, connector=com.microrisc.simply.iqrf.dpa.connector.DPA_Connector@14b7042, implClass=class com.microrisc.simply.iqrf.dpa.v210.devices.impl.SimpleLEDG, configuration=org.apache.commons.configuration.PropertiesConfiguration@1b72ada
+22:05:07.283 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: createResultsContainer - start: configuration=org.apache.commons.configuration.PropertiesConfiguration@1b72ada
+22:05:07.284 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: createResultsContainer - end: com.microrisc.simply.HashMapCallRequestProcessingInfoContainer@21251c
+22:05:07.284 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: getDeviceObject - end: com.microrisc.simply.iqrf.dpa.v210.devices.impl.SimpleLEDG@b701b
+22:05:07.284 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: getDeviceObject - start: networkId=1, nodeId=0, connector=com.microrisc.simply.iqrf.dpa.connector.DPA_Connector@14b7042, implClass=class com.microrisc.simply.iqrf.dpa.v210.devices.impl.SimpleIO, configuration=org.apache.commons.configuration.PropertiesConfiguration@1b72ada
+22:05:07.285 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: createResultsContainer - start: configuration=org.apache.commons.configuration.PropertiesConfiguration@1b72ada
+22:05:07.285 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: createResultsContainer - end: com.microrisc.simply.HashMapCallRequestProcessingInfoContainer@ed0f19
+22:05:07.285 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: getDeviceObject - end: com.microrisc.simply.iqrf.dpa.v210.devices.impl.SimpleIO@17a6926
+22:05:07.286 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: getDeviceObject - start: networkId=1, nodeId=0, connector=com.microrisc.simply.iqrf.dpa.connector.DPA_Connector@14b7042, implClass=class com.microrisc.simply.iqrf.dpa.v210.devices.impl.SimpleThermometer, configuration=org.apache.commons.configuration.PropertiesConfiguration@1b72ada
+22:05:07.287 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: createResultsContainer - start: configuration=org.apache.commons.configuration.PropertiesConfiguration@1b72ada
+22:05:07.287 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: createResultsContainer - end: com.microrisc.simply.HashMapCallRequestProcessingInfoContainer@18d77fe
+22:05:07.287 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: getDeviceObject - end: com.microrisc.simply.iqrf.dpa.v210.devices.impl.SimpleThermometer@c0d2d3
+22:05:07.288 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: getDeviceObject - start: networkId=1, nodeId=0, connector=com.microrisc.simply.iqrf.dpa.connector.DPA_Connector@14b7042, implClass=class com.microrisc.simply.iqrf.dpa.v210.devices.impl.SimpleUART, configuration=org.apache.commons.configuration.PropertiesConfiguration@1b72ada
+22:05:07.288 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: createResultsContainer - start: configuration=org.apache.commons.configuration.PropertiesConfiguration@1b72ada
+22:05:07.296 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: createResultsContainer - end: com.microrisc.simply.HashMapCallRequestProcessingInfoContainer@12df636
+22:05:07.297 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: getDeviceObject - end: com.microrisc.simply.iqrf.dpa.v210.devices.impl.SimpleUART@7f55e2
+22:05:07.297 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: getDeviceObject - start: networkId=1, nodeId=0, connector=com.microrisc.simply.iqrf.dpa.connector.DPA_Connector@14b7042, implClass=class com.microrisc.simply.iqrf.dpa.v210.devices.impl.SimpleFRC, configuration=org.apache.commons.configuration.PropertiesConfiguration@1b72ada
+22:05:07.297 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: createResultsContainer - start: configuration=org.apache.commons.configuration.PropertiesConfiguration@1b72ada
+22:05:07.298 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: createResultsContainer - end: com.microrisc.simply.HashMapCallRequestProcessingInfoContainer@1df6ed6
+22:05:07.298 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: getDeviceObject - end: com.microrisc.simply.iqrf.dpa.v210.devices.impl.SimpleFRC@1e5e323
+22:05:07.298 [main] DEBUG c.m.s.iqrf.dpa.v210.init.DPA_Initializer: createNodeServices - end
+22:05:07.301 [main] DEBUG c.m.s.iqrf.dpa.v210.init.DPA_Initializer: createNode - end: com.microrisc.simply.BaseNode@646e
+22:05:07.301 [main] INFO  c.m.s.iqrf.dpa.v210.init.DPA_Initializer: Master node created
+22:05:07.301 [main] DEBUG c.m.s.iqrf.dpa.v210.init.DPA_Initializer: getBondedNodesIds - start: coord=com.microrisc.simply.iqrf.dpa.v210.devices.impl.SimpleCoordinator@3d50e2
+22:05:07.302 [main] INFO  c.m.s.iqrf.dpa.v210.init.DPA_Initializer: Get bonded nodes: 1 attempt
+22:05:07.313 [main] DEBUG c.microrisc.simply.ConnectedDeviceObject: 1:0-Coordinator: dispatchCall - start: methodId=3, arguments=[65535]
+22:05:07.314 [main] DEBUG c.m.s.iqrf.dpa.connector.DPA_Connector: callMethod - start: devObject=0, devIface=com.microrisc.simply.iqrf.dpa.v210.devices.Coordinator, methodId=3, args=[65535], timeout=10000
+22:05:07.315 [main] INFO  c.m.s.iqrf.dpa.connector.DPA_Connector: New call request created: { id=9e2deaa6-b43f-404a-b1a9-36a38580ed47, network ID=1, node ID=0, device interface=com.microrisc.simply.iqrf.dpa.v210.devices.Coordinator, method ID=3, arguments=[65535] }
+22:05:07.315 [Thread-3] DEBUG c.m.s.iqrf.dpa.connector.DPA_Connector: sendRequestToProtocolLayer - start: request={ id=9e2deaa6-b43f-404a-b1a9-36a38580ed47, network ID=1, node ID=0, device interface=com.microrisc.simply.iqrf.dpa.v210.devices.Coordinator, method ID=3, arguments=[65535] }
+22:05:07.316 [main] DEBUG c.m.s.iqrf.dpa.connector.DPA_Connector: callMethod - end: 9e2deaa6-b43f-404a-b1a9-36a38580ed47
+22:05:07.318 [main] DEBUG c.microrisc.simply.ConnectedDeviceObject: 1:0-Coordinator: dispatchCall - end: 9e2deaa6-b43f-404a-b1a9-36a38580ed47
+22:05:07.319 [main] INFO  c.microrisc.simply.ConnectedDeviceObject: 1:0-Coordinator: Method 3 call dispatched, id=9e2deaa6-b43f-404a-b1a9-36a38580ed47
+22:05:07.321 [main] DEBUG c.m.simply.StandardServicesDeviceObject: 1:0-Coordinator: getCallResult - start: callId=9e2deaa6-b43f-404a-b1a9-36a38580ed47, timeout=3000
+22:05:07.322 [main] DEBUG c.m.simply.HashMapResultsContainer: get - start: uid=9e2deaa6-b43f-404a-b1a9-36a38580ed47
+22:05:07.322 [main] DEBUG c.m.simply.HashMapResultsContainer: update - start: 
+22:05:07.322 [main] DEBUG c.m.simply.HashMapResultsContainer: update - end: 
+22:05:07.322 [main] WARN  c.m.simply.HashMapResultsContainer: No result found.
+22:05:07.322 [main] DEBUG c.m.simply.HashMapResultsContainer: get - end: null
+22:05:08.089 [Thread-3] DEBUG c.m.s.i.d.v.protocol.DPA_ProtocolLayer: sendRequest - start: request={ id=9e2deaa6-b43f-404a-b1a9-36a38580ed47, network ID=1, node ID=0, device interface=com.microrisc.simply.iqrf.dpa.v210.devices.Coordinator, method ID=3, arguments=[65535] }
+22:05:08.089 [Thread-3] DEBUG c.m.s.i.d.v.p.DPA_MessageConvertor: convertToProtoFormat - start: callRequest={ id=9e2deaa6-b43f-404a-b1a9-36a38580ed47, network ID=1, node ID=0, device interface=com.microrisc.simply.iqrf.dpa.v210.devices.Coordinator, method ID=3, arguments=[65535] }
+22:05:08.090 [Thread-3] DEBUG c.m.s.p.m.SimpleCallRequestToPacketMapping: getSerializedProtocolData - start: 
+22:05:08.090 [Thread-3] DEBUG c.m.s.p.m.SimpleCallRequestToPacketMapping: getSerializedProtocolData - end: []
+22:05:08.090 [Thread-3] DEBUG c.m.s.p.m.SimpleCallRequestToPacketMapping: getSerializedNetworkData - start: nodeId=1
+22:05:08.090 [Thread-3] DEBUG c.m.s.p.m.SimpleCallRequestToPacketMapping: getSerializedNetworkData - end: []
+22:05:08.090 [Thread-3] DEBUG c.m.s.p.m.SimpleCallRequestToPacketMapping: getSerializedNodeData - start: nodeId=0
+22:05:08.090 [Thread-3] DEBUG c.m.simply.protocol.mapping.Serializer: serialize - start: valueMapping={ starting position =0, convertor=com.microrisc.simply.types.StringToByteConvertor@3580ab }, value=0
+22:05:08.091 [Thread-3] DEBUG c.m.simply.types.StringToByteConvertor: toProtoValue - start: valueToConv=0
+22:05:08.091 [Thread-3] DEBUG c.m.simply.types.StringToByteConvertor: toProtoValue - end: [0]
+22:05:08.091 [Thread-3] DEBUG c.m.simply.protocol.mapping.Serializer: serialize - end: [0]
+22:05:08.091 [Thread-3] DEBUG c.m.s.p.m.SimpleCallRequestToPacketMapping: getSerializedNodeData - end: [{ starting position=0, data=[S@1242cc9 }]
+22:05:08.091 [Thread-3] DEBUG c.m.s.p.m.SimpleCallRequestToPacketMapping: getSerializedInterfaceData - start: devInterface=interface com.microrisc.simply.iqrf.dpa.v210.devices.Coordinator
+22:05:08.092 [Thread-3] DEBUG c.m.s.p.m.SimpleCallRequestToPacketMapping: getSerializedInterfaceData - end: [{ starting position=2, data=[S@1f85b60 }]
+22:05:08.092 [Thread-3] DEBUG c.m.s.p.m.SimpleCallRequestToPacketMapping: getSerializedMethodData - start: devInterface=interface com.microrisc.simply.iqrf.dpa.v210.devices.Coordinator, methodId=3
+22:05:08.092 [Thread-3] DEBUG c.m.s.p.m.SimpleCallRequestToPacketMapping: getSerializedMethodData - end: [{ starting position=3, data=[S@3729c5 }]
+22:05:08.093 [Thread-3] DEBUG c.m.s.p.m.SimpleCallRequestToPacketMapping: getSerializedMethodArgs - start: devInterface=interface com.microrisc.simply.iqrf.dpa.v210.devices.Coordinator, methodId=3, args=[65535]
+22:05:08.093 [Thread-3] DEBUG c.m.simply.protocol.mapping.Serializer: serialize - start: valueMapping={ starting position =4, convertor=com.microrisc.simply.iqrf.types.Uns16Convertor@11d3f0b }, value=65535
+22:05:08.093 [Thread-3] DEBUG c.m.simply.iqrf.types.Uns16Convertor: toIQValue - start: valueToConv=65535
+22:05:08.093 [Thread-3] DEBUG c.m.simply.iqrf.types.Uns16Convertor: toIQValue - end: [255, 255]
+22:05:08.093 [Thread-3] DEBUG c.m.simply.protocol.mapping.Serializer: serialize - end: [255, 255]
+22:05:08.094 [Thread-3] DEBUG c.m.s.p.m.SimpleCallRequestToPacketMapping: getSerializedMethodArgs - end: [{ starting position=4, data=[S@1976572 }]
+22:05:08.094 [Thread-3] DEBUG c.m.simply.protocol.RequestPacketCreator: createRequestPacket - start: packetFragments[{ starting position=0, data=[S@1242cc9 }, { starting position=2, data=[S@1f85b60 }, { starting position=3, data=[S@3729c5 }, { starting position=4, data=[S@1976572 }]
+22:05:08.094 [Thread-3] DEBUG c.m.simply.protocol.RequestPacketCreator: getMaxPosition - start: packetFragments[{ starting position=0, data=[S@1242cc9 }, { starting position=2, data=[S@1f85b60 }, { starting position=3, data=[S@3729c5 }, { starting position=4, data=[S@1976572 }]
+22:05:08.094 [Thread-3] DEBUG c.m.simply.protocol.RequestPacketCreator: getMaxPosition - end: 6
+22:05:08.095 [Thread-3] DEBUG c.m.simply.protocol.RequestPacketCreator: createRequestPacket - end: [0, 0, 0, 2, 255, 255]
+22:05:08.095 [Thread-3] DEBUG c.m.s.i.d.v.p.DPA_MessageConvertor: convertToProtoFormat - end: [0, 0, 0, 2, 255, 255]
+22:05:08.095 [Thread-3] DEBUG c.m.s.i.d.v.protocol.DPA_ProtocolLayer: deleteInvalidRequests - start: newRequest={ id=9e2deaa6-b43f-404a-b1a9-36a38580ed47, network ID=1, node ID=0, device interface=com.microrisc.simply.iqrf.dpa.v210.devices.Coordinator, method ID=3, arguments=[65535] }
+22:05:08.095 [Thread-3] DEBUG c.m.s.i.d.v.protocol.DPA_ProtocolLayer: deleteInvalidRequests - end
+22:05:08.095 [Thread-3] DEBUG c.m.s.network.usbcdc.CDCNetworkLayer: sendData - start: networkData={ data=[0, 0, 0, 2, 255, 255], network ID=1 }
+22:05:08.155 [Thread-3] DEBUG c.m.s.network.usbcdc.CDCNetworkLayer: sendData - end
+22:05:08.155 [Thread-3] DEBUG c.m.s.i.d.v.protocol.DPA_ProtocolLayer: sendRequest - end
+22:05:08.155 [Thread-3] DEBUG c.m.s.iqrf.dpa.connector.DPA_Connector: sendRequestToProtocolLayer - end:
+22:05:08.221 [Thread-5] DEBUG c.m.s.network.usbcdc.CDCNetworkLayer: onGetMessage - start: data=[0, 0, 0, 130, 0, 0, 0, 85, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+22:05:08.222 [Thread-5] DEBUG c.m.s.i.d.v.protocol.DPA_ProtocolLayer: onGetData - start: { data=[0, 0, 0, 130, 0, 0, 0, 85, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], network ID=1 }
+22:05:08.222 [Thread-5] DEBUG c.m.s.i.d.v.p.DPA_ProtocolProperties: getResponseCode - start: protoMsg=[0, 0, 0, 130, 0, 0, 0, 85, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+22:05:08.222 [Thread-5] DEBUG c.m.s.i.d.v.p.DPA_ProtocolProperties: getMessageData_Integer - start:
+22:05:08.222 [Thread-5] DEBUG c.m.s.i.d.v.p.DPA_ProtocolProperties: getMessageData_Integer - end: 0
+22:05:08.223 [Thread-5] DEBUG c.m.s.i.d.v.p.DPA_ProtocolProperties: getResponseCode - end: NO_ERROR
+22:05:08.223 [Thread-5] DEBUG c.m.s.i.d.v.p.DPA_MessageConvertor: convertToDOFormat - start: networkData={ data=[0, 0, 0, 130, 0, 0, 0, 85, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], network ID=1 }
+22:05:08.223 [Thread-5] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: getNodeId - start: packet=[0, 0, 0, 130, 0, 0, 0, 85, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+22:05:08.223 [Thread-5] DEBUG c.m.simply.protocol.mapping.Deserializer: deserialize - start: packetToValueMapping={ startig position=0, length=1, convertor=com.microrisc.simply.types.StringToByteConvertor@3580ab }, protoMsg=[0, 0, 0, 130, 0, 0, 0, 85, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+22:05:08.224 [Thread-5] DEBUG c.m.simply.types.StringToByteConvertor: toObject - start: iqValue=[0]
+22:05:08.224 [Thread-5] DEBUG c.m.simply.types.StringToByteConvertor: toObject - end: 0
+22:05:08.224 [Thread-5] DEBUG c.m.simply.protocol.mapping.Deserializer: deserialize - end: 0
+22:05:08.224 [Thread-5] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: getNodeId - end: 0
+22:05:08.224 [Thread-5] DEBUG c.m.s.i.d.v.p.DPA_ProtocolProperties: getPeripheralNumber - start: protoMsg=[0, 0, 0, 130, 0, 0, 0, 85, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+22:05:08.225 [Thread-5] DEBUG c.m.s.i.d.v.p.DPA_ProtocolProperties: getMessageData_Integer - start:
+22:05:08.225 [Thread-5] DEBUG c.m.s.i.d.v.p.DPA_ProtocolProperties: getMessageData_Integer - end: 0
+22:05:08.225 [Thread-5] DEBUG c.m.s.i.d.v.p.DPA_ProtocolProperties: getPeripheralNumber - end: 0
+22:05:08.225 [Thread-5] DEBUG c.m.s.i.d.v.p.DPA_ProtocolProperties: getCommand - start: protoMsg=[0, 0, 0, 130, 0, 0, 0, 85, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+22:05:08.225 [Thread-5] DEBUG c.m.s.i.d.v.p.DPA_ProtocolProperties: getMessageData_Integer - start:
+22:05:08.226 [Thread-5] DEBUG c.m.s.i.d.v.p.DPA_ProtocolProperties: getMessageData_Integer - end: 130
+22:05:08.226 [Thread-5] DEBUG c.m.s.i.d.v.p.DPA_ProtocolProperties: getCommand - end: 130
+22:05:08.226 [Thread-5] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: getDeviceInterface - start: packet=[0, 0, 0, 130, 0, 0, 0, 85, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+22:05:08.226 [Thread-5] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - start: packet=[0, 0, 0, 130, 0, 0, 0, 85, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], packetValues=[{ position=2, values={3, } }]
+22:05:08.227 [Thread-5] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - end: false
+22:05:08.227 [Thread-5] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - start: packet=[0, 0, 0, 130, 0, 0, 0, 85, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], packetValues=[{ position=2, values={6, } }]
+22:05:08.227 [Thread-5] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - end: false
+22:05:08.227 [Thread-5] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - start: packet=[0, 0, 0, 130, 0, 0, 0, 85, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], packetValues=[{ position=2, values={13, } }]
+22:05:08.228 [Thread-5] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - end: false
+22:05:08.228 [Thread-5] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - start: packet=[0, 0, 0, 130, 0, 0, 0, 85, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], packetValues=[{ position=2, values={1, } }]
+22:05:08.228 [Thread-5] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - end: false
+22:05:08.228 [Thread-5] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - start: packet=[0, 0, 0, 130, 0, 0, 0, 85, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], packetValues=[{ position=2, values={0, } }]
+22:05:08.229 [Thread-5] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - end: true
+22:05:08.229 [Thread-5] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - start: packet=[0, 0, 0, 130, 0, 0, 0, 85, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], packetValues=[{ position=2, values={10, } }]
+22:05:08.229 [Thread-5] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - end: false
+22:05:08.229 [Thread-5] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - start: packet=[0, 0, 0, 130, 0, 0, 0, 85, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], packetValues=[{ position=2, values={7, } }]
+22:05:08.230 [Thread-5] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - end: false
+22:05:08.230 [Thread-5] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - start: packet=[0, 0, 0, 130, 0, 0, 0, 85, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], packetValues=[{ position=2, values={12, } }]
+22:05:08.230 [Thread-5] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - end: false
+22:05:08.230 [Thread-5] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - start: packet=[0, 0, 0, 130, 0, 0, 0, 85, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], packetValues=[{ position=2, values={11, } }]
+22:05:08.230 [Thread-5] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - end: false
+22:05:08.231 [Thread-5] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - start: packet=[0, 0, 0, 130, 0, 0, 0, 85, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], packetValues=[{ position=2, values={4, } }]
+22:05:08.231 [Thread-5] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - end: false
+22:05:08.231 [Thread-5] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - start: packet=[0, 0, 0, 130, 0, 0, 0, 85, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], packetValues=[{ position=2, values={9, } }]
+22:05:08.231 [Thread-5] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - end: false
+22:05:08.231 [Thread-5] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - start: packet=[0, 0, 0, 130, 0, 0, 0, 85, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], packetValues=[]
+22:05:08.232 [Thread-5] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - end: true
+22:05:08.232 [Thread-5] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - start: packet=[0, 0, 0, 130, 0, 0, 0, 85, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], packetValues=[{ position=2, values={2, } }]
+22:05:08.232 [Thread-5] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - end: false
+22:05:08.232 [Thread-5] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - start: packet=[0, 0, 0, 130, 0, 0, 0, 85, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], packetValues=[{ position=2, values={8, } }]
+22:05:08.232 [Thread-5] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - end: false
+22:05:08.233 [Thread-5] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - start: packet=[0, 0, 0, 130, 0, 0, 0, 85, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], packetValues=[{ position=2, values={5, } }]
+22:05:08.233 [Thread-5] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - end: false
+22:05:08.233 [Thread-5] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: getDeviceInterface - end: interface com.microrisc.simply.iqrf.dpa.v210.devices.Coordinator
+22:05:08.233 [Thread-5] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: getMethodId - start: devInterface=interface com.microrisc.simply.iqrf.dpa.v210.devices.Coordinator, packet=[0, 0, 0, 130, 0, 0, 0, 85, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+22:05:08.233 [Thread-5] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - start: packet=[0, 0, 0, 130, 0, 0, 0, 85, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], packetValues=[{ position=3, values={143, } }]
+22:05:08.234 [Thread-5] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - end: false
+22:05:08.234 [Thread-5] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - start: packet=[0, 0, 0, 130, 0, 0, 0, 85, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], packetValues=[{ position=3, values={144, } }]
+22:05:08.235 [Thread-5] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - end: false
+22:05:08.235 [Thread-5] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - start: packet=[0, 0, 0, 130, 0, 0, 0, 85, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], packetValues=[{ position=3, values={142, } }]
+22:05:08.235 [Thread-5] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - end: false
+22:05:08.235 [Thread-5] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - start: packet=[0, 0, 0, 130, 0, 0, 0, 85, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], packetValues=[{ position=3, values={145, } }]
+22:05:08.235 [Thread-5] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - end: false
+22:05:08.236 [Thread-5] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - start: packet=[0, 0, 0, 130, 0, 0, 0, 85, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], packetValues=[{ position=3, values={140, } }]
+22:05:08.236 [Thread-5] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - end: false
+22:05:08.236 [Thread-5] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - start: packet=[0, 0, 0, 130, 0, 0, 0, 85, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], packetValues=[{ position=3, values={141, } }]
+22:05:08.236 [Thread-5] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - end: false
+22:05:08.236 [Thread-5] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - start: packet=[0, 0, 0, 130, 0, 0, 0, 85, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], packetValues=[{ position=3, values={138, } }]
+22:05:08.237 [Thread-5] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - end: false
+22:05:08.237 [Thread-5] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - start: packet=[0, 0, 0, 130, 0, 0, 0, 85, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], packetValues=[{ position=3, values={139, } }]
+22:05:08.237 [Thread-5] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - end: false
+22:05:08.237 [Thread-5] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - start: packet=[0, 0, 0, 130, 0, 0, 0, 85, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], packetValues=[{ position=3, values={130, } }]
+22:05:08.238 [Thread-5] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - end: true
+22:05:08.238 [Thread-5] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isResultCompatible - start: packet=[0, 0, 0, 130, 0, 0, 0, 85, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], resultMapping={ startig position=8, length=0, convertor=com.microrisc.simply.iqrf.dpa.v210.types.BondedNodesConvertor@12b48e5 }
+22:05:08.238 [Thread-5] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isResultCompatible - end: true
+22:05:08.238 [Thread-5] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - start: packet=[0, 0, 0, 130, 0, 0, 0, 85, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], packetValues=[{ position=3, values={129, } }]
+22:05:08.238 [Thread-5] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - end: false
+22:05:08.238 [Thread-5] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - start: packet=[0, 0, 0, 130, 0, 0, 0, 85, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], packetValues=[{ position=3, values={128, } }]
+22:05:08.238 [Thread-5] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - end: false
+22:05:08.238 [Thread-5] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - start: packet=[0, 0, 0, 130, 0, 0, 0, 85, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], packetValues=[{ position=3, values={137, } }]
+22:05:08.239 [Thread-5] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - end: false
+22:05:08.239 [Thread-5] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - start: packet=[0, 0, 0, 130, 0, 0, 0, 85, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], packetValues=[{ position=3, values={134, } }]
+22:05:08.239 [Thread-5] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - end: false
+22:05:08.239 [Thread-5] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - start: packet=[0, 0, 0, 130, 0, 0, 0, 85, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], packetValues=[{ position=3, values={133, } }]
+22:05:08.239 [Thread-5] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - end: false
+22:05:08.239 [Thread-5] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - start: packet=[0, 0, 0, 130, 0, 0, 0, 85, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], packetValues=[{ position=3, values={132, } }]
+22:05:08.239 [Thread-5] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - end: false
+22:05:08.239 [Thread-5] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - start: packet=[0, 0, 0, 130, 0, 0, 0, 85, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], packetValues=[{ position=3, values={131, } }]
+22:05:08.239 [Thread-5] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - end: false
+22:05:08.240 [Thread-5] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - start: packet=[0, 0, 0, 130, 0, 0, 0, 85, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], packetValues=[{ position=3, values={136, } }]
+22:05:08.240 [Thread-5] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - end: false
+22:05:08.240 [Thread-5] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - start: packet=[0, 0, 0, 130, 0, 0, 0, 85, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], packetValues=[{ position=3, values={135, } }]
+22:05:08.247 [Thread-5] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - end: false
+22:05:08.247 [Thread-5] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: getMethodId - end: 3
+22:05:08.247 [Thread-5] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: getAdditionalData - start: packet=[0, 0, 0, 130, 0, 0, 0, 85, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+22:05:08.247 [Thread-5] DEBUG c.m.simply.protocol.mapping.Deserializer: deserialize - start: packetToValueMapping={ startig position=4, length=0, convertor=com.microrisc.simply.iqrf.dpa.v210.types.DPA_AdditionalInfoConvertor@da88c2 }, protoMsg=[0, 0, 0, 130, 0, 0, 0, 85, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+22:05:08.247 [Thread-5] DEBUG c.m.s.i.d.v.t.DPA_AdditionalInfoConvertor: toObject - start: protoValue=[0, 0, 0, 85, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+22:05:08.247 [Thread-5] DEBUG c.m.simply.iqrf.types.Uns16Convertor: toObject - start: iqValue=[0, 0]
+22:05:08.247 [Thread-5] DEBUG c.m.simply.iqrf.types.Uns16Convertor: toIQValue - end: 0
+22:05:08.247 [Thread-5] DEBUG c.m.s.i.d.v.t.DPA_AdditionalInfoConvertor: toObject - end: DPA_AdditionalInfo { 
  HW profile ID: 0
  Response code: NO_ERROR
- DPA value: 89
-}, source={ { networkId=1, node ID=0 }dev interface=interface com.microrisc.simply.iqrf.dpa.v210.devices.Coordinator, method ID=3 } }, proc error=null, request ID=2f7a07da-2c34-4d9b-99b6-1fe4eebe6171 }
-11:44:30.171 [Thread-3] INFO  c.m.s.iqrf.dpa.connector.DPA_Connector: Processed message: { { main data=BondedNodes { 
- Bonded nodes: 1, 2
-}, additional data=DPA_AdditionalInfo { 
+ DPA value: 85
+}
+22:05:08.247 [Thread-5] DEBUG c.m.simply.protocol.mapping.Deserializer: deserialize - end: DPA_AdditionalInfo { 
  HW profile ID: 0
  Response code: NO_ERROR
- DPA value: 89
-}, source={ { networkId=1, node ID=0 }dev interface=interface com.microrisc.simply.iqrf.dpa.v210.devices.Coordinator, method ID=3 } }, proc error=null, request ID=2f7a07da-2c34-4d9b-99b6-1fe4eebe6171 }
-11:44:30.172 [Thread-3] INFO  c.m.s.iqrf.dpa.connector.DPA_Connector: Response found
-11:44:30.173 [Thread-2] INFO  c.microrisc.simply.ConnectedDeviceObject: 1:0-Coordinator: New result from connector, id=2f7a07da-2c34-4d9b-99b6-1fe4eebe6171
-11:44:30.173 [main] INFO  c.m.simply.StandardServicesDeviceObject: 1:0-Coordinator: Get call result: BondedNodes { 
+ DPA value: 85
+}
+22:05:08.247 [Thread-5] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: getAdditionalData - end: DPA_AdditionalInfo { 
+ HW profile ID: 0
+ Response code: NO_ERROR
+ DPA value: 85
+}
+22:05:08.248 [Thread-5] DEBUG c.m.s.i.d.v.p.DPA_ProtocolProperties: getResponseCode - start: protoMsg=[0, 0, 0, 130, 0, 0, 0, 85, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+22:05:08.248 [Thread-5] DEBUG c.m.s.i.d.v.p.DPA_ProtocolProperties: getMessageData_Integer - start:
+22:05:08.248 [Thread-5] DEBUG c.m.s.i.d.v.p.DPA_ProtocolProperties: getMessageData_Integer - end: 0
+22:05:08.248 [Thread-5] DEBUG c.m.s.i.d.v.p.DPA_ProtocolProperties: getResponseCode - end: NO_ERROR
+22:05:08.248 [Thread-5] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: getMethodResult - start: devInterface=interface com.microrisc.simply.iqrf.dpa.v210.devices.Coordinator, methodId=3,protoMsg=[0, 0, 0, 130, 0, 0, 0, 85, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+22:05:08.248 [Thread-5] DEBUG c.m.simply.protocol.mapping.Deserializer: deserialize - start: packetToValueMapping={ startig position=8, length=0, convertor=com.microrisc.simply.iqrf.dpa.v210.types.BondedNodesConvertor@12b48e5 }, protoMsg=[0, 0, 0, 130, 0, 0, 0, 85, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+22:05:08.248 [Thread-5] DEBUG c.m.s.i.d.v.types.BondedNodesConvertor: toObject - start: protoValue=[6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+22:05:08.251 [Thread-5] DEBUG c.m.s.i.d.v.types.BondedNodesConvertor: toObject - end: BondedNodes { 
  Bonded nodes: 1, 2
 }
-11:44:30.174 [main] INFO  c.m.s.iqrf.dpa.v210.init.DPA_Initializer: Getting peripheral enumeration: 1 attempt
-11:44:30.174 [main] INFO  c.m.s.iqrf.dpa.connector.DPA_Connector: New call request created: { id=10ebd776-98b2-40af-810f-3e7482577dc0, network ID=1, node ID=1, device interface=com.microrisc.simply.iqrf.dpa.v210.devices.PeripheralInfoGetter, method ID=1, arguments=[65535] }
-11:44:30.174 [main] INFO  c.microrisc.simply.ConnectedDeviceObject: 1:1-PeripheralInfoGetter: Method 1 call dispatched, id=10ebd776-98b2-40af-810f-3e7482577dc0
-11:44:30.174 [main] WARN  c.m.simply.HashMapResultsContainer: No result found.
-11:44:31.278 [Thread-7] INFO  c.m.s.iqrf.dpa.connector.DPA_Connector: New message from protocol layer get: { { main data=PeripheralEnumeration { 
+22:05:08.252 [Thread-5] DEBUG c.m.simply.protocol.mapping.Deserializer: deserialize - end: BondedNodes { 
+ Bonded nodes: 1, 2
+}
+22:05:08.252 [Thread-5] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: getMethodResult - end: BondedNodes { 
+ Bonded nodes: 1, 2
+}
+22:05:08.252 [Thread-5] DEBUG c.m.s.i.d.v.p.DPA_MessageConvertor: convertToDOFormat - end: { { main data=BondedNodes { 
+ Bonded nodes: 1, 2
+}, additional data=DPA_AdditionalInfo { 
+ HW profile ID: 0
+ Response code: NO_ERROR
+ DPA value: 85
+}, source={ { networkId=1, node ID=0 }dev interface=interface com.microrisc.simply.iqrf.dpa.v210.devices.Coordinator, method ID=3 } }, proc error=null, request ID=null }
+22:05:08.252 [Thread-5] DEBUG c.m.s.i.d.v.protocol.DPA_ProtocolLayer: processMessage - start: message={ { main data=BondedNodes { 
+ Bonded nodes: 1, 2
+}, additional data=DPA_AdditionalInfo { 
+ HW profile ID: 0
+ Response code: NO_ERROR
+ DPA value: 85
+}, source={ { networkId=1, node ID=0 }dev interface=interface com.microrisc.simply.iqrf.dpa.v210.devices.Coordinator, method ID=3 } }, proc error=null, request ID=null }
+22:05:08.252 [Thread-5] DEBUG c.m.s.i.d.v.protocol.DPA_ProtocolLayer: getCauseRequest - start: response={ { main data=BondedNodes { 
+ Bonded nodes: 1, 2
+}, additional data=DPA_AdditionalInfo { 
+ HW profile ID: 0
+ Response code: NO_ERROR
+ DPA value: 85
+}, source={ { networkId=1, node ID=0 }dev interface=interface com.microrisc.simply.iqrf.dpa.v210.devices.Coordinator, method ID=3 } }, proc error=null, request ID=null }
+22:05:08.252 [Thread-5] DEBUG c.m.s.i.d.v.protocol.DPA_ProtocolLayer: getCauseRequest - end: { id=9e2deaa6-b43f-404a-b1a9-36a38580ed47, network ID=1, node ID=0, device interface=com.microrisc.simply.iqrf.dpa.v210.devices.Coordinator, method ID=3, arguments=[65535] }
+22:05:08.252 [Thread-5] DEBUG c.m.s.iqrf.dpa.connector.DPA_Connector: onGetMessage - start: data={ { main data=BondedNodes { 
+ Bonded nodes: 1, 2
+}, additional data=DPA_AdditionalInfo { 
+ HW profile ID: 0
+ Response code: NO_ERROR
+ DPA value: 85
+}, source={ { networkId=1, node ID=0 }dev interface=interface com.microrisc.simply.iqrf.dpa.v210.devices.Coordinator, method ID=3 } }, proc error=null, request ID=9e2deaa6-b43f-404a-b1a9-36a38580ed47 }
+22:05:08.253 [Thread-5] INFO  c.m.s.iqrf.dpa.connector.DPA_Connector: New message from protocol layer get: { { main data=BondedNodes { 
+ Bonded nodes: 1, 2
+}, additional data=DPA_AdditionalInfo { 
+ HW profile ID: 0
+ Response code: NO_ERROR
+ DPA value: 85
+}, source={ { networkId=1, node ID=0 }dev interface=interface com.microrisc.simply.iqrf.dpa.v210.devices.Coordinator, method ID=3 } }, proc error=null, request ID=9e2deaa6-b43f-404a-b1a9-36a38580ed47 }
+22:05:08.253 [Thread-3] DEBUG c.m.s.iqrf.dpa.connector.DPA_Connector: processNextIncommingMessage - start:
+22:05:08.253 [Thread-5] DEBUG c.m.s.iqrf.dpa.connector.DPA_Connector: onGetMessage - end
+22:05:08.253 [Thread-3] INFO  c.m.s.iqrf.dpa.connector.DPA_Connector: Processed message: { { main data=BondedNodes { 
+ Bonded nodes: 1, 2
+}, additional data=DPA_AdditionalInfo { 
+ HW profile ID: 0
+ Response code: NO_ERROR
+ DPA value: 85
+}, source={ { networkId=1, node ID=0 }dev interface=interface com.microrisc.simply.iqrf.dpa.v210.devices.Coordinator, method ID=3 } }, proc error=null, request ID=9e2deaa6-b43f-404a-b1a9-36a38580ed47 }
+22:05:08.253 [Thread-5] DEBUG c.m.s.i.d.v.protocol.DPA_ProtocolLayer: processResponse - end
+22:05:08.253 [Thread-3] INFO  c.m.s.iqrf.dpa.connector.DPA_Connector: Response found
+22:05:08.254 [Thread-5] DEBUG c.m.s.i.d.v.protocol.DPA_ProtocolLayer: onGetData - end
+22:05:08.254 [Thread-3] DEBUG c.m.s.iqrf.dpa.connector.DPA_Connector: createCallRequestProcessingInfo - start: { { main data=BondedNodes { 
+ Bonded nodes: 1, 2
+}, additional data=DPA_AdditionalInfo { 
+ HW profile ID: 0
+ Response code: NO_ERROR
+ DPA value: 85
+}, source={ { networkId=1, node ID=0 }dev interface=interface com.microrisc.simply.iqrf.dpa.v210.devices.Coordinator, method ID=3 } }, proc error=null, request ID=9e2deaa6-b43f-404a-b1a9-36a38580ed47 }
+22:05:08.254 [Thread-5] DEBUG c.m.s.network.usbcdc.CDCNetworkLayer: onGetMessage - end
+22:05:08.254 [Thread-3] DEBUG c.m.s.iqrf.dpa.connector.DPA_Connector: createCallRequestProcessingInfo - end: { , request ID=9e2deaa6-b43f-404a-b1a9-36a38580ed47, state=RESULT_ARRIVED, call result={ , method result=BondedNodes { 
+ Bonded nodes: 1, 2
+}, additional info=DPA_AdditionalInfo { 
+ HW profile ID: 0
+ Response code: NO_ERROR
+ DPA value: 85
+} }, error=null }
+22:05:08.254 [Thread-3] DEBUG c.m.s.iqrf.dpa.connector.DPA_Connector: processNextIncommingMessage - end
+22:05:08.254 [Thread-2] DEBUG c.microrisc.simply.ConnectedDeviceObject: 1:0-Coordinator: onCallRequestProcessingInfo - start: procInfo={ , request ID=9e2deaa6-b43f-404a-b1a9-36a38580ed47, state=RESULT_ARRIVED, call result={ , method result=BondedNodes { 
+ Bonded nodes: 1, 2
+}, additional info=DPA_AdditionalInfo { 
+ HW profile ID: 0
+ Response code: NO_ERROR
+ DPA value: 85
+} }, error=null }, callId=9e2deaa6-b43f-404a-b1a9-36a38580ed47
+22:05:08.256 [Thread-2] DEBUG c.m.simply.HashMapResultsContainer: put - start: uid=9e2deaa6-b43f-404a-b1a9-36a38580ed47, callResult={ , request ID=9e2deaa6-b43f-404a-b1a9-36a38580ed47, state=RESULT_ARRIVED, call result={ , method result=BondedNodes { 
+ Bonded nodes: 1, 2
+}, additional info=DPA_AdditionalInfo { 
+ HW profile ID: 0
+ Response code: NO_ERROR
+ DPA value: 85
+} }, error=null }
+22:05:08.256 [Thread-2] DEBUG c.m.simply.HashMapResultsContainer: update - start: 
+22:05:08.256 [Thread-2] DEBUG c.m.simply.HashMapResultsContainer: update - end: 
+22:05:08.258 [Thread-2] DEBUG c.m.simply.HashMapResultsContainer: put - end: 
+22:05:08.258 [Thread-2] DEBUG c.microrisc.simply.ConnectedDeviceObject: 1:0-Coordinator: onCallRequestProcessingInfo - end
+22:05:08.258 [Thread-2] INFO  c.microrisc.simply.ConnectedDeviceObject: 1:0-Coordinator: New result from connector, id=9e2deaa6-b43f-404a-b1a9-36a38580ed47
+22:05:08.258 [main] DEBUG c.m.simply.HashMapResultsContainer: get - start: uid=9e2deaa6-b43f-404a-b1a9-36a38580ed47
+22:05:08.258 [main] DEBUG c.m.simply.HashMapResultsContainer: update - start: 
+22:05:08.258 [main] DEBUG c.m.simply.HashMapResultsContainer: update - end: 
+22:05:08.258 [main] DEBUG c.m.simply.HashMapResultsContainer: get - end: { , request ID=9e2deaa6-b43f-404a-b1a9-36a38580ed47, state=RESULT_ARRIVED, call result={ , method result=BondedNodes { 
+ Bonded nodes: 1, 2
+}, additional info=DPA_AdditionalInfo { 
+ HW profile ID: 0
+ Response code: NO_ERROR
+ DPA value: 85
+} }, error=null }
+22:05:08.259 [main] DEBUG c.m.simply.StandardServicesDeviceObject: 1:0-Coordinator: getCallResultImmediately - start: callId=9e2deaa6-b43f-404a-b1a9-36a38580ed47
+22:05:08.259 [main] DEBUG c.m.simply.HashMapResultsContainer: get - start: uid=9e2deaa6-b43f-404a-b1a9-36a38580ed47
+22:05:08.259 [main] DEBUG c.m.simply.HashMapResultsContainer: update - start: 
+22:05:08.259 [main] DEBUG c.m.simply.HashMapResultsContainer: update - end: 
+22:05:08.259 [main] DEBUG c.m.simply.HashMapResultsContainer: get - end: { , request ID=9e2deaa6-b43f-404a-b1a9-36a38580ed47, state=RESULT_ARRIVED, call result={ , method result=BondedNodes { 
+ Bonded nodes: 1, 2
+}, additional info=DPA_AdditionalInfo { 
+ HW profile ID: 0
+ Response code: NO_ERROR
+ DPA value: 85
+} }, error=null }
+22:05:08.259 [main] DEBUG c.m.simply.StandardServicesDeviceObject: 1:0-Coordinator: getCallResultImmediately - end: BondedNodes { 
+ Bonded nodes: 1, 2
+}
+22:05:08.259 [main] INFO  c.m.simply.StandardServicesDeviceObject: 1:0-Coordinator: Get call result: BondedNodes { 
+ Bonded nodes: 1, 2
+}
+22:05:08.259 [main] DEBUG c.m.simply.StandardServicesDeviceObject: 1:0-Coordinator: getCallResult - end: BondedNodes { 
+ Bonded nodes: 1, 2
+}
+22:05:08.259 [main] DEBUG c.m.s.iqrf.dpa.v210.init.DPA_Initializer: getBondedNodesIds - end: 1, 2
+22:05:08.260 [main] DEBUG c.m.s.iqrf.dpa.v210.init.DPA_Initializer: createBondedNodes - start: networkId=1, master=[1, 2]
+22:05:08.260 [main] DEBUG c.m.s.iqrf.dpa.v210.init.DPA_Initializer: createNode - start: networkId=1, nodeId=1
+22:05:08.260 [main] DEBUG c.m.s.iqrf.dpa.v210.init.DPA_Initializer: createNodeServices - start: nodeId=1
+22:05:08.260 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: getDeviceObject - start: networkId=1, nodeId=1, connector=com.microrisc.simply.iqrf.dpa.connector.DPA_Connector@14b7042, implClass=class com.microrisc.simply.iqrf.dpa.v210.devices.impl.SimplePeripheralInfoGetter, configuration=org.apache.commons.configuration.PropertiesConfiguration@1b72ada
+22:05:08.260 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: createResultsContainer - start: configuration=org.apache.commons.configuration.PropertiesConfiguration@1b72ada
+22:05:08.261 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: createResultsContainer - end: com.microrisc.simply.HashMapCallRequestProcessingInfoContainer@1c38fe
+22:05:08.261 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: getDeviceObject - end: com.microrisc.simply.iqrf.dpa.v210.devices.impl.SimplePeripheralInfoGetter@e1cfa7
+22:05:08.261 [main] DEBUG c.m.s.iqrf.dpa.v210.init.DPA_Initializer: getPeripheralNumbers - start: infoDeviceObj=com.microrisc.simply.iqrf.dpa.v210.devices.impl.SimplePeripheralInfoGetter@e1cfa7
+22:05:08.261 [main] INFO  c.m.s.iqrf.dpa.v210.init.DPA_Initializer: Getting peripheral enumeration: 1 attempt
+22:05:08.261 [main] DEBUG c.microrisc.simply.ConnectedDeviceObject: 1:1-PeripheralInfoGetter: dispatchCall - start: methodId=1, arguments=[65535], timeout=10000
+22:05:08.261 [main] DEBUG c.m.s.iqrf.dpa.connector.DPA_Connector: callMethod - start: devObject=1, devIface=com.microrisc.simply.iqrf.dpa.v210.devices.PeripheralInfoGetter, methodId=1, args=[65535], timeout=10000
+22:05:08.261 [main] INFO  c.m.s.iqrf.dpa.connector.DPA_Connector: New call request created: { id=9deb8ddf-639a-4cfb-9385-d30ab2e794af, network ID=1, node ID=1, device interface=com.microrisc.simply.iqrf.dpa.v210.devices.PeripheralInfoGetter, method ID=1, arguments=[65535] }
+22:05:08.261 [main] DEBUG c.m.s.iqrf.dpa.connector.DPA_Connector: callMethod - end: 9deb8ddf-639a-4cfb-9385-d30ab2e794af
+22:05:08.261 [Thread-3] DEBUG c.m.s.iqrf.dpa.connector.DPA_Connector: sendRequestToProtocolLayer - start: request={ id=9deb8ddf-639a-4cfb-9385-d30ab2e794af, network ID=1, node ID=1, device interface=com.microrisc.simply.iqrf.dpa.v210.devices.PeripheralInfoGetter, method ID=1, arguments=[65535] }
+22:05:08.261 [main] DEBUG c.microrisc.simply.ConnectedDeviceObject: 1:1-PeripheralInfoGetter: dispatchCall - end: 9deb8ddf-639a-4cfb-9385-d30ab2e794af
+22:05:08.263 [main] INFO  c.microrisc.simply.ConnectedDeviceObject: 1:1-PeripheralInfoGetter: Method 1 call dispatched, id=9deb8ddf-639a-4cfb-9385-d30ab2e794af
+22:05:08.264 [main] DEBUG c.m.simply.StandardServicesDeviceObject: 1:1-PeripheralInfoGetter: getCallResult - start: callId=9deb8ddf-639a-4cfb-9385-d30ab2e794af, timeout=10000
+22:05:08.264 [main] DEBUG c.m.simply.HashMapResultsContainer: get - start: uid=9deb8ddf-639a-4cfb-9385-d30ab2e794af
+22:05:08.264 [main] DEBUG c.m.simply.HashMapResultsContainer: update - start: 
+22:05:08.264 [main] DEBUG c.m.simply.HashMapResultsContainer: update - end: 
+22:05:08.264 [main] WARN  c.m.simply.HashMapResultsContainer: No result found.
+22:05:08.264 [main] DEBUG c.m.simply.HashMapResultsContainer: get - end: null
+22:05:09.155 [Thread-3] DEBUG c.m.s.i.d.v.protocol.DPA_ProtocolLayer: sendRequest - start: request={ id=9deb8ddf-639a-4cfb-9385-d30ab2e794af, network ID=1, node ID=1, device interface=com.microrisc.simply.iqrf.dpa.v210.devices.PeripheralInfoGetter, method ID=1, arguments=[65535] }
+22:05:09.155 [Thread-3] DEBUG c.m.s.i.d.v.p.DPA_MessageConvertor: convertToProtoFormat - start: callRequest={ id=9deb8ddf-639a-4cfb-9385-d30ab2e794af, network ID=1, node ID=1, device interface=com.microrisc.simply.iqrf.dpa.v210.devices.PeripheralInfoGetter, method ID=1, arguments=[65535] }
+22:05:09.155 [Thread-3] DEBUG c.m.s.p.m.SimpleCallRequestToPacketMapping: getSerializedProtocolData - start: 
+22:05:09.155 [Thread-3] DEBUG c.m.s.p.m.SimpleCallRequestToPacketMapping: getSerializedProtocolData - end: []
+22:05:09.155 [Thread-3] DEBUG c.m.s.p.m.SimpleCallRequestToPacketMapping: getSerializedNetworkData - start: nodeId=1
+22:05:09.155 [Thread-3] DEBUG c.m.s.p.m.SimpleCallRequestToPacketMapping: getSerializedNetworkData - end: []
+22:05:09.155 [Thread-3] DEBUG c.m.s.p.m.SimpleCallRequestToPacketMapping: getSerializedNodeData - start: nodeId=1
+22:05:09.156 [Thread-3] DEBUG c.m.simply.protocol.mapping.Serializer: serialize - start: valueMapping={ starting position =0, convertor=com.microrisc.simply.types.StringToByteConvertor@3580ab }, value=1
+22:05:09.156 [Thread-3] DEBUG c.m.simply.types.StringToByteConvertor: toProtoValue - start: valueToConv=1
+22:05:09.156 [Thread-3] DEBUG c.m.simply.types.StringToByteConvertor: toProtoValue - end: [1]
+22:05:09.156 [Thread-3] DEBUG c.m.simply.protocol.mapping.Serializer: serialize - end: [1]
+22:05:09.156 [Thread-3] DEBUG c.m.s.p.m.SimpleCallRequestToPacketMapping: getSerializedNodeData - end: [{ starting position=0, data=[S@10b3611 }]
+22:05:09.156 [Thread-3] DEBUG c.m.s.p.m.SimpleCallRequestToPacketMapping: getSerializedInterfaceData - start: devInterface=interface com.microrisc.simply.iqrf.dpa.v210.devices.PeripheralInfoGetter
+22:05:09.156 [Thread-3] DEBUG c.m.s.p.m.SimpleCallRequestToPacketMapping: getSerializedInterfaceData - end: []
+22:05:09.156 [Thread-3] DEBUG c.m.s.p.m.SimpleCallRequestToPacketMapping: getSerializedMethodData - start: devInterface=interface com.microrisc.simply.iqrf.dpa.v210.devices.PeripheralInfoGetter, methodId=1
+22:05:09.156 [Thread-3] DEBUG c.m.s.p.m.SimpleCallRequestToPacketMapping: getSerializedMethodData - end: [{ starting position=2, data=[S@d72e3f }]
+22:05:09.156 [Thread-3] DEBUG c.m.s.p.m.SimpleCallRequestToPacketMapping: getSerializedMethodArgs - start: devInterface=interface com.microrisc.simply.iqrf.dpa.v210.devices.PeripheralInfoGetter, methodId=1, args=[65535]
+22:05:09.157 [Thread-3] DEBUG c.m.simply.protocol.mapping.Serializer: serialize - start: valueMapping={ starting position =4, convertor=com.microrisc.simply.iqrf.types.Uns16Convertor@11d3f0b }, value=65535
+22:05:09.157 [Thread-3] DEBUG c.m.simply.iqrf.types.Uns16Convertor: toIQValue - start: valueToConv=65535
+22:05:09.157 [Thread-3] DEBUG c.m.simply.iqrf.types.Uns16Convertor: toIQValue - end: [255, 255]
+22:05:09.157 [Thread-3] DEBUG c.m.simply.protocol.mapping.Serializer: serialize - end: [255, 255]
+22:05:09.157 [Thread-3] DEBUG c.m.s.p.m.SimpleCallRequestToPacketMapping: getSerializedMethodArgs - end: [{ starting position=4, data=[S@10abc94 }]
+22:05:09.157 [Thread-3] DEBUG c.m.simply.protocol.RequestPacketCreator: createRequestPacket - start: packetFragments[{ starting position=0, data=[S@10b3611 }, { starting position=2, data=[S@d72e3f }, { starting position=4, data=[S@10abc94 }]
+22:05:09.157 [Thread-3] DEBUG c.m.simply.protocol.RequestPacketCreator: getMaxPosition - start: packetFragments[{ starting position=0, data=[S@10b3611 }, { starting position=2, data=[S@d72e3f }, { starting position=4, data=[S@10abc94 }]
+22:05:09.157 [Thread-3] DEBUG c.m.simply.protocol.RequestPacketCreator: getMaxPosition - end: 6
+22:05:09.157 [Thread-3] DEBUG c.m.simply.protocol.RequestPacketCreator: createRequestPacket - end: [1, 0, 255, 63, 255, 255]
+22:05:09.158 [Thread-3] DEBUG c.m.s.i.d.v.p.DPA_MessageConvertor: convertToProtoFormat - end: [1, 0, 255, 63, 255, 255]
+22:05:09.158 [Thread-3] DEBUG c.m.s.i.d.v.protocol.DPA_ProtocolLayer: deleteInvalidRequests - start: newRequest={ id=9deb8ddf-639a-4cfb-9385-d30ab2e794af, network ID=1, node ID=1, device interface=com.microrisc.simply.iqrf.dpa.v210.devices.PeripheralInfoGetter, method ID=1, arguments=[65535] }
+22:05:09.158 [Thread-3] DEBUG c.m.s.i.d.v.protocol.DPA_ProtocolLayer: deleteInvalidRequests - end
+22:05:09.158 [Thread-3] DEBUG c.m.s.network.usbcdc.CDCNetworkLayer: sendData - start: networkData={ data=[1, 0, 255, 63, 255, 255], network ID=1 }
+22:05:09.209 [Thread-3] DEBUG c.m.s.network.usbcdc.CDCNetworkLayer: sendData - end
+22:05:09.210 [Thread-3] DEBUG c.m.s.i.d.v.protocol.DPA_ProtocolLayer: sendRequest - end
+22:05:09.210 [Thread-3] DEBUG c.m.s.iqrf.dpa.connector.DPA_Connector: sendRequestToProtocolLayer - end:
+22:05:09.260 [Thread-6] DEBUG c.m.s.network.usbcdc.CDCNetworkLayer: onGetMessage - start: data=[1, 0, 255, 63, 255, 255, 255, 85, 1, 3, 1]
+22:05:09.261 [Thread-6] DEBUG c.m.s.i.d.v.protocol.DPA_ProtocolLayer: onGetData - start: { data=[1, 0, 255, 63, 255, 255, 255, 85, 1, 3, 1], network ID=1 }
+22:05:09.261 [Thread-6] DEBUG c.m.s.i.d.v.p.DPA_ProtocolProperties: getResponseCode - start: protoMsg=[1, 0, 255, 63, 255, 255, 255, 85, 1, 3, 1]
+22:05:09.261 [Thread-6] DEBUG c.m.s.i.d.v.p.DPA_ProtocolProperties: getMessageData_Integer - start:
+22:05:09.261 [Thread-6] DEBUG c.m.s.i.d.v.p.DPA_ProtocolProperties: getMessageData_Integer - end: 255
+22:05:09.261 [Thread-6] DEBUG c.m.s.i.d.v.p.DPA_ProtocolProperties: getResponseCode - end: CONFIRMATION
+22:05:09.261 [Thread-6] DEBUG c.m.s.i.d.v.protocol.DPA_ProtocolLayer: onGetData - confirmation arrived: { data=[1, 0, 255, 63, 255, 255, 255, 85, 1, 3, 1], network ID=1 }
+22:05:09.262 [Thread-6] DEBUG c.m.s.network.usbcdc.CDCNetworkLayer: onGetMessage - end
+22:05:09.360 [Thread-7] DEBUG c.m.s.network.usbcdc.CDCNetworkLayer: onGetMessage - start: data=[1, 0, 255, 191, 0, 0, 0, 86, 16, 2, 0, 254, 54, 0, 0, 0, 0, 0, 0, 1]
+22:05:09.360 [Thread-7] DEBUG c.m.s.i.d.v.protocol.DPA_ProtocolLayer: onGetData - start: { data=[1, 0, 255, 191, 0, 0, 0, 86, 16, 2, 0, 254, 54, 0, 0, 0, 0, 0, 0, 1], network ID=1 }
+22:05:09.361 [Thread-7] DEBUG c.m.s.i.d.v.p.DPA_ProtocolProperties: getResponseCode - start: protoMsg=[1, 0, 255, 191, 0, 0, 0, 86, 16, 2, 0, 254, 54, 0, 0, 0, 0, 0, 0, 1]
+22:05:09.361 [Thread-7] DEBUG c.m.s.i.d.v.p.DPA_ProtocolProperties: getMessageData_Integer - start:
+22:05:09.361 [Thread-7] DEBUG c.m.s.i.d.v.p.DPA_ProtocolProperties: getMessageData_Integer - end: 0
+22:05:09.361 [Thread-7] DEBUG c.m.s.i.d.v.p.DPA_ProtocolProperties: getResponseCode - end: NO_ERROR
+22:05:09.361 [Thread-7] DEBUG c.m.s.i.d.v.p.DPA_MessageConvertor: convertToDOFormat - start: networkData={ data=[1, 0, 255, 191, 0, 0, 0, 86, 16, 2, 0, 254, 54, 0, 0, 0, 0, 0, 0, 1], network ID=1 }
+22:05:09.361 [Thread-7] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: getNodeId - start: packet=[1, 0, 255, 191, 0, 0, 0, 86, 16, 2, 0, 254, 54, 0, 0, 0, 0, 0, 0, 1]
+22:05:09.362 [Thread-7] DEBUG c.m.simply.protocol.mapping.Deserializer: deserialize - start: packetToValueMapping={ startig position=0, length=1, convertor=com.microrisc.simply.types.StringToByteConvertor@3580ab }, protoMsg=[1, 0, 255, 191, 0, 0, 0, 86, 16, 2, 0, 254, 54, 0, 0, 0, 0, 0, 0, 1]
+22:05:09.362 [Thread-7] DEBUG c.m.simply.types.StringToByteConvertor: toObject - start: iqValue=[1]
+22:05:09.362 [Thread-7] DEBUG c.m.simply.types.StringToByteConvertor: toObject - end: 1
+22:05:09.362 [Thread-7] DEBUG c.m.simply.protocol.mapping.Deserializer: deserialize - end: 1
+22:05:09.362 [Thread-7] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: getNodeId - end: 1
+22:05:09.362 [Thread-7] DEBUG c.m.s.i.d.v.p.DPA_ProtocolProperties: getPeripheralNumber - start: protoMsg=[1, 0, 255, 191, 0, 0, 0, 86, 16, 2, 0, 254, 54, 0, 0, 0, 0, 0, 0, 1]
+22:05:09.362 [Thread-7] DEBUG c.m.s.i.d.v.p.DPA_ProtocolProperties: getMessageData_Integer - start:
+22:05:09.363 [Thread-7] DEBUG c.m.s.i.d.v.p.DPA_ProtocolProperties: getMessageData_Integer - end: 255
+22:05:09.363 [Thread-7] DEBUG c.m.s.i.d.v.p.DPA_ProtocolProperties: getPeripheralNumber - end: 255
+22:05:09.363 [Thread-7] DEBUG c.m.s.i.d.v.p.DPA_ProtocolProperties: getCommand - start: protoMsg=[1, 0, 255, 191, 0, 0, 0, 86, 16, 2, 0, 254, 54, 0, 0, 0, 0, 0, 0, 1]
+22:05:09.363 [Thread-7] DEBUG c.m.s.i.d.v.p.DPA_ProtocolProperties: getMessageData_Integer - start:
+22:05:09.363 [Thread-7] DEBUG c.m.s.i.d.v.p.DPA_ProtocolProperties: getMessageData_Integer - end: 191
+22:05:09.363 [Thread-7] DEBUG c.m.s.i.d.v.p.DPA_ProtocolProperties: getCommand - end: 191
+22:05:09.364 [Thread-7] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: getMethodId - start: devInterface=interface com.microrisc.simply.iqrf.dpa.v210.devices.PeripheralInfoGetter, packet=[1, 0, 255, 191, 0, 0, 0, 86, 16, 2, 0, 254, 54, 0, 0, 0, 0, 0, 0, 1]
+22:05:09.364 [Thread-7] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - start: packet=[1, 0, 255, 191, 0, 0, 0, 86, 16, 2, 0, 254, 54, 0, 0, 0, 0, 0, 0, 1], packetValues=[{ position=2, values={255, } }]
+22:05:09.364 [Thread-7] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - end: true
+22:05:09.364 [Thread-7] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isResultCompatible - start: packet=[1, 0, 255, 191, 0, 0, 0, 86, 16, 2, 0, 254, 54, 0, 0, 0, 0, 0, 0, 1], resultMapping={ startig position=8, length=0, convertor=com.microrisc.simply.iqrf.dpa.v210.types.ArrayPeripheralInfoConvertor@3adfb4 }
+22:05:09.364 [Thread-7] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isResultCompatible - end: true
+22:05:09.364 [Thread-7] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - start: packet=[1, 0, 255, 191, 0, 0, 0, 86, 16, 2, 0, 254, 54, 0, 0, 0, 0, 0, 0, 1], packetValues=[{ position=3, values={191, } }]
+22:05:09.365 [Thread-7] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - end: true
+22:05:09.365 [Thread-7] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isResultCompatible - start: packet=[1, 0, 255, 191, 0, 0, 0, 86, 16, 2, 0, 254, 54, 0, 0, 0, 0, 0, 0, 1], resultMapping={ startig position=8, length=0, convertor=com.microrisc.simply.iqrf.dpa.v210.types.PeripheralInfoConvertor@134be3c }
+22:05:09.365 [Thread-7] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isResultCompatible - end: true
+22:05:09.365 [Thread-7] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - start: packet=[1, 0, 255, 191, 0, 0, 0, 86, 16, 2, 0, 254, 54, 0, 0, 0, 0, 0, 0, 1], packetValues=[{ position=2, values={255, } }, { position=3, values={191, } }]
+22:05:09.366 [Thread-7] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - end: true
+22:05:09.366 [Thread-7] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isResultCompatible - start: packet=[1, 0, 255, 191, 0, 0, 0, 86, 16, 2, 0, 254, 54, 0, 0, 0, 0, 0, 0, 1], resultMapping={ startig position=8, length=0, convertor=com.microrisc.simply.iqrf.dpa.v210.types.PeripheralEnumerationConvertor@1b57fd1 }
+22:05:09.366 [Thread-7] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isResultCompatible - end: true
+22:05:09.366 [Thread-7] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: getMethodId - end: 1
+22:05:09.366 [Thread-7] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: getAdditionalData - start: packet=[1, 0, 255, 191, 0, 0, 0, 86, 16, 2, 0, 254, 54, 0, 0, 0, 0, 0, 0, 1]
+22:05:09.367 [Thread-7] DEBUG c.m.simply.protocol.mapping.Deserializer: deserialize - start: packetToValueMapping={ startig position=4, length=0, convertor=com.microrisc.simply.iqrf.dpa.v210.types.DPA_AdditionalInfoConvertor@da88c2 }, protoMsg=[1, 0, 255, 191, 0, 0, 0, 86, 16, 2, 0, 254, 54, 0, 0, 0, 0, 0, 0, 1]
+22:05:09.367 [Thread-7] DEBUG c.m.s.i.d.v.t.DPA_AdditionalInfoConvertor: toObject - start: protoValue=[0, 0, 0, 86, 16, 2, 0, 254, 54, 0, 0, 0, 0, 0, 0, 1]
+22:05:09.367 [Thread-7] DEBUG c.m.simply.iqrf.types.Uns16Convertor: toObject - start: iqValue=[0, 0]
+22:05:09.367 [Thread-7] DEBUG c.m.simply.iqrf.types.Uns16Convertor: toIQValue - end: 0
+22:05:09.367 [Thread-7] DEBUG c.m.s.i.d.v.t.DPA_AdditionalInfoConvertor: toObject - end: DPA_AdditionalInfo { 
+ HW profile ID: 0
+ Response code: NO_ERROR
+ DPA value: 86
+}
+22:05:09.368 [Thread-7] DEBUG c.m.simply.protocol.mapping.Deserializer: deserialize - end: DPA_AdditionalInfo { 
+ HW profile ID: 0
+ Response code: NO_ERROR
+ DPA value: 86
+}
+22:05:09.368 [Thread-7] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: getAdditionalData - end: DPA_AdditionalInfo { 
+ HW profile ID: 0
+ Response code: NO_ERROR
+ DPA value: 86
+}
+22:05:09.368 [Thread-7] DEBUG c.m.s.i.d.v.p.DPA_ProtocolProperties: getResponseCode - start: protoMsg=[1, 0, 255, 191, 0, 0, 0, 86, 16, 2, 0, 254, 54, 0, 0, 0, 0, 0, 0, 1]
+22:05:09.368 [Thread-7] DEBUG c.m.s.i.d.v.p.DPA_ProtocolProperties: getMessageData_Integer - start:
+22:05:09.368 [Thread-7] DEBUG c.m.s.i.d.v.p.DPA_ProtocolProperties: getMessageData_Integer - end: 0
+22:05:09.368 [Thread-7] DEBUG c.m.s.i.d.v.p.DPA_ProtocolProperties: getResponseCode - end: NO_ERROR
+22:05:09.369 [Thread-7] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: getMethodResult - start: devInterface=interface com.microrisc.simply.iqrf.dpa.v210.devices.PeripheralInfoGetter, methodId=1,protoMsg=[1, 0, 255, 191, 0, 0, 0, 86, 16, 2, 0, 254, 54, 0, 0, 0, 0, 0, 0, 1]
+22:05:09.369 [Thread-7] DEBUG c.m.simply.protocol.mapping.Deserializer: deserialize - start: packetToValueMapping={ startig position=8, length=0, convertor=com.microrisc.simply.iqrf.dpa.v210.types.PeripheralEnumerationConvertor@1b57fd1 }, protoMsg=[1, 0, 255, 191, 0, 0, 0, 86, 16, 2, 0, 254, 54, 0, 0, 0, 0, 0, 0, 1]
+22:05:09.369 [Thread-7] DEBUG c.m.s.i.d.v.t.PeripheralEnumerationConvertor: toObject - start: protoValue=[16, 2, 0, 254, 54, 0, 0, 0, 0, 0, 0, 1]
+22:05:09.369 [Thread-7] DEBUG c.m.s.i.d.v.t.PeripheralEnumerationConvertor: toObject - end: PeripheralEnumeration { 
+ DPA protocol version: { minor number=16, major number=2 }
+ Number of user defined peripherals: 0
+ Default peripherals: [1, 2, 3, 4, 5, 6, 7, 9, 10, 12, 13, ]
+ HW profile ID: 0
+ HW profile version: 0
+ Flags: 1
+}
+22:05:09.369 [Thread-7] DEBUG c.m.simply.protocol.mapping.Deserializer: deserialize - end: PeripheralEnumeration { 
+ DPA protocol version: { minor number=16, major number=2 }
+ Number of user defined peripherals: 0
+ Default peripherals: [1, 2, 3, 4, 5, 6, 7, 9, 10, 12, 13, ]
+ HW profile ID: 0
+ HW profile version: 0
+ Flags: 1
+}
+22:05:09.370 [Thread-7] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: getMethodResult - end: PeripheralEnumeration { 
+ DPA protocol version: { minor number=16, major number=2 }
+ Number of user defined peripherals: 0
+ Default peripherals: [1, 2, 3, 4, 5, 6, 7, 9, 10, 12, 13, ]
+ HW profile ID: 0
+ HW profile version: 0
+ Flags: 1
+}
+22:05:09.370 [Thread-7] DEBUG c.m.s.i.d.v.p.DPA_MessageConvertor: convertToDOFormat - end: { { main data=PeripheralEnumeration { 
  DPA protocol version: { minor number=16, major number=2 }
  Number of user defined peripherals: 0
  Default peripherals: [1, 2, 3, 4, 5, 6, 7, 9, 10, 12, 13, ]
@@ -80,9 +842,9 @@
 }, additional data=DPA_AdditionalInfo { 
  HW profile ID: 0
  Response code: NO_ERROR
- DPA value: 87
-}, source={ { networkId=1, node ID=1 }dev interface=interface com.microrisc.simply.iqrf.dpa.v210.devices.PeripheralInfoGetter, method ID=1 } }, proc error=null, request ID=10ebd776-98b2-40af-810f-3e7482577dc0 }
-11:44:31.278 [Thread-3] INFO  c.m.s.iqrf.dpa.connector.DPA_Connector: Processed message: { { main data=PeripheralEnumeration { 
+ DPA value: 86
+}, source={ { networkId=1, node ID=1 }dev interface=interface com.microrisc.simply.iqrf.dpa.v210.devices.PeripheralInfoGetter, method ID=1 } }, proc error=null, request ID=null }
+22:05:09.370 [Thread-7] DEBUG c.m.s.i.d.v.protocol.DPA_ProtocolLayer: processMessage - start: message={ { main data=PeripheralEnumeration { 
  DPA protocol version: { minor number=16, major number=2 }
  Number of user defined peripherals: 0
  Default peripherals: [1, 2, 3, 4, 5, 6, 7, 9, 10, 12, 13, ]
@@ -92,11 +854,149 @@
 }, additional data=DPA_AdditionalInfo { 
  HW profile ID: 0
  Response code: NO_ERROR
- DPA value: 87
-}, source={ { networkId=1, node ID=1 }dev interface=interface com.microrisc.simply.iqrf.dpa.v210.devices.PeripheralInfoGetter, method ID=1 } }, proc error=null, request ID=10ebd776-98b2-40af-810f-3e7482577dc0 }
-11:44:31.279 [Thread-3] INFO  c.m.s.iqrf.dpa.connector.DPA_Connector: Response found
-11:44:31.280 [Thread-2] INFO  c.microrisc.simply.ConnectedDeviceObject: 1:1-PeripheralInfoGetter: New result from connector, id=10ebd776-98b2-40af-810f-3e7482577dc0
-11:44:31.280 [main] INFO  c.m.simply.StandardServicesDeviceObject: 1:1-PeripheralInfoGetter: Get call result: PeripheralEnumeration { 
+ DPA value: 86
+}, source={ { networkId=1, node ID=1 }dev interface=interface com.microrisc.simply.iqrf.dpa.v210.devices.PeripheralInfoGetter, method ID=1 } }, proc error=null, request ID=null }
+22:05:09.371 [Thread-7] DEBUG c.m.s.i.d.v.protocol.DPA_ProtocolLayer: getCauseRequest - start: response={ { main data=PeripheralEnumeration { 
+ DPA protocol version: { minor number=16, major number=2 }
+ Number of user defined peripherals: 0
+ Default peripherals: [1, 2, 3, 4, 5, 6, 7, 9, 10, 12, 13, ]
+ HW profile ID: 0
+ HW profile version: 0
+ Flags: 1
+}, additional data=DPA_AdditionalInfo { 
+ HW profile ID: 0
+ Response code: NO_ERROR
+ DPA value: 86
+}, source={ { networkId=1, node ID=1 }dev interface=interface com.microrisc.simply.iqrf.dpa.v210.devices.PeripheralInfoGetter, method ID=1 } }, proc error=null, request ID=null }
+22:05:09.371 [Thread-7] DEBUG c.m.s.i.d.v.protocol.DPA_ProtocolLayer: getCauseRequest - end: { id=9deb8ddf-639a-4cfb-9385-d30ab2e794af, network ID=1, node ID=1, device interface=com.microrisc.simply.iqrf.dpa.v210.devices.PeripheralInfoGetter, method ID=1, arguments=[65535] }
+22:05:09.371 [Thread-7] DEBUG c.m.s.iqrf.dpa.connector.DPA_Connector: onGetMessage - start: data={ { main data=PeripheralEnumeration { 
+ DPA protocol version: { minor number=16, major number=2 }
+ Number of user defined peripherals: 0
+ Default peripherals: [1, 2, 3, 4, 5, 6, 7, 9, 10, 12, 13, ]
+ HW profile ID: 0
+ HW profile version: 0
+ Flags: 1
+}, additional data=DPA_AdditionalInfo { 
+ HW profile ID: 0
+ Response code: NO_ERROR
+ DPA value: 86
+}, source={ { networkId=1, node ID=1 }dev interface=interface com.microrisc.simply.iqrf.dpa.v210.devices.PeripheralInfoGetter, method ID=1 } }, proc error=null, request ID=9deb8ddf-639a-4cfb-9385-d30ab2e794af }
+22:05:09.372 [Thread-3] DEBUG c.m.s.iqrf.dpa.connector.DPA_Connector: processNextIncommingMessage - start:
+22:05:09.372 [Thread-7] INFO  c.m.s.iqrf.dpa.connector.DPA_Connector: New message from protocol layer get: { { main data=PeripheralEnumeration { 
+ DPA protocol version: { minor number=16, major number=2 }
+ Number of user defined peripherals: 0
+ Default peripherals: [1, 2, 3, 4, 5, 6, 7, 9, 10, 12, 13, ]
+ HW profile ID: 0
+ HW profile version: 0
+ Flags: 1
+}, additional data=DPA_AdditionalInfo { 
+ HW profile ID: 0
+ Response code: NO_ERROR
+ DPA value: 86
+}, source={ { networkId=1, node ID=1 }dev interface=interface com.microrisc.simply.iqrf.dpa.v210.devices.PeripheralInfoGetter, method ID=1 } }, proc error=null, request ID=9deb8ddf-639a-4cfb-9385-d30ab2e794af }
+22:05:09.372 [Thread-7] DEBUG c.m.s.iqrf.dpa.connector.DPA_Connector: onGetMessage - end
+22:05:09.372 [Thread-3] INFO  c.m.s.iqrf.dpa.connector.DPA_Connector: Processed message: { { main data=PeripheralEnumeration { 
+ DPA protocol version: { minor number=16, major number=2 }
+ Number of user defined peripherals: 0
+ Default peripherals: [1, 2, 3, 4, 5, 6, 7, 9, 10, 12, 13, ]
+ HW profile ID: 0
+ HW profile version: 0
+ Flags: 1
+}, additional data=DPA_AdditionalInfo { 
+ HW profile ID: 0
+ Response code: NO_ERROR
+ DPA value: 86
+}, source={ { networkId=1, node ID=1 }dev interface=interface com.microrisc.simply.iqrf.dpa.v210.devices.PeripheralInfoGetter, method ID=1 } }, proc error=null, request ID=9deb8ddf-639a-4cfb-9385-d30ab2e794af }
+22:05:09.372 [Thread-7] DEBUG c.m.s.i.d.v.protocol.DPA_ProtocolLayer: processResponse - end
+22:05:09.373 [Thread-3] INFO  c.m.s.iqrf.dpa.connector.DPA_Connector: Response found
+22:05:09.373 [Thread-7] DEBUG c.m.s.i.d.v.protocol.DPA_ProtocolLayer: onGetData - end
+22:05:09.373 [Thread-3] DEBUG c.m.s.iqrf.dpa.connector.DPA_Connector: createCallRequestProcessingInfo - start: { { main data=PeripheralEnumeration { 
+ DPA protocol version: { minor number=16, major number=2 }
+ Number of user defined peripherals: 0
+ Default peripherals: [1, 2, 3, 4, 5, 6, 7, 9, 10, 12, 13, ]
+ HW profile ID: 0
+ HW profile version: 0
+ Flags: 1
+}, additional data=DPA_AdditionalInfo { 
+ HW profile ID: 0
+ Response code: NO_ERROR
+ DPA value: 86
+}, source={ { networkId=1, node ID=1 }dev interface=interface com.microrisc.simply.iqrf.dpa.v210.devices.PeripheralInfoGetter, method ID=1 } }, proc error=null, request ID=9deb8ddf-639a-4cfb-9385-d30ab2e794af }
+22:05:09.373 [Thread-7] DEBUG c.m.s.network.usbcdc.CDCNetworkLayer: onGetMessage - end
+22:05:09.374 [Thread-3] DEBUG c.m.s.iqrf.dpa.connector.DPA_Connector: createCallRequestProcessingInfo - end: { , request ID=9deb8ddf-639a-4cfb-9385-d30ab2e794af, state=RESULT_ARRIVED, call result={ , method result=PeripheralEnumeration { 
+ DPA protocol version: { minor number=16, major number=2 }
+ Number of user defined peripherals: 0
+ Default peripherals: [1, 2, 3, 4, 5, 6, 7, 9, 10, 12, 13, ]
+ HW profile ID: 0
+ HW profile version: 0
+ Flags: 1
+}, additional info=DPA_AdditionalInfo { 
+ HW profile ID: 0
+ Response code: NO_ERROR
+ DPA value: 86
+} }, error=null }
+22:05:09.374 [Thread-3] DEBUG c.m.s.iqrf.dpa.connector.DPA_Connector: processNextIncommingMessage - end
+22:05:09.374 [Thread-2] DEBUG c.microrisc.simply.ConnectedDeviceObject: 1:1-PeripheralInfoGetter: onCallRequestProcessingInfo - start: procInfo={ , request ID=9deb8ddf-639a-4cfb-9385-d30ab2e794af, state=RESULT_ARRIVED, call result={ , method result=PeripheralEnumeration { 
+ DPA protocol version: { minor number=16, major number=2 }
+ Number of user defined peripherals: 0
+ Default peripherals: [1, 2, 3, 4, 5, 6, 7, 9, 10, 12, 13, ]
+ HW profile ID: 0
+ HW profile version: 0
+ Flags: 1
+}, additional info=DPA_AdditionalInfo { 
+ HW profile ID: 0
+ Response code: NO_ERROR
+ DPA value: 86
+} }, error=null }, callId=9deb8ddf-639a-4cfb-9385-d30ab2e794af
+22:05:09.375 [Thread-2] DEBUG c.m.simply.HashMapResultsContainer: put - start: uid=9deb8ddf-639a-4cfb-9385-d30ab2e794af, callResult={ , request ID=9deb8ddf-639a-4cfb-9385-d30ab2e794af, state=RESULT_ARRIVED, call result={ , method result=PeripheralEnumeration { 
+ DPA protocol version: { minor number=16, major number=2 }
+ Number of user defined peripherals: 0
+ Default peripherals: [1, 2, 3, 4, 5, 6, 7, 9, 10, 12, 13, ]
+ HW profile ID: 0
+ HW profile version: 0
+ Flags: 1
+}, additional info=DPA_AdditionalInfo { 
+ HW profile ID: 0
+ Response code: NO_ERROR
+ DPA value: 86
+} }, error=null }
+22:05:09.375 [Thread-2] DEBUG c.m.simply.HashMapResultsContainer: update - start: 
+22:05:09.375 [Thread-2] DEBUG c.m.simply.HashMapResultsContainer: update - end: 
+22:05:09.375 [Thread-2] DEBUG c.m.simply.HashMapResultsContainer: put - end: 
+22:05:09.375 [Thread-2] DEBUG c.microrisc.simply.ConnectedDeviceObject: 1:1-PeripheralInfoGetter: onCallRequestProcessingInfo - end
+22:05:09.376 [main] DEBUG c.m.simply.HashMapResultsContainer: get - start: uid=9deb8ddf-639a-4cfb-9385-d30ab2e794af
+22:05:09.376 [Thread-2] INFO  c.microrisc.simply.ConnectedDeviceObject: 1:1-PeripheralInfoGetter: New result from connector, id=9deb8ddf-639a-4cfb-9385-d30ab2e794af
+22:05:09.376 [main] DEBUG c.m.simply.HashMapResultsContainer: update - start: 
+22:05:09.376 [main] DEBUG c.m.simply.HashMapResultsContainer: update - end: 
+22:05:09.376 [main] DEBUG c.m.simply.HashMapResultsContainer: get - end: { , request ID=9deb8ddf-639a-4cfb-9385-d30ab2e794af, state=RESULT_ARRIVED, call result={ , method result=PeripheralEnumeration { 
+ DPA protocol version: { minor number=16, major number=2 }
+ Number of user defined peripherals: 0
+ Default peripherals: [1, 2, 3, 4, 5, 6, 7, 9, 10, 12, 13, ]
+ HW profile ID: 0
+ HW profile version: 0
+ Flags: 1
+}, additional info=DPA_AdditionalInfo { 
+ HW profile ID: 0
+ Response code: NO_ERROR
+ DPA value: 86
+} }, error=null }
+22:05:09.377 [main] DEBUG c.m.simply.StandardServicesDeviceObject: 1:1-PeripheralInfoGetter: getCallResultImmediately - start: callId=9deb8ddf-639a-4cfb-9385-d30ab2e794af
+22:05:09.377 [main] DEBUG c.m.simply.HashMapResultsContainer: get - start: uid=9deb8ddf-639a-4cfb-9385-d30ab2e794af
+22:05:09.377 [main] DEBUG c.m.simply.HashMapResultsContainer: update - start: 
+22:05:09.377 [main] DEBUG c.m.simply.HashMapResultsContainer: update - end: 
+22:05:09.377 [main] DEBUG c.m.simply.HashMapResultsContainer: get - end: { , request ID=9deb8ddf-639a-4cfb-9385-d30ab2e794af, state=RESULT_ARRIVED, call result={ , method result=PeripheralEnumeration { 
+ DPA protocol version: { minor number=16, major number=2 }
+ Number of user defined peripherals: 0
+ Default peripherals: [1, 2, 3, 4, 5, 6, 7, 9, 10, 12, 13, ]
+ HW profile ID: 0
+ HW profile version: 0
+ Flags: 1
+}, additional info=DPA_AdditionalInfo { 
+ HW profile ID: 0
+ Response code: NO_ERROR
+ DPA value: 86
+} }, error=null }
+22:05:09.378 [main] DEBUG c.m.simply.StandardServicesDeviceObject: 1:1-PeripheralInfoGetter: getCallResultImmediately - end: PeripheralEnumeration { 
  DPA protocol version: { minor number=16, major number=2 }
  Number of user defined peripherals: 0
  Default peripherals: [1, 2, 3, 4, 5, 6, 7, 9, 10, 12, 13, ]
@@ -104,37 +1004,194 @@
  HW profile version: 0
  Flags: 1
 }
-11:44:31.283 [main] INFO  c.m.s.iqrf.dpa.v210.init.DPA_Initializer: Getting peripheral enumeration: 1 attempt
-11:44:31.283 [main] INFO  c.m.s.iqrf.dpa.connector.DPA_Connector: New call request created: { id=4b7e43e4-5afc-4430-b5bc-235e45a8345a, network ID=1, node ID=2, device interface=com.microrisc.simply.iqrf.dpa.v210.devices.PeripheralInfoGetter, method ID=1, arguments=[65535] }
-11:44:31.283 [main] INFO  c.microrisc.simply.ConnectedDeviceObject: 1:2-PeripheralInfoGetter: Method 1 call dispatched, id=4b7e43e4-5afc-4430-b5bc-235e45a8345a
-11:44:31.283 [main] WARN  c.m.simply.HashMapResultsContainer: No result found.
-11:44:32.358 [Thread-9] INFO  c.m.s.iqrf.dpa.connector.DPA_Connector: New message from protocol layer get: { { main data=PeripheralEnumeration { 
+22:05:09.378 [main] INFO  c.m.simply.StandardServicesDeviceObject: 1:1-PeripheralInfoGetter: Get call result: PeripheralEnumeration { 
  DPA protocol version: { minor number=16, major number=2 }
- Number of user defined peripherals: 1
+ Number of user defined peripherals: 0
  Default peripherals: [1, 2, 3, 4, 5, 6, 7, 9, 10, 12, 13, ]
- HW profile ID: 15
- HW profile version: 43981
+ HW profile ID: 0
+ HW profile version: 0
  Flags: 1
-}, additional data=DPA_AdditionalInfo { 
+}
+22:05:09.378 [main] DEBUG c.m.simply.StandardServicesDeviceObject: 1:1-PeripheralInfoGetter: getCallResult - end: PeripheralEnumeration { 
+ DPA protocol version: { minor number=16, major number=2 }
+ Number of user defined peripherals: 0
+ Default peripherals: [1, 2, 3, 4, 5, 6, 7, 9, 10, 12, 13, ]
+ HW profile ID: 0
+ HW profile version: 0
+ Flags: 1
+}
+22:05:09.378 [main] DEBUG c.m.s.iqrf.dpa.v210.init.DPA_Initializer: getPeripheralNumbers - end: [1, 2, 3, 4, 5, 6, 7, 9, 10, 12, 13]
+22:05:09.379 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: getDeviceObject - start: networkId=1, nodeId=1, connector=com.microrisc.simply.iqrf.dpa.connector.DPA_Connector@14b7042, implClass=class com.microrisc.simply.iqrf.dpa.v210.devices.impl.SimpleNode, configuration=org.apache.commons.configuration.PropertiesConfiguration@1b72ada
+22:05:09.379 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: createResultsContainer - start: configuration=org.apache.commons.configuration.PropertiesConfiguration@1b72ada
+22:05:09.379 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: createResultsContainer - end: com.microrisc.simply.HashMapCallRequestProcessingInfoContainer@cfe446
+22:05:09.380 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: getDeviceObject - end: com.microrisc.simply.iqrf.dpa.v210.devices.impl.SimpleNode@93b63c
+22:05:09.380 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: getDeviceObject - start: networkId=1, nodeId=1, connector=com.microrisc.simply.iqrf.dpa.connector.DPA_Connector@14b7042, implClass=class com.microrisc.simply.iqrf.dpa.v210.devices.impl.SimpleOS, configuration=org.apache.commons.configuration.PropertiesConfiguration@1b72ada
+22:05:09.381 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: createResultsContainer - start: configuration=org.apache.commons.configuration.PropertiesConfiguration@1b72ada
+22:05:09.381 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: createResultsContainer - end: com.microrisc.simply.HashMapCallRequestProcessingInfoContainer@1a12fe6
+22:05:09.381 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: getDeviceObject - end: com.microrisc.simply.iqrf.dpa.v210.devices.impl.SimpleOS@14fd510
+22:05:09.382 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: getDeviceObject - start: networkId=1, nodeId=1, connector=com.microrisc.simply.iqrf.dpa.connector.DPA_Connector@14b7042, implClass=class com.microrisc.simply.iqrf.dpa.v210.devices.impl.SimpleEEPROM, configuration=org.apache.commons.configuration.PropertiesConfiguration@1b72ada
+22:05:09.382 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: createResultsContainer - start: configuration=org.apache.commons.configuration.PropertiesConfiguration@1b72ada
+22:05:09.383 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: createResultsContainer - end: com.microrisc.simply.HashMapCallRequestProcessingInfoContainer@2d0e1c
+22:05:09.383 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: getDeviceObject - end: com.microrisc.simply.iqrf.dpa.v210.devices.impl.SimpleEEPROM@1f960c4
+22:05:09.383 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: getDeviceObject - start: networkId=1, nodeId=1, connector=com.microrisc.simply.iqrf.dpa.connector.DPA_Connector@14b7042, implClass=class com.microrisc.simply.iqrf.dpa.v210.devices.impl.SimpleEEEPROM, configuration=org.apache.commons.configuration.PropertiesConfiguration@1b72ada
+22:05:09.384 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: createResultsContainer - start: configuration=org.apache.commons.configuration.PropertiesConfiguration@1b72ada
+22:05:09.384 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: createResultsContainer - end: com.microrisc.simply.HashMapCallRequestProcessingInfoContainer@1401c44
+22:05:09.384 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: getDeviceObject - end: com.microrisc.simply.iqrf.dpa.v210.devices.impl.SimpleEEEPROM@1ffbc2e
+22:05:09.385 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: getDeviceObject - start: networkId=1, nodeId=1, connector=com.microrisc.simply.iqrf.dpa.connector.DPA_Connector@14b7042, implClass=class com.microrisc.simply.iqrf.dpa.v210.devices.impl.SimpleRAM, configuration=org.apache.commons.configuration.PropertiesConfiguration@1b72ada
+22:05:09.385 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: createResultsContainer - start: configuration=org.apache.commons.configuration.PropertiesConfiguration@1b72ada
+22:05:09.385 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: createResultsContainer - end: com.microrisc.simply.HashMapCallRequestProcessingInfoContainer@9b8dc1
+22:05:09.385 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: getDeviceObject - end: com.microrisc.simply.iqrf.dpa.v210.devices.impl.SimpleRAM@779d17
+22:05:09.386 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: getDeviceObject - start: networkId=1, nodeId=1, connector=com.microrisc.simply.iqrf.dpa.connector.DPA_Connector@14b7042, implClass=class com.microrisc.simply.iqrf.dpa.v210.devices.impl.SimpleLEDR, configuration=org.apache.commons.configuration.PropertiesConfiguration@1b72ada
+22:05:09.386 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: createResultsContainer - start: configuration=org.apache.commons.configuration.PropertiesConfiguration@1b72ada
+22:05:09.386 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: createResultsContainer - end: com.microrisc.simply.HashMapCallRequestProcessingInfoContainer@ea7211
+22:05:09.387 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: getDeviceObject - end: com.microrisc.simply.iqrf.dpa.v210.devices.impl.SimpleLEDR@1e6f1f4
+22:05:09.387 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: getDeviceObject - start: networkId=1, nodeId=1, connector=com.microrisc.simply.iqrf.dpa.connector.DPA_Connector@14b7042, implClass=class com.microrisc.simply.iqrf.dpa.v210.devices.impl.SimpleLEDG, configuration=org.apache.commons.configuration.PropertiesConfiguration@1b72ada
+22:05:09.387 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: createResultsContainer - start: configuration=org.apache.commons.configuration.PropertiesConfiguration@1b72ada
+22:05:09.387 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: createResultsContainer - end: com.microrisc.simply.HashMapCallRequestProcessingInfoContainer@116d461
+22:05:09.388 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: getDeviceObject - end: com.microrisc.simply.iqrf.dpa.v210.devices.impl.SimpleLEDG@1d13c39
+22:05:09.388 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: getDeviceObject - start: networkId=1, nodeId=1, connector=com.microrisc.simply.iqrf.dpa.connector.DPA_Connector@14b7042, implClass=class com.microrisc.simply.iqrf.dpa.v210.devices.impl.SimpleIO, configuration=org.apache.commons.configuration.PropertiesConfiguration@1b72ada
+22:05:09.388 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: createResultsContainer - start: configuration=org.apache.commons.configuration.PropertiesConfiguration@1b72ada
+22:05:09.388 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: createResultsContainer - end: com.microrisc.simply.HashMapCallRequestProcessingInfoContainer@1c8cc59
+22:05:09.389 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: getDeviceObject - end: com.microrisc.simply.iqrf.dpa.v210.devices.impl.SimpleIO@1dfee20
+22:05:09.389 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: getDeviceObject - start: networkId=1, nodeId=1, connector=com.microrisc.simply.iqrf.dpa.connector.DPA_Connector@14b7042, implClass=class com.microrisc.simply.iqrf.dpa.v210.devices.impl.SimpleThermometer, configuration=org.apache.commons.configuration.PropertiesConfiguration@1b72ada
+22:05:09.389 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: createResultsContainer - start: configuration=org.apache.commons.configuration.PropertiesConfiguration@1b72ada
+22:05:09.390 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: createResultsContainer - end: com.microrisc.simply.HashMapCallRequestProcessingInfoContainer@8ab562
+22:05:09.390 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: getDeviceObject - end: com.microrisc.simply.iqrf.dpa.v210.devices.impl.SimpleThermometer@8a6465
+22:05:09.390 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: getDeviceObject - start: networkId=1, nodeId=1, connector=com.microrisc.simply.iqrf.dpa.connector.DPA_Connector@14b7042, implClass=class com.microrisc.simply.iqrf.dpa.v210.devices.impl.SimpleUART, configuration=org.apache.commons.configuration.PropertiesConfiguration@1b72ada
+22:05:09.390 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: createResultsContainer - start: configuration=org.apache.commons.configuration.PropertiesConfiguration@1b72ada
+22:05:09.391 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: createResultsContainer - end: com.microrisc.simply.HashMapCallRequestProcessingInfoContainer@1c52e72
+22:05:09.391 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: getDeviceObject - end: com.microrisc.simply.iqrf.dpa.v210.devices.impl.SimpleUART@6c6b62
+22:05:09.391 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: getDeviceObject - start: networkId=1, nodeId=1, connector=com.microrisc.simply.iqrf.dpa.connector.DPA_Connector@14b7042, implClass=class com.microrisc.simply.iqrf.dpa.v210.devices.impl.SimpleFRC, configuration=org.apache.commons.configuration.PropertiesConfiguration@1b72ada
+22:05:09.391 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: createResultsContainer - start: configuration=org.apache.commons.configuration.PropertiesConfiguration@1b72ada
+22:05:09.392 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: createResultsContainer - end: com.microrisc.simply.HashMapCallRequestProcessingInfoContainer@1fe1934
+22:05:09.392 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: getDeviceObject - end: com.microrisc.simply.iqrf.dpa.v210.devices.impl.SimpleFRC@128cbe6
+22:05:09.392 [main] DEBUG c.m.s.iqrf.dpa.v210.init.DPA_Initializer: createNodeServices - end
+22:05:09.393 [main] DEBUG c.m.s.iqrf.dpa.v210.init.DPA_Initializer: createNode - end: com.microrisc.simply.BaseNode@64b1
+22:05:09.393 [main] DEBUG c.m.s.iqrf.dpa.v210.init.DPA_Initializer: createNode - start: networkId=1, nodeId=2
+22:05:09.393 [main] DEBUG c.m.s.iqrf.dpa.v210.init.DPA_Initializer: createNodeServices - start: nodeId=2
+22:05:09.393 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: getDeviceObject - start: networkId=1, nodeId=2, connector=com.microrisc.simply.iqrf.dpa.connector.DPA_Connector@14b7042, implClass=class com.microrisc.simply.iqrf.dpa.v210.devices.impl.SimplePeripheralInfoGetter, configuration=org.apache.commons.configuration.PropertiesConfiguration@1b72ada
+22:05:09.394 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: createResultsContainer - start: configuration=org.apache.commons.configuration.PropertiesConfiguration@1b72ada
+22:05:09.394 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: createResultsContainer - end: com.microrisc.simply.HashMapCallRequestProcessingInfoContainer@16274ea
+22:05:09.394 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: getDeviceObject - end: com.microrisc.simply.iqrf.dpa.v210.devices.impl.SimplePeripheralInfoGetter@e9ebe1
+22:05:09.394 [main] DEBUG c.m.s.iqrf.dpa.v210.init.DPA_Initializer: getPeripheralNumbers - start: infoDeviceObj=com.microrisc.simply.iqrf.dpa.v210.devices.impl.SimplePeripheralInfoGetter@e9ebe1
+22:05:09.395 [main] INFO  c.m.s.iqrf.dpa.v210.init.DPA_Initializer: Getting peripheral enumeration: 1 attempt
+22:05:09.395 [main] DEBUG c.microrisc.simply.ConnectedDeviceObject: 1:2-PeripheralInfoGetter: dispatchCall - start: methodId=1, arguments=[65535], timeout=10000
+22:05:09.395 [main] DEBUG c.m.s.iqrf.dpa.connector.DPA_Connector: callMethod - start: devObject=2, devIface=com.microrisc.simply.iqrf.dpa.v210.devices.PeripheralInfoGetter, methodId=1, args=[65535], timeout=10000
+22:05:09.395 [main] INFO  c.m.s.iqrf.dpa.connector.DPA_Connector: New call request created: { id=45a504ab-e24b-47c8-8f33-f681693d7935, network ID=1, node ID=2, device interface=com.microrisc.simply.iqrf.dpa.v210.devices.PeripheralInfoGetter, method ID=1, arguments=[65535] }
+22:05:09.396 [main] DEBUG c.m.s.iqrf.dpa.connector.DPA_Connector: callMethod - end: 45a504ab-e24b-47c8-8f33-f681693d7935
+22:05:09.396 [main] DEBUG c.microrisc.simply.ConnectedDeviceObject: 1:2-PeripheralInfoGetter: dispatchCall - end: 45a504ab-e24b-47c8-8f33-f681693d7935
+22:05:09.396 [main] INFO  c.microrisc.simply.ConnectedDeviceObject: 1:2-PeripheralInfoGetter: Method 1 call dispatched, id=45a504ab-e24b-47c8-8f33-f681693d7935
+22:05:09.396 [main] DEBUG c.m.simply.StandardServicesDeviceObject: 1:2-PeripheralInfoGetter: getCallResult - start: callId=45a504ab-e24b-47c8-8f33-f681693d7935, timeout=10000
+22:05:09.396 [main] DEBUG c.m.simply.HashMapResultsContainer: get - start: uid=45a504ab-e24b-47c8-8f33-f681693d7935
+22:05:09.396 [main] DEBUG c.m.simply.HashMapResultsContainer: update - start: 
+22:05:09.397 [main] DEBUG c.m.simply.HashMapResultsContainer: update - end: 
+22:05:09.397 [main] WARN  c.m.simply.HashMapResultsContainer: No result found.
+22:05:09.397 [main] DEBUG c.m.simply.HashMapResultsContainer: get - end: null
+22:05:09.398 [Thread-3] DEBUG c.m.s.iqrf.dpa.connector.DPA_Connector: sendRequestToProtocolLayer - start: request={ id=45a504ab-e24b-47c8-8f33-f681693d7935, network ID=1, node ID=2, device interface=com.microrisc.simply.iqrf.dpa.v210.devices.PeripheralInfoGetter, method ID=1, arguments=[65535] }
+22:05:10.210 [Thread-3] DEBUG c.m.s.i.d.v.protocol.DPA_ProtocolLayer: sendRequest - start: request={ id=45a504ab-e24b-47c8-8f33-f681693d7935, network ID=1, node ID=2, device interface=com.microrisc.simply.iqrf.dpa.v210.devices.PeripheralInfoGetter, method ID=1, arguments=[65535] }
+22:05:10.210 [Thread-3] DEBUG c.m.s.i.d.v.p.DPA_MessageConvertor: convertToProtoFormat - start: callRequest={ id=45a504ab-e24b-47c8-8f33-f681693d7935, network ID=1, node ID=2, device interface=com.microrisc.simply.iqrf.dpa.v210.devices.PeripheralInfoGetter, method ID=1, arguments=[65535] }
+22:05:10.210 [Thread-3] DEBUG c.m.s.p.m.SimpleCallRequestToPacketMapping: getSerializedProtocolData - start: 
+22:05:10.210 [Thread-3] DEBUG c.m.s.p.m.SimpleCallRequestToPacketMapping: getSerializedProtocolData - end: []
+22:05:10.210 [Thread-3] DEBUG c.m.s.p.m.SimpleCallRequestToPacketMapping: getSerializedNetworkData - start: nodeId=1
+22:05:10.210 [Thread-3] DEBUG c.m.s.p.m.SimpleCallRequestToPacketMapping: getSerializedNetworkData - end: []
+22:05:10.210 [Thread-3] DEBUG c.m.s.p.m.SimpleCallRequestToPacketMapping: getSerializedNodeData - start: nodeId=2
+22:05:10.210 [Thread-3] DEBUG c.m.simply.protocol.mapping.Serializer: serialize - start: valueMapping={ starting position =0, convertor=com.microrisc.simply.types.StringToByteConvertor@3580ab }, value=2
+22:05:10.211 [Thread-3] DEBUG c.m.simply.types.StringToByteConvertor: toProtoValue - start: valueToConv=2
+22:05:10.211 [Thread-3] DEBUG c.m.simply.types.StringToByteConvertor: toProtoValue - end: [2]
+22:05:10.211 [Thread-3] DEBUG c.m.simply.protocol.mapping.Serializer: serialize - end: [2]
+22:05:10.211 [Thread-3] DEBUG c.m.s.p.m.SimpleCallRequestToPacketMapping: getSerializedNodeData - end: [{ starting position=0, data=[S@7d7a04 }]
+22:05:10.211 [Thread-3] DEBUG c.m.s.p.m.SimpleCallRequestToPacketMapping: getSerializedInterfaceData - start: devInterface=interface com.microrisc.simply.iqrf.dpa.v210.devices.PeripheralInfoGetter
+22:05:10.211 [Thread-3] DEBUG c.m.s.p.m.SimpleCallRequestToPacketMapping: getSerializedInterfaceData - end: []
+22:05:10.211 [Thread-3] DEBUG c.m.s.p.m.SimpleCallRequestToPacketMapping: getSerializedMethodData - start: devInterface=interface com.microrisc.simply.iqrf.dpa.v210.devices.PeripheralInfoGetter, methodId=1
+22:05:10.211 [Thread-3] DEBUG c.m.s.p.m.SimpleCallRequestToPacketMapping: getSerializedMethodData - end: [{ starting position=2, data=[S@d72e3f }]
+22:05:10.211 [Thread-3] DEBUG c.m.s.p.m.SimpleCallRequestToPacketMapping: getSerializedMethodArgs - start: devInterface=interface com.microrisc.simply.iqrf.dpa.v210.devices.PeripheralInfoGetter, methodId=1, args=[65535]
+22:05:10.211 [Thread-3] DEBUG c.m.simply.protocol.mapping.Serializer: serialize - start: valueMapping={ starting position =4, convertor=com.microrisc.simply.iqrf.types.Uns16Convertor@11d3f0b }, value=65535
+22:05:10.211 [Thread-3] DEBUG c.m.simply.iqrf.types.Uns16Convertor: toIQValue - start: valueToConv=65535
+22:05:10.211 [Thread-3] DEBUG c.m.simply.iqrf.types.Uns16Convertor: toIQValue - end: [255, 255]
+22:05:10.212 [Thread-3] DEBUG c.m.simply.protocol.mapping.Serializer: serialize - end: [255, 255]
+22:05:10.212 [Thread-3] DEBUG c.m.s.p.m.SimpleCallRequestToPacketMapping: getSerializedMethodArgs - end: [{ starting position=4, data=[S@1d59ff0 }]
+22:05:10.212 [Thread-3] DEBUG c.m.simply.protocol.RequestPacketCreator: createRequestPacket - start: packetFragments[{ starting position=0, data=[S@7d7a04 }, { starting position=2, data=[S@d72e3f }, { starting position=4, data=[S@1d59ff0 }]
+22:05:10.212 [Thread-3] DEBUG c.m.simply.protocol.RequestPacketCreator: getMaxPosition - start: packetFragments[{ starting position=0, data=[S@7d7a04 }, { starting position=2, data=[S@d72e3f }, { starting position=4, data=[S@1d59ff0 }]
+22:05:10.212 [Thread-3] DEBUG c.m.simply.protocol.RequestPacketCreator: getMaxPosition - end: 6
+22:05:10.212 [Thread-3] DEBUG c.m.simply.protocol.RequestPacketCreator: createRequestPacket - end: [2, 0, 255, 63, 255, 255]
+22:05:10.212 [Thread-3] DEBUG c.m.s.i.d.v.p.DPA_MessageConvertor: convertToProtoFormat - end: [2, 0, 255, 63, 255, 255]
+22:05:10.212 [Thread-3] DEBUG c.m.s.i.d.v.protocol.DPA_ProtocolLayer: deleteInvalidRequests - start: newRequest={ id=45a504ab-e24b-47c8-8f33-f681693d7935, network ID=1, node ID=2, device interface=com.microrisc.simply.iqrf.dpa.v210.devices.PeripheralInfoGetter, method ID=1, arguments=[65535] }
+22:05:10.212 [Thread-3] DEBUG c.m.s.i.d.v.protocol.DPA_ProtocolLayer: deleteInvalidRequests - end
+22:05:10.212 [Thread-3] DEBUG c.m.s.network.usbcdc.CDCNetworkLayer: sendData - start: networkData={ data=[2, 0, 255, 63, 255, 255], network ID=1 }
+22:05:10.265 [Thread-3] DEBUG c.m.s.network.usbcdc.CDCNetworkLayer: sendData - end
+22:05:10.266 [Thread-3] DEBUG c.m.s.i.d.v.protocol.DPA_ProtocolLayer: sendRequest - end
+22:05:10.266 [Thread-3] DEBUG c.m.s.iqrf.dpa.connector.DPA_Connector: sendRequestToProtocolLayer - end:
+22:05:10.316 [Thread-8] DEBUG c.m.s.network.usbcdc.CDCNetworkLayer: onGetMessage - start: data=[2, 0, 255, 63, 255, 255, 255, 88, 2, 3, 2]
+22:05:10.317 [Thread-8] DEBUG c.m.s.i.d.v.protocol.DPA_ProtocolLayer: onGetData - start: { data=[2, 0, 255, 63, 255, 255, 255, 88, 2, 3, 2], network ID=1 }
+22:05:10.317 [Thread-8] DEBUG c.m.s.i.d.v.p.DPA_ProtocolProperties: getResponseCode - start: protoMsg=[2, 0, 255, 63, 255, 255, 255, 88, 2, 3, 2]
+22:05:10.317 [Thread-8] DEBUG c.m.s.i.d.v.p.DPA_ProtocolProperties: getMessageData_Integer - start:
+22:05:10.317 [Thread-8] DEBUG c.m.s.i.d.v.p.DPA_ProtocolProperties: getMessageData_Integer - end: 255
+22:05:10.317 [Thread-8] DEBUG c.m.s.i.d.v.p.DPA_ProtocolProperties: getResponseCode - end: CONFIRMATION
+22:05:10.317 [Thread-8] DEBUG c.m.s.i.d.v.protocol.DPA_ProtocolLayer: onGetData - confirmation arrived: { data=[2, 0, 255, 63, 255, 255, 255, 88, 2, 3, 2], network ID=1 }
+22:05:10.317 [Thread-8] DEBUG c.m.s.network.usbcdc.CDCNetworkLayer: onGetMessage - end
+22:05:10.446 [Thread-9] DEBUG c.m.s.network.usbcdc.CDCNetworkLayer: onGetMessage - start: data=[2, 0, 255, 191, 15, 0, 0, 79, 16, 2, 1, 254, 54, 0, 0, 15, 0, 205, 171, 1]
+22:05:10.446 [Thread-9] DEBUG c.m.s.i.d.v.protocol.DPA_ProtocolLayer: onGetData - start: { data=[2, 0, 255, 191, 15, 0, 0, 79, 16, 2, 1, 254, 54, 0, 0, 15, 0, 205, 171, 1], network ID=1 }
+22:05:10.446 [Thread-9] DEBUG c.m.s.i.d.v.p.DPA_ProtocolProperties: getResponseCode - start: protoMsg=[2, 0, 255, 191, 15, 0, 0, 79, 16, 2, 1, 254, 54, 0, 0, 15, 0, 205, 171, 1]
+22:05:10.446 [Thread-9] DEBUG c.m.s.i.d.v.p.DPA_ProtocolProperties: getMessageData_Integer - start:
+22:05:10.446 [Thread-9] DEBUG c.m.s.i.d.v.p.DPA_ProtocolProperties: getMessageData_Integer - end: 0
+22:05:10.446 [Thread-9] DEBUG c.m.s.i.d.v.p.DPA_ProtocolProperties: getResponseCode - end: NO_ERROR
+22:05:10.447 [Thread-9] DEBUG c.m.s.i.d.v.p.DPA_MessageConvertor: convertToDOFormat - start: networkData={ data=[2, 0, 255, 191, 15, 0, 0, 79, 16, 2, 1, 254, 54, 0, 0, 15, 0, 205, 171, 1], network ID=1 }
+22:05:10.447 [Thread-9] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: getNodeId - start: packet=[2, 0, 255, 191, 15, 0, 0, 79, 16, 2, 1, 254, 54, 0, 0, 15, 0, 205, 171, 1]
+22:05:10.447 [Thread-9] DEBUG c.m.simply.protocol.mapping.Deserializer: deserialize - start: packetToValueMapping={ startig position=0, length=1, convertor=com.microrisc.simply.types.StringToByteConvertor@3580ab }, protoMsg=[2, 0, 255, 191, 15, 0, 0, 79, 16, 2, 1, 254, 54, 0, 0, 15, 0, 205, 171, 1]
+22:05:10.447 [Thread-9] DEBUG c.m.simply.types.StringToByteConvertor: toObject - start: iqValue=[2]
+22:05:10.447 [Thread-9] DEBUG c.m.simply.types.StringToByteConvertor: toObject - end: 2
+22:05:10.447 [Thread-9] DEBUG c.m.simply.protocol.mapping.Deserializer: deserialize - end: 2
+22:05:10.447 [Thread-9] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: getNodeId - end: 2
+22:05:10.447 [Thread-9] DEBUG c.m.s.i.d.v.p.DPA_ProtocolProperties: getPeripheralNumber - start: protoMsg=[2, 0, 255, 191, 15, 0, 0, 79, 16, 2, 1, 254, 54, 0, 0, 15, 0, 205, 171, 1]
+22:05:10.447 [Thread-9] DEBUG c.m.s.i.d.v.p.DPA_ProtocolProperties: getMessageData_Integer - start:
+22:05:10.447 [Thread-9] DEBUG c.m.s.i.d.v.p.DPA_ProtocolProperties: getMessageData_Integer - end: 255
+22:05:10.447 [Thread-9] DEBUG c.m.s.i.d.v.p.DPA_ProtocolProperties: getPeripheralNumber - end: 255
+22:05:10.448 [Thread-9] DEBUG c.m.s.i.d.v.p.DPA_ProtocolProperties: getCommand - start: protoMsg=[2, 0, 255, 191, 15, 0, 0, 79, 16, 2, 1, 254, 54, 0, 0, 15, 0, 205, 171, 1]
+22:05:10.448 [Thread-9] DEBUG c.m.s.i.d.v.p.DPA_ProtocolProperties: getMessageData_Integer - start:
+22:05:10.448 [Thread-9] DEBUG c.m.s.i.d.v.p.DPA_ProtocolProperties: getMessageData_Integer - end: 191
+22:05:10.448 [Thread-9] DEBUG c.m.s.i.d.v.p.DPA_ProtocolProperties: getCommand - end: 191
+22:05:10.448 [Thread-9] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: getMethodId - start: devInterface=interface com.microrisc.simply.iqrf.dpa.v210.devices.PeripheralInfoGetter, packet=[2, 0, 255, 191, 15, 0, 0, 79, 16, 2, 1, 254, 54, 0, 0, 15, 0, 205, 171, 1]
+22:05:10.448 [Thread-9] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - start: packet=[2, 0, 255, 191, 15, 0, 0, 79, 16, 2, 1, 254, 54, 0, 0, 15, 0, 205, 171, 1], packetValues=[{ position=2, values={255, } }]
+22:05:10.448 [Thread-9] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - end: true
+22:05:10.448 [Thread-9] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isResultCompatible - start: packet=[2, 0, 255, 191, 15, 0, 0, 79, 16, 2, 1, 254, 54, 0, 0, 15, 0, 205, 171, 1], resultMapping={ startig position=8, length=0, convertor=com.microrisc.simply.iqrf.dpa.v210.types.ArrayPeripheralInfoConvertor@3adfb4 }
+22:05:10.448 [Thread-9] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isResultCompatible - end: true
+22:05:10.448 [Thread-9] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - start: packet=[2, 0, 255, 191, 15, 0, 0, 79, 16, 2, 1, 254, 54, 0, 0, 15, 0, 205, 171, 1], packetValues=[{ position=3, values={191, } }]
+22:05:10.448 [Thread-9] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - end: true
+22:05:10.448 [Thread-9] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isResultCompatible - start: packet=[2, 0, 255, 191, 15, 0, 0, 79, 16, 2, 1, 254, 54, 0, 0, 15, 0, 205, 171, 1], resultMapping={ startig position=8, length=0, convertor=com.microrisc.simply.iqrf.dpa.v210.types.PeripheralInfoConvertor@134be3c }
+22:05:10.449 [Thread-9] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isResultCompatible - end: true
+22:05:10.449 [Thread-9] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - start: packet=[2, 0, 255, 191, 15, 0, 0, 79, 16, 2, 1, 254, 54, 0, 0, 15, 0, 205, 171, 1], packetValues=[{ position=2, values={255, } }, { position=3, values={191, } }]
+22:05:10.449 [Thread-9] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - end: true
+22:05:10.449 [Thread-9] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isResultCompatible - start: packet=[2, 0, 255, 191, 15, 0, 0, 79, 16, 2, 1, 254, 54, 0, 0, 15, 0, 205, 171, 1], resultMapping={ startig position=8, length=0, convertor=com.microrisc.simply.iqrf.dpa.v210.types.PeripheralEnumerationConvertor@1b57fd1 }
+22:05:10.449 [Thread-9] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isResultCompatible - end: true
+22:05:10.449 [Thread-9] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: getMethodId - end: 1
+22:05:10.449 [Thread-9] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: getAdditionalData - start: packet=[2, 0, 255, 191, 15, 0, 0, 79, 16, 2, 1, 254, 54, 0, 0, 15, 0, 205, 171, 1]
+22:05:10.449 [Thread-9] DEBUG c.m.simply.protocol.mapping.Deserializer: deserialize - start: packetToValueMapping={ startig position=4, length=0, convertor=com.microrisc.simply.iqrf.dpa.v210.types.DPA_AdditionalInfoConvertor@da88c2 }, protoMsg=[2, 0, 255, 191, 15, 0, 0, 79, 16, 2, 1, 254, 54, 0, 0, 15, 0, 205, 171, 1]
+22:05:10.449 [Thread-9] DEBUG c.m.s.i.d.v.t.DPA_AdditionalInfoConvertor: toObject - start: protoValue=[15, 0, 0, 79, 16, 2, 1, 254, 54, 0, 0, 15, 0, 205, 171, 1]
+22:05:10.449 [Thread-9] DEBUG c.m.simply.iqrf.types.Uns16Convertor: toObject - start: iqValue=[15, 0]
+22:05:10.450 [Thread-9] DEBUG c.m.simply.iqrf.types.Uns16Convertor: toIQValue - end: 15
+22:05:10.450 [Thread-9] DEBUG c.m.s.i.d.v.t.DPA_AdditionalInfoConvertor: toObject - end: DPA_AdditionalInfo { 
  HW profile ID: 15
  Response code: NO_ERROR
- DPA value: 88
-}, source={ { networkId=1, node ID=2 }dev interface=interface com.microrisc.simply.iqrf.dpa.v210.devices.PeripheralInfoGetter, method ID=1 } }, proc error=null, request ID=4b7e43e4-5afc-4430-b5bc-235e45a8345a }
-11:44:32.358 [Thread-3] INFO  c.m.s.iqrf.dpa.connector.DPA_Connector: Processed message: { { main data=PeripheralEnumeration { 
- DPA protocol version: { minor number=16, major number=2 }
- Number of user defined peripherals: 1
- Default peripherals: [1, 2, 3, 4, 5, 6, 7, 9, 10, 12, 13, ]
- HW profile ID: 15
- HW profile version: 43981
- Flags: 1
-}, additional data=DPA_AdditionalInfo { 
+ DPA value: 79
+}
+22:05:10.450 [Thread-9] DEBUG c.m.simply.protocol.mapping.Deserializer: deserialize - end: DPA_AdditionalInfo { 
  HW profile ID: 15
  Response code: NO_ERROR
- DPA value: 88
-}, source={ { networkId=1, node ID=2 }dev interface=interface com.microrisc.simply.iqrf.dpa.v210.devices.PeripheralInfoGetter, method ID=1 } }, proc error=null, request ID=4b7e43e4-5afc-4430-b5bc-235e45a8345a }
-11:44:32.359 [Thread-3] INFO  c.m.s.iqrf.dpa.connector.DPA_Connector: Response found
-11:44:32.359 [Thread-2] INFO  c.microrisc.simply.ConnectedDeviceObject: 1:2-PeripheralInfoGetter: New result from connector, id=4b7e43e4-5afc-4430-b5bc-235e45a8345a
-11:44:32.360 [main] INFO  c.m.simply.StandardServicesDeviceObject: 1:2-PeripheralInfoGetter: Get call result: PeripheralEnumeration { 
+ DPA value: 79
+}
+22:05:10.450 [Thread-9] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: getAdditionalData - end: DPA_AdditionalInfo { 
+ HW profile ID: 15
+ Response code: NO_ERROR
+ DPA value: 79
+}
+22:05:10.450 [Thread-9] DEBUG c.m.s.i.d.v.p.DPA_ProtocolProperties: getResponseCode - start: protoMsg=[2, 0, 255, 191, 15, 0, 0, 79, 16, 2, 1, 254, 54, 0, 0, 15, 0, 205, 171, 1]
+22:05:10.450 [Thread-9] DEBUG c.m.s.i.d.v.p.DPA_ProtocolProperties: getMessageData_Integer - start:
+22:05:10.450 [Thread-9] DEBUG c.m.s.i.d.v.p.DPA_ProtocolProperties: getMessageData_Integer - end: 0
+22:05:10.450 [Thread-9] DEBUG c.m.s.i.d.v.p.DPA_ProtocolProperties: getResponseCode - end: NO_ERROR
+22:05:10.450 [Thread-9] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: getMethodResult - start: devInterface=interface com.microrisc.simply.iqrf.dpa.v210.devices.PeripheralInfoGetter, methodId=1,protoMsg=[2, 0, 255, 191, 15, 0, 0, 79, 16, 2, 1, 254, 54, 0, 0, 15, 0, 205, 171, 1]
+22:05:10.450 [Thread-9] DEBUG c.m.simply.protocol.mapping.Deserializer: deserialize - start: packetToValueMapping={ startig position=8, length=0, convertor=com.microrisc.simply.iqrf.dpa.v210.types.PeripheralEnumerationConvertor@1b57fd1 }, protoMsg=[2, 0, 255, 191, 15, 0, 0, 79, 16, 2, 1, 254, 54, 0, 0, 15, 0, 205, 171, 1]
+22:05:10.450 [Thread-9] DEBUG c.m.s.i.d.v.t.PeripheralEnumerationConvertor: toObject - start: protoValue=[16, 2, 1, 254, 54, 0, 0, 15, 0, 205, 171, 1]
+22:05:10.451 [Thread-9] DEBUG c.m.s.i.d.v.t.PeripheralEnumerationConvertor: toObject - end: PeripheralEnumeration { 
  DPA protocol version: { minor number=16, major number=2 }
  Number of user defined peripherals: 1
  Default peripherals: [1, 2, 3, 4, 5, 6, 7, 9, 10, 12, 13, ]
@@ -142,16 +1199,593 @@
  HW profile version: 43981
  Flags: 1
 }
-11:44:32.362 [main] WARN  c.m.s.iqrf.dpa.v210.init.DPA_Initializer: Interface not found for peripheral: 32
-11:44:32.386 [main] INFO  c.m.s.iqrf.dpa.v210.init.DPA_Initializer: Initialization complete
-11:44:32.519 [main] INFO  c.m.s.iqrf.dpa.connector.DPA_Connector: New call request created: { id=76e9f9ee-1c35-4548-a40f-6d78449e302e, network ID=1, node ID=1, device interface=com.microrisc.simply.iqrf.dpa.v210.devices.Thermometer, method ID=1, arguments=[65535] }
-11:44:32.519 [main] INFO  c.microrisc.simply.ConnectedDeviceObject: 1:1-Thermometer: Method 1 call dispatched, id=76e9f9ee-1c35-4548-a40f-6d78449e302e
-11:44:32.519 [main] WARN  c.m.simply.HashMapResultsContainer: No result found.
-11:44:32.520 [main] INFO  c.m.s.network.usbcdc.CDCNetworkLayer: Listener unregistered
-11:44:32.520 [main] INFO  c.m.s.protocol.AbstractProtocolLayer: Listener unregistered
-11:44:32.610 [Thread-3] ERROR c.m.s.iqrf.dpa.connector.DPA_Connector: Send request to protocol layer error
-java.lang.InterruptedException: sleep interrupted
-	at java.lang.Thread.sleep(Native Method) ~[na:1.7.0_25]
-	at com.microrisc.simply.iqrf.dpa.connector.DPA_Connector$WorkerThread.sendRequestToProtocolLayer(DPA_Connector.java:183) ~[classes/:na]
-	at com.microrisc.simply.iqrf.dpa.connector.DPA_Connector$WorkerThread.run(DPA_Connector.java:542) ~[classes/:na]
-11:44:32.662 [Thread-2] INFO  c.microrisc.simply.ConnectedDeviceObject: 1:1-Thermometer: New result from connector, id=76e9f9ee-1c35-4548-a40f-6d78449e302e
+22:05:10.451 [Thread-9] DEBUG c.m.simply.protocol.mapping.Deserializer: deserialize - end: PeripheralEnumeration { 
+ DPA protocol version: { minor number=16, major number=2 }
+ Number of user defined peripherals: 1
+ Default peripherals: [1, 2, 3, 4, 5, 6, 7, 9, 10, 12, 13, ]
+ HW profile ID: 15
+ HW profile version: 43981
+ Flags: 1
+}
+22:05:10.451 [Thread-9] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: getMethodResult - end: PeripheralEnumeration { 
+ DPA protocol version: { minor number=16, major number=2 }
+ Number of user defined peripherals: 1
+ Default peripherals: [1, 2, 3, 4, 5, 6, 7, 9, 10, 12, 13, ]
+ HW profile ID: 15
+ HW profile version: 43981
+ Flags: 1
+}
+22:05:10.451 [Thread-9] DEBUG c.m.s.i.d.v.p.DPA_MessageConvertor: convertToDOFormat - end: { { main data=PeripheralEnumeration { 
+ DPA protocol version: { minor number=16, major number=2 }
+ Number of user defined peripherals: 1
+ Default peripherals: [1, 2, 3, 4, 5, 6, 7, 9, 10, 12, 13, ]
+ HW profile ID: 15
+ HW profile version: 43981
+ Flags: 1
+}, additional data=DPA_AdditionalInfo { 
+ HW profile ID: 15
+ Response code: NO_ERROR
+ DPA value: 79
+}, source={ { networkId=1, node ID=2 }dev interface=interface com.microrisc.simply.iqrf.dpa.v210.devices.PeripheralInfoGetter, method ID=1 } }, proc error=null, request ID=null }
+22:05:10.451 [Thread-9] DEBUG c.m.s.i.d.v.protocol.DPA_ProtocolLayer: processMessage - start: message={ { main data=PeripheralEnumeration { 
+ DPA protocol version: { minor number=16, major number=2 }
+ Number of user defined peripherals: 1
+ Default peripherals: [1, 2, 3, 4, 5, 6, 7, 9, 10, 12, 13, ]
+ HW profile ID: 15
+ HW profile version: 43981
+ Flags: 1
+}, additional data=DPA_AdditionalInfo { 
+ HW profile ID: 15
+ Response code: NO_ERROR
+ DPA value: 79
+}, source={ { networkId=1, node ID=2 }dev interface=interface com.microrisc.simply.iqrf.dpa.v210.devices.PeripheralInfoGetter, method ID=1 } }, proc error=null, request ID=null }
+22:05:10.451 [Thread-9] DEBUG c.m.s.i.d.v.protocol.DPA_ProtocolLayer: getCauseRequest - start: response={ { main data=PeripheralEnumeration { 
+ DPA protocol version: { minor number=16, major number=2 }
+ Number of user defined peripherals: 1
+ Default peripherals: [1, 2, 3, 4, 5, 6, 7, 9, 10, 12, 13, ]
+ HW profile ID: 15
+ HW profile version: 43981
+ Flags: 1
+}, additional data=DPA_AdditionalInfo { 
+ HW profile ID: 15
+ Response code: NO_ERROR
+ DPA value: 79
+}, source={ { networkId=1, node ID=2 }dev interface=interface com.microrisc.simply.iqrf.dpa.v210.devices.PeripheralInfoGetter, method ID=1 } }, proc error=null, request ID=null }
+22:05:10.451 [Thread-9] DEBUG c.m.s.i.d.v.protocol.DPA_ProtocolLayer: getCauseRequest - end: { id=45a504ab-e24b-47c8-8f33-f681693d7935, network ID=1, node ID=2, device interface=com.microrisc.simply.iqrf.dpa.v210.devices.PeripheralInfoGetter, method ID=1, arguments=[65535] }
+22:05:10.451 [Thread-9] DEBUG c.m.s.iqrf.dpa.connector.DPA_Connector: onGetMessage - start: data={ { main data=PeripheralEnumeration { 
+ DPA protocol version: { minor number=16, major number=2 }
+ Number of user defined peripherals: 1
+ Default peripherals: [1, 2, 3, 4, 5, 6, 7, 9, 10, 12, 13, ]
+ HW profile ID: 15
+ HW profile version: 43981
+ Flags: 1
+}, additional data=DPA_AdditionalInfo { 
+ HW profile ID: 15
+ Response code: NO_ERROR
+ DPA value: 79
+}, source={ { networkId=1, node ID=2 }dev interface=interface com.microrisc.simply.iqrf.dpa.v210.devices.PeripheralInfoGetter, method ID=1 } }, proc error=null, request ID=45a504ab-e24b-47c8-8f33-f681693d7935 }
+22:05:10.452 [Thread-9] INFO  c.m.s.iqrf.dpa.connector.DPA_Connector: New message from protocol layer get: { { main data=PeripheralEnumeration { 
+ DPA protocol version: { minor number=16, major number=2 }
+ Number of user defined peripherals: 1
+ Default peripherals: [1, 2, 3, 4, 5, 6, 7, 9, 10, 12, 13, ]
+ HW profile ID: 15
+ HW profile version: 43981
+ Flags: 1
+}, additional data=DPA_AdditionalInfo { 
+ HW profile ID: 15
+ Response code: NO_ERROR
+ DPA value: 79
+}, source={ { networkId=1, node ID=2 }dev interface=interface com.microrisc.simply.iqrf.dpa.v210.devices.PeripheralInfoGetter, method ID=1 } }, proc error=null, request ID=45a504ab-e24b-47c8-8f33-f681693d7935 }
+22:05:10.452 [Thread-3] DEBUG c.m.s.iqrf.dpa.connector.DPA_Connector: processNextIncommingMessage - start:
+22:05:10.452 [Thread-9] DEBUG c.m.s.iqrf.dpa.connector.DPA_Connector: onGetMessage - end
+22:05:10.452 [Thread-3] INFO  c.m.s.iqrf.dpa.connector.DPA_Connector: Processed message: { { main data=PeripheralEnumeration { 
+ DPA protocol version: { minor number=16, major number=2 }
+ Number of user defined peripherals: 1
+ Default peripherals: [1, 2, 3, 4, 5, 6, 7, 9, 10, 12, 13, ]
+ HW profile ID: 15
+ HW profile version: 43981
+ Flags: 1
+}, additional data=DPA_AdditionalInfo { 
+ HW profile ID: 15
+ Response code: NO_ERROR
+ DPA value: 79
+}, source={ { networkId=1, node ID=2 }dev interface=interface com.microrisc.simply.iqrf.dpa.v210.devices.PeripheralInfoGetter, method ID=1 } }, proc error=null, request ID=45a504ab-e24b-47c8-8f33-f681693d7935 }
+22:05:10.452 [Thread-9] DEBUG c.m.s.i.d.v.protocol.DPA_ProtocolLayer: processResponse - end
+22:05:10.452 [Thread-3] INFO  c.m.s.iqrf.dpa.connector.DPA_Connector: Response found
+22:05:10.452 [Thread-9] DEBUG c.m.s.i.d.v.protocol.DPA_ProtocolLayer: onGetData - end
+22:05:10.452 [Thread-3] DEBUG c.m.s.iqrf.dpa.connector.DPA_Connector: createCallRequestProcessingInfo - start: { { main data=PeripheralEnumeration { 
+ DPA protocol version: { minor number=16, major number=2 }
+ Number of user defined peripherals: 1
+ Default peripherals: [1, 2, 3, 4, 5, 6, 7, 9, 10, 12, 13, ]
+ HW profile ID: 15
+ HW profile version: 43981
+ Flags: 1
+}, additional data=DPA_AdditionalInfo { 
+ HW profile ID: 15
+ Response code: NO_ERROR
+ DPA value: 79
+}, source={ { networkId=1, node ID=2 }dev interface=interface com.microrisc.simply.iqrf.dpa.v210.devices.PeripheralInfoGetter, method ID=1 } }, proc error=null, request ID=45a504ab-e24b-47c8-8f33-f681693d7935 }
+22:05:10.453 [Thread-9] DEBUG c.m.s.network.usbcdc.CDCNetworkLayer: onGetMessage - end
+22:05:10.453 [Thread-3] DEBUG c.m.s.iqrf.dpa.connector.DPA_Connector: createCallRequestProcessingInfo - end: { , request ID=45a504ab-e24b-47c8-8f33-f681693d7935, state=RESULT_ARRIVED, call result={ , method result=PeripheralEnumeration { 
+ DPA protocol version: { minor number=16, major number=2 }
+ Number of user defined peripherals: 1
+ Default peripherals: [1, 2, 3, 4, 5, 6, 7, 9, 10, 12, 13, ]
+ HW profile ID: 15
+ HW profile version: 43981
+ Flags: 1
+}, additional info=DPA_AdditionalInfo { 
+ HW profile ID: 15
+ Response code: NO_ERROR
+ DPA value: 79
+} }, error=null }
+22:05:10.453 [Thread-3] DEBUG c.m.s.iqrf.dpa.connector.DPA_Connector: processNextIncommingMessage - end
+22:05:10.453 [Thread-2] DEBUG c.microrisc.simply.ConnectedDeviceObject: 1:2-PeripheralInfoGetter: onCallRequestProcessingInfo - start: procInfo={ , request ID=45a504ab-e24b-47c8-8f33-f681693d7935, state=RESULT_ARRIVED, call result={ , method result=PeripheralEnumeration { 
+ DPA protocol version: { minor number=16, major number=2 }
+ Number of user defined peripherals: 1
+ Default peripherals: [1, 2, 3, 4, 5, 6, 7, 9, 10, 12, 13, ]
+ HW profile ID: 15
+ HW profile version: 43981
+ Flags: 1
+}, additional info=DPA_AdditionalInfo { 
+ HW profile ID: 15
+ Response code: NO_ERROR
+ DPA value: 79
+} }, error=null }, callId=45a504ab-e24b-47c8-8f33-f681693d7935
+22:05:10.454 [Thread-2] DEBUG c.m.simply.HashMapResultsContainer: put - start: uid=45a504ab-e24b-47c8-8f33-f681693d7935, callResult={ , request ID=45a504ab-e24b-47c8-8f33-f681693d7935, state=RESULT_ARRIVED, call result={ , method result=PeripheralEnumeration { 
+ DPA protocol version: { minor number=16, major number=2 }
+ Number of user defined peripherals: 1
+ Default peripherals: [1, 2, 3, 4, 5, 6, 7, 9, 10, 12, 13, ]
+ HW profile ID: 15
+ HW profile version: 43981
+ Flags: 1
+}, additional info=DPA_AdditionalInfo { 
+ HW profile ID: 15
+ Response code: NO_ERROR
+ DPA value: 79
+} }, error=null }
+22:05:10.454 [Thread-2] DEBUG c.m.simply.HashMapResultsContainer: update - start: 
+22:05:10.454 [Thread-2] DEBUG c.m.simply.HashMapResultsContainer: update - end: 
+22:05:10.454 [Thread-2] DEBUG c.m.simply.HashMapResultsContainer: put - end: 
+22:05:10.454 [Thread-2] DEBUG c.microrisc.simply.ConnectedDeviceObject: 1:2-PeripheralInfoGetter: onCallRequestProcessingInfo - end
+22:05:10.454 [Thread-2] INFO  c.microrisc.simply.ConnectedDeviceObject: 1:2-PeripheralInfoGetter: New result from connector, id=45a504ab-e24b-47c8-8f33-f681693d7935
+22:05:10.454 [main] DEBUG c.m.simply.HashMapResultsContainer: get - start: uid=45a504ab-e24b-47c8-8f33-f681693d7935
+22:05:10.454 [main] DEBUG c.m.simply.HashMapResultsContainer: update - start: 
+22:05:10.454 [main] DEBUG c.m.simply.HashMapResultsContainer: update - end: 
+22:05:10.454 [main] DEBUG c.m.simply.HashMapResultsContainer: get - end: { , request ID=45a504ab-e24b-47c8-8f33-f681693d7935, state=RESULT_ARRIVED, call result={ , method result=PeripheralEnumeration { 
+ DPA protocol version: { minor number=16, major number=2 }
+ Number of user defined peripherals: 1
+ Default peripherals: [1, 2, 3, 4, 5, 6, 7, 9, 10, 12, 13, ]
+ HW profile ID: 15
+ HW profile version: 43981
+ Flags: 1
+}, additional info=DPA_AdditionalInfo { 
+ HW profile ID: 15
+ Response code: NO_ERROR
+ DPA value: 79
+} }, error=null }
+22:05:10.454 [main] DEBUG c.m.simply.StandardServicesDeviceObject: 1:2-PeripheralInfoGetter: getCallResultImmediately - start: callId=45a504ab-e24b-47c8-8f33-f681693d7935
+22:05:10.455 [main] DEBUG c.m.simply.HashMapResultsContainer: get - start: uid=45a504ab-e24b-47c8-8f33-f681693d7935
+22:05:10.455 [main] DEBUG c.m.simply.HashMapResultsContainer: update - start: 
+22:05:10.455 [main] DEBUG c.m.simply.HashMapResultsContainer: update - end: 
+22:05:10.455 [main] DEBUG c.m.simply.HashMapResultsContainer: get - end: { , request ID=45a504ab-e24b-47c8-8f33-f681693d7935, state=RESULT_ARRIVED, call result={ , method result=PeripheralEnumeration { 
+ DPA protocol version: { minor number=16, major number=2 }
+ Number of user defined peripherals: 1
+ Default peripherals: [1, 2, 3, 4, 5, 6, 7, 9, 10, 12, 13, ]
+ HW profile ID: 15
+ HW profile version: 43981
+ Flags: 1
+}, additional info=DPA_AdditionalInfo { 
+ HW profile ID: 15
+ Response code: NO_ERROR
+ DPA value: 79
+} }, error=null }
+22:05:10.455 [main] DEBUG c.m.simply.StandardServicesDeviceObject: 1:2-PeripheralInfoGetter: getCallResultImmediately - end: PeripheralEnumeration { 
+ DPA protocol version: { minor number=16, major number=2 }
+ Number of user defined peripherals: 1
+ Default peripherals: [1, 2, 3, 4, 5, 6, 7, 9, 10, 12, 13, ]
+ HW profile ID: 15
+ HW profile version: 43981
+ Flags: 1
+}
+22:05:10.455 [main] INFO  c.m.simply.StandardServicesDeviceObject: 1:2-PeripheralInfoGetter: Get call result: PeripheralEnumeration { 
+ DPA protocol version: { minor number=16, major number=2 }
+ Number of user defined peripherals: 1
+ Default peripherals: [1, 2, 3, 4, 5, 6, 7, 9, 10, 12, 13, ]
+ HW profile ID: 15
+ HW profile version: 43981
+ Flags: 1
+}
+22:05:10.455 [main] DEBUG c.m.simply.StandardServicesDeviceObject: 1:2-PeripheralInfoGetter: getCallResult - end: PeripheralEnumeration { 
+ DPA protocol version: { minor number=16, major number=2 }
+ Number of user defined peripherals: 1
+ Default peripherals: [1, 2, 3, 4, 5, 6, 7, 9, 10, 12, 13, ]
+ HW profile ID: 15
+ HW profile version: 43981
+ Flags: 1
+}
+22:05:10.455 [main] DEBUG c.m.s.iqrf.dpa.v210.init.DPA_Initializer: getPeripheralNumbers - end: [1, 2, 3, 4, 5, 6, 7, 9, 10, 12, 13, 32]
+22:05:10.456 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: getDeviceObject - start: networkId=1, nodeId=2, connector=com.microrisc.simply.iqrf.dpa.connector.DPA_Connector@14b7042, implClass=class com.microrisc.simply.iqrf.dpa.v210.devices.impl.SimpleNode, configuration=org.apache.commons.configuration.PropertiesConfiguration@1b72ada
+22:05:10.456 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: createResultsContainer - start: configuration=org.apache.commons.configuration.PropertiesConfiguration@1b72ada
+22:05:10.456 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: createResultsContainer - end: com.microrisc.simply.HashMapCallRequestProcessingInfoContainer@2a0030
+22:05:10.456 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: getDeviceObject - end: com.microrisc.simply.iqrf.dpa.v210.devices.impl.SimpleNode@17286ca
+22:05:10.456 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: getDeviceObject - start: networkId=1, nodeId=2, connector=com.microrisc.simply.iqrf.dpa.connector.DPA_Connector@14b7042, implClass=class com.microrisc.simply.iqrf.dpa.v210.devices.impl.SimpleOS, configuration=org.apache.commons.configuration.PropertiesConfiguration@1b72ada
+22:05:10.457 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: createResultsContainer - start: configuration=org.apache.commons.configuration.PropertiesConfiguration@1b72ada
+22:05:10.457 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: createResultsContainer - end: com.microrisc.simply.HashMapCallRequestProcessingInfoContainer@1ef553d
+22:05:10.457 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: getDeviceObject - end: com.microrisc.simply.iqrf.dpa.v210.devices.impl.SimpleOS@1c51ef0
+22:05:10.457 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: getDeviceObject - start: networkId=1, nodeId=2, connector=com.microrisc.simply.iqrf.dpa.connector.DPA_Connector@14b7042, implClass=class com.microrisc.simply.iqrf.dpa.v210.devices.impl.SimpleEEPROM, configuration=org.apache.commons.configuration.PropertiesConfiguration@1b72ada
+22:05:10.457 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: createResultsContainer - start: configuration=org.apache.commons.configuration.PropertiesConfiguration@1b72ada
+22:05:10.458 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: createResultsContainer - end: com.microrisc.simply.HashMapCallRequestProcessingInfoContainer@724da1
+22:05:10.458 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: getDeviceObject - end: com.microrisc.simply.iqrf.dpa.v210.devices.impl.SimpleEEPROM@46bb9f
+22:05:10.458 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: getDeviceObject - start: networkId=1, nodeId=2, connector=com.microrisc.simply.iqrf.dpa.connector.DPA_Connector@14b7042, implClass=class com.microrisc.simply.iqrf.dpa.v210.devices.impl.SimpleEEEPROM, configuration=org.apache.commons.configuration.PropertiesConfiguration@1b72ada
+22:05:10.458 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: createResultsContainer - start: configuration=org.apache.commons.configuration.PropertiesConfiguration@1b72ada
+22:05:10.458 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: createResultsContainer - end: com.microrisc.simply.HashMapCallRequestProcessingInfoContainer@1c80063
+22:05:10.458 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: getDeviceObject - end: com.microrisc.simply.iqrf.dpa.v210.devices.impl.SimpleEEEPROM@19172db
+22:05:10.459 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: getDeviceObject - start: networkId=1, nodeId=2, connector=com.microrisc.simply.iqrf.dpa.connector.DPA_Connector@14b7042, implClass=class com.microrisc.simply.iqrf.dpa.v210.devices.impl.SimpleRAM, configuration=org.apache.commons.configuration.PropertiesConfiguration@1b72ada
+22:05:10.459 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: createResultsContainer - start: configuration=org.apache.commons.configuration.PropertiesConfiguration@1b72ada
+22:05:10.459 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: createResultsContainer - end: com.microrisc.simply.HashMapCallRequestProcessingInfoContainer@ba356
+22:05:10.459 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: getDeviceObject - end: com.microrisc.simply.iqrf.dpa.v210.devices.impl.SimpleRAM@10945d
+22:05:10.459 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: getDeviceObject - start: networkId=1, nodeId=2, connector=com.microrisc.simply.iqrf.dpa.connector.DPA_Connector@14b7042, implClass=class com.microrisc.simply.iqrf.dpa.v210.devices.impl.SimpleLEDR, configuration=org.apache.commons.configuration.PropertiesConfiguration@1b72ada
+22:05:10.459 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: createResultsContainer - start: configuration=org.apache.commons.configuration.PropertiesConfiguration@1b72ada
+22:05:10.460 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: createResultsContainer - end: com.microrisc.simply.HashMapCallRequestProcessingInfoContainer@7c7410
+22:05:10.460 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: getDeviceObject - end: com.microrisc.simply.iqrf.dpa.v210.devices.impl.SimpleLEDR@a7c8bd
+22:05:10.460 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: getDeviceObject - start: networkId=1, nodeId=2, connector=com.microrisc.simply.iqrf.dpa.connector.DPA_Connector@14b7042, implClass=class com.microrisc.simply.iqrf.dpa.v210.devices.impl.SimpleLEDG, configuration=org.apache.commons.configuration.PropertiesConfiguration@1b72ada
+22:05:10.460 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: createResultsContainer - start: configuration=org.apache.commons.configuration.PropertiesConfiguration@1b72ada
+22:05:10.460 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: createResultsContainer - end: com.microrisc.simply.HashMapCallRequestProcessingInfoContainer@16bf3b4
+22:05:10.460 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: getDeviceObject - end: com.microrisc.simply.iqrf.dpa.v210.devices.impl.SimpleLEDG@4ce898
+22:05:10.461 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: getDeviceObject - start: networkId=1, nodeId=2, connector=com.microrisc.simply.iqrf.dpa.connector.DPA_Connector@14b7042, implClass=class com.microrisc.simply.iqrf.dpa.v210.devices.impl.SimpleIO, configuration=org.apache.commons.configuration.PropertiesConfiguration@1b72ada
+22:05:10.461 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: createResultsContainer - start: configuration=org.apache.commons.configuration.PropertiesConfiguration@1b72ada
+22:05:10.461 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: createResultsContainer - end: com.microrisc.simply.HashMapCallRequestProcessingInfoContainer@13a87a0
+22:05:10.461 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: getDeviceObject - end: com.microrisc.simply.iqrf.dpa.v210.devices.impl.SimpleIO@19e3bdb
+22:05:10.462 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: getDeviceObject - start: networkId=1, nodeId=2, connector=com.microrisc.simply.iqrf.dpa.connector.DPA_Connector@14b7042, implClass=class com.microrisc.simply.iqrf.dpa.v210.devices.impl.SimpleThermometer, configuration=org.apache.commons.configuration.PropertiesConfiguration@1b72ada
+22:05:10.462 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: createResultsContainer - start: configuration=org.apache.commons.configuration.PropertiesConfiguration@1b72ada
+22:05:10.462 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: createResultsContainer - end: com.microrisc.simply.HashMapCallRequestProcessingInfoContainer@16bc363
+22:05:10.462 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: getDeviceObject - end: com.microrisc.simply.iqrf.dpa.v210.devices.impl.SimpleThermometer@1e8d4ce
+22:05:10.462 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: getDeviceObject - start: networkId=1, nodeId=2, connector=com.microrisc.simply.iqrf.dpa.connector.DPA_Connector@14b7042, implClass=class com.microrisc.simply.iqrf.dpa.v210.devices.impl.SimpleUART, configuration=org.apache.commons.configuration.PropertiesConfiguration@1b72ada
+22:05:10.463 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: createResultsContainer - start: configuration=org.apache.commons.configuration.PropertiesConfiguration@1b72ada
+22:05:10.463 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: createResultsContainer - end: com.microrisc.simply.HashMapCallRequestProcessingInfoContainer@eb5cdc
+22:05:10.463 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: getDeviceObject - end: com.microrisc.simply.iqrf.dpa.v210.devices.impl.SimpleUART@1d7417
+22:05:10.463 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: getDeviceObject - start: networkId=1, nodeId=2, connector=com.microrisc.simply.iqrf.dpa.connector.DPA_Connector@14b7042, implClass=class com.microrisc.simply.iqrf.dpa.v210.devices.impl.SimpleFRC, configuration=org.apache.commons.configuration.PropertiesConfiguration@1b72ada
+22:05:10.463 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: createResultsContainer - start: configuration=org.apache.commons.configuration.PropertiesConfiguration@1b72ada
+22:05:10.464 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: createResultsContainer - end: com.microrisc.simply.HashMapCallRequestProcessingInfoContainer@1b09c52
+22:05:10.464 [main] DEBUG c.m.simply.SimpleDeviceObjectFactory: getDeviceObject - end: com.microrisc.simply.iqrf.dpa.v210.devices.impl.SimpleFRC@1e6d8ab
+22:05:10.464 [main] WARN  c.m.s.iqrf.dpa.v210.init.DPA_Initializer: Interface not found for peripheral: 32
+22:05:10.464 [main] DEBUG c.m.s.iqrf.dpa.v210.init.DPA_Initializer: createNodeServices - end
+22:05:10.464 [main] DEBUG c.m.s.iqrf.dpa.v210.init.DPA_Initializer: createNode - end: com.microrisc.simply.BaseNode@64f4
+22:05:10.465 [main] DEBUG c.m.s.iqrf.dpa.v210.init.DPA_Initializer: createBondedNodes - end: {2=com.microrisc.simply.BaseNode@64f4, 1=com.microrisc.simply.BaseNode@64b1}
+22:05:10.467 [main] DEBUG c.m.s.iqrf.dpa.v210.init.DPA_Initializer: createNetwork - end: com.microrisc.simply.BaseNetwork@cfcd20
+22:05:10.467 [main] INFO  c.m.s.iqrf.dpa.v210.init.DPA_Initializer: Initialization complete
+22:05:10.467 [main] DEBUG c.m.s.iqrf.dpa.v210.init.DPA_Initializer: initialize - end
+22:05:10.498 [main] DEBUG com.microrisc.simply.BaseSimply: getMapOfNetwork - start: networkId=1, type=interface com.microrisc.simply.Network
+22:05:10.498 [main] DEBUG com.microrisc.simply.BaseSimply: getMapOfNetwork - end: com.microrisc.simply.BaseNetwork@cfcd20
+22:05:10.498 [main] DEBUG c.microrisc.simply.ConnectedDeviceObject: 1:1-Thermometer: dispatchCall - start: methodId=1, arguments=[65535]
+22:05:10.498 [main] DEBUG c.m.s.iqrf.dpa.connector.DPA_Connector: callMethod - start: devObject=1, devIface=com.microrisc.simply.iqrf.dpa.v210.devices.Thermometer, methodId=1, args=[65535], timeout=10000
+22:05:10.498 [main] INFO  c.m.s.iqrf.dpa.connector.DPA_Connector: New call request created: { id=7f16cfaa-1bc3-4675-aa85-43c10d7e5386, network ID=1, node ID=1, device interface=com.microrisc.simply.iqrf.dpa.v210.devices.Thermometer, method ID=1, arguments=[65535] }
+22:05:10.498 [main] DEBUG c.m.s.iqrf.dpa.connector.DPA_Connector: callMethod - end: 7f16cfaa-1bc3-4675-aa85-43c10d7e5386
+22:05:10.498 [main] DEBUG c.microrisc.simply.ConnectedDeviceObject: 1:1-Thermometer: dispatchCall - end: 7f16cfaa-1bc3-4675-aa85-43c10d7e5386
+22:05:10.499 [main] INFO  c.microrisc.simply.ConnectedDeviceObject: 1:1-Thermometer: Method 1 call dispatched, id=7f16cfaa-1bc3-4675-aa85-43c10d7e5386
+22:05:10.499 [main] DEBUG c.m.simply.HashMapResultsContainer: get - start: uid=7f16cfaa-1bc3-4675-aa85-43c10d7e5386
+22:05:10.499 [main] DEBUG c.m.simply.HashMapResultsContainer: update - start: 
+22:05:10.499 [main] DEBUG c.m.simply.HashMapResultsContainer: update - end: 
+22:05:10.499 [main] WARN  c.m.simply.HashMapResultsContainer: No result found.
+22:05:10.499 [main] DEBUG c.m.simply.HashMapResultsContainer: get - end: null
+22:05:10.500 [Thread-3] DEBUG c.m.s.iqrf.dpa.connector.DPA_Connector: sendRequestToProtocolLayer - start: request={ id=7f16cfaa-1bc3-4675-aa85-43c10d7e5386, network ID=1, node ID=1, device interface=com.microrisc.simply.iqrf.dpa.v210.devices.Thermometer, method ID=1, arguments=[65535] }
+22:05:10.999 [main] DEBUG c.m.simply.HashMapResultsContainer: get - start: uid=7f16cfaa-1bc3-4675-aa85-43c10d7e5386
+22:05:10.999 [main] DEBUG c.m.simply.HashMapResultsContainer: update - start: 
+22:05:10.999 [main] DEBUG c.m.simply.HashMapResultsContainer: update - end: 
+22:05:10.999 [main] WARN  c.m.simply.HashMapResultsContainer: No result found.
+22:05:10.999 [main] DEBUG c.m.simply.HashMapResultsContainer: get - end: null
+22:05:11.266 [Thread-3] DEBUG c.m.s.i.d.v.protocol.DPA_ProtocolLayer: sendRequest - start: request={ id=7f16cfaa-1bc3-4675-aa85-43c10d7e5386, network ID=1, node ID=1, device interface=com.microrisc.simply.iqrf.dpa.v210.devices.Thermometer, method ID=1, arguments=[65535] }
+22:05:11.266 [Thread-3] DEBUG c.m.s.i.d.v.p.DPA_MessageConvertor: convertToProtoFormat - start: callRequest={ id=7f16cfaa-1bc3-4675-aa85-43c10d7e5386, network ID=1, node ID=1, device interface=com.microrisc.simply.iqrf.dpa.v210.devices.Thermometer, method ID=1, arguments=[65535] }
+22:05:11.266 [Thread-3] DEBUG c.m.s.p.m.SimpleCallRequestToPacketMapping: getSerializedProtocolData - start: 
+22:05:11.266 [Thread-3] DEBUG c.m.s.p.m.SimpleCallRequestToPacketMapping: getSerializedProtocolData - end: []
+22:05:11.266 [Thread-3] DEBUG c.m.s.p.m.SimpleCallRequestToPacketMapping: getSerializedNetworkData - start: nodeId=1
+22:05:11.266 [Thread-3] DEBUG c.m.s.p.m.SimpleCallRequestToPacketMapping: getSerializedNetworkData - end: []
+22:05:11.266 [Thread-3] DEBUG c.m.s.p.m.SimpleCallRequestToPacketMapping: getSerializedNodeData - start: nodeId=1
+22:05:11.266 [Thread-3] DEBUG c.m.simply.protocol.mapping.Serializer: serialize - start: valueMapping={ starting position =0, convertor=com.microrisc.simply.types.StringToByteConvertor@3580ab }, value=1
+22:05:11.266 [Thread-3] DEBUG c.m.simply.types.StringToByteConvertor: toProtoValue - start: valueToConv=1
+22:05:11.266 [Thread-3] DEBUG c.m.simply.types.StringToByteConvertor: toProtoValue - end: [1]
+22:05:11.266 [Thread-3] DEBUG c.m.simply.protocol.mapping.Serializer: serialize - end: [1]
+22:05:11.266 [Thread-3] DEBUG c.m.s.p.m.SimpleCallRequestToPacketMapping: getSerializedNodeData - end: [{ starting position=0, data=[S@128b33a }]
+22:05:11.267 [Thread-3] DEBUG c.m.s.p.m.SimpleCallRequestToPacketMapping: getSerializedInterfaceData - start: devInterface=interface com.microrisc.simply.iqrf.dpa.v210.devices.Thermometer
+22:05:11.267 [Thread-3] DEBUG c.m.s.p.m.SimpleCallRequestToPacketMapping: getSerializedInterfaceData - end: [{ starting position=2, data=[S@10ea988 }]
+22:05:11.267 [Thread-3] DEBUG c.m.s.p.m.SimpleCallRequestToPacketMapping: getSerializedMethodData - start: devInterface=interface com.microrisc.simply.iqrf.dpa.v210.devices.Thermometer, methodId=1
+22:05:11.267 [Thread-3] DEBUG c.m.s.p.m.SimpleCallRequestToPacketMapping: getSerializedMethodData - end: [{ starting position=3, data=[S@19c4844 }]
+22:05:11.267 [Thread-3] DEBUG c.m.s.p.m.SimpleCallRequestToPacketMapping: getSerializedMethodArgs - start: devInterface=interface com.microrisc.simply.iqrf.dpa.v210.devices.Thermometer, methodId=1, args=[65535]
+22:05:11.267 [Thread-3] DEBUG c.m.simply.protocol.mapping.Serializer: serialize - start: valueMapping={ starting position =4, convertor=com.microrisc.simply.iqrf.types.Uns16Convertor@11d3f0b }, value=65535
+22:05:11.267 [Thread-3] DEBUG c.m.simply.iqrf.types.Uns16Convertor: toIQValue - start: valueToConv=65535
+22:05:11.267 [Thread-3] DEBUG c.m.simply.iqrf.types.Uns16Convertor: toIQValue - end: [255, 255]
+22:05:11.267 [Thread-3] DEBUG c.m.simply.protocol.mapping.Serializer: serialize - end: [255, 255]
+22:05:11.267 [Thread-3] DEBUG c.m.s.p.m.SimpleCallRequestToPacketMapping: getSerializedMethodArgs - end: [{ starting position=4, data=[S@14c8f24 }]
+22:05:11.267 [Thread-3] DEBUG c.m.simply.protocol.RequestPacketCreator: createRequestPacket - start: packetFragments[{ starting position=0, data=[S@128b33a }, { starting position=2, data=[S@10ea988 }, { starting position=3, data=[S@19c4844 }, { starting position=4, data=[S@14c8f24 }]
+22:05:11.267 [Thread-3] DEBUG c.m.simply.protocol.RequestPacketCreator: getMaxPosition - start: packetFragments[{ starting position=0, data=[S@128b33a }, { starting position=2, data=[S@10ea988 }, { starting position=3, data=[S@19c4844 }, { starting position=4, data=[S@14c8f24 }]
+22:05:11.267 [Thread-3] DEBUG c.m.simply.protocol.RequestPacketCreator: getMaxPosition - end: 6
+22:05:11.268 [Thread-3] DEBUG c.m.simply.protocol.RequestPacketCreator: createRequestPacket - end: [1, 0, 10, 0, 255, 255]
+22:05:11.268 [Thread-3] DEBUG c.m.s.i.d.v.p.DPA_MessageConvertor: convertToProtoFormat - end: [1, 0, 10, 0, 255, 255]
+22:05:11.268 [Thread-3] DEBUG c.m.s.i.d.v.protocol.DPA_ProtocolLayer: deleteInvalidRequests - start: newRequest={ id=7f16cfaa-1bc3-4675-aa85-43c10d7e5386, network ID=1, node ID=1, device interface=com.microrisc.simply.iqrf.dpa.v210.devices.Thermometer, method ID=1, arguments=[65535] }
+22:05:11.268 [Thread-3] DEBUG c.m.s.i.d.v.protocol.DPA_ProtocolLayer: deleteInvalidRequests - end
+22:05:11.268 [Thread-3] DEBUG c.m.s.network.usbcdc.CDCNetworkLayer: sendData - start: networkData={ data=[1, 0, 10, 0, 255, 255], network ID=1 }
+22:05:11.318 [Thread-3] DEBUG c.m.s.network.usbcdc.CDCNetworkLayer: sendData - end
+22:05:11.318 [Thread-3] DEBUG c.m.s.i.d.v.protocol.DPA_ProtocolLayer: sendRequest - end
+22:05:11.318 [Thread-3] DEBUG c.m.s.iqrf.dpa.connector.DPA_Connector: sendRequestToProtocolLayer - end:
+22:05:11.369 [Thread-10] DEBUG c.m.s.network.usbcdc.CDCNetworkLayer: onGetMessage - start: data=[1, 0, 10, 0, 255, 255, 255, 87, 1, 3, 1]
+22:05:11.369 [Thread-10] DEBUG c.m.s.i.d.v.protocol.DPA_ProtocolLayer: onGetData - start: { data=[1, 0, 10, 0, 255, 255, 255, 87, 1, 3, 1], network ID=1 }
+22:05:11.369 [Thread-10] DEBUG c.m.s.i.d.v.p.DPA_ProtocolProperties: getResponseCode - start: protoMsg=[1, 0, 10, 0, 255, 255, 255, 87, 1, 3, 1]
+22:05:11.369 [Thread-10] DEBUG c.m.s.i.d.v.p.DPA_ProtocolProperties: getMessageData_Integer - start:
+22:05:11.369 [Thread-10] DEBUG c.m.s.i.d.v.p.DPA_ProtocolProperties: getMessageData_Integer - end: 255
+22:05:11.369 [Thread-10] DEBUG c.m.s.i.d.v.p.DPA_ProtocolProperties: getResponseCode - end: CONFIRMATION
+22:05:11.369 [Thread-10] DEBUG c.m.s.i.d.v.protocol.DPA_ProtocolLayer: onGetData - confirmation arrived: { data=[1, 0, 10, 0, 255, 255, 255, 87, 1, 3, 1], network ID=1 }
+22:05:11.370 [Thread-10] DEBUG c.m.s.network.usbcdc.CDCNetworkLayer: onGetMessage - end
+22:05:11.462 [Thread-11] DEBUG c.m.s.network.usbcdc.CDCNetworkLayer: onGetMessage - start: data=[1, 0, 10, 128, 0, 0, 0, 84, 28, 196, 1]
+22:05:11.462 [Thread-11] DEBUG c.m.s.i.d.v.protocol.DPA_ProtocolLayer: onGetData - start: { data=[1, 0, 10, 128, 0, 0, 0, 84, 28, 196, 1], network ID=1 }
+22:05:11.463 [Thread-11] DEBUG c.m.s.i.d.v.p.DPA_ProtocolProperties: getResponseCode - start: protoMsg=[1, 0, 10, 128, 0, 0, 0, 84, 28, 196, 1]
+22:05:11.463 [Thread-11] DEBUG c.m.s.i.d.v.p.DPA_ProtocolProperties: getMessageData_Integer - start:
+22:05:11.463 [Thread-11] DEBUG c.m.s.i.d.v.p.DPA_ProtocolProperties: getMessageData_Integer - end: 0
+22:05:11.463 [Thread-11] DEBUG c.m.s.i.d.v.p.DPA_ProtocolProperties: getResponseCode - end: NO_ERROR
+22:05:11.463 [Thread-11] DEBUG c.m.s.i.d.v.p.DPA_MessageConvertor: convertToDOFormat - start: networkData={ data=[1, 0, 10, 128, 0, 0, 0, 84, 28, 196, 1], network ID=1 }
+22:05:11.463 [Thread-11] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: getNodeId - start: packet=[1, 0, 10, 128, 0, 0, 0, 84, 28, 196, 1]
+22:05:11.463 [Thread-11] DEBUG c.m.simply.protocol.mapping.Deserializer: deserialize - start: packetToValueMapping={ startig position=0, length=1, convertor=com.microrisc.simply.types.StringToByteConvertor@3580ab }, protoMsg=[1, 0, 10, 128, 0, 0, 0, 84, 28, 196, 1]
+22:05:11.463 [Thread-11] DEBUG c.m.simply.types.StringToByteConvertor: toObject - start: iqValue=[1]
+22:05:11.464 [Thread-11] DEBUG c.m.simply.types.StringToByteConvertor: toObject - end: 1
+22:05:11.464 [Thread-11] DEBUG c.m.simply.protocol.mapping.Deserializer: deserialize - end: 1
+22:05:11.464 [Thread-11] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: getNodeId - end: 1
+22:05:11.464 [Thread-11] DEBUG c.m.s.i.d.v.p.DPA_ProtocolProperties: getPeripheralNumber - start: protoMsg=[1, 0, 10, 128, 0, 0, 0, 84, 28, 196, 1]
+22:05:11.464 [Thread-11] DEBUG c.m.s.i.d.v.p.DPA_ProtocolProperties: getMessageData_Integer - start:
+22:05:11.464 [Thread-11] DEBUG c.m.s.i.d.v.p.DPA_ProtocolProperties: getMessageData_Integer - end: 10
+22:05:11.464 [Thread-11] DEBUG c.m.s.i.d.v.p.DPA_ProtocolProperties: getPeripheralNumber - end: 10
+22:05:11.464 [Thread-11] DEBUG c.m.s.i.d.v.p.DPA_ProtocolProperties: getCommand - start: protoMsg=[1, 0, 10, 128, 0, 0, 0, 84, 28, 196, 1]
+22:05:11.464 [Thread-11] DEBUG c.m.s.i.d.v.p.DPA_ProtocolProperties: getMessageData_Integer - start:
+22:05:11.465 [Thread-11] DEBUG c.m.s.i.d.v.p.DPA_ProtocolProperties: getMessageData_Integer - end: 128
+22:05:11.465 [Thread-11] DEBUG c.m.s.i.d.v.p.DPA_ProtocolProperties: getCommand - end: 128
+22:05:11.465 [Thread-11] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: getDeviceInterface - start: packet=[1, 0, 10, 128, 0, 0, 0, 84, 28, 196, 1]
+22:05:11.465 [Thread-11] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - start: packet=[1, 0, 10, 128, 0, 0, 0, 84, 28, 196, 1], packetValues=[{ position=2, values={3, } }]
+22:05:11.465 [Thread-11] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - end: false
+22:05:11.465 [Thread-11] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - start: packet=[1, 0, 10, 128, 0, 0, 0, 84, 28, 196, 1], packetValues=[{ position=2, values={6, } }]
+22:05:11.465 [Thread-11] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - end: false
+22:05:11.466 [Thread-11] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - start: packet=[1, 0, 10, 128, 0, 0, 0, 84, 28, 196, 1], packetValues=[{ position=2, values={13, } }]
+22:05:11.466 [Thread-11] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - end: false
+22:05:11.466 [Thread-11] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - start: packet=[1, 0, 10, 128, 0, 0, 0, 84, 28, 196, 1], packetValues=[{ position=2, values={1, } }]
+22:05:11.466 [Thread-11] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - end: false
+22:05:11.466 [Thread-11] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - start: packet=[1, 0, 10, 128, 0, 0, 0, 84, 28, 196, 1], packetValues=[{ position=2, values={0, } }]
+22:05:11.466 [Thread-11] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - end: false
+22:05:11.466 [Thread-11] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - start: packet=[1, 0, 10, 128, 0, 0, 0, 84, 28, 196, 1], packetValues=[{ position=2, values={10, } }]
+22:05:11.467 [Thread-11] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - end: true
+22:05:11.467 [Thread-11] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - start: packet=[1, 0, 10, 128, 0, 0, 0, 84, 28, 196, 1], packetValues=[{ position=2, values={7, } }]
+22:05:11.467 [Thread-11] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - end: false
+22:05:11.467 [Thread-11] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - start: packet=[1, 0, 10, 128, 0, 0, 0, 84, 28, 196, 1], packetValues=[{ position=2, values={12, } }]
+22:05:11.467 [Thread-11] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - end: false
+22:05:11.467 [Thread-11] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - start: packet=[1, 0, 10, 128, 0, 0, 0, 84, 28, 196, 1], packetValues=[{ position=2, values={11, } }]
+22:05:11.468 [Thread-11] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - end: false
+22:05:11.468 [Thread-11] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - start: packet=[1, 0, 10, 128, 0, 0, 0, 84, 28, 196, 1], packetValues=[{ position=2, values={4, } }]
+22:05:11.468 [Thread-11] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - end: false
+22:05:11.468 [Thread-11] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - start: packet=[1, 0, 10, 128, 0, 0, 0, 84, 28, 196, 1], packetValues=[{ position=2, values={9, } }]
+22:05:11.468 [Thread-11] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - end: false
+22:05:11.468 [Thread-11] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - start: packet=[1, 0, 10, 128, 0, 0, 0, 84, 28, 196, 1], packetValues=[]
+22:05:11.468 [Thread-11] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - end: true
+22:05:11.469 [Thread-11] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - start: packet=[1, 0, 10, 128, 0, 0, 0, 84, 28, 196, 1], packetValues=[{ position=2, values={2, } }]
+22:05:11.469 [Thread-11] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - end: false
+22:05:11.469 [Thread-11] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - start: packet=[1, 0, 10, 128, 0, 0, 0, 84, 28, 196, 1], packetValues=[{ position=2, values={8, } }]
+22:05:11.469 [Thread-11] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - end: false
+22:05:11.469 [Thread-11] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - start: packet=[1, 0, 10, 128, 0, 0, 0, 84, 28, 196, 1], packetValues=[{ position=2, values={5, } }]
+22:05:11.469 [Thread-11] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - end: false
+22:05:11.469 [Thread-11] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: getDeviceInterface - end: interface com.microrisc.simply.iqrf.dpa.v210.devices.Thermometer
+22:05:11.470 [Thread-11] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: getMethodId - start: devInterface=interface com.microrisc.simply.iqrf.dpa.v210.devices.Thermometer, packet=[1, 0, 10, 128, 0, 0, 0, 84, 28, 196, 1]
+22:05:11.470 [Thread-11] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - start: packet=[1, 0, 10, 128, 0, 0, 0, 84, 28, 196, 1], packetValues=[{ position=3, values={128, } }]
+22:05:11.470 [Thread-11] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isCompatible - end: true
+22:05:11.470 [Thread-11] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isResultCompatible - start: packet=[1, 0, 10, 128, 0, 0, 0, 84, 28, 196, 1], resultMapping={ startig position=8, length=0, convertor=com.microrisc.simply.iqrf.dpa.v210.types.ThermometerValueConvertor@51b326 }
+22:05:11.470 [Thread-11] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: isResultCompatible - end: true
+22:05:11.470 [Thread-11] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: getMethodId - end: 1
+22:05:11.470 [Thread-11] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: getAdditionalData - start: packet=[1, 0, 10, 128, 0, 0, 0, 84, 28, 196, 1]
+22:05:11.470 [Thread-11] DEBUG c.m.simply.protocol.mapping.Deserializer: deserialize - start: packetToValueMapping={ startig position=4, length=0, convertor=com.microrisc.simply.iqrf.dpa.v210.types.DPA_AdditionalInfoConvertor@da88c2 }, protoMsg=[1, 0, 10, 128, 0, 0, 0, 84, 28, 196, 1]
+22:05:11.471 [Thread-11] DEBUG c.m.s.i.d.v.t.DPA_AdditionalInfoConvertor: toObject - start: protoValue=[0, 0, 0, 84, 28, 196, 1]
+22:05:11.471 [Thread-11] DEBUG c.m.simply.iqrf.types.Uns16Convertor: toObject - start: iqValue=[0, 0]
+22:05:11.471 [Thread-11] DEBUG c.m.simply.iqrf.types.Uns16Convertor: toIQValue - end: 0
+22:05:11.471 [Thread-11] DEBUG c.m.s.i.d.v.t.DPA_AdditionalInfoConvertor: toObject - end: DPA_AdditionalInfo { 
+ HW profile ID: 0
+ Response code: NO_ERROR
+ DPA value: 84
+}
+22:05:11.471 [Thread-11] DEBUG c.m.simply.protocol.mapping.Deserializer: deserialize - end: DPA_AdditionalInfo { 
+ HW profile ID: 0
+ Response code: NO_ERROR
+ DPA value: 84
+}
+22:05:11.472 [Thread-11] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: getAdditionalData - end: DPA_AdditionalInfo { 
+ HW profile ID: 0
+ Response code: NO_ERROR
+ DPA value: 84
+}
+22:05:11.472 [Thread-11] DEBUG c.m.s.i.d.v.p.DPA_ProtocolProperties: getResponseCode - start: protoMsg=[1, 0, 10, 128, 0, 0, 0, 84, 28, 196, 1]
+22:05:11.472 [Thread-11] DEBUG c.m.s.i.d.v.p.DPA_ProtocolProperties: getMessageData_Integer - start:
+22:05:11.472 [Thread-11] DEBUG c.m.s.i.d.v.p.DPA_ProtocolProperties: getMessageData_Integer - end: 0
+22:05:11.472 [Thread-11] DEBUG c.m.s.i.d.v.p.DPA_ProtocolProperties: getResponseCode - end: NO_ERROR
+22:05:11.472 [Thread-11] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: getMethodResult - start: devInterface=interface com.microrisc.simply.iqrf.dpa.v210.devices.Thermometer, methodId=1,protoMsg=[1, 0, 10, 128, 0, 0, 0, 84, 28, 196, 1]
+22:05:11.473 [Thread-11] DEBUG c.m.simply.protocol.mapping.Deserializer: deserialize - start: packetToValueMapping={ startig position=8, length=0, convertor=com.microrisc.simply.iqrf.dpa.v210.types.ThermometerValueConvertor@51b326 }, protoMsg=[1, 0, 10, 128, 0, 0, 0, 84, 28, 196, 1]
+22:05:11.473 [Thread-11] DEBUG c.m.s.i.d.v.t.ThermometerValueConvertor: toObject - start: protoValue=[28, 196, 1]
+22:05:11.495 [Thread-11] DEBUG c.m.s.i.d.v.t.ThermometerValueConvertor: toObject - end: Thermometer_values { 
+ Value: 28
+ Fractional part: 4
+}
+22:05:11.495 [Thread-11] DEBUG c.m.simply.protocol.mapping.Deserializer: deserialize - end: Thermometer_values { 
+ Value: 28
+ Fractional part: 4
+}
+22:05:11.496 [Thread-11] DEBUG c.m.s.p.m.SimplePacketToCallResponseMapping: getMethodResult - end: Thermometer_values { 
+ Value: 28
+ Fractional part: 4
+}
+22:05:11.496 [Thread-11] DEBUG c.m.s.i.d.v.p.DPA_MessageConvertor: convertToDOFormat - end: { { main data=Thermometer_values { 
+ Value: 28
+ Fractional part: 4
+}, additional data=DPA_AdditionalInfo { 
+ HW profile ID: 0
+ Response code: NO_ERROR
+ DPA value: 84
+}, source={ { networkId=1, node ID=1 }dev interface=interface com.microrisc.simply.iqrf.dpa.v210.devices.Thermometer, method ID=1 } }, proc error=null, request ID=null }
+22:05:11.496 [Thread-11] DEBUG c.m.s.i.d.v.protocol.DPA_ProtocolLayer: processMessage - start: message={ { main data=Thermometer_values { 
+ Value: 28
+ Fractional part: 4
+}, additional data=DPA_AdditionalInfo { 
+ HW profile ID: 0
+ Response code: NO_ERROR
+ DPA value: 84
+}, source={ { networkId=1, node ID=1 }dev interface=interface com.microrisc.simply.iqrf.dpa.v210.devices.Thermometer, method ID=1 } }, proc error=null, request ID=null }
+22:05:11.496 [Thread-11] DEBUG c.m.s.i.d.v.protocol.DPA_ProtocolLayer: getCauseRequest - start: response={ { main data=Thermometer_values { 
+ Value: 28
+ Fractional part: 4
+}, additional data=DPA_AdditionalInfo { 
+ HW profile ID: 0
+ Response code: NO_ERROR
+ DPA value: 84
+}, source={ { networkId=1, node ID=1 }dev interface=interface com.microrisc.simply.iqrf.dpa.v210.devices.Thermometer, method ID=1 } }, proc error=null, request ID=null }
+22:05:11.496 [Thread-11] DEBUG c.m.s.i.d.v.protocol.DPA_ProtocolLayer: getCauseRequest - end: { id=7f16cfaa-1bc3-4675-aa85-43c10d7e5386, network ID=1, node ID=1, device interface=com.microrisc.simply.iqrf.dpa.v210.devices.Thermometer, method ID=1, arguments=[65535] }
+22:05:11.496 [Thread-11] DEBUG c.m.s.iqrf.dpa.connector.DPA_Connector: onGetMessage - start: data={ { main data=Thermometer_values { 
+ Value: 28
+ Fractional part: 4
+}, additional data=DPA_AdditionalInfo { 
+ HW profile ID: 0
+ Response code: NO_ERROR
+ DPA value: 84
+}, source={ { networkId=1, node ID=1 }dev interface=interface com.microrisc.simply.iqrf.dpa.v210.devices.Thermometer, method ID=1 } }, proc error=null, request ID=7f16cfaa-1bc3-4675-aa85-43c10d7e5386 }
+22:05:11.496 [Thread-11] INFO  c.m.s.iqrf.dpa.connector.DPA_Connector: New message from protocol layer get: { { main data=Thermometer_values { 
+ Value: 28
+ Fractional part: 4
+}, additional data=DPA_AdditionalInfo { 
+ HW profile ID: 0
+ Response code: NO_ERROR
+ DPA value: 84
+}, source={ { networkId=1, node ID=1 }dev interface=interface com.microrisc.simply.iqrf.dpa.v210.devices.Thermometer, method ID=1 } }, proc error=null, request ID=7f16cfaa-1bc3-4675-aa85-43c10d7e5386 }
+22:05:11.496 [Thread-3] DEBUG c.m.s.iqrf.dpa.connector.DPA_Connector: processNextIncommingMessage - start:
+22:05:11.496 [Thread-11] DEBUG c.m.s.iqrf.dpa.connector.DPA_Connector: onGetMessage - end
+22:05:11.497 [Thread-11] DEBUG c.m.s.i.d.v.protocol.DPA_ProtocolLayer: processResponse - end
+22:05:11.497 [Thread-3] INFO  c.m.s.iqrf.dpa.connector.DPA_Connector: Processed message: { { main data=Thermometer_values { 
+ Value: 28
+ Fractional part: 4
+}, additional data=DPA_AdditionalInfo { 
+ HW profile ID: 0
+ Response code: NO_ERROR
+ DPA value: 84
+}, source={ { networkId=1, node ID=1 }dev interface=interface com.microrisc.simply.iqrf.dpa.v210.devices.Thermometer, method ID=1 } }, proc error=null, request ID=7f16cfaa-1bc3-4675-aa85-43c10d7e5386 }
+22:05:11.497 [Thread-11] DEBUG c.m.s.i.d.v.protocol.DPA_ProtocolLayer: onGetData - end
+22:05:11.497 [Thread-3] INFO  c.m.s.iqrf.dpa.connector.DPA_Connector: Response found
+22:05:11.497 [Thread-11] DEBUG c.m.s.network.usbcdc.CDCNetworkLayer: onGetMessage - end
+22:05:11.497 [Thread-3] DEBUG c.m.s.iqrf.dpa.connector.DPA_Connector: createCallRequestProcessingInfo - start: { { main data=Thermometer_values { 
+ Value: 28
+ Fractional part: 4
+}, additional data=DPA_AdditionalInfo { 
+ HW profile ID: 0
+ Response code: NO_ERROR
+ DPA value: 84
+}, source={ { networkId=1, node ID=1 }dev interface=interface com.microrisc.simply.iqrf.dpa.v210.devices.Thermometer, method ID=1 } }, proc error=null, request ID=7f16cfaa-1bc3-4675-aa85-43c10d7e5386 }
+22:05:11.497 [Thread-3] DEBUG c.m.s.iqrf.dpa.connector.DPA_Connector: createCallRequestProcessingInfo - end: { , request ID=7f16cfaa-1bc3-4675-aa85-43c10d7e5386, state=RESULT_ARRIVED, call result={ , method result=Thermometer_values { 
+ Value: 28
+ Fractional part: 4
+}, additional info=DPA_AdditionalInfo { 
+ HW profile ID: 0
+ Response code: NO_ERROR
+ DPA value: 84
+} }, error=null }
+22:05:11.497 [Thread-3] DEBUG c.m.s.iqrf.dpa.connector.DPA_Connector: processNextIncommingMessage - end
+22:05:11.498 [Thread-2] DEBUG c.microrisc.simply.ConnectedDeviceObject: 1:1-Thermometer: onCallRequestProcessingInfo - start: procInfo={ , request ID=7f16cfaa-1bc3-4675-aa85-43c10d7e5386, state=RESULT_ARRIVED, call result={ , method result=Thermometer_values { 
+ Value: 28
+ Fractional part: 4
+}, additional info=DPA_AdditionalInfo { 
+ HW profile ID: 0
+ Response code: NO_ERROR
+ DPA value: 84
+} }, error=null }, callId=7f16cfaa-1bc3-4675-aa85-43c10d7e5386
+22:05:11.501 [Thread-2] DEBUG c.m.simply.HashMapResultsContainer: put - start: uid=7f16cfaa-1bc3-4675-aa85-43c10d7e5386, callResult={ , request ID=7f16cfaa-1bc3-4675-aa85-43c10d7e5386, state=RESULT_ARRIVED, call result={ , method result=Thermometer_values { 
+ Value: 28
+ Fractional part: 4
+}, additional info=DPA_AdditionalInfo { 
+ HW profile ID: 0
+ Response code: NO_ERROR
+ DPA value: 84
+} }, error=null }
+22:05:11.501 [Thread-2] DEBUG c.m.simply.HashMapResultsContainer: update - start: 
+22:05:11.501 [Thread-2] DEBUG c.m.simply.HashMapResultsContainer: update - end: 
+22:05:11.501 [Thread-2] DEBUG c.m.simply.HashMapResultsContainer: put - end: 
+22:05:11.501 [Thread-2] DEBUG c.microrisc.simply.ConnectedDeviceObject: 1:1-Thermometer: onCallRequestProcessingInfo - end
+22:05:11.501 [Thread-2] INFO  c.microrisc.simply.ConnectedDeviceObject: 1:1-Thermometer: New result from connector, id=7f16cfaa-1bc3-4675-aa85-43c10d7e5386
+22:05:11.502 [main] DEBUG c.m.simply.HashMapResultsContainer: get - start: uid=7f16cfaa-1bc3-4675-aa85-43c10d7e5386
+22:05:11.502 [main] DEBUG c.m.simply.HashMapResultsContainer: update - start: 
+22:05:11.502 [main] DEBUG c.m.simply.HashMapResultsContainer: update - end: 
+22:05:11.502 [main] DEBUG c.m.simply.HashMapResultsContainer: get - end: { , request ID=7f16cfaa-1bc3-4675-aa85-43c10d7e5386, state=RESULT_ARRIVED, call result={ , method result=Thermometer_values { 
+ Value: 28
+ Fractional part: 4
+}, additional info=DPA_AdditionalInfo { 
+ HW profile ID: 0
+ Response code: NO_ERROR
+ DPA value: 84
+} }, error=null }
+22:05:11.502 [main] DEBUG c.m.simply.StandardServicesDeviceObject: 1:1-Thermometer: getCallResultImmediately - start: callId=7f16cfaa-1bc3-4675-aa85-43c10d7e5386
+22:05:11.502 [main] DEBUG c.m.simply.HashMapResultsContainer: get - start: uid=7f16cfaa-1bc3-4675-aa85-43c10d7e5386
+22:05:11.502 [main] DEBUG c.m.simply.HashMapResultsContainer: update - start: 
+22:05:11.502 [main] DEBUG c.m.simply.HashMapResultsContainer: update - end: 
+22:05:11.502 [main] DEBUG c.m.simply.HashMapResultsContainer: get - end: { , request ID=7f16cfaa-1bc3-4675-aa85-43c10d7e5386, state=RESULT_ARRIVED, call result={ , method result=Thermometer_values { 
+ Value: 28
+ Fractional part: 4
+}, additional info=DPA_AdditionalInfo { 
+ HW profile ID: 0
+ Response code: NO_ERROR
+ DPA value: 84
+} }, error=null }
+22:05:11.503 [main] DEBUG c.m.simply.StandardServicesDeviceObject: 1:1-Thermometer: getCallResultImmediately - end: Thermometer_values { 
+ Value: 28
+ Fractional part: 4
+}
+22:05:11.504 [main] INFO  c.m.simply.StandardServicesDeviceObject: 1:1-Thermometer: Get call result: Thermometer_values { 
+ Value: 28
+ Fractional part: 4
+}
+22:05:11.504 [main] DEBUG c.m.simply.iqrf.dpa.SimpleDPA_Simply: destroy - start: 
+22:05:11.505 [main] DEBUG com.microrisc.simply.BaseSimply: destroy - start: 
+22:05:11.505 [main] DEBUG c.m.s.iqrf.dpa.connector.DPA_Connector: destroy - start:
+22:05:11.505 [main] INFO  c.m.s.network.usbcdc.CDCNetworkLayer: Listener unregistered
+22:05:11.505 [main] INFO  c.m.s.protocol.AbstractProtocolLayer: Listener unregistered
+22:05:11.505 [main] DEBUG c.m.s.iqrf.dpa.connector.DPA_Connector: stopMessaging - start:
+22:05:11.524 [Thread-3] WARN  c.m.s.iqrf.dpa.connector.DPA_Connector: Worker thread interrupted while waiting on requests and messages
+java.lang.InterruptedException: null
+	at java.lang.Object.wait(Native Method) ~[na:1.7.0_25]
+	at java.lang.Object.wait(Object.java:503) ~[na:1.7.0_25]
+	at com.microrisc.simply.iqrf.dpa.connector.DPA_Connector$WorkerThread.run(DPA_Connector.java:499) ~[classes/:na]
+22:05:11.524 [main] INFO  c.m.s.iqrf.dpa.connector.DPA_Connector: Messaging stopped.
+22:05:11.524 [main] DEBUG c.m.s.iqrf.dpa.connector.DPA_Connector: stopMessaging - end
+22:05:11.525 [main] DEBUG c.m.simply.connector.CallResultsSender: destroy - start:
+22:05:11.525 [main] DEBUG c.m.simply.connector.CallResultsSender: terminateSenderThread - start:
+22:05:11.525 [Thread-2] WARN  c.m.simply.connector.CallResultsSender: Listener thread interrupted while waiting
+java.lang.InterruptedException: null
+	at java.lang.Object.wait(Native Method) ~[na:1.7.0_25]
+	at java.lang.Object.wait(Object.java:503) ~[na:1.7.0_25]
+	at com.microrisc.simply.connector.CallResultsSender$SenderThread.run(CallResultsSender.java:43) ~[classes/:na]
+22:05:11.525 [main] INFO  c.m.simply.connector.CallResultsSender: Sending stopped.
+22:05:11.525 [main] DEBUG c.m.simply.connector.CallResultsSender: terminateSenderThread - end
+22:05:11.526 [main] INFO  c.m.simply.connector.CallResultsSender: Destroyed.
+22:05:11.526 [main] DEBUG c.m.simply.connector.CallResultsSender: destroy - end
+22:05:11.526 [main] INFO  c.m.s.iqrf.dpa.connector.DPA_Connector: Destroyed.
+22:05:11.526 [main] DEBUG c.m.s.iqrf.dpa.connector.DPA_Connector: destroy - end
+22:05:11.526 [main] DEBUG c.m.s.i.d.v.protocol.DPA_ProtocolLayer: destroy - start:
+22:05:11.526 [main] DEBUG c.m.s.protocol.AbstractProtocolLayer: destroy - start:
+22:05:11.526 [main] INFO  c.m.s.network.usbcdc.CDCNetworkLayer: Listener unregistered
+22:05:11.526 [main] INFO  c.m.s.protocol.AbstractProtocolLayer: Listener unregistered
+22:05:11.526 [main] INFO  c.m.s.protocol.AbstractProtocolLayer: Destroyed
+22:05:11.526 [main] DEBUG c.m.s.protocol.AbstractProtocolLayer: destroy - end
+22:05:11.526 [main] DEBUG c.m.s.i.d.v.protocol.DPA_ProtocolLayer: terminateBroadcastResponderThread - start:
+22:05:11.527 [Thread-1] WARN  c.m.s.i.d.v.protocol.DPA_ProtocolLayer: Broadcast responder thread interrupted while waiting
+java.lang.InterruptedException: null
+	at java.lang.Object.wait(Native Method) ~[na:1.7.0_25]
+	at java.lang.Object.wait(Object.java:503) ~[na:1.7.0_25]
+	at com.microrisc.simply.iqrf.dpa.v210.protocol.DPA_ProtocolLayer$BroadcastResponder.run(DPA_ProtocolLayer.java:220) ~[classes/:na]
+22:05:11.527 [main] INFO  c.m.s.i.d.v.protocol.DPA_ProtocolLayer: broadcast responding stopped.
+22:05:11.527 [main] DEBUG c.m.s.i.d.v.protocol.DPA_ProtocolLayer: terminateBroadcastResponderThread - end
+22:05:11.527 [main] INFO  c.m.s.i.d.v.protocol.DPA_ProtocolLayer: Destroyed
+22:05:11.527 [main] DEBUG c.m.s.i.d.v.protocol.DPA_ProtocolLayer: destroy - end
+22:05:11.528 [main] DEBUG c.m.s.network.usbcdc.CDCNetworkLayer: destroy - start: 
+22:05:11.528 [main] INFO  c.m.s.network.usbcdc.CDCNetworkLayer: Destroyed
+22:05:11.528 [main] DEBUG c.m.s.network.usbcdc.CDCNetworkLayer: destroy - end
+22:05:11.528 [main] DEBUG com.microrisc.simply.BaseNetwork: destroy - start: 
+22:05:11.528 [main] INFO  com.microrisc.simply.BaseNetwork: Destroyed
+22:05:11.528 [main] DEBUG com.microrisc.simply.BaseNetwork: destroy - end
+22:05:11.528 [main] INFO  com.microrisc.simply.BaseSimply: Destroy complete
+22:05:11.528 [main] DEBUG com.microrisc.simply.BaseSimply: destroy - end 
+22:05:11.528 [main] INFO  c.m.simply.iqrf.dpa.SimpleDPA_Simply: Destroy complete
+22:05:11.528 [main] DEBUG c.m.simply.iqrf.dpa.SimpleDPA_Simply: destroy - end 
