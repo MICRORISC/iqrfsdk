@@ -1,0 +1,157 @@
+11:44:28.549 [main] INFO  c.m.s.network.usbcdc.CDCNetworkLayer: Listener registered
+11:44:28.565 [main] INFO  c.m.s.protocol.AbstractProtocolLayer: Protocol layer started
+11:44:28.567 [main] INFO  c.m.s.i.d.v.protocol.DPA_ProtocolLayer: Started
+11:44:28.568 [main] INFO  c.m.simply.connector.CallResultsSender: Sending started
+11:44:28.568 [main] INFO  c.m.s.protocol.AbstractProtocolLayer: Listener registered
+11:44:28.569 [main] INFO  c.m.s.iqrf.dpa.connector.DPA_Connector: Messaging started
+11:44:28.702 [main] INFO  c.m.s.iqrf.dpa.v210.init.DPA_Initializer: Getting peripheral enumeration: 1 attempt
+11:44:28.863 [main] INFO  c.m.s.iqrf.dpa.connector.DPA_Connector: New call request created: { id=20df405b-5492-4407-8d0a-e52881eb6435, network ID=1, node ID=0, device interface=com.microrisc.simply.iqrf.dpa.v210.devices.PeripheralInfoGetter, method ID=1, arguments=[65535] }
+11:44:28.864 [main] INFO  c.microrisc.simply.ConnectedDeviceObject: 1:0-PeripheralInfoGetter: Method 1 call dispatched, id=20df405b-5492-4407-8d0a-e52881eb6435
+11:44:28.894 [main] WARN  c.m.simply.HashMapResultsContainer: No result found.
+11:44:29.201 [Thread-4] INFO  c.m.s.iqrf.dpa.connector.DPA_Connector: New message from protocol layer get: { { main data=PeripheralEnumeration { 
+ DPA protocol version: { minor number=16, major number=2 }
+ Number of user defined peripherals: 0
+ Default peripherals: [0, 2, 3, 4, 5, 6, 7, 9, 10, 12, 13, ]
+ HW profile ID: 0
+ HW profile version: 0
+ Flags: 1
+}, additional data=DPA_AdditionalInfo { 
+ HW profile ID: 0
+ Response code: NO_ERROR
+ DPA value: 89
+}, source={ { networkId=1, node ID=0 }dev interface=interface com.microrisc.simply.iqrf.dpa.v210.devices.PeripheralInfoGetter, method ID=1 } }, proc error=null, request ID=20df405b-5492-4407-8d0a-e52881eb6435 }
+11:44:29.201 [Thread-3] INFO  c.m.s.iqrf.dpa.connector.DPA_Connector: Processed message: { { main data=PeripheralEnumeration { 
+ DPA protocol version: { minor number=16, major number=2 }
+ Number of user defined peripherals: 0
+ Default peripherals: [0, 2, 3, 4, 5, 6, 7, 9, 10, 12, 13, ]
+ HW profile ID: 0
+ HW profile version: 0
+ Flags: 1
+}, additional data=DPA_AdditionalInfo { 
+ HW profile ID: 0
+ Response code: NO_ERROR
+ DPA value: 89
+}, source={ { networkId=1, node ID=0 }dev interface=interface com.microrisc.simply.iqrf.dpa.v210.devices.PeripheralInfoGetter, method ID=1 } }, proc error=null, request ID=20df405b-5492-4407-8d0a-e52881eb6435 }
+11:44:29.203 [Thread-3] INFO  c.m.s.iqrf.dpa.connector.DPA_Connector: Response found
+11:44:29.250 [Thread-2] INFO  c.microrisc.simply.ConnectedDeviceObject: 1:0-PeripheralInfoGetter: New result from connector, id=20df405b-5492-4407-8d0a-e52881eb6435
+11:44:29.250 [main] INFO  c.m.simply.StandardServicesDeviceObject: 1:0-PeripheralInfoGetter: Get call result: PeripheralEnumeration { 
+ DPA protocol version: { minor number=16, major number=2 }
+ Number of user defined peripherals: 0
+ Default peripherals: [0, 2, 3, 4, 5, 6, 7, 9, 10, 12, 13, ]
+ HW profile ID: 0
+ HW profile version: 0
+ Flags: 1
+}
+11:44:29.275 [main] INFO  c.m.s.iqrf.dpa.v210.init.DPA_Initializer: Master node created
+11:44:29.275 [main] INFO  c.m.s.iqrf.dpa.v210.init.DPA_Initializer: Get bonded nodes: 1 attempt
+11:44:29.329 [main] INFO  c.m.s.iqrf.dpa.connector.DPA_Connector: New call request created: { id=2f7a07da-2c34-4d9b-99b6-1fe4eebe6171, network ID=1, node ID=0, device interface=com.microrisc.simply.iqrf.dpa.v210.devices.Coordinator, method ID=3, arguments=[65535] }
+11:44:29.329 [main] INFO  c.microrisc.simply.ConnectedDeviceObject: 1:0-Coordinator: Method 3 call dispatched, id=2f7a07da-2c34-4d9b-99b6-1fe4eebe6171
+11:44:29.344 [main] WARN  c.m.simply.HashMapResultsContainer: No result found.
+11:44:30.171 [Thread-5] INFO  c.m.s.iqrf.dpa.connector.DPA_Connector: New message from protocol layer get: { { main data=BondedNodes { 
+ Bonded nodes: 1, 2
+}, additional data=DPA_AdditionalInfo { 
+ HW profile ID: 0
+ Response code: NO_ERROR
+ DPA value: 89
+}, source={ { networkId=1, node ID=0 }dev interface=interface com.microrisc.simply.iqrf.dpa.v210.devices.Coordinator, method ID=3 } }, proc error=null, request ID=2f7a07da-2c34-4d9b-99b6-1fe4eebe6171 }
+11:44:30.171 [Thread-3] INFO  c.m.s.iqrf.dpa.connector.DPA_Connector: Processed message: { { main data=BondedNodes { 
+ Bonded nodes: 1, 2
+}, additional data=DPA_AdditionalInfo { 
+ HW profile ID: 0
+ Response code: NO_ERROR
+ DPA value: 89
+}, source={ { networkId=1, node ID=0 }dev interface=interface com.microrisc.simply.iqrf.dpa.v210.devices.Coordinator, method ID=3 } }, proc error=null, request ID=2f7a07da-2c34-4d9b-99b6-1fe4eebe6171 }
+11:44:30.172 [Thread-3] INFO  c.m.s.iqrf.dpa.connector.DPA_Connector: Response found
+11:44:30.173 [Thread-2] INFO  c.microrisc.simply.ConnectedDeviceObject: 1:0-Coordinator: New result from connector, id=2f7a07da-2c34-4d9b-99b6-1fe4eebe6171
+11:44:30.173 [main] INFO  c.m.simply.StandardServicesDeviceObject: 1:0-Coordinator: Get call result: BondedNodes { 
+ Bonded nodes: 1, 2
+}
+11:44:30.174 [main] INFO  c.m.s.iqrf.dpa.v210.init.DPA_Initializer: Getting peripheral enumeration: 1 attempt
+11:44:30.174 [main] INFO  c.m.s.iqrf.dpa.connector.DPA_Connector: New call request created: { id=10ebd776-98b2-40af-810f-3e7482577dc0, network ID=1, node ID=1, device interface=com.microrisc.simply.iqrf.dpa.v210.devices.PeripheralInfoGetter, method ID=1, arguments=[65535] }
+11:44:30.174 [main] INFO  c.microrisc.simply.ConnectedDeviceObject: 1:1-PeripheralInfoGetter: Method 1 call dispatched, id=10ebd776-98b2-40af-810f-3e7482577dc0
+11:44:30.174 [main] WARN  c.m.simply.HashMapResultsContainer: No result found.
+11:44:31.278 [Thread-7] INFO  c.m.s.iqrf.dpa.connector.DPA_Connector: New message from protocol layer get: { { main data=PeripheralEnumeration { 
+ DPA protocol version: { minor number=16, major number=2 }
+ Number of user defined peripherals: 0
+ Default peripherals: [1, 2, 3, 4, 5, 6, 7, 9, 10, 12, 13, ]
+ HW profile ID: 0
+ HW profile version: 0
+ Flags: 1
+}, additional data=DPA_AdditionalInfo { 
+ HW profile ID: 0
+ Response code: NO_ERROR
+ DPA value: 87
+}, source={ { networkId=1, node ID=1 }dev interface=interface com.microrisc.simply.iqrf.dpa.v210.devices.PeripheralInfoGetter, method ID=1 } }, proc error=null, request ID=10ebd776-98b2-40af-810f-3e7482577dc0 }
+11:44:31.278 [Thread-3] INFO  c.m.s.iqrf.dpa.connector.DPA_Connector: Processed message: { { main data=PeripheralEnumeration { 
+ DPA protocol version: { minor number=16, major number=2 }
+ Number of user defined peripherals: 0
+ Default peripherals: [1, 2, 3, 4, 5, 6, 7, 9, 10, 12, 13, ]
+ HW profile ID: 0
+ HW profile version: 0
+ Flags: 1
+}, additional data=DPA_AdditionalInfo { 
+ HW profile ID: 0
+ Response code: NO_ERROR
+ DPA value: 87
+}, source={ { networkId=1, node ID=1 }dev interface=interface com.microrisc.simply.iqrf.dpa.v210.devices.PeripheralInfoGetter, method ID=1 } }, proc error=null, request ID=10ebd776-98b2-40af-810f-3e7482577dc0 }
+11:44:31.279 [Thread-3] INFO  c.m.s.iqrf.dpa.connector.DPA_Connector: Response found
+11:44:31.280 [Thread-2] INFO  c.microrisc.simply.ConnectedDeviceObject: 1:1-PeripheralInfoGetter: New result from connector, id=10ebd776-98b2-40af-810f-3e7482577dc0
+11:44:31.280 [main] INFO  c.m.simply.StandardServicesDeviceObject: 1:1-PeripheralInfoGetter: Get call result: PeripheralEnumeration { 
+ DPA protocol version: { minor number=16, major number=2 }
+ Number of user defined peripherals: 0
+ Default peripherals: [1, 2, 3, 4, 5, 6, 7, 9, 10, 12, 13, ]
+ HW profile ID: 0
+ HW profile version: 0
+ Flags: 1
+}
+11:44:31.283 [main] INFO  c.m.s.iqrf.dpa.v210.init.DPA_Initializer: Getting peripheral enumeration: 1 attempt
+11:44:31.283 [main] INFO  c.m.s.iqrf.dpa.connector.DPA_Connector: New call request created: { id=4b7e43e4-5afc-4430-b5bc-235e45a8345a, network ID=1, node ID=2, device interface=com.microrisc.simply.iqrf.dpa.v210.devices.PeripheralInfoGetter, method ID=1, arguments=[65535] }
+11:44:31.283 [main] INFO  c.microrisc.simply.ConnectedDeviceObject: 1:2-PeripheralInfoGetter: Method 1 call dispatched, id=4b7e43e4-5afc-4430-b5bc-235e45a8345a
+11:44:31.283 [main] WARN  c.m.simply.HashMapResultsContainer: No result found.
+11:44:32.358 [Thread-9] INFO  c.m.s.iqrf.dpa.connector.DPA_Connector: New message from protocol layer get: { { main data=PeripheralEnumeration { 
+ DPA protocol version: { minor number=16, major number=2 }
+ Number of user defined peripherals: 1
+ Default peripherals: [1, 2, 3, 4, 5, 6, 7, 9, 10, 12, 13, ]
+ HW profile ID: 15
+ HW profile version: 43981
+ Flags: 1
+}, additional data=DPA_AdditionalInfo { 
+ HW profile ID: 15
+ Response code: NO_ERROR
+ DPA value: 88
+}, source={ { networkId=1, node ID=2 }dev interface=interface com.microrisc.simply.iqrf.dpa.v210.devices.PeripheralInfoGetter, method ID=1 } }, proc error=null, request ID=4b7e43e4-5afc-4430-b5bc-235e45a8345a }
+11:44:32.358 [Thread-3] INFO  c.m.s.iqrf.dpa.connector.DPA_Connector: Processed message: { { main data=PeripheralEnumeration { 
+ DPA protocol version: { minor number=16, major number=2 }
+ Number of user defined peripherals: 1
+ Default peripherals: [1, 2, 3, 4, 5, 6, 7, 9, 10, 12, 13, ]
+ HW profile ID: 15
+ HW profile version: 43981
+ Flags: 1
+}, additional data=DPA_AdditionalInfo { 
+ HW profile ID: 15
+ Response code: NO_ERROR
+ DPA value: 88
+}, source={ { networkId=1, node ID=2 }dev interface=interface com.microrisc.simply.iqrf.dpa.v210.devices.PeripheralInfoGetter, method ID=1 } }, proc error=null, request ID=4b7e43e4-5afc-4430-b5bc-235e45a8345a }
+11:44:32.359 [Thread-3] INFO  c.m.s.iqrf.dpa.connector.DPA_Connector: Response found
+11:44:32.359 [Thread-2] INFO  c.microrisc.simply.ConnectedDeviceObject: 1:2-PeripheralInfoGetter: New result from connector, id=4b7e43e4-5afc-4430-b5bc-235e45a8345a
+11:44:32.360 [main] INFO  c.m.simply.StandardServicesDeviceObject: 1:2-PeripheralInfoGetter: Get call result: PeripheralEnumeration { 
+ DPA protocol version: { minor number=16, major number=2 }
+ Number of user defined peripherals: 1
+ Default peripherals: [1, 2, 3, 4, 5, 6, 7, 9, 10, 12, 13, ]
+ HW profile ID: 15
+ HW profile version: 43981
+ Flags: 1
+}
+11:44:32.362 [main] WARN  c.m.s.iqrf.dpa.v210.init.DPA_Initializer: Interface not found for peripheral: 32
+11:44:32.386 [main] INFO  c.m.s.iqrf.dpa.v210.init.DPA_Initializer: Initialization complete
+11:44:32.519 [main] INFO  c.m.s.iqrf.dpa.connector.DPA_Connector: New call request created: { id=76e9f9ee-1c35-4548-a40f-6d78449e302e, network ID=1, node ID=1, device interface=com.microrisc.simply.iqrf.dpa.v210.devices.Thermometer, method ID=1, arguments=[65535] }
+11:44:32.519 [main] INFO  c.microrisc.simply.ConnectedDeviceObject: 1:1-Thermometer: Method 1 call dispatched, id=76e9f9ee-1c35-4548-a40f-6d78449e302e
+11:44:32.519 [main] WARN  c.m.simply.HashMapResultsContainer: No result found.
+11:44:32.520 [main] INFO  c.m.s.network.usbcdc.CDCNetworkLayer: Listener unregistered
+11:44:32.520 [main] INFO  c.m.s.protocol.AbstractProtocolLayer: Listener unregistered
+11:44:32.610 [Thread-3] ERROR c.m.s.iqrf.dpa.connector.DPA_Connector: Send request to protocol layer error
+java.lang.InterruptedException: sleep interrupted
+	at java.lang.Thread.sleep(Native Method) ~[na:1.7.0_25]
+	at com.microrisc.simply.iqrf.dpa.connector.DPA_Connector$WorkerThread.sendRequestToProtocolLayer(DPA_Connector.java:183) ~[classes/:na]
+	at com.microrisc.simply.iqrf.dpa.connector.DPA_Connector$WorkerThread.run(DPA_Connector.java:542) ~[classes/:na]
+11:44:32.662 [Thread-2] INFO  c.microrisc.simply.ConnectedDeviceObject: 1:1-Thermometer: New result from connector, id=76e9f9ee-1c35-4548-a40f-6d78449e302e

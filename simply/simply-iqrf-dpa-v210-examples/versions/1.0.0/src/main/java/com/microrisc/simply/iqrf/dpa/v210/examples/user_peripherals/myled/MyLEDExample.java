@@ -23,7 +23,6 @@ import com.microrisc.simply.Simply;
 import com.microrisc.simply.SimplyException;
 import com.microrisc.simply.errors.CallRequestProcessingError;
 import com.microrisc.simply.iqrf.dpa.v210.DPA_SimplyFactory;
-import com.microrisc.simply.iqrf.dpa.di_services.DPA_StandardServices;
 import com.microrisc.simply.iqrf.dpa.v210.examples.user_peripherals.myled.def.MyLED;
 import com.microrisc.simply.iqrf.dpa.v210.types.LED_State;
 import com.microrisc.simply.iqrf.types.VoidType;

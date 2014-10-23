@@ -88,7 +88,7 @@ public class SetDPAParams {
         }
         
         // printing the previous state of DPA parameters
-        System.out.println("Previous DPA Parameters were: \n" + dpaParameter.toPrettyFormattedString());
+        System.out.println("Previous DPA Parameters were: \n" + dpaParameterPrevious.toPrettyFormattedString());
         
         // end working with Simply
         simply.destroy();
