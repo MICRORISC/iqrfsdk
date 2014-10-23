@@ -23,7 +23,7 @@ public final class PeripheralInfoConvertor extends PrimitiveConvertor {
     
     
     /**
-     * @return PeripheralInfoConvertor instance 
+     * @return {@code PeripheralInfoConvertor} instance 
      */
     static public PeripheralInfoConvertor getInstance() {
         return instance;
@@ -43,14 +43,10 @@ public final class PeripheralInfoConvertor extends PrimitiveConvertor {
     static private final int PARAM1_POS = 2;
     static private final int PARAM2_POS = 3;
     
-    
-    
 
     /**
      * Currently not supported. Throws {@code UnsupportedOperationException }.
-     * @param value
-     * @return
-     * @throws ValueConversionException 
+     * @throws UnsupportedOperationException 
      */
     @Override
     public short[] toProtoValue(Object value) throws ValueConversionException {

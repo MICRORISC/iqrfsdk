@@ -24,7 +24,7 @@ public final class IntegerFastQueryListConvertor extends AbstractConvertor {
     private IntegerFastQueryListConvertor() {}
     
     /**
-     * @return IntegerFastQueryListConvertor instance 
+     * @return {@code IntegerFastQueryListConvertor} instance 
      */
     static public IntegerFastQueryListConvertor getInstance() {
         return instance;

@@ -70,7 +70,7 @@ public class BaseSimply implements Simply {
     public <T> Map<String, T> getMapOfNetworks(Class<T> type) {
         logger.debug("getMapOfNetworks - start: type={}", type);
         
-        Map<String, T> mapToReturn = new HashMap<String, T>();
+        Map<String, T> mapToReturn = new HashMap<>();
         for (Map.Entry<String, Network> pair : networksMap.entrySet()) {
             if (type.isInstance(pair.getValue())) {
                 mapToReturn.put(pair.getKey(), type.cast(pair.getValue()));

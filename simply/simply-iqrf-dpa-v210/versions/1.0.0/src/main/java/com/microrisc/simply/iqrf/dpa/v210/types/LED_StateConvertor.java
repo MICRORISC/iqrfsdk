@@ -22,7 +22,7 @@ public final class LED_StateConvertor extends PrimitiveConvertor {
     private static final LED_StateConvertor instance = new LED_StateConvertor();
     
     /**
-     * @return LED_StateConvertor instance 
+     * @return {@code LED_StateConvertor} instance 
      */
     static public LED_StateConvertor getInstance() {
         return instance;
@@ -41,9 +41,7 @@ public final class LED_StateConvertor extends PrimitiveConvertor {
     
     /**
      * Currently not supported. Throws {@code UnsupportedOperationException }.
-     * @param value
-     * @return
-     * @throws ValueConversionException 
+     * @throws UnsupportedOperationException 
      */
     @Override
     public short[] toProtoValue(Object value) throws ValueConversionException {

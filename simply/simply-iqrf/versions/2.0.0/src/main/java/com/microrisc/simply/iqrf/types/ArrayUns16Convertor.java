@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Provides functionality for converting from and to IQRF arrays of uns16 type. 
- * Peer Java type: Integer[].
+ * Peer Java type: {@code Integer[]}.
  *  
  * @author Michal Konopa
  */
@@ -29,7 +29,7 @@ public final class ArrayUns16Convertor extends ArrayConvertor {
     
     
     /**
-     * @return ArrayUns16Convertor instance 
+     * @return {@code ArrayUns16Convertor} instance 
      */
     static public ArrayUns16Convertor getInstance() {
         return instance;
@@ -37,11 +37,12 @@ public final class ArrayUns16Convertor extends ArrayConvertor {
    
     
     /**
-     * The value to convert must have Integer[] type, otherwise Exception is
+     * The value to convert must have {@code Integer[]} type, otherwise Exception is
      * thrown.
      * @param valueToConv value to convert
      * @return application protocol representation of converted value
-     * @throws ValueConversionException if the converted value hasn't Integer[] type
+     * @throws ValueConversionException if the converted value doesn't have 
+     *         the {@code Integer[]} type
      */
     @Override
     public short[] toProtoValue(Object valueToConv) throws ValueConversionException {
@@ -80,7 +81,7 @@ public final class ArrayUns16Convertor extends ArrayConvertor {
             );
         }
         
-        List<Integer> retValues = new LinkedList<Integer>();
+        List<Integer> retValues = new LinkedList<>();
         for (int byteId = 0; byteId < protoValue.length; byteId+= elemSize) {
             short[] elem = new short[elemSize];
             System.arraycopy(protoValue, byteId, elem, 0, elemSize);

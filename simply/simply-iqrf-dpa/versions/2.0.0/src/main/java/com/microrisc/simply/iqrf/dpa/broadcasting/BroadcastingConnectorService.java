@@ -31,7 +31,7 @@ public interface BroadcastingConnectorService extends ConnectorService {
     );
     
     /**
-     * Like {@link BroadcastingConnectorService#broadcastCallMethod(com.microrisc.simply.iqrf.dpa.broadcasting.BroadcastingConnectorListener, 
+     * Like {@link BroadcastingConnectorService#broadcastCallMethod(com.microrisc.simply.ConnectorListener, 
      * java.lang.String, java.lang.Class, java.lang.String, java.lang.Object[])  broadcastCallMethod} 
      * method, but specifies also a maximal time of processing of a called method.
      * @param maxProcTime maximal time of processing of the called method

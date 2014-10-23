@@ -13,7 +13,8 @@ public interface NetworkConnectionStorage {
      * Returns connection information for access to the network specified by
      * {@code networkId} parameter.
      * @param networkId ID of network, which 
-     * @return 
+     * @return connection information for access to the network specified by
+     *         {@code networkId} parameter.
      */
     AbstractNetworkConnectionInfo getNetworkConnectionInfo(String networkId); 
     

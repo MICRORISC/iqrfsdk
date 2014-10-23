@@ -66,7 +66,7 @@ implements CallRequestToPacketMapping {
     public List<PacketFragment> getSerializedProtocolData() {
         logger.debug("getSerializedProtocolData - start: ");
         
-        List<PacketFragment> serData = new LinkedList<PacketFragment>();
+        List<PacketFragment> serData = new LinkedList<>();
         for (ConstValueToPacketMapping protoMapping : constantMappings) {
             serData.add(
                     new PacketFragment(protoMapping.getStartingPosition(), 
@@ -80,7 +80,7 @@ implements CallRequestToPacketMapping {
     
     /**
      * Serializes specified network ID and returns it.
-     * @param netowrkID network ID
+     * @param networkId network ID
      * @return serialized network data
      * @throws ValueConversionException if an error has occurred during serialization
      */
@@ -89,7 +89,7 @@ implements CallRequestToPacketMapping {
             throws ValueConversionException {
         logger.debug("getSerializedNetworkData - start: nodeId={}", networkId);
         
-        List<PacketFragment> serNetworkData = new LinkedList<PacketFragment>();
+        List<PacketFragment> serNetworkData = new LinkedList<>();
         for (ValueToPacketMapping networkMapping : networkMappings) {
             short[] serData = Serializer.serialize(networkMapping, networkId);
             serNetworkData.add(
@@ -112,7 +112,7 @@ implements CallRequestToPacketMapping {
             throws ValueConversionException {
         logger.debug("getSerializedNodeData - start: nodeId={}", nodeId);
         
-        List<PacketFragment> serNodeData = new LinkedList<PacketFragment>();
+        List<PacketFragment> serNodeData = new LinkedList<>();
         for (ValueToPacketMapping nodeMapping : nodeMappings) {
             short[] serData = Serializer.serialize(nodeMapping, nodeId);
             serNodeData.add(
@@ -167,7 +167,7 @@ implements CallRequestToPacketMapping {
                 + " Method ID: " + methodId);
         }
         
-        List<PacketFragment> serMethodData = new LinkedList<PacketFragment>();
+        List<PacketFragment> serMethodData = new LinkedList<>();
         List<ConstValueToPacketMapping> constMappings = methodMapping.getConstantMappings();
         for (ConstValueToPacketMapping constMapping : constMappings) {
             serMethodData.add(
@@ -205,7 +205,7 @@ implements CallRequestToPacketMapping {
         }
         
         Iterator<ValueToPacketMapping> argIter = methodMapping.getArgMappings().iterator();
-        List<PacketFragment> serArgs = new LinkedList<PacketFragment>();
+        List<PacketFragment> serArgs = new LinkedList<>();
         
         int argId = 0;
         while (argIter.hasNext()) {

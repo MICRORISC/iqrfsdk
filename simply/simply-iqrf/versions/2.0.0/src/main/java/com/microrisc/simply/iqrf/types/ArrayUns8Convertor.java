@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Provides functionality for converting from and to IQRF arrays of uns8 type. 
- * Peer Java type: Short[].<br>
+ * Peer Java type: {@code Short[]}.<br>
  * 
  * @author Michal Konopa
  */
@@ -28,7 +28,7 @@ public final class ArrayUns8Convertor extends ArrayConvertor{
     
     
     /**
-     * @return ArrayUns8Convertor instance 
+     * @return {@code ArrayUns8Convertor} instance 
      */
     static public ArrayUns8Convertor getInstance() {
         return instance;
@@ -36,11 +36,12 @@ public final class ArrayUns8Convertor extends ArrayConvertor{
     
     
     /**
-     * The value to convert must have Short[] type, otherwise Exception is
+     * The value to convert must have the {@code Short[]} type, otherwise Exception is
      * thrown.
      * @param valueToConv value to convert
      * @return application protocol representation of converted value
-     * @throws ValueConversionException if the converted value hasn't Short[] type
+     * @throws ValueConversionException if the converted value doesn't have 
+     *         the {@code Short[]} type
      */
     @Override
     public short[] toProtoValue(Object valueToConv) throws ValueConversionException {

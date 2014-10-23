@@ -32,11 +32,11 @@ public final class PWM_Parameters {
     /**
      * Returns enum value corresponding to specified integer value.
      * @param prescalerValue
-     * @return 
+     * @return enum value corresponding to specified prescaler integer value
      */
     private Prescaler getPrescaler(int prescalerValue) {
-        for (Prescaler prescEnum : Prescaler.values()) {
-            if (prescalerValue == prescEnum.getPrescalerValue()) {
+        for ( Prescaler prescEnum : Prescaler.values() ) {
+            if ( prescalerValue == prescEnum.getPrescalerValue() ) {
                 return prescEnum;
             }
         }

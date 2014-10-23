@@ -41,7 +41,8 @@ extends DPA_StandardServices, GenericAsyncCallable, MethodIdTransformer {
      * Additionally the same command can be used to setup weak pull-ups at 
      * the pins where available. <br>
      * See datasheet of the PIC MCU for a description of IO ports.
-     * Synchronous wrapper for {@link #async_setDirection() async_setDirection} method.
+     * Synchronous wrapper for {@link #async_setDirection(com.microrisc.simply.iqrf.dpa.v210.types.IO_DirectionSettings[])  
+     * async_setDirection} method.
      * @param directionSettings direction settings
      * @return {@code VoidType} object, if operation has processed correctly <br>
      *         {@code null}, if an error has occurred during processing
@@ -58,10 +59,11 @@ extends DPA_StandardServices, GenericAsyncCallable, MethodIdTransformer {
     
     /**
      * Sets the output state of the IO pins.
-     * Synchronous wrapper for {@link #async_setOutputState() async_setOutputState} method.
+     * Synchronous wrapper for {@link #async_setOutputState(com.microrisc.simply.iqrf.dpa.v210.types.IO_Command[]) 
+     * async_setOutputState} method.
      * @param ioCommands IO commands
      * @return {@code VoidType} object, if operation has processed correctly <br>
-     *         {@code null}, if an error has occurred during processing
+     *         {@code null} if an error has occurred during processing
      */
     VoidType setOutputState(IO_Command[] ioCommands);
     
@@ -75,7 +77,7 @@ extends DPA_StandardServices, GenericAsyncCallable, MethodIdTransformer {
     
     /**
      * Reads the input state of all supported the MCU ports.
-     * Synchronous wrapper for {@link #async_getState() async_getState} method.
+     * Synchronous wrapper for {@link #async_get() async_get} method.
      * @return array of bytes representing state of port PORTA, PORTB, ..., 
      *         ending with the last supported MCU port. <br>
      *         {@code null}, if an error has occurred during processing

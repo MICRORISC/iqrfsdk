@@ -47,7 +47,7 @@ public final class DPA_AdditionalInfoConvertor extends PrimitiveConvertor {
     
     
     /**
-     * @return DPA_AdditionalInfoConvertor instance 
+     * @return {@code DPA_AdditionalInfoConvertor} instance 
      */
     static public DPA_AdditionalInfoConvertor getInstance() {
         return instance;
@@ -60,8 +60,7 @@ public final class DPA_AdditionalInfoConvertor extends PrimitiveConvertor {
 
     /**
      * Currently not supported. Throws {@code UnsupportedOperationException }
-     * @return 
-     * @throws ValueConversionException 
+     * @throws UnsupportedOperationException 
      */
     @Override
     public short[] toProtoValue(Object value) throws ValueConversionException {

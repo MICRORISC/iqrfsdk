@@ -22,7 +22,7 @@ public final class IO_CommandConvertor extends PrimitiveConvertor {
     private IO_CommandConvertor() {}
     
     /**
-     * @return IO_CommandConvertor instance 
+     * @return {@code IO_CommandConvertor} instance 
      */
     static public IO_CommandConvertor getInstance() {
         return instance;

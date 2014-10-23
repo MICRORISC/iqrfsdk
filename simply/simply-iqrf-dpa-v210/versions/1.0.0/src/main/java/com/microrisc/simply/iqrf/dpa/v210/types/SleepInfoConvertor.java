@@ -25,7 +25,7 @@ public final class SleepInfoConvertor extends PrimitiveConvertor {
     
     
     /**
-     * @return OsInfoConvertor instance 
+     * @return {@code SleepInfoConvertor} instance 
      */
     static public SleepInfoConvertor getInstance() {
         return instance;
@@ -61,9 +61,7 @@ public final class SleepInfoConvertor extends PrimitiveConvertor {
     
     /**
      * Currently not supported. Throws {@code UnsupportedOperationException }.
-     * @param value
-     * @return
-     * @throws ValueConversionException 
+     * @throws UnsupportedOperationException 
      */
     @Override
     public short[] toProtoValue(Object value) throws ValueConversionException {

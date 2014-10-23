@@ -55,7 +55,7 @@ extends AbstractConnectorFactory<ProtocolLayer, Configuration, DPA_Connector>
     /**
      * Returns type of connector.
      * @param configuration source configuration to discover
-     * @return
+     * @return type of connector
      * @throws Exception 
      */
     private ConnectorType getConnectorType(Configuration configuration) throws Exception {

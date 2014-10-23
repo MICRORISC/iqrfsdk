@@ -64,8 +64,8 @@ public class ConfigurationReader {
     
     /**
      * Creates configuration from specified .property file.
-     * @param file source configuration file
-     * @return 
+     * @param file source property file
+     * @return configuration
      */
     private static Configuration createConfigurationFromProperties(String file) 
             throws ConfigurationException {
@@ -74,7 +74,7 @@ public class ConfigurationReader {
     
     
     /**
-     * Reads configuration data from specified file, creates {@Configuration} object, 
+     * Reads configuration data from specified file, creates {@code Configuration} object, 
      * and returns it. 
      * <p>
      * The currently only supported format is: <b>.properties</b> file type. If 

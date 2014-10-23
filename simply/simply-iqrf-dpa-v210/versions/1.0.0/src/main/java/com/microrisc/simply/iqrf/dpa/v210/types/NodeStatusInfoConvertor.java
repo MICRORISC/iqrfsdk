@@ -23,7 +23,7 @@ public final class NodeStatusInfoConvertor extends PrimitiveConvertor {
     private static final NodeStatusInfoConvertor instance = new NodeStatusInfoConvertor();
     
     /**
-     * @return NodeStatusInfoConvertor instance 
+     * @return {@code NodeStatusInfoConvertor} instance 
      */
     static public NodeStatusInfoConvertor getInstance() {
         return instance;
@@ -51,14 +51,9 @@ public final class NodeStatusInfoConvertor extends PrimitiveConvertor {
     
     static private final int FLAGS_POS = 11;
     
-    
-    
-
     /**
      * Currently not supported. Throws {@code UnsupportedOperationException }.
-     * @param value
-     * @return
-     * @throws ValueConversionException 
+     * @throws UnsupportedOperationException 
      */
     @Override
     public short[] toProtoValue(Object value) throws ValueConversionException {

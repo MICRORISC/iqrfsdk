@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Provides functionality for converting from and to IQRF uns16 type. 
- * Peer Java type: Integer
+ * Peer Java type: {@code Integer}
  * 
  * @author Michal Konopa
  */
@@ -24,7 +24,7 @@ public final class Uns16Convertor extends PrimitiveConvertor {
     
     
     /**
-     * @return Uns16Convertor instance 
+     * @return {@code Uns16Convertor} instance 
      */
     static public Uns16Convertor getInstance() {
         return instance;
@@ -43,7 +43,7 @@ public final class Uns16Convertor extends PrimitiveConvertor {
     public short[] toProtoValue(Object valueToConv) throws ValueConversionException {
         logger.debug("toIQValue - start: valueToConv={}", valueToConv);
         
-        if (!(valueToConv instanceof Integer)) {
+        if ( !(valueToConv instanceof Integer) ) {
             throw new ValueConversionException("Value to convert has not proper type.");
         }
         
@@ -51,7 +51,7 @@ public final class Uns16Convertor extends PrimitiveConvertor {
         
         ByteBuffer byteBuffer = ByteBuffer.allocate(4);
         byteBuffer.order(ByteOrder.LITTLE_ENDIAN);
-        byteBuffer.putInt(((Integer)valueToConv).intValue());
+        byteBuffer.putInt(((Integer)valueToConv));
         
         byteBuffer.position(0);
         for (int byteId = 0; byteId < TYPE_SIZE; byteId++) {
@@ -67,8 +67,8 @@ public final class Uns16Convertor extends PrimitiveConvertor {
         logger.debug("toObject - start: iqValue={}", iqValue);
         
         if (iqValue.length != TYPE_SIZE) {
-            throw new ValueConversionException("Argument length doesn't match with "
-                    + "type size");
+            throw new ValueConversionException(
+                "Argument length doesn't match with type size");
         }
         
         ByteBuffer byteBuffer = ByteBuffer.allocate(4);

@@ -43,7 +43,7 @@ public class BaseNetwork implements Network {
     
     @Override
     public Map<String, Node> getNodesMap() {
-        return new HashMap<String, Node>(nodesMap);
+        return new HashMap<>(nodesMap);
     }
     
     /**

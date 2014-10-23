@@ -20,7 +20,7 @@ implements
     /**
      * Checks specified protocol layer for validity.
      * @param protocolLayerService
-     * @return 
+     * @return {@code protocolLayerService}
      */
     private ProtocolLayerService checkProtocolLayer(ProtocolLayerService protocolLayerService) {
         if ( protocolLayerService == null ) {

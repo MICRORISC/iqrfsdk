@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Provides functionality for converting from and to IQRF void type. 
- * Peer Java type: VoidType (Simply specific class)
+ * Peer Java type: {@code VoidType} (Simply specific class)
  * 
  * @author Michal Konopa
  */
@@ -23,7 +23,7 @@ public final class VoidTypeConvertor extends PrimitiveConvertor {
     
     
     /**
-     * @return VoidTypeConvertor instance 
+     * @return {@code VoidTypeConvertor} instance 
      */
     static public VoidTypeConvertor getInstance() {
         return instance;
@@ -56,7 +56,7 @@ public final class VoidTypeConvertor extends PrimitiveConvertor {
     public Object toObject(short[] iqValue) throws ValueConversionException {
         logger.debug("toObject - start: iqValue={}", iqValue);
         
-        if (iqValue.length != TYPE_SIZE) {
+        if ( iqValue.length != TYPE_SIZE ) {
             throw new ValueConversionException(
                 "Argument length doesn't match with type size"
             );

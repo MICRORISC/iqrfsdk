@@ -38,9 +38,10 @@ public final class DPA_MessageConvertor extends SimpleMessageConvertor {
     private static final int BROADCAST_ADDRESS = 0xFF;
     
     /**
-     * Indicates, if specified packet is from Device Exploration process.
+     * Indicates if specified packet is from Device Exploration process.
      * @param msg data of the packet
-     * @return 
+     * @return {@code true} if specified packet is from Device Exploration process <br>
+     *         {@code false} otherwise
      */
     private boolean isDeviceExploration(short[] msg) {
         int pNum = DPA_ProtocolProperties.getPeripheralNumber(msg);

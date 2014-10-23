@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Provides functionality for converting from and to IQRF uns8 type. 
- * Peer Java type: Short
+ * Peer Java type: {@code Short}
  * 
  * @author Michal Konopa
  */
@@ -23,7 +23,7 @@ public final class Uns8Convertor extends PrimitiveConvertor {
     private static final Uns8Convertor instance = new Uns8Convertor();
    
     /**
-     * @return Uns8Convertor instance 
+     * @return {@code Uns8Convertor} instance 
      */
     static public Uns8Convertor getInstance() {
         return instance;
@@ -50,7 +50,7 @@ public final class Uns8Convertor extends PrimitiveConvertor {
         
         ByteBuffer byteBuffer = ByteBuffer.allocate(2);
         byteBuffer.order(ByteOrder.LITTLE_ENDIAN);
-        byteBuffer.putShort(((Short)valueToConv).shortValue());
+        byteBuffer.putShort(((Short)valueToConv));
         
         byteBuffer.position(0);
         for (int byteId = 0; byteId < TYPE_SIZE; byteId++) {

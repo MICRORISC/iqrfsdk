@@ -28,7 +28,7 @@ public final class DiscoveredNodesConvertor extends PrimitiveConvertor {
     
     
     /**
-     * @return DiscoveredNodesConvertor instance 
+     * @return {@code DiscoveredNodesConvertor} instance 
      */
     static public DiscoveredNodesConvertor getInstance() {
         return instance;
