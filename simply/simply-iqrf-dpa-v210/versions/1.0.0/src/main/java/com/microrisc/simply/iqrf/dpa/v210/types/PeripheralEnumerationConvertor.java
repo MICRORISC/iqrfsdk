@@ -28,7 +28,7 @@ public final class PeripheralEnumerationConvertor extends PrimitiveConvertor {
     
     
     /**
-     * @return PeripheralEnumerationConvertor instance 
+     * @return {@code PeripheralEnumerationConvertor} instance 
      */
     static public PeripheralEnumerationConvertor getInstance() {
         return instance;
@@ -117,9 +117,7 @@ public final class PeripheralEnumerationConvertor extends PrimitiveConvertor {
 
     /**
      * Currently not supported. Throws {@code UnsupportedOperationException }.
-     * @param value
-     * @return
-     * @throws ValueConversionException 
+     * @throws UnsupportedOperationException 
      */
     @Override
     public short[] toProtoValue(Object value) throws ValueConversionException {

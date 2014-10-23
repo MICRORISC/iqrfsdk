@@ -16,7 +16,7 @@ public final class PacketPositionValues {
     private int position = 0;
     
     /** Set of values at the position. */
-    private Set<Short> values = new HashSet<Short>();
+    private final Set<Short> values = new HashSet<>();
     
     
     /**
@@ -50,7 +50,7 @@ public final class PacketPositionValues {
     }
     
     /**
-     * Creates new {@PacketPositionValue} object. At the specified position in
+     * Creates new {@code PacketPositionValue} object. At the specified position in
      * the packet can only be the specified value.
      * @param position postition in the packet
      * @param value value of byte at the position
@@ -61,7 +61,7 @@ public final class PacketPositionValues {
     }
     
     /**
-     * Creates new {@PacketPositionValue} object. At the specified position in
+     * Creates new {@code PacketPositionValue} object. At the specified position in
      * the packet can be any one of the values from the specified collection.
      * @param position postition in the packet
      * @param values values, which can be at specified position
@@ -72,7 +72,7 @@ public final class PacketPositionValues {
     }
     
     /**
-     * Creates new {@PacketPositionValue} object. At the specified position in
+     * Creates new {@code PacketPositionValue} object. At the specified position in
      * the packet can be any one of the values from the specified array.
      * @param position postition in the packet
      * @param values values, which can be at specified position
@@ -93,11 +93,11 @@ public final class PacketPositionValues {
      * Returns {@code true}, if specified value can be at the position. Otherwise
      * return {@code false}.
      * @param value value to check for
-     * @return {@code true}, if specified value can be at the position
-     * @return {@code false}, otherwise
+     * @return {@code true}, if specified value can be at the position <br>
+     *         {@code false} otherwise
      */
     public boolean canBeAtPosition(short value) {
-        return values.contains(new Short(value));
+        return values.contains(value);
     }
     
     @Override

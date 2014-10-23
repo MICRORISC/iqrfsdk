@@ -14,9 +14,7 @@ public final class DPA_PeripheralToDevIfaceMapperFactory
 implements PeripheralToDevIfaceMapperFactory {
     
     /**
-     * Returns mapping between standard DPA peripherals and Device Interfaces.
-     * @return
-     * @throws Exception 
+     * @return mapping between standard DPA peripherals and Device Interfaces.
      */
     @Override
     public PeripheralToDevIfaceMapper createPeripheralToDevIfaceMapper() throws Exception {

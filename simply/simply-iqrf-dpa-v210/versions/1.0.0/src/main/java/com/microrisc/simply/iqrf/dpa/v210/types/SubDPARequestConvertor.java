@@ -23,7 +23,7 @@ public final class SubDPARequestConvertor extends AbstractConvertor {
     
     
     /**
-     * @return SubDPARequestConvertor instance 
+     * @return {@code SubDPARequestConvertor} instance 
      */
     static public SubDPARequestConvertor getInstance() {
         return instance;
@@ -44,9 +44,7 @@ public final class SubDPARequestConvertor extends AbstractConvertor {
 
     /**
      * Currently not supported. Throws {@code UnsupportedOperationException }.
-     * @param value
-     * @return
-     * @throws ValueConversionException 
+     * @throws UnsupportedOperationException 
      */
     @Override
     public short[] toProtoValue(Object value) throws ValueConversionException {

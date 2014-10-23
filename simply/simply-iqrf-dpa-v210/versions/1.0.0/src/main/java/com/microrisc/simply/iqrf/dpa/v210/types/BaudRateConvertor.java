@@ -30,12 +30,8 @@ public final class BaudRateConvertor extends PrimitiveConvertor {
     // postitions of fields
     static private final int STATE_POS = 0;
     
-    
-    
-    
-    
     /**
-     * @return BaudRateConvertor instance 
+     * @return {@code BaudRateConvertor} instance 
      */
     static public BaudRateConvertor getInstance() {
         return instance;

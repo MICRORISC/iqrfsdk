@@ -52,7 +52,7 @@ extends AbstractConnectorFactory<ProtocolLayerService, Configuration, Connector>
     /**
      * Returns type of connector.
      * @param configuration source configuration to discover
-     * @return
+     * @return connector type
      * @throws Exception 
      */
     private ConnectorType getConnectorType(Configuration configuration) throws Exception {

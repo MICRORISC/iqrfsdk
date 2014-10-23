@@ -27,7 +27,7 @@ public final class BondedNodesConvertor extends PrimitiveConvertor {
     
     
     /**
-     * @return BondedNodesConvertor instance 
+     * @return {@code BondedNodesConvertor} instance 
      */
     static public BondedNodesConvertor getInstance() {
         return instance;

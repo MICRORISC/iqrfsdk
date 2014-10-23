@@ -23,7 +23,7 @@ public final class FRC_CommandConvertor extends AbstractConvertor {
     
     
     /**
-     * @return FRC_CommandConvertor instance 
+     * @return {@code FRC_CommandConvertor} instance 
      */
     static public FRC_CommandConvertor getInstance() {
         return instance;
@@ -31,9 +31,7 @@ public final class FRC_CommandConvertor extends AbstractConvertor {
     
     /**
      * Currently not supported. Throws {@code UnsupportedOperationException }.
-     * @param value
-     * @return
-     * @throws ValueConversionException 
+     * @throws UnsupportedOperationException 
      */
     @Override
     public short[] toProtoValue(Object value) throws ValueConversionException {

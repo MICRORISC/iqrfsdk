@@ -30,7 +30,7 @@ public final class DiscoveryParamsConvertor extends PrimitiveConvertor {
     
     
     /**
-     * @return DiscoveryParamsConvertor instance 
+     * @return {@code DiscoveryParamsConvertor} instance 
      */
     static public DiscoveryParamsConvertor getInstance() {
         return instance;

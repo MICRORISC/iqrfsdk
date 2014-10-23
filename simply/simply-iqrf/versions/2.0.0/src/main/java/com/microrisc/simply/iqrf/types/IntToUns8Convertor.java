@@ -10,7 +10,8 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Performs conversion between Java Integer to IQRF uns8 type.
- * Only the lowest 8 significant bits of Java Integer are converted, others are ignored.
+ * Only the lowest 8 significant bits of Java {@code Integer} are converted, 
+ * others are ignored.
  * 
  * @author Michal Konopa
  */
@@ -24,7 +25,7 @@ public class IntToUns8Convertor extends PrimitiveConvertor  {
     private static final IntToUns8Convertor instance = new IntToUns8Convertor();
     
     /**
-     * @return IntToUns8Convertor instance 
+     * @return {@code IntToUns8Convertor} instance 
      */
     static public IntToUns8Convertor getInstance() {
         return instance;
@@ -38,12 +39,15 @@ public class IntToUns8Convertor extends PrimitiveConvertor  {
         return TYPE_SIZE;
     }
     
-    
+    /**
+     * @throws ValueConversionException if the converted value doesn't have 
+     *         the {@code Integer} type
+     */
     @Override
     public short[] toProtoValue(Object javaObj) throws ValueConversionException {
         logger.debug("toProtoValue - start: valueToConv={}", javaObj);
         
-        if (!(javaObj instanceof Integer)) {
+        if ( !(javaObj instanceof Integer) ) {
             throw new ValueConversionException("Value to convert has not proper type.");
         }
         
@@ -51,7 +55,7 @@ public class IntToUns8Convertor extends PrimitiveConvertor  {
         
         ByteBuffer byteBuffer = ByteBuffer.allocate(4);
         byteBuffer.order(ByteOrder.LITTLE_ENDIAN);
-        byteBuffer.putInt(((Integer)javaObj).intValue());
+        byteBuffer.putInt(((Integer)javaObj));
         
         byteBuffer.position(0);
         for (int byteId = 0; byteId < TYPE_SIZE; byteId++) {

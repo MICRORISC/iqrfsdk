@@ -31,7 +31,7 @@ public final class DPA_RequestConvertor extends AbstractConvertor {
     
     
     /**
-     * @return DPA_RequestConvertor instance
+     * @return {@code DPA_RequestConvertor} instance
      */
     static public DPA_RequestConvertor getInstance() {
         return instance;

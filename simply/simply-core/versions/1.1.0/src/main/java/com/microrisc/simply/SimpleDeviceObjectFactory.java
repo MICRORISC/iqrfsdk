@@ -56,12 +56,12 @@ extends AbstractDeviceObjectFactory<ConnectorService, Configuration, DeviceObjec
      * Implementation class {@code implClass} must be subclass ( direct or indirect )
      * of {@code BaseDeviceObject} class else {@code IllegalArgumentException} is
      * thrown.
-     * @param networkId
-     * @param nodeId
-     * @param connector
-     * @param implClass
-     * @param configuration
-     * @return
+     * @param networkId ID of network, which returned device object belongs to.
+     * @param nodeId ID of node, which returned device object belongs to.
+     * @param implClass Device interface implementation class
+     * @param connector connector to use
+     * @param configuration configuration settings
+     * @return device object
      * @throws IllegalArgumentException if {@code implClass} is not direct or 
      *         indirect subclass of {@code BaseDeviceObject} class.
      */

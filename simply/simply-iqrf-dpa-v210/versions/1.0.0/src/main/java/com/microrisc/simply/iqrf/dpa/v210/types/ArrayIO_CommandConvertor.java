@@ -26,7 +26,7 @@ public final class ArrayIO_CommandConvertor extends ArrayConvertor {
     
     
     /**
-     * @return ArrayIO_CommandConvertor instance 
+     * @return {@code ArrayIO_CommandConvertor} instance 
      */
     static public ArrayIO_CommandConvertor getInstance() {
         return instance;

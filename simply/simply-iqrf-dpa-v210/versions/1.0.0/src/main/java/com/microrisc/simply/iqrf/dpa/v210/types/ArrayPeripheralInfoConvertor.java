@@ -28,7 +28,7 @@ public final class ArrayPeripheralInfoConvertor extends ArrayConvertor {
     
     
     /**
-     * @return ArrayPeripheralInfoConvertor instance 
+     * @return {@code ArrayPeripheralInfoConvertor} instance 
      */
     static public ArrayPeripheralInfoConvertor getInstance() {
         return instance;

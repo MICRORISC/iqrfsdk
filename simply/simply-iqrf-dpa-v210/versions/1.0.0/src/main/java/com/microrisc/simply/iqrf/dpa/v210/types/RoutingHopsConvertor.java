@@ -23,7 +23,7 @@ public final class RoutingHopsConvertor extends PrimitiveConvertor {
     
     
     /**
-     * @return RoutingHopsConvertor instance 
+     * @return {@code RoutingHopsConvertor} instance 
      */
     static public RoutingHopsConvertor getInstance() {
         return instance;

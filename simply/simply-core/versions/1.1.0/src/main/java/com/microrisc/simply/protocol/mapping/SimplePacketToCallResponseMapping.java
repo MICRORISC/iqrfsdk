@@ -33,13 +33,9 @@ implements PacketToCallResponseMapping {
     /** Logger. */
     private static final Logger logger = LoggerFactory.getLogger(SimplePacketToCallResponseMapping.class);
     
-    /**
-     * Indicates, wheather specified packet fullfils specified packet values.
-     * @param packet packet
-     * @param packetPosValues
-     * @return 
-     */
-    private boolean isCompatible(short[] packet, List<PacketPositionValues> packetPosValues) {
+    // Indicates, wheather specified packet fullfils specified packet values.
+    private boolean isCompatible(short[] packet, List<PacketPositionValues> packetPosValues) 
+    {
         logger.debug("isCompatible - start: packet={}, packetValues={}", 
                 packet, packetPosValues);
         
@@ -63,7 +59,8 @@ implements PacketToCallResponseMapping {
      * Indicates, wheather the packet is compatible with specified result mapping.
      * @param packet
      * @param resultMapping
-     * @return 
+     * @return {@code true} if packet is compatible
+     *         {@code false} otherwise
      */
     private boolean isResultCompatible(short[] packet, PacketToValueMapping resultMapping) {
         logger.debug("isResultCompatible - start: packet={}, resultMapping={}", 

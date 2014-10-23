@@ -85,25 +85,17 @@ public class BaseDeviceObject implements DeviceObject {
         );
     }
 
-    /**
-     * @return identifier of network, which this device object belongs to.
-     */
     @Override
     public String getNetworkId() {
         return networkId;
     }
 
-    /**
-     * @return identifier of node, which this device object belongs to.
-     */
     @Override
     public String getNodeId() {
         return nodeId;
     }
 
-    /**
-     * @return device interface implemented by this device object.
-     */
+    
     @Override
     public Class getImplementedDeviceInterface() {
         return implementedDeviceInterface;

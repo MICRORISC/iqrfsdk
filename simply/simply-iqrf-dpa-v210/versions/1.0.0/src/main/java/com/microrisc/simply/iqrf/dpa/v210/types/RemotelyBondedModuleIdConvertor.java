@@ -24,7 +24,7 @@ public final class RemotelyBondedModuleIdConvertor extends PrimitiveConvertor {
     
     
     /**
-     * @return RemotelyBondedModuleIdConvertor instance 
+     * @return {@code RemotelyBondedModuleIdConvertor} instance 
      */
     static public RemotelyBondedModuleIdConvertor getInstance() {
         return instance;
@@ -48,9 +48,7 @@ public final class RemotelyBondedModuleIdConvertor extends PrimitiveConvertor {
     
     /**
      * Currently not supported. Throws {@code UnsupportedOperationException }.
-     * @param value
-     * @return
-     * @throws ValueConversionException 
+     * @throws UnsupportedOperationException 
      */
     @Override
     public short[] toProtoValue(Object value) throws ValueConversionException {

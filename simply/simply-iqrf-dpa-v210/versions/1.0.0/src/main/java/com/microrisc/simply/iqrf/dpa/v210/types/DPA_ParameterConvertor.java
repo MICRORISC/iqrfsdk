@@ -26,7 +26,7 @@ public final class DPA_ParameterConvertor extends PrimitiveConvertor {
     
     
     /**
-     * @return DPA_ParameterConvertor instance 
+     * @return {@code DPA_ParameterConvertor} instance 
      */
     static public DPA_ParameterConvertor getInstance() {
         return instance;
@@ -52,9 +52,7 @@ public final class DPA_ParameterConvertor extends PrimitiveConvertor {
     
     /**
      * Currently not supported. Throws {@code UnsupportedOperationException }.
-     * @param value
-     * @return
-     * @throws ValueConversionException 
+     * @throws UnsupportedOperationException 
      */
     @Override
     public short[] toProtoValue(Object value) throws ValueConversionException {

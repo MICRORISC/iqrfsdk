@@ -32,7 +32,7 @@ public interface BroadcastCallable_sync extends WaitingTimeoutService {
     
     /**
      * Same as 
-     * {@link Broadcaster#broadcast(com.microrisc.simply.Network, java.lang.Class, 
+     * {@link BroadcastCallable_sync#broadcast(java.lang.String, java.lang.Class, 
      * java.lang.Object, java.lang.Object[], com.microrisc.simply.di_services.MethodIdTransformer) 
      * broadcast}
      * but Simply will try to find out a method ID transformer himself.

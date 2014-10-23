@@ -23,7 +23,7 @@ public final class PWM_ParametersConvertor extends PrimitiveConvertor {
     
     
     /**
-     * @return PWM_ParametersConvertor instance 
+     * @return {@code PWM_ParametersConvertor} instance 
      */
     static public PWM_ParametersConvertor getInstance() {
         return instance;
@@ -46,10 +46,7 @@ public final class PWM_ParametersConvertor extends PrimitiveConvertor {
     
     
     /**
-     * Returns serialized prescaler value. 
-     * @param prescaler
-     * @param dutyCycle
-     * @return 
+     * @return serialized prescaler value
      */
     private short getSerializedPrescaler(PWM_Parameters.Prescaler prescaler, int dutyCycle) {
         short serPrescaler = (short)prescaler.getPrescalerValue();
@@ -59,9 +56,7 @@ public final class PWM_ParametersConvertor extends PrimitiveConvertor {
     }
     
     /**
-     * Returns serialized duty cycle value. 
-     * @param dutyCycle
-     * @return 
+     * @return serialized duty cycle value
      */
     private short getSerializedDutyCycle(int dutyCycle) {
         short serDutyCycle = 0;

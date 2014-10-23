@@ -26,7 +26,7 @@ public final class ArrayIO_DirectionSettingsConvertor extends ArrayConvertor {
     
     
     /**
-     * @return ArrayIO_DirectionSettingsConvertor instance 
+     * @return {@code ArrayIO_DirectionSettingsConvertor} instance 
      */
     static public ArrayIO_DirectionSettingsConvertor getInstance() {
         return instance;

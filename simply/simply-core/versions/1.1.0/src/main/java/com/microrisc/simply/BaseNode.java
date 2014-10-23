@@ -51,7 +51,7 @@ public class BaseNode implements Node {
     
     @Override
     public Map<Class, DeviceObject> getDeviceObjectsMap() {
-        return new HashMap<Class, DeviceObject>(devicesMap);
+        return new HashMap<>(devicesMap);
     }
     
     @Override

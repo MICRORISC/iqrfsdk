@@ -3,8 +3,11 @@
 package com.microrisc.simply.iqrf.dpa.v201.types;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Implements base parsing of FRC result data. 
@@ -12,6 +15,9 @@ import java.util.Map;
  * @author Michal Konopa
  */
 public final class FRC_ResultParser {
+    /** Logger. */
+    private static final Logger logger = LoggerFactory.getLogger(FRC_ResultParser.class);
+    
     /** Length of incomming data. */
     private static final int DATA_LENGTH = 64;
     
@@ -64,6 +70,10 @@ public final class FRC_ResultParser {
             IllegalArgumentException, 
             InvocationTargetException 
     {
+        logger.debug("parseAsCollectedBits - start: frcData={}, type={}", 
+                Arrays.toString(frcData), type
+        );
+        
         checkFrcData(frcData);
         java.lang.reflect.Constructor constructor = type.getConstructor(byte.class, byte.class);
         
@@ -80,6 +90,8 @@ public final class FRC_ResultParser {
                 bitComp *= 2;
             }
         }
+        
+        logger.debug("parseAsCollectedBits - end: {}", resultMap.toString());
         return resultMap;
     }
     
@@ -108,6 +120,10 @@ public final class FRC_ResultParser {
             IllegalArgumentException, 
             InvocationTargetException 
     {
+        logger.debug("parseAsCollectedBytes - start: frcData={}, type={}", 
+                Arrays.toString(frcData), type
+        );
+        
         checkFrcData(frcData);
         java.lang.reflect.Constructor constructor = type.getConstructor(short.class);
         
@@ -118,6 +134,8 @@ public final class FRC_ResultParser {
             resultMap.put(String.valueOf(nodeId), (T)constructor.newInstance(frcData[byteId]));
             nodeId++;
         }
+        
+        logger.debug("parseAsCollectedBytes - end: {}", resultMap.toString());
         return resultMap;
     }
 }
