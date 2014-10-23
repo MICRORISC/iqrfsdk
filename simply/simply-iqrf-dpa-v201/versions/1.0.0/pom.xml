@@ -55,7 +55,7 @@
                             <goal>jar</goal>
                         </goals>
                         <configuration>
-                            <includeDependencySources>true</includeDependencySources>
+                            <includeDependencySources>false</includeDependencySources>
                         </configuration>
                     </execution>
             	</executions>
