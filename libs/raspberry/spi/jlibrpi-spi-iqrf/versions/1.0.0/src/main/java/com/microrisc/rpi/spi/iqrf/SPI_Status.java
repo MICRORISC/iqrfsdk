@@ -46,9 +46,9 @@ public final class SPI_Status {
     
     /**
      * Returns {@code true} if the status is SPI data ready. Otherwise, it returns
-     * {@false}.
+     * {@code false}.
      * @return {@code true} if the status is SPI data ready <br>
-     *         {@code false}, otherwise
+     *         {@code false} otherwise
      */
     public boolean isDataReady() {
         return dataReady;

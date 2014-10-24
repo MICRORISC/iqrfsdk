@@ -15,8 +15,8 @@ implements PeripheralToDevIfaceMapperFactory {
     
     /**
      * Returns mapping between standard DPA peripherals and Device Interfaces.
-     * @return
-     * @throws Exception 
+     * @return mapping between standard DPA peripherals and Device Interfaces
+     * @throws Exception if an error has occured during the mapping creation
      */
     @Override
     public PeripheralToDevIfaceMapper createPeripheralToDevIfaceMapper() throws Exception {

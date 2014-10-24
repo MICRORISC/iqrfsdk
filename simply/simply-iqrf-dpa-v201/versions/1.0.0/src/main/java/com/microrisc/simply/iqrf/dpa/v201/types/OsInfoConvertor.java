@@ -23,7 +23,7 @@ public final class OsInfoConvertor extends PrimitiveConvertor {
     
     
     /**
-     * @return OsInfoConvertor instance 
+     * @return {@code OsInfoConvertor} instance 
      */
     static public OsInfoConvertor getInstance() {
         return instance;
@@ -64,9 +64,7 @@ public final class OsInfoConvertor extends PrimitiveConvertor {
     
     /**
      * Currently not supported. Throws {@code UnsupportedOperationException }.
-     * @param value
-     * @return
-     * @throws ValueConversionException 
+     * @throws UnsupportedOperationException 
      */
     @Override
     public short[] toProtoValue(Object value) throws ValueConversionException {

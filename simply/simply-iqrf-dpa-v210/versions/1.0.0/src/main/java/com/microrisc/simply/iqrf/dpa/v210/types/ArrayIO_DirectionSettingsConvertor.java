@@ -54,7 +54,11 @@ public final class ArrayIO_DirectionSettingsConvertor extends ArrayConvertor {
         logger.debug("toIQValue - end: {}", finalIqValue);
         return finalIqValue;
     }
-
+    
+    /**
+     * Currently not supported. Throws {@code UnsupportedOperationException }.
+     * @throws UnsupportedOperationException 
+     */
     @Override
     public Object toObject(short[] protoValue) throws ValueConversionException {
         throw new UnsupportedOperationException("Not supported yet.");

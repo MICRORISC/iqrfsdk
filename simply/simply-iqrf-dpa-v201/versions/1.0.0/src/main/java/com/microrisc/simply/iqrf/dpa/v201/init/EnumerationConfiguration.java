@@ -44,8 +44,6 @@ public class EnumerationConfiguration {
      * Creates new object of enumeration configuration.
      * @param getPerAttemptsNum number of attempts of getting peripherals from node
      * @param getPerTimeout timeout [in ms] of operation of getting peripherals from node
-     * @param getBondedNodesAttemptsNum number of attempts of getting bonded nodes from coordinator
-     * @param getBondedNodesTimeout timeout [in ms] of operation of getting bonded nodes from coordinator
      */
     public EnumerationConfiguration(int getPerAttemptsNum, long getPerTimeout) {
         this.getPerAttemptsNum = checkGetPerAttemptsNum(getPerAttemptsNum);

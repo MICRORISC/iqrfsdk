@@ -26,7 +26,7 @@ public final class DPA_ParameterConvertor extends PrimitiveConvertor {
     
     
     /**
-     * @return DPA_ParameterConvertor instance 
+     * @return {@code DPA_ParameterConvertor} instance 
      */
     static public DPA_ParameterConvertor getInstance() {
         return instance;
@@ -50,12 +50,6 @@ public final class DPA_ParameterConvertor extends PrimitiveConvertor {
         throw new ValueConversionException("Unknown DPA value: " + dpaBits);
     }
     
-    /**
-     * Currently not supported. Throws {@code UnsupportedOperationException }.
-     * @param value
-     * @return
-     * @throws ValueConversionException 
-     */
     @Override
     public short[] toProtoValue(Object value) throws ValueConversionException {
         logger.debug("toProtoValue - start: value={}", value);

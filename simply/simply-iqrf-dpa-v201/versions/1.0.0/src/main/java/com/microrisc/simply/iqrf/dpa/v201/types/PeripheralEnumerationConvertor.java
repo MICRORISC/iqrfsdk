@@ -28,7 +28,7 @@ public final class PeripheralEnumerationConvertor extends PrimitiveConvertor {
     
     
     /**
-     * @return PeripheralEnumerationConvertor instance 
+     * @return {@code PeripheralEnumerationConvertor} instance 
      */
     static public PeripheralEnumerationConvertor getInstance() {
         return instance;
@@ -41,8 +41,6 @@ public final class PeripheralEnumerationConvertor extends PrimitiveConvertor {
     public int getGenericTypeSize() {
         return TYPE_SIZE;
     }
-    
-    
     
     // postitions of fields
     static private final int DPA_PROTO_MINOR_VERSION_POS = 0;
@@ -65,7 +63,7 @@ public final class PeripheralEnumerationConvertor extends PrimitiveConvertor {
     
     // returns array of numbers of supported peripheral
     private int[] getDefaultPeripherals(short[] defPers) {
-        List<Integer> perNumbersList = new LinkedList<Integer>();
+        List<Integer> perNumbersList = new LinkedList<>();
         
         int byteRank = 0;
         for (short defPersByte : defPers) {
@@ -112,14 +110,10 @@ public final class PeripheralEnumerationConvertor extends PrimitiveConvertor {
         return byteBuffer.getInt(0);
     }
     
-    
-    
 
     /**
      * Currently not supported. Throws {@code UnsupportedOperationException }.
-     * @param value
-     * @return
-     * @throws ValueConversionException 
+     * @throws UnsupportedOperationException 
      */
     @Override
     public short[] toProtoValue(Object value) throws ValueConversionException {

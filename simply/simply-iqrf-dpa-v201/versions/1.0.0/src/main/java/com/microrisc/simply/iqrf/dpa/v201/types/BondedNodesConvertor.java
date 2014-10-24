@@ -27,7 +27,7 @@ public final class BondedNodesConvertor extends PrimitiveConvertor {
     
     
     /**
-     * @return BondedNodesConvertor instance 
+     * @return {@code BondedNodesConvertor} instance 
      */
     static public BondedNodesConvertor getInstance() {
         return instance;
@@ -41,6 +41,10 @@ public final class BondedNodesConvertor extends PrimitiveConvertor {
         return TYPE_SIZE;
     }
     
+    /**
+     * Currently not supported. Throws {@code UnsupportedOperationException }.
+     * @throws UnsupportedOperationException 
+     */
     @Override
     public short[] toProtoValue(Object value) throws ValueConversionException {
         throw new UnsupportedOperationException("Currently not supported");

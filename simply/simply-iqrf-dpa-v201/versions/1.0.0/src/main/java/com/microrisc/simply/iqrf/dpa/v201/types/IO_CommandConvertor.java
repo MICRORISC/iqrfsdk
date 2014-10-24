@@ -22,7 +22,7 @@ public final class IO_CommandConvertor extends PrimitiveConvertor {
     private IO_CommandConvertor() {}
     
     /**
-     * @return IO_CommandConvertor instance 
+     * @return {@code IO_CommandConvertor} instance 
      */
     static public IO_CommandConvertor getInstance() {
         return instance;
@@ -60,7 +60,11 @@ public final class IO_CommandConvertor extends PrimitiveConvertor {
         logger.debug("toProtoValue - end: {}", protoValue);
         return protoValue;
     }
-
+    
+    /**
+     * Currently not supported. Throws {@code UnsupportedOperationException }.
+     * @throws UnsupportedOperationException 
+     */
     @Override
     public Object toObject(short[] protoValue) throws ValueConversionException {
         throw new UnsupportedOperationException("Currently not supported");

@@ -43,7 +43,7 @@ public final class HWP_ConfigurationConvertor extends PrimitiveConvertor {
     
     
     /**
-     * @return HWP_ConfigurationConvertor instance 
+     * @return {@code HWP_ConfigurationConvertor} instance 
      */
     static public HWP_ConfigurationConvertor getInstance() {
         return instance;
@@ -74,9 +74,7 @@ public final class HWP_ConfigurationConvertor extends PrimitiveConvertor {
     
     /**
      * Currently not supported. Throws {@code UnsupportedOperationException }.
-     * @param value Java object to convert
-     * @return
-     * @throws ValueConversionException 
+     * @throws UnsupportedOperationException 
      */
     @Override
     public short[] toProtoValue(Object value) throws ValueConversionException {

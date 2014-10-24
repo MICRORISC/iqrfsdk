@@ -23,18 +23,12 @@ public final class FRC_CommandConvertor extends AbstractConvertor {
     
     
     /**
-     * @return FRC_CommandConvertor instance 
+     * @return {@code FRC_CommandConvertor} instance 
      */
     static public FRC_CommandConvertor getInstance() {
         return instance;
     }
     
-    /**
-     * Currently not supported. Throws {@code UnsupportedOperationException }.
-     * @param value
-     * @return
-     * @throws ValueConversionException 
-     */
     @Override
     public short[] toProtoValue(Object value) throws ValueConversionException {
         logger.debug("toProtoValue - start: value={}", value);
@@ -52,7 +46,11 @@ public final class FRC_CommandConvertor extends AbstractConvertor {
         logger.debug("toProtoValue - end: {}", protoValue);
         return protoValue;
     }
-
+    
+    /**
+     * Currently not supported. Throws {@code UnsupportedOperationException }.
+     * @throws UnsupportedOperationException 
+     */
     @Override
     public Object toObject(short[] protoValue) throws ValueConversionException {
         throw new UnsupportedOperationException("Currently not supported.");

@@ -10,18 +10,18 @@ import org.apache.commons.configuration.Configuration;
 /**
  * Factory for creation of network layers, which are bound to UDP GW-ETH.
  * <p>
- * Two types of UDP network layer is supported:
+ * Two types of UDP network layer is supported: <br>
  * 1. bound to single network: supports only one specified network <br>
  * 2. multinetwork: is able to work with arbitrary UDP network <br>
  * 
  * If user want to create type 1 of network, it must correctly specify <b>remote address</b> 
- * and <b>remote port</b> through configuration settings:
+ * and <b>remote port</b> through configuration settings: <br>
  * <b>networkLayer.type.udp.remoteaddress</b> and <b>networkLayer.type.udp.remoteport</b>.
  * If <b>neither</b> of the two settings are specified, type 2 of network layer is created.
  * 
  * <p>
  * Particular network layer version to create is specified by configuration key:
- * <b>networkLayer.type.udp.version</b>. If no such key is present in configuation
+ * <b>networkLayer.type.udp.version</b>. If no such key is present in configuration
  * properties, version of "01" is assumed.
  * 
  * @author Michal Konopa
@@ -64,10 +64,11 @@ extends AbstractNetworkLayerFactory<Configuration, NetworkLayer> {
      * Creates network layer parameters encapsulation object.
      * @param connectionStorage
      * @param configuration
-     * @return 
+     * @return network layer parameters encapsulation object
      */
-    private NetworkLayerParams createNetworkLayerParams(NetworkConnectionStorage connectionStorage, 
-            Configuration configuration) {
+    private NetworkLayerParams createNetworkLayerParams(
+            NetworkConnectionStorage connectionStorage, Configuration configuration
+    ) {
         String localAddress = configuration.getString("networkLayer.type.udp.localaddress", "");
         int localPort = configuration.getInt("networkLayer.type.udp.localport", -1);
         String remoteAddress = configuration.getString("networkLayer.type.udp.remoteaddress", "");
@@ -86,10 +87,7 @@ extends AbstractNetworkLayerFactory<Configuration, NetworkLayer> {
     }
     
     /**
-     * Returns type of UDP network layer.
-     * @param configuration configuration to explore
-     * @return
-     * @throws Exception 
+     * @return type of UDP network layer 
      */
     private NetworkLayerType getNetworkLayerType(Configuration configuration) 
             throws Exception {

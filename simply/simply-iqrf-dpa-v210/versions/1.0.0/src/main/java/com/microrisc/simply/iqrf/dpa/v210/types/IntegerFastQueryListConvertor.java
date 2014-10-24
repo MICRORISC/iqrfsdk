@@ -30,7 +30,10 @@ public final class IntegerFastQueryListConvertor extends AbstractConvertor {
         return instance;
     }
     
-    
+    /**
+     * Currently not supported. Throws {@code UnsupportedOperationException }.
+     * @throws UnsupportedOperationException 
+     */
     @Override
     public short[] toProtoValue(Object value) throws ValueConversionException {
         throw new UnsupportedOperationException("Currently not supported");

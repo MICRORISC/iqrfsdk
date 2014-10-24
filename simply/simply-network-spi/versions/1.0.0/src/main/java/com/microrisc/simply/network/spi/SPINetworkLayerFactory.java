@@ -16,14 +16,14 @@ import org.apache.commons.configuration.Configuration;
  * 
  * <p>
  * <b>Autoconfiguration</b> is the process, during which a SPI-port to use is deduced
- * from a Network Connection Storage's information by this way:
+ * from a Network Connection Storage's information by this way: <br>
  * - if there aren't any Connection Info records in the Network Connection Storage,
- *   autoconfiguration ends up with an error
+ *   autoconfiguration ends up with an error <br>
  * - if the Network Connection Storage contains some Connection Info records, which
  *    relates to other type of connections then SPI-port is, autoconfiguration 
- *    ends up with an error
+ *    ends up with an error <br>
  * - if the Network Connection Storage contains more Connection Info records, which
- *   relate to different SPI-ports, autoconfiguration ends up with an error
+ *   relate to different SPI-ports, autoconfiguration ends up with an error <br>
  * - if any of the preceding cases comes, then the SPI-port is obtained from some
  *   of the Connection Info records in the Network Connection Storage
  * 
@@ -77,10 +77,10 @@ extends AbstractNetworkLayerFactory<Configuration, NetworkLayer> {
     }
     
     /**
-     * Creates network layer parameters encapsulation object.
+     * Creates and returns network layer parameters encapsulation object.
      * @param connectionStorage
      * @param configProps
-     * @return 
+     * @return network layer parameters encapsulation object
      */
     private NetworkLayerParams createNetworkLayerParams(
             NetworkConnectionStorage connectionStorage, Configuration configProps
@@ -93,7 +93,7 @@ extends AbstractNetworkLayerFactory<Configuration, NetworkLayer> {
      * Creates SPI network layer - according to specified network layer
      * parameters and version.
      * @param networkParams network layer parameters
-     * @return 
+     * @return SPI network layer
      */
     private SPINetworkLayer createSPINetworkLayer(NetworkLayerParams networkParams) 
             throws Exception {

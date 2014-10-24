@@ -32,9 +32,9 @@ extends DPA_StandardServices, GenericAsyncCallable, MethodIdTransformer {
     
     /**
      * Reads on-board thermometer sensor value.
-     * Synchronous wrapper for {@link #async_getState() async_getState} method.
+     * Synchronous wrapper for {@link #async_get() async_get} method.
      * @return actual state of Thermometer<br>
-     *         {@code null}, if an error has occurred during processing
+     *         {@code null} if an error has occurred during processing
      */
     Thermometer_values get();
 }

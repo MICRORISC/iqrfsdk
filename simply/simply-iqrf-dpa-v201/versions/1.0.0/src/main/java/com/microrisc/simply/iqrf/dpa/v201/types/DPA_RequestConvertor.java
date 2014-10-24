@@ -31,7 +31,7 @@ public final class DPA_RequestConvertor extends AbstractConvertor {
     
     
     /**
-     * @return DPA_RequestConvertor instance
+     * @return {@code DPA_RequestConvertor} instance
      */
     static public DPA_RequestConvertor getInstance() {
         return instance;
@@ -134,7 +134,11 @@ public final class DPA_RequestConvertor extends AbstractConvertor {
         logger.debug("toProtoValue - end: {}", serRequest);
         return serRequest; 
     }
-
+    
+    /**
+     * Currently not supported. Throws {@code UnsupportedOperationException }.
+     * @throws UnsupportedOperationException 
+     */
     @Override
     public Object toObject(short[] protoValue) throws ValueConversionException {
         throw new UnsupportedOperationException("Not supported yet.");

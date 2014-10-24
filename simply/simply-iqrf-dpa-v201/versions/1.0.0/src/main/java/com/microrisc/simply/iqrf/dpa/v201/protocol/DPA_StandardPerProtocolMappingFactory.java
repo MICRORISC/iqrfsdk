@@ -968,8 +968,7 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
     }
         
     /**
-     * Creates map of mapping of Device Interfaces into protocol packets.
-     * @return 
+     * @return map of mapping of Device Interfaces into protocol packets
      */
     static private Map<Class, InterfaceToPacketMapping> createRequestIfaceMappings() {
         Map<Class, InterfaceToPacketMapping> mappings = new HashMap<>();

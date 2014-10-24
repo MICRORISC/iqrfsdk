@@ -22,7 +22,7 @@ public final class IO_DirectionSettingsConvertor extends PrimitiveConvertor {
     private IO_DirectionSettingsConvertor() {}
     
     /**
-     * @return IO_DirectionSettingsConvertor instance 
+     * @return {@code IO_DirectionSettingsConvertor} instance 
      */
     static public IO_DirectionSettingsConvertor getInstance() {
         return instance;
@@ -60,7 +60,11 @@ public final class IO_DirectionSettingsConvertor extends PrimitiveConvertor {
         logger.debug("toProtoValue - end: {}", protoValue);
         return protoValue;
     }
-
+    
+    /**
+     * Currently not supported. Throws {@code UnsupportedOperationException }.
+     * @throws UnsupportedOperationException 
+     */
     @Override
     public Object toObject(short[] protoValue) throws ValueConversionException {
         throw new UnsupportedOperationException("Currently not supported");

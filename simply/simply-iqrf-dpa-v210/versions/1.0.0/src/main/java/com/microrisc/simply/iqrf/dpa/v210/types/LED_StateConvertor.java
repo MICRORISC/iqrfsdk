@@ -39,10 +39,7 @@ public final class LED_StateConvertor extends PrimitiveConvertor {
     // postitions of fields
     static private final int STATE_POS = 0;
     
-    /**
-     * Currently not supported. Throws {@code UnsupportedOperationException }.
-     * @throws UnsupportedOperationException 
-     */
+    
     @Override
     public short[] toProtoValue(Object value) throws ValueConversionException {
         logger.debug("toProtoValue - start: value={}", value);

@@ -5,7 +5,9 @@ package com.microrisc.simply.network.udp.gweth;
  * Transformation of Simply data to and from GW-ETH-01 protocol. 
  * <p>
  * CRC computation was adopted from 
- * {@link http://introcs.cs.princeton.edu/java/51data/CRC16CCITT.java.html} site.
+ * <a href="http://introcs.cs.princeton.edu/java/51data/CRC16CCITT.java.html">
+ * http://introcs.cs.princeton.edu/java/51data/CRC16CCITT.java.html</a>
+ * site.
  * 
  * @author Michal Konopa
  */
@@ -219,8 +221,8 @@ public class GWETH_DataTransformer {
     /**
      * Returns {@code true} if the specified message is asynchrounous message.
      * @param message message to check for asynchronity
-     * @return {@code true} if the specified message is asynchrounous message
-     * @return {@code false}, otherwise
+     * @return {@code true} if the specified message is asynchrounous message <br>
+     *         {@code false} otherwise
      */
     public static boolean isAsynchronousMessage(short[] message) {
         checkMessageFromGW(message);
@@ -231,8 +233,8 @@ public class GWETH_DataTransformer {
      * Returns {@code true} if the specified message has answer indication, i.e.
      * bit 7 of CMD is set.
      * @param message message to check
-     * @return {@code true} if the specified message has answer indication
-     * @return {@code false}, otherwise
+     * @return {@code true} if the specified message has answer indication <br>
+     *         {@code false} otherwise
      */
     public static boolean hasAnswerIndication(short[] message) {
         checkMessageFromGW(message);
@@ -241,7 +243,7 @@ public class GWETH_DataTransformer {
     
     /**
      * Returns DATA part of specified GW message. 
-     * @param message source message from GW
+     * @param messageFromGW source message from GW
      * @return DATA part of specified GW message
      */
     public static short[] getDataFromMessage(short[] messageFromGW) {

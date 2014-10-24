@@ -481,7 +481,7 @@ public final class DPA_ProtocolProperties {
     
     /**
      * Retruns response code length.
-     * @return 
+     * @return response code length
      */
     static int getResponseCodeLength() {
         return RESPONSE_CODE_LENGTH;

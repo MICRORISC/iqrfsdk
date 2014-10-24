@@ -40,6 +40,10 @@ public final class DiscoveredNodesConvertor extends PrimitiveConvertor {
         return TYPE_SIZE;
     }
     
+    /**
+     * Currently not supported. Throws {@code UnsupportedOperationException }.
+     * @throws UnsupportedOperationException 
+     */
     @Override
     public short[] toProtoValue(Object value) throws ValueConversionException {
         throw new UnsupportedOperationException("Currently not supported");

@@ -24,13 +24,16 @@ public final class IntegerFastQueryListConvertor extends AbstractConvertor {
     private IntegerFastQueryListConvertor() {}
     
     /**
-     * @return IntegerFastQueryListConvertor instance 
+     * @return {@code IntegerFastQueryListConvertor} instance 
      */
     static public IntegerFastQueryListConvertor getInstance() {
         return instance;
     }
     
-    
+    /**
+     * Currently not supported. Throws {@code UnsupportedOperationException }.
+     * @throws UnsupportedOperationException 
+     */
     @Override
     public short[] toProtoValue(Object value) throws ValueConversionException {
         throw new UnsupportedOperationException("Currently not supported");
@@ -40,7 +43,7 @@ public final class IntegerFastQueryListConvertor extends AbstractConvertor {
     public Object toObject(short[] protoValue) throws ValueConversionException {
         logger.debug("toObject - start: protoValue={}", protoValue);
         
-        List<Integer> membersList = new LinkedList<Integer>();
+        List<Integer> membersList = new LinkedList<>();
         for (int byteId = 0; byteId < protoValue.length; byteId++) {
             if (protoValue[byteId] == 0) {
                 continue;

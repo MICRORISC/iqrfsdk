@@ -23,7 +23,6 @@ public final class BaudRateConvertor extends PrimitiveConvertor {
     private static final BaudRateConvertor instance = new BaudRateConvertor();
     
     
-    
     /** Size of returned response. */
     static public final int TYPE_SIZE = 1;
     
@@ -32,10 +31,8 @@ public final class BaudRateConvertor extends PrimitiveConvertor {
     
     
     
-    
-    
     /**
-     * @return BaudRateConvertor instance 
+     * @return {@code BaudRateConvertor} instance 
      */
     static public BaudRateConvertor getInstance() {
         return instance;
@@ -63,6 +60,10 @@ public final class BaudRateConvertor extends PrimitiveConvertor {
         return protoValue;
     }
 
+    /**
+     * Currently not supported. Throws {@code UnsupportedOperationException }.
+     * @throws UnsupportedOperationException 
+     */
     @Override
     public Object toObject(short[] protoValue) throws ValueConversionException {
         throw new UnsupportedOperationException("Not supported yet.");

@@ -7,7 +7,6 @@ package com.microrisc.simply.iqrf.dpa.v201.types;
  * @author Michal Konopa
  */
 public final class PWM_Parameters {
-    
     /**
      * Prescaler type.
      */
@@ -32,7 +31,7 @@ public final class PWM_Parameters {
     /**
      * Returns enum value corresponding to specified integer value.
      * @param prescalerValue
-     * @return 
+     * @return enum value corresponding to specified integer value
      */
     private Prescaler getPrescaler(int prescalerValue) {
         for (Prescaler prescEnum : Prescaler.values()) {

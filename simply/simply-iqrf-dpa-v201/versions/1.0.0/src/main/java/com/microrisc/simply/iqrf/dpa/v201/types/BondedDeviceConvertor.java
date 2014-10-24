@@ -32,13 +32,8 @@ public final class BondedDeviceConvertor extends PrimitiveConvertor {
     static private final int BONDED_DEV_NUM_POS = 1;
     
     
-    
-    
-    
-    
-    
     /**
-     * @return BondedDeviceConvertor instance 
+     * @return {@code BondedDeviceConvertor} instance 
      */
     static public BondedDeviceConvertor getInstance() {
         return instance;
@@ -51,9 +46,7 @@ public final class BondedDeviceConvertor extends PrimitiveConvertor {
 
     /**
      * Currently not supported. Throws {@code UnsupportedOperationException }.
-     * @param value
-     * @return
-     * @throws ValueConversionException 
+     * @throws UnsupportedOperationException 
      */
     @Override
     public short[] toProtoValue(Object value) throws ValueConversionException {

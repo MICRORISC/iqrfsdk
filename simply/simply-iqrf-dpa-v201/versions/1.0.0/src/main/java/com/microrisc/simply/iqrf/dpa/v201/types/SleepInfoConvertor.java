@@ -27,7 +27,6 @@ public final class SleepInfoConvertor extends PrimitiveConvertor {
     static private final int CONTROL_POS = 2;
     
     
-    
     private SleepInfoConvertor() {}
     
     /** Singleton. */
@@ -35,7 +34,7 @@ public final class SleepInfoConvertor extends PrimitiveConvertor {
     
     
     /**
-     * @return OsInfoConvertor instance 
+     * @return {@code OsInfoConvertor} instance 
      */
     static public SleepInfoConvertor getInstance() {
         return instance;
@@ -58,12 +57,6 @@ public final class SleepInfoConvertor extends PrimitiveConvertor {
         }
     }
     
-    /**
-     * Currently not supported. Throws {@code UnsupportedOperationException }.
-     * @param value
-     * @return
-     * @throws ValueConversionException 
-     */
     @Override
     public short[] toProtoValue(Object value) throws ValueConversionException {
         logger.debug("toProtoValue - start: value={}", value);
@@ -81,7 +74,11 @@ public final class SleepInfoConvertor extends PrimitiveConvertor {
         logger.debug("toProtoValue - end: {}", protoValue);
         return protoValue;
     }
-
+    
+    /**
+     * Currently not supported. Throws {@code UnsupportedOperationException }.
+     * @throws UnsupportedOperationException 
+     */
     @Override
     public Object toObject(short[] protoValue) throws ValueConversionException {
         throw new UnsupportedOperationException("Not supported yet.");

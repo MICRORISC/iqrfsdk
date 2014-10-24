@@ -40,12 +40,7 @@ public final class IO_StateConvertor extends PrimitiveConvertor {
     static private final int STATE_POS = 0;
     static private final int DIRECTION_POS = 1;
     
-    
 
-    /**
-     * Currently not supported. Throws {@code UnsupportedOperationException }.
-     * @throws UnsupportedOperationException 
-     */
     @Override
     public short[] toProtoValue(Object value) throws ValueConversionException {
         logger.debug("toProtoValue - start: value={}", value);

@@ -35,7 +35,7 @@ extends DPA_StandardServices, GenericAsyncCallable, MethodIdTransformer {
     
     /**
      * Reads in data of specified length from specified block.
-     * Synchronous wrapper for {@link #async_read() async_read} method.
+     * Synchronous wrapper for {@link #async_read(int, int)  async_read} method.
      * @param blockNumber number of (zero based) block to read from
      * @param length length of the data to read (in bytes), must be equal to the block size
      * @return read data <br>
@@ -55,7 +55,7 @@ extends DPA_StandardServices, GenericAsyncCallable, MethodIdTransformer {
     
     /**
      * Writes specified data to specified address.
-     * Synchronous wrapper for {@link #async_write() async_write} method.
+     * Synchronous wrapper for {@link #async_write(int, short[])  async_write} method.
      * @param blockNumber number of (zero based) block to write the data into
      * @param data actual data to be written to the memory, its length must be 
      *             equal to the block size

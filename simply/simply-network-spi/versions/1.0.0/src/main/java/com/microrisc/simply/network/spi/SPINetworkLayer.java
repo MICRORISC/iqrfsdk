@@ -16,6 +16,11 @@ import java.util.Queue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Implements network layer using {@code com.microrisc.rpi.spi.iqrf.SimpleSPI_Master} object.
+ * 
+ * @author Rostislav Spinar
+ */
 public final class SPINetworkLayer extends AbstractNetworkLayer {
     /**
      * Logger.
@@ -141,7 +146,7 @@ public final class SPINetworkLayer extends AbstractNetworkLayer {
     private class ListenerCaller extends Thread {
 
         // already consumed data from socket
-        private Queue<short[]> consumedData = new LinkedList<short[]>();
+        private Queue<short[]> consumedData = new LinkedList<>();
 
         // indicates, wheather new data are from SPI
         private boolean areDataReadyFromSPI() {
@@ -272,6 +277,7 @@ public final class SPINetworkLayer extends AbstractNetworkLayer {
         this.connectionInfo = new BaseSPIPortConnectionInfo(portName);
     }
 
+    @Override
     public void start() throws NetworkLayerException {
         logger.debug("startReceivingData - start:");
 
@@ -283,7 +289,7 @@ public final class SPINetworkLayer extends AbstractNetworkLayer {
         }
 
         // init queue of data comming from SPI
-        dataFromSPI = new LinkedList<short[]>();
+        dataFromSPI = new LinkedList<>();
 
         // creating and starting threads
         createAndStartThreads();
@@ -292,16 +298,19 @@ public final class SPINetworkLayer extends AbstractNetworkLayer {
         logger.debug("startReceivingData - end");
     }
 
+    @Override
     public void registerListener(NetworkLayerListener listener) {
         this.networkListener = listener;
         logger.info("Listener registered");
     }
 
+    @Override
     public void unregisterListener() {
         networkListener = null;
         logger.info("Listener unregistered");
     }
 
+    @Override
     public void sendData(NetworkData networkData) throws NetworkLayerException {
         logger.debug("sendData - start: networkData={}", networkData);
 
@@ -347,6 +356,7 @@ public final class SPINetworkLayer extends AbstractNetworkLayer {
         }
     }
 
+    @Override
     public void destroy() {
         logger.debug("destroy - start: ");
         

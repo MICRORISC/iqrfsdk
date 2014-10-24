@@ -102,11 +102,12 @@ extends AbstractInitObjectsFactory<Configuration, SimpleDPA_InitObjects>
     /**
      * Creates user peripherals to device interface mapping.
      * @param configuration configuration to use
-     * @return
+     * @return user peripherals to device interface mapping
      * @throws Exception 
      */
-    private PeripheralToDevIfaceMapper createUserPerToDevIfaceMapper(Configuration configuration) 
-           throws Exception {
+    private PeripheralToDevIfaceMapper createUserPerToDevIfaceMapper(
+            Configuration configuration
+    ) throws Exception {
        String factoryClassName = configuration.getString("dpa.perToDevIfaceMapper.factory.class", "");
        // if user hasn't defined his mapping
        if ( factoryClassName.isEmpty() ) {

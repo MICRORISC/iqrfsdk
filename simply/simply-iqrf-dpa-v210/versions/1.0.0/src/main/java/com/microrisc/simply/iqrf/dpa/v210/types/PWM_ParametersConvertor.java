@@ -37,12 +37,10 @@ public final class PWM_ParametersConvertor extends PrimitiveConvertor {
         return TYPE_SIZE;
     }
     
-    
     // postitions of fields
     static private final int PRESCALER_POS = 0;
     static private final int PERIOD_POS = 1;
     static private final int DUTY_CYCLE_POS = 2;
-    
     
     
     /**
@@ -89,7 +87,11 @@ public final class PWM_ParametersConvertor extends PrimitiveConvertor {
         logger.debug("toProtoValue - end: {}", protoValue);
         return protoValue;
     }
-
+    
+    /**
+     * Currently not supported. Throws {@code UnsupportedOperationException }.
+     * @throws UnsupportedOperationException 
+     */
     @Override
     public Object toObject(short[] protoValue) throws ValueConversionException {
         throw new UnsupportedOperationException("Currently not supported");

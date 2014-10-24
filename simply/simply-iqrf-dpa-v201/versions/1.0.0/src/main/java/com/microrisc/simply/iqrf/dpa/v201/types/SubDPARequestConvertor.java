@@ -23,7 +23,7 @@ public final class SubDPARequestConvertor extends AbstractConvertor {
     
     
     /**
-     * @return SubDPARequestConvertor instance 
+     * @return {@code SubDPARequestConvertor} instance 
      */
     static public SubDPARequestConvertor getInstance() {
         return instance;
@@ -42,12 +42,6 @@ public final class SubDPARequestConvertor extends AbstractConvertor {
     static private final int SUB_PDATA_POS = 6;
 
 
-    /**
-     * Currently not supported. Throws {@code UnsupportedOperationException }.
-     * @param value
-     * @return
-     * @throws ValueConversionException 
-     */
     @Override
     public short[] toProtoValue(Object value) throws ValueConversionException {
         logger.debug("toProtoValue - start: value={}", value);
@@ -74,7 +68,11 @@ public final class SubDPARequestConvertor extends AbstractConvertor {
         logger.debug("toProtoValue - end: {}", protoValue);
         return protoValue;
     }
-
+    
+    /**
+     * Currently not supported. Throws {@code UnsupportedOperationException }.
+     * @throws UnsupportedOperationException 
+     */
     @Override
     public Object toObject(short[] protoValue) throws ValueConversionException {
         throw new UnsupportedOperationException("Not supported yet.");

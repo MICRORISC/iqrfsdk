@@ -176,7 +176,7 @@ extends AbstractInitializer<SimpleDPA_InitObjects, Network> {
     /**
      * Returns list of bonded nodes IDs.
      * @param coord coordinator to use
-     * @return 
+     * @return list of bonded nodes IDs
      */
     private List<Integer> getBondedNodesIds(Coordinator coord) throws Exception {
         logger.debug("getBondedNodesIds - start: coord={}", coord);
@@ -213,7 +213,7 @@ extends AbstractInitializer<SimpleDPA_InitObjects, Network> {
      * Creates node for specified nodeId and returns it.
      * @param networkId network ID
      * @param nodeId node ID
-     * @return 
+     * @return node for specified nodeId
      */
     Node createNode(String networkId, String nodeId) throws Exception {
         logger.debug("createNode - start: networkId={}, nodeId={}", networkId, nodeId);

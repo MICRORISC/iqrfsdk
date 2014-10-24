@@ -24,7 +24,7 @@ public final class BatchCommandConvertor extends AbstractConvertor {
     private static final BatchCommandConvertor instance = new BatchCommandConvertor();
     
      /**
-     * @return BatchCommandConvertor instance
+     * @return {@code BatchCommandConvertor} instance
      */
     static public BatchCommandConvertor getInstance() {
         return instance;
@@ -33,7 +33,7 @@ public final class BatchCommandConvertor extends AbstractConvertor {
     /**
      * Serializes specified serialized requests into one final sequence of bytes. 
      * @param serRequests source request to put into final sequence
-     * @return 
+     * @return specified serialized requests into one final sequence of bytes
      */
     private short[] serializeToArray(List<short[]> serRequests) {
         final byte BATCH_LAST_BYTE = 0;
@@ -82,7 +82,11 @@ public final class BatchCommandConvertor extends AbstractConvertor {
         logger.debug("toProtoValue - end: {}", protoValue);
         return protoValue;
     }
-
+    
+    /**
+     * Currently not supported. Throws {@code UnsupportedOperationException }.
+     * @throws UnsupportedOperationException 
+     */
     @Override
     public Object toObject(short[] protoValue) throws ValueConversionException {
         throw new UnsupportedOperationException("Not supported yet.");

@@ -23,7 +23,7 @@ public final class PWM_ParametersConvertor extends PrimitiveConvertor {
     
     
     /**
-     * @return PWM_ParametersConvertor instance 
+     * @return {@code PWM_ParametersConvertor} instance 
      */
     static public PWM_ParametersConvertor getInstance() {
         return instance;
@@ -37,19 +37,17 @@ public final class PWM_ParametersConvertor extends PrimitiveConvertor {
         return TYPE_SIZE;
     }
     
-    
     // postitions of fields
     static private final int PRESCALER_POS = 0;
     static private final int PERIOD_POS = 1;
     static private final int DUTY_CYCLE_POS = 2;
-    
-    
+   
     
     /**
      * Returns serialized prescaler value. 
      * @param prescaler
      * @param dutyCycle
-     * @return 
+     * @return serialized prescaler value
      */
     private short getSerializedPrescaler(PWM_Parameters.Prescaler prescaler, int dutyCycle) {
         short serPrescaler = (short)prescaler.getPrescalerValue();
@@ -61,7 +59,7 @@ public final class PWM_ParametersConvertor extends PrimitiveConvertor {
     /**
      * Returns serialized duty cycle value. 
      * @param dutyCycle
-     * @return 
+     * @return serialized duty cycle value
      */
     private short getSerializedDutyCycle(int dutyCycle) {
         short serDutyCycle = 0;
@@ -94,7 +92,11 @@ public final class PWM_ParametersConvertor extends PrimitiveConvertor {
         logger.debug("toProtoValue - end: {}", protoValue);
         return protoValue;
     }
-
+    
+    /**
+     * Currently not supported. Throws {@code UnsupportedOperationException }.
+     * @throws UnsupportedOperationException 
+     */
     @Override
     public Object toObject(short[] protoValue) throws ValueConversionException {
         throw new UnsupportedOperationException("Currently not supported");

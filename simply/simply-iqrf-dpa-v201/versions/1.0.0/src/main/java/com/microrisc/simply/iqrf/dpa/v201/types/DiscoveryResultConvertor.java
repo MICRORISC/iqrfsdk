@@ -29,7 +29,7 @@ public final class DiscoveryResultConvertor extends PrimitiveConvertor {
     
     
     /**
-     * @return DiscoveryResultConvertor instance 
+     * @return {@code DiscoveryResultConvertor} instance 
      */
     static public DiscoveryResultConvertor getInstance() {
         return instance;
@@ -42,9 +42,7 @@ public final class DiscoveryResultConvertor extends PrimitiveConvertor {
 
     /**
      * Currently not supported. Throws {@code UnsupportedOperationException }.
-     * @param value
-     * @return
-     * @throws ValueConversionException 
+     * @throws UnsupportedOperationException 
      */
     @Override
     public short[] toProtoValue(Object value) throws ValueConversionException {

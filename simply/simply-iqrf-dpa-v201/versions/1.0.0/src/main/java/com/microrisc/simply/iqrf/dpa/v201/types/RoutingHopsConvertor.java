@@ -37,8 +37,6 @@ public final class RoutingHopsConvertor extends PrimitiveConvertor {
         return TYPE_SIZE;
     }
     
-    
-    
     // postitions of fields
     static private final int REQUEST_HOPS_POS = 0;
     static private final int RESPONSE_HOPS_POS = 1;

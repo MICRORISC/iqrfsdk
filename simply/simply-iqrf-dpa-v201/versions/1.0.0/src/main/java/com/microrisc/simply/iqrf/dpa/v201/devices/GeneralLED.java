@@ -36,7 +36,7 @@ extends DPA_StandardServices, GenericAsyncCallable, MethodIdTransformer {
     
     /**
      * Sets the LED to specifed state.
-     * Synchronous wrapper for {@link #async_set(LED_State.class) async_set} method.
+     * Synchronous wrapper for {@link #async_set(com.microrisc.simply.iqrf.dpa.v201.types.LED_State)  async_set} method.
      * @param state to set the LED into
      * @return {@code VoidType} object, if method call has processed allright <br>
      *         {@code null}, if an error has occured during processing
@@ -52,7 +52,7 @@ extends DPA_StandardServices, GenericAsyncCallable, MethodIdTransformer {
     
     /**
      * Gets actual state of the LED.
-     * Synchronous wrapper for {@link #async_getState() async_getState} method.
+     * Synchronous wrapper for {@link #async_get() async_get} method.
      * @return actual state of LED <br>
      *         {@code null}, if an error has occurred during processing
      */

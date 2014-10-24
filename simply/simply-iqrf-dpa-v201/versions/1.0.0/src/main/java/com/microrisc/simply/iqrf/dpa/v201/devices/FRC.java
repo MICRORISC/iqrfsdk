@@ -31,7 +31,7 @@ extends DPA_StandardServices, GenericAsyncCallable, MethodIdTransformer {
     /**
      * This command starts Fast Response Command (FRC) process supported by IQRF OS. 
      * Synchronous wrapper for 
-     * {@link #async_send(FRC_Command.class) async_send} method.
+     * {@link #async_send(com.microrisc.simply.iqrf.dpa.v201.types.FRC_Command) async_send} method.
      * @param frcCmd FRC command to use
      * @return FRC data collected from nodes
      */
@@ -41,7 +41,7 @@ extends DPA_StandardServices, GenericAsyncCallable, MethodIdTransformer {
      * Reads remaining bytes of the FRC result, so the total number of bytes obtained 
      * by both commands will be total 64. 
      * Synchronous wrapper for 
-     * {@link #async_async_extraResult() async_async_extraResult} method.
+     * {@link #async_extraResult() async_extraResult} method.
      * 
      * @return remaining bytes of the FRC result
      */

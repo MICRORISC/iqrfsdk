@@ -39,13 +39,10 @@ public final class SleepInfoConvertor extends PrimitiveConvertor {
         return TYPE_SIZE;
     }
     
-    
     // postitions of fields
     static private final int TIME_POS = 0;
     static private final int TIME_LENGTH = 2;
     static private final int CONTROL_POS = 2;
-    
-    
     
     
     // puts specified time value into specified protocol message 
@@ -59,10 +56,7 @@ public final class SleepInfoConvertor extends PrimitiveConvertor {
         }
     }
     
-    /**
-     * Currently not supported. Throws {@code UnsupportedOperationException }.
-     * @throws UnsupportedOperationException 
-     */
+
     @Override
     public short[] toProtoValue(Object value) throws ValueConversionException {
         logger.debug("toProtoValue - start: value={}", value);
@@ -80,7 +74,11 @@ public final class SleepInfoConvertor extends PrimitiveConvertor {
         logger.debug("toProtoValue - end: {}", protoValue);
         return protoValue;
     }
-
+    
+    /**
+     * Currently not supported. Throws {@code UnsupportedOperationException }.
+     * @throws UnsupportedOperationException 
+     */
     @Override
     public Object toObject(short[] protoValue) throws ValueConversionException {
         throw new UnsupportedOperationException("Not supported yet.");

@@ -84,6 +84,10 @@ public final class BatchCommandConvertor extends AbstractConvertor {
         return protoValue;
     }
 
+    /**
+     * Currently not supported. Throws {@code UnsupportedOperationException }.
+     * @throws UnsupportedOperationException 
+     */
     @Override
     public Object toObject(short[] protoValue) throws ValueConversionException {
         throw new UnsupportedOperationException("Not supported yet.");

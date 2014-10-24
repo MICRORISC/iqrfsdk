@@ -23,7 +23,7 @@ public final class ThermometerValueConvertor extends PrimitiveConvertor {
     
     
     /**
-     * @return ThermometerValueConvertor instance 
+     * @return {@code ThermometerValueConvertor} instance 
      */
     static public ThermometerValueConvertor getInstance() {
         return instance;
@@ -37,20 +37,16 @@ public final class ThermometerValueConvertor extends PrimitiveConvertor {
         return TYPE_SIZE;
     }
     
-    
     // postitions of fields
     static private final int INT_VALUE_POS = 0;
     
     static private final int FULL_VALUE_POS = 1;
     static private final int FULL_VALUE_LENGTH = 2;
     
-    
 
     /**
      * Currently not supported. Throws {@code UnsupportedOperationException }.
-     * @param value
-     * @return
-     * @throws ValueConversionException 
+     * @throws UnsupportedOperationException 
      */
     @Override
     public short[] toProtoValue(Object value) throws ValueConversionException {

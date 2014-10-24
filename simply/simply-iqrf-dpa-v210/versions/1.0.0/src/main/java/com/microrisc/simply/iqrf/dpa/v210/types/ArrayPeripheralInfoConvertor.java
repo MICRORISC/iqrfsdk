@@ -35,7 +35,10 @@ public final class ArrayPeripheralInfoConvertor extends ArrayConvertor {
     }
     
     
-    
+    /**
+     * Currently not supported. Throws {@code UnsupportedOperationException }.
+     * @throws UnsupportedOperationException 
+     */
     @Override
     public short[] toProtoValue(Object value) throws ValueConversionException {
         throw new UnsupportedOperationException("Not supported yet.");

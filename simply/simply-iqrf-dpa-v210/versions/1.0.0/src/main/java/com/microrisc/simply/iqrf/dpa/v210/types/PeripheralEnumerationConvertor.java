@@ -42,8 +42,6 @@ public final class PeripheralEnumerationConvertor extends PrimitiveConvertor {
         return TYPE_SIZE;
     }
     
-    
-    
     // postitions of fields
     static private final int DPA_PROTO_MINOR_VERSION_POS = 0;
     static private final int DPA_PROTO_MAJOR_VERSION_POS = 
@@ -65,7 +63,7 @@ public final class PeripheralEnumerationConvertor extends PrimitiveConvertor {
     
     // returns array of numbers of supported peripheral
     private int[] getDefaultPeripherals(short[] defPers) {
-        List<Integer> perNumbersList = new LinkedList<Integer>();
+        List<Integer> perNumbersList = new LinkedList<>();
         
         int byteRank = 0;
         for (short defPersByte : defPers) {
@@ -111,9 +109,6 @@ public final class PeripheralEnumerationConvertor extends PrimitiveConvertor {
         }
         return byteBuffer.getInt(0);
     }
-    
-    
-    
 
     /**
      * Currently not supported. Throws {@code UnsupportedOperationException }.
