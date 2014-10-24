@@ -38,6 +38,16 @@
             <artifactId>hdlc-framing</artifactId>
             <version>1.0.0</version>
         </dependency>
+        <dependency>
+            <groupId>commons-configuration</groupId>
+            <artifactId>commons-configuration</artifactId>
+            <version>1.8</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.6</version>
+        </dependency>
     </dependencies>
     
     <build>
@@ -79,6 +89,11 @@
                         </goals>
                         <configuration>
                             <includeDependencySources>true</includeDependencySources>
+                            <includeTransitiveDependencySources>true</includeTransitiveDependencySources>
+                            <dependencySourceIncludes>
+                                <dependencySourceInclude>com.microrisc.simply:simply-core</dependencySourceInclude>
+                                <dependencySourceInclude>com.microrisc:hdlc-framing</dependencySourceInclude>
+                            </dependencySourceIncludes>
                         </configuration>
                     </execution>
             	</executions>

@@ -21,6 +21,16 @@
             <artifactId>simply-iqrf-dpa</artifactId>
             <version>2.0.0</version>
         </dependency>
+        <dependency>
+            <groupId>commons-configuration</groupId>
+            <artifactId>commons-configuration</artifactId>
+            <version>1.8</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.6</version>
+        </dependency>
     </dependencies>
     
     <build>
@@ -61,7 +71,14 @@
                             <goal>jar</goal>
                         </goals>
                         <configuration>
-                            <includeDependencySources>false</includeDependencySources>
+                            <includeDependencySources>true</includeDependencySources>
+                            <includeTransitiveDependencySources>true</includeTransitiveDependencySources>
+                            <dependencySourceIncludes>
+                                <dependencySourceInclude>com.microrisc.simply.iqrf.dpa:simply-iqrf-dpa</dependencySourceInclude>
+                                <dependencySourceInclude>com.microrisc.simply:simply-core</dependencySourceInclude>
+                                <dependencySourceInclude>com.microrisc.simply.iqrf:simply-iqrf</dependencySourceInclude>
+                                <dependencySourceInclude>com.microrisc.simply.asynchrony:simply-asynchrony</dependencySourceInclude>
+                            </dependencySourceIncludes>
                         </configuration>
                     </execution>
             	</executions>

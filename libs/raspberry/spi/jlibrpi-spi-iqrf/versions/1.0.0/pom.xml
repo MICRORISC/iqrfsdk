@@ -68,7 +68,10 @@
                             <goal>jar</goal>
                         </goals>
                         <configuration>
-                            <includeDependencySources>false</includeDependencySources>
+                            <includeDependencySources>true</includeDependencySources>
+                            <dependencySourceIncludes>
+                                <dependencySourceInclude>com.microrisc.rpi:jlibrpi-spi</dependencySourceInclude>
+                            </dependencySourceIncludes>
                         </configuration>
                     </execution>
             	</executions>

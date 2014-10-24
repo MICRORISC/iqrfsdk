@@ -28,24 +28,6 @@
             <artifactId>commons-configuration</artifactId>
             <version>1.8</version>
         </dependency>
-
-        <dependency>
-            <groupId>commons-lang</groupId>
-            <artifactId>commons-lang</artifactId>
-            <version>2.6</version>
-        </dependency>
-
-        <dependency>
-            <groupId>commons-logging</groupId>
-            <artifactId>commons-logging</artifactId>
-            <version>1.1.1</version>
-        </dependency>
-        
-	<dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>1.7.2</version>
-        </dependency>
         <dependency>
             <groupId>com.microrisc.simply.iqrf</groupId>
             <artifactId>simply-iqrf</artifactId>
@@ -55,6 +37,11 @@
             <groupId>com.microrisc.simply.asynchrony</groupId>
             <artifactId>simply-asynchrony</artifactId>
             <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.6</version>
         </dependency>
     </dependencies>
     <build>
@@ -95,7 +82,13 @@
                             <goal>jar</goal>
                         </goals>
                         <configuration>
-                            <includeDependencySources>false</includeDependencySources>
+                            <includeDependencySources>true</includeDependencySources>
+                            <includeTransitiveDependencySources>true</includeTransitiveDependencySources>
+                            <dependencySourceIncludes>
+                                <dependencySourceInclude>com.microrisc.simply:simply-core</dependencySourceInclude>
+                                <dependencySourceInclude>com.microrisc.simply.iqrf:simply-iqrf</dependencySourceInclude>
+                                <dependencySourceInclude>com.microrisc.simply.asynchrony:simply-asynchrony</dependencySourceInclude>
+                            </dependencySourceIncludes>
                         </configuration>
                     </execution>
                	</executions>

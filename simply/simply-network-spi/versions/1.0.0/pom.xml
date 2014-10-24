@@ -25,7 +25,7 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>1.7.2</version>
+            <version>1.7.6</version>
             <type>jar</type>
         </dependency>
         <dependency>
@@ -84,7 +84,13 @@
                             <goal>jar</goal>
                         </goals>
                         <configuration>
-                            <includeDependencySources>false</includeDependencySources>
+                            <includeDependencySources>true</includeDependencySources>
+                            <includeTransitiveDependencySources>true</includeTransitiveDependencySources>
+                            <dependencySourceIncludes>
+                                <dependencySourceInclude>com.microrisc.simply:simply-core</dependencySourceInclude>
+                                <dependencySourceInclude>com.microrisc.rpi:jlibrpi-spi</dependencySourceInclude>
+                                <dependencySourceInclude>com.microrisc.rpi:jlibrpi-spi-iqrf</dependencySourceInclude>
+                            </dependencySourceIncludes>
                         </configuration>
                     </execution>
             	</executions>
