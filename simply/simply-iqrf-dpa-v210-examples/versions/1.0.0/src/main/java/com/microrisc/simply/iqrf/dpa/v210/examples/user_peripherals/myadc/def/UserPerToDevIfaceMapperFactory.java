@@ -49,8 +49,8 @@ implements PeripheralToDevIfaceMapperFactory {
     
     
         public UserPerToDevIfaceMapper() {
-            peripheralToIface = new HashMap<String, Class>();
-            ifaceToPeripheral = new HashMap<Class, String>();
+            peripheralToIface = new HashMap<>();
+            ifaceToPeripheral = new HashMap<>();
             createMappings();
         }
     

@@ -121,7 +121,7 @@ public final class FRC_ResultParser {
             InvocationTargetException 
     {
         logger.debug("parseAsCollectedBytes - start: frcData={}, type={}", 
-                Arrays.toString(frcData), type
+            Arrays.toString(frcData), type
         );
         
         checkFrcData(frcData);

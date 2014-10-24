@@ -12,7 +12,8 @@ import com.microrisc.simply.iqrf.dpa.di_services.DPA_StandardServices;
  * @author Martin Strouhal
  */
 @DeviceInterface
-public interface MyADC extends DPA_StandardServices, GenericAsyncCallable, MethodIdTransformer {
+public interface MyADC 
+extends DPA_StandardServices, GenericAsyncCallable, MethodIdTransformer {
 
     /**
      * Identifiers of this Device Interface's methods.
@@ -23,9 +24,8 @@ public interface MyADC extends DPA_StandardServices, GenericAsyncCallable, Metho
 
     /**
      * Gets actual value of MyADC.
-     *
-     * @return actual value of MyADC <br> {@code Integer.MAX_VALUE}, if some error has occurred
-     * during processing
+     * @return actual value of MyADC <br> 
+     *         {@code Integer.MAX_VALUE} if an error has occurred during processing
      */
     int get();
 }

@@ -66,7 +66,7 @@ public final class Uns16Convertor extends PrimitiveConvertor {
     public Object toObject(short[] iqValue) throws ValueConversionException {
         logger.debug("toObject - start: iqValue={}", iqValue);
         
-        if (iqValue.length != TYPE_SIZE) {
+        if ( iqValue.length != TYPE_SIZE ) {
             throw new ValueConversionException(
                 "Argument length doesn't match with type size");
         }

@@ -12,13 +12,14 @@ import java.util.UUID;
  *
  * @author Martin Strouhal
  */
-public final class SimpleMyADC extends DPA_DeviceObject implements MyADC {
+public final class SimpleMyADC 
+extends DPA_DeviceObject implements MyADC {
 
     /**
      * Mapping of method IDs to theirs string representations.
      */
-    private static final Map<MyADC.MethodID, String> methodIdsMap = new EnumMap<>(
-            MyADC.MethodID.class);
+    private static final Map<MyADC.MethodID, String> methodIdsMap 
+            = new EnumMap<>(MyADC.MethodID.class);
 
     private static void initMethodIdsMap() {
         methodIdsMap.put(MyADC.MethodID.GET, "0");
@@ -28,20 +29,21 @@ public final class SimpleMyADC extends DPA_DeviceObject implements MyADC {
         initMethodIdsMap();
     }
 
-    public SimpleMyADC(String networkId, String nodeId,
-            ConnectorService connector,
-            CallRequestProcessingInfoContainer resultsContainer) {
+    public SimpleMyADC(
+            String networkId, String nodeId, ConnectorService connector,
+            CallRequestProcessingInfoContainer resultsContainer
+    ) {
         super(networkId, nodeId, connector, resultsContainer);
     }
 
     @Override
     public UUID call(Object methodId, Object[] args) {
         String methodIdStr = transform((MyADC.MethodID) methodId);
-        if (methodIdStr == null) {
+        if ( methodIdStr == null ) {
             return null;
         }
 
-        if (args == null) {
+        if ( args == null ) {
             return dispatchCall(methodIdStr, new Object[]{ getRequestHwProfile() });
         }
 
@@ -53,7 +55,7 @@ public final class SimpleMyADC extends DPA_DeviceObject implements MyADC {
 
     @Override
     public String transform(Object methodId) {
-        if (!(methodId instanceof MyADC.MethodID)) {
+        if ( !(methodId instanceof MyADC.MethodID)) {
             throw new IllegalArgumentException(
                     "Method ID must be of type MyADC.MethodID."
             );
@@ -64,10 +66,16 @@ public final class SimpleMyADC extends DPA_DeviceObject implements MyADC {
     @Override
     public int get() {
         UUID uid = dispatchCall("0", new Object[]{ getRequestHwProfile() },
-                getDefaultWaitingTimeout());
-        if (uid == null) {
+                getDefaultWaitingTimeout()
+        );
+        if ( uid == null ) {
             return Integer.MAX_VALUE;
         }
-        return getCallResult(uid, int.class, getDefaultWaitingTimeout());
+        
+        Integer result = getCallResult(uid, int.class, getDefaultWaitingTimeout());
+        if ( result == null ) {
+            return Integer.MAX_VALUE;
+        }
+        return result;
     }
 }

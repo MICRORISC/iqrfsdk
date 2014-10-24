@@ -39,18 +39,18 @@ public class UserProtocolMappingFactory implements ProtocolMappingFactory {
     // REQUEST MAPPING
     // returns currently empty list of mappings
     static private List<ConstValueToPacketMapping> createRequestConstMappings() {
-        List<ConstValueToPacketMapping> mappings = new LinkedList<ConstValueToPacketMapping>();
+        List<ConstValueToPacketMapping> mappings = new LinkedList<>();
         return mappings;
     }
 
     // returns empty list of mappings - more networks capability is not currently used
     static private List<ValueToPacketMapping> createRequestNetworkMappings() {
-        List<ValueToPacketMapping> mappings = new LinkedList<ValueToPacketMapping>();
+        List<ValueToPacketMapping> mappings = new LinkedList<>();
         return mappings;
     }
 
     static private List<ValueToPacketMapping> createRequestNodeMappings() {
-        List<ValueToPacketMapping> mappings = new LinkedList<ValueToPacketMapping>();
+        List<ValueToPacketMapping> mappings = new LinkedList<>();
         ValueToPacketMapping nodeMapping = new ValueToPacketMapping(0,
                 StringToByteConvertor.getInstance()
         );
@@ -60,24 +60,22 @@ public class UserProtocolMappingFactory implements ProtocolMappingFactory {
     
     // MyDallas18B20 interface
     static private MethodToPacketMapping createGetMapping() {
-        List<ConstValueToPacketMapping> constMapping = new LinkedList<ConstValueToPacketMapping>();
+        List<ConstValueToPacketMapping> constMapping = new LinkedList<>();
         constMapping.add(new ConstValueToPacketMapping(3, new short[]{0x00}));
 
-        List<ValueToPacketMapping> argMapping = new LinkedList<ValueToPacketMapping>();
+        List<ValueToPacketMapping> argMapping = new LinkedList<>();
         argMapping.add(new ValueToPacketMapping(4, Uns16Convertor.getInstance()));
 
         return new MethodToPacketMapping(constMapping, argMapping);
     }
 
     static private InterfaceToPacketMapping createRequestMyDeviceMapping() {
-        List<ConstValueToPacketMapping> constMappings = new LinkedList<ConstValueToPacketMapping>();
+        List<ConstValueToPacketMapping> constMappings = new LinkedList<>();
         constMappings.add(new ConstValueToPacketMapping(2, new short[]{0x20}));
 
-        Map<String, MethodToPacketMapping> methodMappings
-                = new HashMap<String, MethodToPacketMapping>();
+        Map<String, MethodToPacketMapping> methodMappings = new HashMap<>();
 
         methodMappings.put("0", createGetMapping());
-
         return new InterfaceToPacketMapping(constMappings, methodMappings);
     }
 
@@ -87,8 +85,7 @@ public class UserProtocolMappingFactory implements ProtocolMappingFactory {
      * @return
      */
     static private Map<Class, InterfaceToPacketMapping> createRequestIfaceMappings() {
-        Map<Class, InterfaceToPacketMapping> mappings
-                = new HashMap<Class, InterfaceToPacketMapping>();
+        Map<Class, InterfaceToPacketMapping> mappings = new HashMap<>();
 
         // creating interface mappings
         mappings.put(MyDallas18B20.class, createRequestMyDeviceMapping());
@@ -119,7 +116,7 @@ public class UserProtocolMappingFactory implements ProtocolMappingFactory {
 
     // MyDallas18B20
     static private PacketToMethodMapping createResponseGet() {
-        List<PacketPositionValues> packetValues = new LinkedList<PacketPositionValues>();
+        List<PacketPositionValues> packetValues = new LinkedList<>();
         packetValues.add(new PacketPositionValues(3, (short) 0x80));
 
         PacketToValueMapping resultMapping = new PacketToValueMapping(8, Uns16Convertor.getInstance());
@@ -127,11 +124,10 @@ public class UserProtocolMappingFactory implements ProtocolMappingFactory {
     }
     
     static private PacketToInterfaceMapping createResponseMyDeviceMapping() {
-        List<PacketPositionValues> packetValues = new LinkedList<PacketPositionValues>();
+        List<PacketPositionValues> packetValues = new LinkedList<>();
         packetValues.add(new PacketPositionValues(2, (short) 0x20));
 
-        Map<String, PacketToMethodMapping> methodMappings
-                = new HashMap<String, PacketToMethodMapping>();
+        Map<String, PacketToMethodMapping> methodMappings = new HashMap<>();
 
         methodMappings.put("0", createResponseGet());
     
@@ -140,8 +136,7 @@ public class UserProtocolMappingFactory implements ProtocolMappingFactory {
 
     // creating response mapping for Device Interfaces
     static private Map<Class, PacketToInterfaceMapping> createResponseIfaceMappings() {
-        Map<Class, PacketToInterfaceMapping> mappings
-                = new HashMap<Class, PacketToInterfaceMapping>();
+        Map<Class, PacketToInterfaceMapping> mappings = new HashMap<>();
 
         // creating interface mappings
         mappings.put(MyDallas18B20.class, createResponseMyDeviceMapping());
@@ -169,7 +164,7 @@ public class UserProtocolMappingFactory implements ProtocolMappingFactory {
 
     @Override
     public ProtocolMapping createProtocolMapping() throws Exception {
-        if (protocolMapping != null) {
+        if ( protocolMapping != null ) {
             return protocolMapping;
         }
 

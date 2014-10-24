@@ -46,21 +46,21 @@ extends DPA_StandardServices, GenericAsyncCallable, MethodIdTransformer
      * Sets LED to specifed state.
      * @param state to set the LED into
      * @return {@code VoidType} object, if method call has processed allright <br>
-     *         {@code null}, if some error occurrs during processing
+     *         {@code null}, if an error has occured during processing
      */
     VoidType set(LED_State state);
     
     /**
      * Gets actual state of LED.
      * @return actual state of LED <br>
-     *         {@code null}, if some error has occurred during processing
+     *         {@code null}, if an error has occurred during processing
      */
     LED_State get();
     
     /**
      * Performs pulse on LED.
      * @return {@code VoidType} object, if method call has processed allright <br>
-     *         {@code null}, if some error occurrs during processing
+     *         {@code null}, if an error has occured during processing
      */
     VoidType pulse();
 }

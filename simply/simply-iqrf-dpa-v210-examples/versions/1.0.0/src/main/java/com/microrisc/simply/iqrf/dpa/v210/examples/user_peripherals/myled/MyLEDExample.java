@@ -112,8 +112,8 @@ public class MyLEDExample {
         // performing pulse on LEDs
         VoidType pulseResult = myLed.pulse();
         if ( pulseResult == null ) {
-            processNullResult(myLed, "Pulsing LEDs failed", 
-                    "Pulsing LEDs hasn't been processed yet"
+            processNullResult(
+                myLed, "Pulsing LEDs failed", "Pulsing LEDs hasn't been processed yet"
             );
         }
         

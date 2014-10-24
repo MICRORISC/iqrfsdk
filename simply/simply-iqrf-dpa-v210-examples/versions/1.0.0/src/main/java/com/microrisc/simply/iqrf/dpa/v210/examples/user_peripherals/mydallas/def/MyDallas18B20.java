@@ -12,7 +12,8 @@ import com.microrisc.simply.iqrf.dpa.di_services.DPA_StandardServices;
  * @author Martin Strouhal
  */
 @DeviceInterface
-public interface MyDallas18B20 extends DPA_StandardServices, GenericAsyncCallable, MethodIdTransformer {
+public interface MyDallas18B20 
+extends DPA_StandardServices, GenericAsyncCallable, MethodIdTransformer {
 
     /**
      * Identifiers of this Device Interface's methods.
@@ -24,8 +25,8 @@ public interface MyDallas18B20 extends DPA_StandardServices, GenericAsyncCallabl
     /**
      * Gets actual temperature.
      *
-     * @return actual temperature <br> {@code Short.MAX_VALUE}, if some error has occurred
-     * during processing
+     * @return actual temperature <br> 
+     *         {@code Short.MAX_VALUE} if an error has occurred during processing
      */
     short get();
 }

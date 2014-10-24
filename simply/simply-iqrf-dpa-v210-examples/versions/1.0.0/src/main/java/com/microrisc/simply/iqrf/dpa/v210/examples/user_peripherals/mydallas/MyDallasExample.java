@@ -18,21 +18,22 @@ import java.util.Map;
  * @author Martin Strouhal
  */
 public class MyDallasExample {
-
     // reference to Simply
     private static Simply simply = null;
 
-    private static Map<String, MyDallas18B20> getDallas18B20S(Network network,
-            String[] nodeIds) {
-        Map<String, MyDallas18B20> dallas18B20Map = new LinkedHashMap<String, MyDallas18B20>();
+    private static Map<String, MyDallas18B20> getDallas18B20S(
+            Network network, String[] nodeIds) 
+    {
+        Map<String, MyDallas18B20> dallas18B20Map = new LinkedHashMap<>();
 
-        for (String nodeId : nodeIds) {
+        for ( String nodeId : nodeIds ) {
             Node node = network.getNode(nodeId);
             MyDallas18B20 dallas = node.getDeviceObject(MyDallas18B20.class);
             
-            if (dallas == null) {
+            if ( dallas == null ) {
                 System.out.println(
-                        "Sensor Dallas18B20 is not on node " + nodeId + ", return.");
+                    "Sensor Dallas18B20 is not on node " + nodeId + ", return."
+                );
                 return null;
             }
             dallas18B20Map.put(nodeId, dallas);
@@ -50,25 +51,24 @@ public class MyDallasExample {
     }
     
     public static void main(String[] args) {
-        //get simply
+        // get simply
         try {
             simply = DPA_SimplyFactory.getSimply(
-                    "config" + File.separator + "Simply.properties");
+                    "config" + File.separator + "Simply.properties"
+            );
         } catch (SimplyException ex) {
-            printMessageAndExit(
-                    "Error while creating Simply: " + ex.getMessage());
+            printMessageAndExit("Error while creating Simply: " + ex.getMessage());
         }
 
         // get network "1"
         Network network1 = simply.getNetwork("1", Network.class);
-        if (network1 == null) {
+        if ( network1 == null ) {
             printMessageAndExit("Network 1 doesn't exist");
         }
 
         //getting devices
-        Map<String, MyDallas18B20> dallas18B20 = getDallas18B20S(network1,
-                new String[]{"1", "2"});
-        if (dallas18B20 == null) {
+        Map<String, MyDallas18B20> dallas18B20 = getDallas18B20S(network1, new String[]{"1", "2"});
+        if ( dallas18B20 == null ) {
             printMessageAndExit("Error when Dallas18B20 was getting from node.");
         }
 
@@ -78,7 +78,7 @@ public class MyDallasExample {
         //get result - temperature from sensor
         short result = dallas.get();
         
-        if (result == Short.MAX_VALUE) {
+        if ( result == Short.MAX_VALUE ) {
             CallRequestProcessingState procState = dallas.getCallRequestProcessingStateOfLastCall();
             if (procState == CallRequestProcessingState.ERROR) {
                 CallRequestProcessingError error = dallas.getCallRequestProcessingErrorOfLastCall();
