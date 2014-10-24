@@ -35,7 +35,7 @@ import java.io.File;
  * @author Michal Konopa
  * @author Rostislav Spinar
  */
-public class GetSetLedG {
+public class GetSetPulseLedG {
     // reference to Simply
     private static Simply simply = null;
     
@@ -119,6 +119,16 @@ public class GetSetLedG {
             );
         }
         System.out.println("LEDG is OFF");
+        
+        // pulse LEDG
+        System.out.println("Pulsing LEDG ...");
+        
+        setResult = ledg.pulse();
+        if ( setResult == null ) {
+            processNullResult(ledg, "Pulsing LEDG failed", 
+                    "Pulsing LEDG hasn't been processed yet"
+            );
+        }
         
         // end working with Simply
         simply.destroy();
