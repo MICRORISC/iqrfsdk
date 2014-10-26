@@ -36,3 +36,7 @@ simply/simply-network-serial/versions/1.0.0/target/
 simply/simply-network-spi/versions/1.0.0/target/
 simply/simply-network-udp/versions/1.0.0/target/
 simply/simply-network-usbcdc/versions/1.0.1/target/
+/libs/iqrf/cdc-uart/hdlc-framing-v1/hdlc-framing-v1/target/
+/libs/iqrf/cdc-uart/hdlc-framing-v1/versions/1.0.0/target/
+/simply/simply-network-serial-v1/versions/1.0.0/simply-network-serial-v1/target/
+/simply/simply-network-serial-v1/versions/1.0.0/target/
