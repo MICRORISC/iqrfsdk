@@ -309,7 +309,7 @@
 
 	
     <!-- com.microrisc.simply.network.serial package --> 
-    <logger name="com.microrisc.simply.network.serial.SerialNetworkLayerJssc" level="INHERITED">
+    <logger name="com.microrisc.simply.network.serial.v2.SerialNetworkLayerJssc" level="INHERITED">
             <appender-ref ref="FILE" />
     </logger>
     

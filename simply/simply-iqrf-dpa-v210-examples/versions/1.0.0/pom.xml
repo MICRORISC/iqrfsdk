@@ -7,11 +7,6 @@
     <packaging>jar</packaging>
     <dependencies>
         <dependency>
-            <groupId>com.microrisc.simply.network.serial</groupId>
-            <artifactId>simply-network-serial</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-        <dependency>
             <groupId>com.microrisc.simply.iqrf.dpa</groupId>
             <artifactId>simply-iqrf-dpa-v210</artifactId>
             <version>1.0.0</version>
@@ -36,6 +31,11 @@
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
             <version>1.1.2</version>
+        </dependency>
+        <dependency>
+            <groupId>com.microrisc.simply.network.serial</groupId>
+            <artifactId>simply-network-serial-v2</artifactId>
+            <version>1.0.0</version>
         </dependency>
     </dependencies>
     <properties>
