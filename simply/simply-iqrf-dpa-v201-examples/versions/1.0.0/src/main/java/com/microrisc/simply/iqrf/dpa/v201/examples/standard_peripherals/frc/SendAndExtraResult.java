@@ -27,7 +27,10 @@ import com.microrisc.simply.iqrf.dpa.v201.devices.FRC;
 import com.microrisc.simply.iqrf.dpa.v201.types.FRC_Data;
 import com.microrisc.simply.iqrf.dpa.v201.types.FRC_Temperature;
 import java.io.File;
+import java.util.Comparator;
 import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 
 /**
@@ -67,6 +70,27 @@ public class SendAndExtraResult {
         System.arraycopy(firstPart, 0, completeData, 0, firstPart.length);
         System.arraycopy(extraData, 0, completeData, firstPart.length, extraData.length);
         return completeData;
+    }
+    
+    private static class NodeIdComparator implements Comparator<String> {
+        @Override
+        public int compare(String nodeIdStr1, String nodeIdStr2) {
+            int nodeId_1 = Integer.decode(nodeIdStr1);
+            int nodeId_2 = Integer.decode(nodeIdStr2);
+            return Integer.compare(nodeId_1, nodeId_2);
+        }
+    }
+    
+    // Node Id comparator
+    private static final NodeIdComparator nodeIdComparator = new NodeIdComparator();
+    
+    // sorting specified results according to node ID in ascendent manner
+    private static SortedMap<String, FRC_Temperature.Result> sortResult(
+            Map<String, FRC_Temperature.Result> result
+    ) {
+        TreeMap<String, FRC_Temperature.Result> sortedResult = new TreeMap<>(nodeIdComparator);
+        sortedResult.putAll(result);
+        return sortedResult;
     }
     
     
@@ -119,8 +143,11 @@ public class SendAndExtraResult {
             printMessageAndExit("Parsing result data failed: " + ex);
         }
         
+        // sort the results
+        SortedMap<String, FRC_Temperature.Result> sortedResult = sortResult(result);
+        
         // printing temperature on each node
-        for ( Map.Entry<String, FRC_Temperature.Result> dataEntry : result.entrySet() ) {
+        for ( Map.Entry<String, FRC_Temperature.Result> dataEntry : sortedResult.entrySet() ) {
             System.out.println("Node: " + dataEntry.getKey() 
                     + ", temperature: " + dataEntry.getValue().getTemperature());
         }
