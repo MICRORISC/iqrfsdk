@@ -66,8 +66,8 @@ public class SendAndExtraResultAsync {
     // puts together both parts of incomming FRC data
     private static short[] getCompleteFrcData(short[] firstPart, short[] extraData) {
         short[] completeData = new short[firstPart.length + extraData.length];
-        System.arraycopy(completeData, 0, firstPart, 0, firstPart.length);
-        System.arraycopy(completeData, firstPart.length, extraData, 0, extraData.length);
+        System.arraycopy(firstPart, 0, completeData, 0, firstPart.length);
+        System.arraycopy(extraData, 0, completeData, firstPart.length, extraData.length);
         return completeData;
     }
     
