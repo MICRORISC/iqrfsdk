@@ -11,41 +11,41 @@ public final class PeripheralEnumeration {
      * Implements DPA Protocol Version.
      */
     public static class DPA_ProtocolVersion {
-        /** Minor number. */
-        private short minorNumber = 0;
+        /** Minor version. */
+        private short minorVersion = 0;
         
-        /** Major number. */
-        private short majorNumber = 0;
+        /** Major version. */
+        private short majorVersion = 0;
         
         /**
          * Creates new Protocol Version object.
-         * @param minorVersion minor number
-         * @param majorVersion major number
+         * @param minorVersion minor version
+         * @param majorVersion major version
          */
         public DPA_ProtocolVersion(short minorVersion, short majorVersion) {
-            this.minorNumber = minorVersion;
-            this.majorNumber = majorVersion;
+            this.minorVersion = minorVersion;
+            this.majorVersion = majorVersion;
         }
 
         /**
-         * @return the minor number
+         * @return the minor version
          */
-        public short getMinorNumber() {
-            return minorNumber;
+        public short getMinorVersion() {
+            return minorVersion;
         }
 
         /**
-         * @return the major number
+         * @return the major version
          */
-        public short getMajorNumber() {
-            return majorNumber;
+        public short getMajorVersion() {
+            return majorVersion;
         }
         
         @Override
         public String toString() {
             return ("{ " +
-                    "minor number=" + minorNumber + 
-                    ", major number=" + majorNumber +
+                    "minor version=" + minorVersion + 
+                    ", major version=" + majorVersion +
                     " }");
         }
     }

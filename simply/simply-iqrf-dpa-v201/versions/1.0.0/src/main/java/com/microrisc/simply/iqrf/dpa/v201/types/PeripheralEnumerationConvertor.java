@@ -110,6 +110,11 @@ public final class PeripheralEnumerationConvertor extends PrimitiveConvertor {
         return byteBuffer.getInt(0);
     }
     
+    // returns BCD code for specified value
+    private short getBCD_Code(short value) {
+        return Short.parseShort(Integer.toHexString(value));
+    }
+    
 
     /**
      * Currently not supported. Throws {@code UnsupportedOperationException }.
@@ -134,8 +139,8 @@ public final class PeripheralEnumerationConvertor extends PrimitiveConvertor {
         int flags = protoValue[FLAGS_POS];
         
         // dpa protocol version info
-        short protoMinorNumber = protoValue[DPA_PROTO_MINOR_VERSION_POS]; 
-        short protoMajorNumber = protoValue[DPA_PROTO_MAJOR_VERSION_POS];
+        short protoMinorNumber = getBCD_Code(protoValue[DPA_PROTO_MINOR_VERSION_POS]); 
+        short protoMajorNumber = getBCD_Code(protoValue[DPA_PROTO_MAJOR_VERSION_POS]);
         PeripheralEnumeration.DPA_ProtocolVersion dpaProtoVersion = 
                 new PeripheralEnumeration.DPA_ProtocolVersion(protoMinorNumber, protoMajorNumber);
         
