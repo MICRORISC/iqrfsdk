@@ -85,15 +85,18 @@ public final class HDLC_DataTransformer {
         convertedDataList.add( FLAG_SEQUENCE );
         
         // data and computing checksum
-        short crc = 0xFF;
+        short checksum = dataToTransform[0];
         
         for ( int dataId = 0; dataId < dataToTransform.length; dataId++ ) {
-            crc = updateCRC(crc, dataToTransform[dataId]);
+            if ( dataId != 0 ) {
+                checksum ^= dataToTransform[dataId];
+            }
             convertAndAddByte(dataToTransform[dataId], convertedDataList);
         }
         
         // adding checksum
-        convertAndAddByte(crc, convertedDataList);
+        checksum ^= 0x5F;
+        convertAndAddByte(checksum, convertedDataList);
         
         // ending byte
         convertedDataList.add( FLAG_SEQUENCE ); 
@@ -102,6 +105,12 @@ public final class HDLC_DataTransformer {
         return ArrayUtils.toPrimitive(transformedData);
     }
     
+    /**
+     * Retrieves and returns data from specified HDLC data frame.
+     * @param uartDataFrame HDLC data frame, which the data to retrive from
+     * @return data from specified HDLC data frame
+     * @throws HDLC_FormatException if specified data frame has incorrect format
+     */
     public static short[] getDataFromFrame(short[] uartDataFrame) 
             throws HDLC_FormatException {
         checkUartDataFrame(uartDataFrame);
@@ -116,15 +125,15 @@ public final class HDLC_DataTransformer {
         }
         
         boolean escapedByte = false;
-        short countedCRC = 0xFF;
+        short countedChecksum = -1;
         
         // getting starting position of a checksum
-        int crcStartPos = uartDataFrame.length-2;
+        int checksumStartPos = uartDataFrame.length-2;
         if ( uartDataFrame[ uartDataFrame.length-3 ] == CONTROL_ESCAPE ) {
-            crcStartPos = uartDataFrame.length-3;
+            checksumStartPos = uartDataFrame.length-3;
         }
         
-        for ( int dataId = 1; dataId < crcStartPos; dataId++ ) {
+        for ( int dataId = 1; dataId < checksumStartPos; dataId++ ) {
             short dataItem = uartDataFrame[dataId];
             
             if ( dataItem == CONTROL_ESCAPE ) {
@@ -142,25 +151,29 @@ public final class HDLC_DataTransformer {
                 escapedByte = false;
             }
             
-            countedCRC = updateCRC(countedCRC, dataItem);
+            if ( countedChecksum == -1 ) {
+                countedChecksum = (short) (0x5F ^ dataItem);
+            } else {
+                countedChecksum ^= dataItem;
+            }
             
             dataList.add(dataItem);
         }
         
-        short packetCRC = uartDataFrame[ uartDataFrame.length-2 ];
+        short packetChecksum = uartDataFrame[ uartDataFrame.length-2 ];
         if ( uartDataFrame[ uartDataFrame.length-3 ] == CONTROL_ESCAPE ) {
-            packetCRC = uartDataFrame[ uartDataFrame.length-2 ];
-            if ( (packetCRC & ESCAPE_BIT) == 0 ) {
-                packetCRC |= ESCAPE_BIT;
+            packetChecksum = uartDataFrame[ uartDataFrame.length-2 ];
+            if ( (packetChecksum & ESCAPE_BIT) == 0 ) {
+                packetChecksum |= ESCAPE_BIT;
             } else {
-                packetCRC ^= ESCAPE_BIT;
+                packetChecksum ^= ESCAPE_BIT;
             }
         }
         
-        if ( countedCRC != packetCRC ) {
+        if ( countedChecksum != packetChecksum ) {
             throw new HDLC_FormatException(
-                    "CRC mismatch. "
-                    + "Counted: " + countedCRC + " Get: " + packetCRC
+                    "Checksum mismatch. "
+                    + "Counted: " + countedChecksum + " Get: " + packetChecksum
             );
         }
         
