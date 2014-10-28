@@ -106,4 +106,16 @@
     <note></note>
     </implMapping>
     
+    <implMapping>
+        <interface>com.microrisc.simply.iqrf.dpa.v210.examples.user_peripherals.myadc.def.MyADC</interface>
+        <implClass>com.microrisc.simply.iqrf.dpa.v210.examples.user_peripherals.myadc.def.SimpleMyADC</implClass>
+    <note></note>
+    </implMapping>
+    
+    <implMapping>
+        <interface>com.microrisc.simply.iqrf.dpa.v210.examples.user_peripherals.mydallas.def.MyDallas18B20</interface>
+        <implClass>com.microrisc.simply.iqrf.dpa.v210.examples.user_peripherals.mydallas.def.SimpleMyDallas18B20</implClass>
+    <note></note>
+    </implMapping>
+    
 </implMappings>

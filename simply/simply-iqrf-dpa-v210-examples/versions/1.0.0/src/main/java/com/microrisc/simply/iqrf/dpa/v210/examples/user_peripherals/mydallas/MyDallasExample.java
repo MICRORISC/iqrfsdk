@@ -54,7 +54,7 @@ public class MyDallasExample {
         // get simply
         try {
             simply = DPA_SimplyFactory.getSimply(
-                    "config" + File.separator + "Simply.properties"
+                    "config" + File.separator + "Simply-user_per.properties"
             );
         } catch (SimplyException ex) {
             printMessageAndExit("Error while creating Simply: " + ex.getMessage());
@@ -76,9 +76,9 @@ public class MyDallasExample {
         MyDallas18B20 dallas = dallas18B20.get("1");
 
         //get result - temperature from sensor
-        short result = dallas.get();
+        float result = dallas.get();
         
-        if ( result == Short.MAX_VALUE ) {
+        if ( result == Float.MAX_VALUE ) {
             CallRequestProcessingState procState = dallas.getCallRequestProcessingStateOfLastCall();
             if (procState == CallRequestProcessingState.ERROR) {
                 CallRequestProcessingError error = dallas.getCallRequestProcessingErrorOfLastCall();
