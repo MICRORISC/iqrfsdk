@@ -4,7 +4,7 @@ package com.microrisc.simply.asynchrony;
 
 
 /**
- * Entry point for access functionality of asynchronous messaging from user's code.
+ * Entry point for access the functionality of asynchronous messaging from user's code.
  * 
  * @param <T> type of asynchronous message
  * @param <V> type of required properties of asynchronous messages

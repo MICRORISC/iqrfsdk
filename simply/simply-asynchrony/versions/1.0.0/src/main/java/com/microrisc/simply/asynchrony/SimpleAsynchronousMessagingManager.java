@@ -52,7 +52,7 @@ extends AbstractAsynchronousMessagingManager<T, V>
             AsynchronousMessagePropertiesChecker<T, V> propChecker
     ) {
         super(propChecker);
-        this.regListenersAndProps = new LinkedList<ListenerAndProps>();
+        this.regListenersAndProps = new LinkedList<>();
     }
     
     @Override

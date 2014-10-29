@@ -26,7 +26,7 @@ final class MultiCallRequestToPacketMapping implements CallRequestToPacketMappin
             
     // sorts specified call request mappings according to supported classes
     private void sortMappingsAccordingToSuppClasses( CallRequestToPacketMapping[] mappings ) {
-        classMapping = new HashMap<Class, CallRequestToPacketMapping>();
+        classMapping = new HashMap<>();
         
         for ( CallRequestToPacketMapping mapping : mappings ) {
             Set<Class> supportedDevIfaces = mapping.getSupportedDeviceInterfaces();
