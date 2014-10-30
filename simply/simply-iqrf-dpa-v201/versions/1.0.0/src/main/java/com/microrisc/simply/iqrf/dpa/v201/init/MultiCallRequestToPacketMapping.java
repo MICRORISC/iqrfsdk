@@ -5,7 +5,7 @@ package com.microrisc.simply.iqrf.dpa.v201.init;
 import com.microrisc.simply.protocol.mapping.CallRequestToPacketMapping;
 import com.microrisc.simply.protocol.mapping.PacketFragment;
 import com.microrisc.simply.protocol.mapping.ProtocolMappingException;
-import com.microrisc.simply.types.ValueConversionException;
+import com.microrisc.simply.typeconvertors.ValueConversionException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;

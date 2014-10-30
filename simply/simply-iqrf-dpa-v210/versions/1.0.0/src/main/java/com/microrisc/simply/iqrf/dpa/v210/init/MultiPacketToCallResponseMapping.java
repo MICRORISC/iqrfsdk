@@ -3,7 +3,7 @@
 package com.microrisc.simply.iqrf.dpa.v210.init;
 
 import com.microrisc.simply.protocol.mapping.PacketToCallResponseMapping;
-import com.microrisc.simply.types.ValueConversionException;
+import com.microrisc.simply.typeconvertors.ValueConversionException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;

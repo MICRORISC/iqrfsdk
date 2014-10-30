@@ -21,7 +21,7 @@ import com.microrisc.simply.protocol.AbstractProtocolLayer;
 import com.microrisc.simply.protocol.CallRequestComparator;
 import com.microrisc.simply.protocol.MessageConvertor;
 import com.microrisc.simply.protocol.SimpleRequestToResponseMatcher;
-import com.microrisc.simply.types.ValueConversionException;
+import com.microrisc.simply.typeconvertors.ValueConversionException;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
