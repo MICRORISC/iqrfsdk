@@ -68,9 +68,9 @@ public class MyADCExample {
         MyADC adc1 = adcDevices.get("1");
         
         // get result
-        int result = adc1.get();
+        float result = adc1.get();
         
-        if ( result == Integer.MAX_VALUE ) {
+        if ( result == Float.MAX_VALUE ) {
             CallRequestProcessingState procState = adc1.getCallRequestProcessingStateOfLastCall();
             if (procState == CallRequestProcessingState.ERROR) {
                 CallRequestProcessingError error = adc1.getCallRequestProcessingErrorOfLastCall();
@@ -79,7 +79,7 @@ public class MyADCExample {
                 printMessageAndExit("Getting ADC value hasn't been processed yet: " + procState);
             }
         } else {
-            System.out.println("ADC value is " + result);
+            System.out.println("ADC value is " + result + "V");
         }
 
         simply.destroy();

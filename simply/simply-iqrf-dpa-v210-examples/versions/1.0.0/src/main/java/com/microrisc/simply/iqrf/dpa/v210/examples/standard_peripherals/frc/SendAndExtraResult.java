@@ -24,6 +24,9 @@ import com.microrisc.simply.SimplyException;
 import com.microrisc.simply.errors.CallRequestProcessingError;
 import com.microrisc.simply.iqrf.dpa.v210.DPA_SimplyFactory;
 import com.microrisc.simply.iqrf.dpa.v210.devices.FRC;
+import com.microrisc.simply.iqrf.dpa.v210.devices.LEDR;
+import com.microrisc.simply.iqrf.dpa.v210.types.DPA_Request;
+import com.microrisc.simply.iqrf.dpa.v210.types.FRC_AcknowledgedBroadcastBits;
 import com.microrisc.simply.iqrf.dpa.v210.types.FRC_Data;
 import com.microrisc.simply.iqrf.dpa.v210.types.FRC_Temperature;
 import java.io.File;
@@ -85,10 +88,13 @@ public class SendAndExtraResult {
     private static final NodeIdComparator nodeIdComparator = new NodeIdComparator();
     
     // sorting specified results according to node ID in ascendent manner
-    private static SortedMap<String, FRC_Temperature.Result> sortResult(
-            Map<String, FRC_Temperature.Result> result
+    //private static SortedMap<String, FRC_Temperature.Result> sortResult(
+    private static SortedMap<String, FRC_AcknowledgedBroadcastBits.Result> sortResult(
+            //Map<String, FRC_Temperature.Result> result
+            Map<String, FRC_AcknowledgedBroadcastBits.Result> result
     ) {
-        TreeMap<String, FRC_Temperature.Result> sortedResult = new TreeMap<>(nodeIdComparator);
+        //TreeMap<String, FRC_Temperature.Result> sortedResult = new TreeMap<>(nodeIdComparator);
+        TreeMap<String, FRC_AcknowledgedBroadcastBits.Result> sortedResult = new TreeMap<>(nodeIdComparator);
         sortedResult.putAll(result);
         return sortedResult;
     }
@@ -120,7 +126,10 @@ public class SendAndExtraResult {
             printMessageAndExit("FRC doesn't exist or is not enabled");
         }
         
-        FRC_Data frcData = frc.send( new FRC_Temperature( new short[] { 0, 0, 0, 0, 0 } ));
+        //FRC_Data frcData = frc.send( new FRC_Temperature( new short[] { 0, 0, 0, 0, 0 } ));
+        //FRC_Data frcData = frc.send( new FRC_AcknowledgedBroadcastBits( new short[] { 0x05, 0x06, 0x03, 0xFF, 0xFF } ));
+        FRC_Data frcData = frc.send( new FRC_AcknowledgedBroadcastBits( new DPA_Request(LEDR.class, LEDR.MethodID.PULSE, null, 0xFFFF) ));
+        
         if ( frcData == null ) {
             processNullResult(frc, "Sending FRC command failed", 
                     "Sending FRC command hasn't been processed yet"
@@ -134,9 +143,11 @@ public class SendAndExtraResult {
             );
         }
         
-        Map<String, FRC_Temperature.Result> result = null;
+        //Map<String, FRC_Temperature.Result> result = null;
+        Map<String, FRC_AcknowledgedBroadcastBits.Result> result = null;
         try {
-            result = FRC_Temperature.parse(
+            //result = FRC_Temperature.parse(
+            result = FRC_AcknowledgedBroadcastBits.parse(
                     getCompleteFrcData(frcData.getData(), frcExtraData)
             );
         } catch ( Exception ex ) {
@@ -144,12 +155,15 @@ public class SendAndExtraResult {
         }
         
         // sort the results
-        SortedMap<String, FRC_Temperature.Result> sortedResult = sortResult(result);
+        //SortedMap<String, FRC_Temperature.Result> sortedResult = sortResult(result);
+        SortedMap<String, FRC_AcknowledgedBroadcastBits.Result> sortedResult = sortResult(result);
         
         // printing temperature on each node
-        for ( Map.Entry<String, FRC_Temperature.Result> dataEntry : sortedResult.entrySet() ) {
+        //for ( Map.Entry<String, FRC_Temperature.Result> dataEntry : sortedResult.entrySet() ) {
+        for ( Map.Entry<String, FRC_AcknowledgedBroadcastBits.Result> dataEntry : sortedResult.entrySet() ) {
             System.out.println("Node: " + dataEntry.getKey() 
-                    + ", temperature: " + dataEntry.getValue().getTemperature());
+            //        + ", temperature: " + dataEntry.getValue().getTemperature());
+                      + ", Bit0: " + dataEntry.getValue().getBit0() + ", Bit1: " + dataEntry.getValue().getBit1());
         }
         
         // end working with Simply

@@ -25,7 +25,7 @@ extends DPA_StandardServices, GenericAsyncCallable, MethodIdTransformer {
     /**
      * Gets actual value of MyADC.
      * @return actual value of MyADC <br> 
-     *         {@code Integer.MAX_VALUE} if an error has occurred during processing
+     *         {@code Float.MAX_VALUE} if an error has occurred during processing
      */
-    int get();
+    float get();
 }

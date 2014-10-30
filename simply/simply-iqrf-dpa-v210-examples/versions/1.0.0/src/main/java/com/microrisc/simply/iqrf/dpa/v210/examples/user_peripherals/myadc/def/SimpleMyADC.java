@@ -12,13 +12,13 @@ import java.util.UUID;
  *
  * @author Martin Strouhal
  */
-public final class SimpleMyADC 
-extends DPA_DeviceObject implements MyADC {
+public final class SimpleMyADC
+        extends DPA_DeviceObject implements MyADC {
 
     /**
      * Mapping of method IDs to theirs string representations.
      */
-    private static final Map<MyADC.MethodID, String> methodIdsMap 
+    private static final Map<MyADC.MethodID, String> methodIdsMap
             = new EnumMap<>(MyADC.MethodID.class);
 
     private static void initMethodIdsMap() {
@@ -39,12 +39,12 @@ extends DPA_DeviceObject implements MyADC {
     @Override
     public UUID call(Object methodId, Object[] args) {
         String methodIdStr = transform((MyADC.MethodID) methodId);
-        if ( methodIdStr == null ) {
+        if (methodIdStr == null) {
             return null;
         }
 
-        if ( args == null ) {
-            return dispatchCall(methodIdStr, new Object[]{ getRequestHwProfile() });
+        if (args == null) {
+            return dispatchCall(methodIdStr, new Object[]{getRequestHwProfile()});
         }
 
         Object[] argsWithHwProfile = new Object[args.length + 1];
@@ -55,7 +55,7 @@ extends DPA_DeviceObject implements MyADC {
 
     @Override
     public String transform(Object methodId) {
-        if ( !(methodId instanceof MyADC.MethodID)) {
+        if (!(methodId instanceof MyADC.MethodID)) {
             throw new IllegalArgumentException(
                     "Method ID must be of type MyADC.MethodID."
             );
@@ -64,18 +64,23 @@ extends DPA_DeviceObject implements MyADC {
     }
 
     @Override
-    public int get() {
-        UUID uid = dispatchCall("0", new Object[]{ getRequestHwProfile() },
+    public float get() {
+        UUID uid = dispatchCall("0", new Object[]{getRequestHwProfile()},
                 getDefaultWaitingTimeout()
         );
-        if ( uid == null ) {
-            return Integer.MAX_VALUE;
+        if (uid == null) {
+            return Float.MAX_VALUE;
         }
-        
-        Integer result = getCallResult(uid, int.class, getDefaultWaitingTimeout());
-        if ( result == null ) {
-            return Integer.MAX_VALUE;
+
+        Integer result = getCallResult(uid, int.class,
+                getDefaultWaitingTimeout());
+        if (result == null) {
+            return Float.MAX_VALUE;
         }
-        return result;
+        result *= 30;
+        result /= 1024;
+        float toReturn = result / 10;
+        toReturn += (result % 10) * 0.1f;
+        return toReturn;
     }
 }
