@@ -24,7 +24,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Access to Standard method ID transformers. 
+ * Access to Standard Device Interface method ID transformers. 
  * 
  * @author Michal Konopa
  */

@@ -1,8 +1,8 @@
 package com.microrisc.simply.iqrf.dpa.v210.examples.user_peripherals.mydallas.def;
 
-import com.microrisc.simply.iqrf.dpa.v210.types.DPA_AdditionalInfoConvertor;
-import com.microrisc.simply.iqrf.types.PrimArrayUns8Convertor;
-import com.microrisc.simply.iqrf.types.Uns16Convertor;
+import com.microrisc.simply.iqrf.dpa.v210.typeconvertors.DPA_AdditionalInfoConvertor;
+import com.microrisc.simply.iqrf.typeconvertors.PrimArrayUns8Convertor;
+import com.microrisc.simply.iqrf.typeconvertors.Uns16Convertor;
 import com.microrisc.simply.protocol.mapping.CallRequestToPacketMapping;
 import com.microrisc.simply.protocol.mapping.ConstValueToPacketMapping;
 import com.microrisc.simply.protocol.mapping.InterfaceToPacketMapping;
@@ -18,7 +18,7 @@ import com.microrisc.simply.protocol.mapping.SimpleCallRequestToPacketMapping;
 import com.microrisc.simply.protocol.mapping.SimplePacketToCallResponseMapping;
 import com.microrisc.simply.protocol.mapping.SimpleProtocolMapping;
 import com.microrisc.simply.protocol.mapping.ValueToPacketMapping;
-import com.microrisc.simply.types.StringToByteConvertor;
+import com.microrisc.simply.typeconvertors.StringToByteConvertor;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;

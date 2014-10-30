@@ -1,7 +1,7 @@
 
 package com.microrisc.simply.protocol.mapping;
 
-import com.microrisc.simply.types.AbstractConvertor;
+import com.microrisc.simply.typeconvertors.AbstractConvertor;
 
 /**
  * Base class of classes, which descibe mapping from Java values to

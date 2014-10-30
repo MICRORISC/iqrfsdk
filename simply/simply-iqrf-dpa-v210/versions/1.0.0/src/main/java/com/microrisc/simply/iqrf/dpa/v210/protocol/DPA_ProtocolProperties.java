@@ -2,8 +2,8 @@
 package com.microrisc.simply.iqrf.dpa.v210.protocol;
 
 import com.microrisc.simply.iqrf.dpa.v210.DPA_ResponseCode;
-import com.microrisc.simply.types.AbstractConvertor;
-import com.microrisc.simply.types.ValueConversionException;
+import com.microrisc.simply.typeconvertors.AbstractConvertor;
+import com.microrisc.simply.typeconvertors.ValueConversionException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import org.slf4j.Logger;

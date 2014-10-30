@@ -18,7 +18,6 @@ import com.microrisc.simply.iqrf.dpa.v201.types.RoutingHops;
 import com.microrisc.simply.iqrf.dpa.v201.types.SubDPARequest;
 import com.microrisc.simply.iqrf.types.VoidType;
 import java.util.UUID;
-import org.apache.commons.lang.ArrayUtils;
 
 /**
  * Simple Coordinator implementation.

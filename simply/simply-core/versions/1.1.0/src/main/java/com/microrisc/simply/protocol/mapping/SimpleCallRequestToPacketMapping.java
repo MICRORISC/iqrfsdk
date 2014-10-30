@@ -1,7 +1,7 @@
 
 package com.microrisc.simply.protocol.mapping;
 
-import com.microrisc.simply.types.ValueConversionException;
+import com.microrisc.simply.typeconvertors.ValueConversionException;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -188,18 +188,19 @@ implements CallRequestToPacketMapping {
         logArgs[0] = devInterface;
         logArgs[1] = methodId;
         logArgs[2] = args;
-        logger.debug("getSerializedMethodArgs - start: devInterface={}, "
-                + "methodId={}, args={}", logArgs
+        logger.debug(
+            "getSerializedMethodArgs - start: devInterface={}, " 
+             + "methodId={}, args={}", logArgs
         );
         
         InterfaceToPacketMapping ifaceMapping = ifaceMappings.get(devInterface);
-        if (ifaceMapping == null) {
+        if ( ifaceMapping == null ) {
             throw new ProtocolMappingException("Interface mapping not found. "
                 + " Device Interface: " + devInterface.getName());
         }
         
         MethodToPacketMapping methodMapping = ifaceMapping.getMethodMapping(methodId);
-        if (methodMapping == null) {
+        if ( methodMapping == null ) {
             throw new ProtocolMappingException("Method mapping not found. "
                 + " Method ID: " + methodId);
         }
@@ -208,12 +209,12 @@ implements CallRequestToPacketMapping {
         List<PacketFragment> serArgs = new LinkedList<>();
         
         int argId = 0;
-        while (argIter.hasNext()) {
+        while ( argIter.hasNext() ) {
             ValueToPacketMapping argMapping = argIter.next();
             short[] serArg = Serializer.serialize(argMapping, args[argId]);
             serArgs.add(
-                    new PacketFragment(argMapping.getStartingPosition(), serArg)
-                    );
+                new PacketFragment(argMapping.getStartingPosition(), serArg)
+            );
             argId++;
         }
         

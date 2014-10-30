@@ -38,8 +38,8 @@ final class MultiPeripheralToDevIfaceMapper implements PeripheralToDevIfaceMappe
     
     // creates union mapper
     private void createUnionMapper(PeripheralToDevIfaceMapper[] mappers) {
-        peripheralToIface = new HashMap<String, Class>();
-        ifaceToPeripheral = new HashMap<Class, String>();
+        peripheralToIface = new HashMap<>();
+        ifaceToPeripheral = new HashMap<>();
         
         for (PeripheralToDevIfaceMapper mapper : mappers) {
             Set<Class> mapperDevIfaces = mapper.getMappedDeviceInterfaces();
@@ -66,7 +66,7 @@ final class MultiPeripheralToDevIfaceMapper implements PeripheralToDevIfaceMappe
     } 
     
     private void copyMappers(PeripheralToDevIfaceMapper[] mappers) {
-        List<PeripheralToDevIfaceMapper> mappersList = new LinkedList<PeripheralToDevIfaceMapper>();
+        List<PeripheralToDevIfaceMapper> mappersList = new LinkedList<>();
         for ( PeripheralToDevIfaceMapper mapper : mappers ) {
             if ( mapper != null ) {
                 mappersList.add(mapper);
@@ -89,7 +89,7 @@ final class MultiPeripheralToDevIfaceMapper implements PeripheralToDevIfaceMappe
     
     @Override
     public Set<Class> getMappedDeviceInterfaces() {
-        Set<Class> mappedIfaces = new HashSet<Class>();
+        Set<Class> mappedIfaces = new HashSet<>();
         for (PeripheralToDevIfaceMapper mapper : mappers) {
             mappedIfaces.addAll(mapper.getMappedDeviceInterfaces());
         }

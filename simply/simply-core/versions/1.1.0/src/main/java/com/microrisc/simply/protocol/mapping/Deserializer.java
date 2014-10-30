@@ -1,7 +1,7 @@
 
 package com.microrisc.simply.protocol.mapping;
 
-import com.microrisc.simply.types.ValueConversionException;
+import com.microrisc.simply.typeconvertors.ValueConversionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
