@@ -1,5 +1,4 @@
 
-
 package com.microrisc.simply.iqrf.dpa.v210.types;
 
 import java.util.HashMap;

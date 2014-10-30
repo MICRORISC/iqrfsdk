@@ -79,7 +79,7 @@ public final class FRC_ResultParser {
         
         Map<String, T> resultMap = new HashMap<>();
         
-        int nodeId = 1;
+        int nodeId = 0;
         for ( int byteId = FIRST_BIT_START_INDEX;  byteId <= FIRST_BIT_END_INDEX; byteId++ ) {
             int bitComp = 1;
             for ( int bitId = 0; bitId < 8; bitId++ ) {
