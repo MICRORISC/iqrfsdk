@@ -1,8 +1,8 @@
 package com.microrisc.simply.iqrf.dpa.v210.examples.user_peripherals.mydallas.def;
 
 import com.microrisc.simply.iqrf.dpa.v210.typeconvertors.DPA_AdditionalInfoConvertor;
+import com.microrisc.simply.iqrf.typeconvertors.PrimArrayUns8Convertor;
 import com.microrisc.simply.iqrf.typeconvertors.Uns16Convertor;
-import com.microrisc.simply.iqrf.typeconvertors.Uns8Convertor;
 import com.microrisc.simply.protocol.mapping.CallRequestToPacketMapping;
 import com.microrisc.simply.protocol.mapping.ConstValueToPacketMapping;
 import com.microrisc.simply.protocol.mapping.InterfaceToPacketMapping;
@@ -122,7 +122,7 @@ public class UserProtocolMappingFactory implements ProtocolMappingFactory {
         List<PacketPositionValues> packetValues = new LinkedList<>();
         packetValues.add(new PacketPositionValues(3, (short) 0x80));
 
-        PacketToValueMapping resultMapping = new PacketToValueMapping(8, Uns8Convertor.getInstance());
+        PacketToValueMapping resultMapping = new PacketToValueMapping(8, PrimArrayUns8Convertor.getInstance());
         return new PacketToMethodMapping("0", packetValues, resultMapping);
     }
 
