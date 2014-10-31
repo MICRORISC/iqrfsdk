@@ -15,6 +15,21 @@ import org.apache.commons.configuration.Configuration;
 
 /**
  * Simple implementation of network connection storage factory.
+ * <p>
+ * Supported connection types: <br>
+ * - UDP<br>
+ *      Configuration items: <br>
+ *          - host: host address <br>
+ *          - port: port number <br>
+ *      Implementing class: {@link BaseUDPConnectionInfo} <br>
+ * - COM, UART: <br>
+ *      Configuration items: <br>
+ *          - port: port number <br>
+ *      Implementing class: {@link BaseCOMPortConnectionInfo} <br>
+ * - SPI:
+ *      Configuration items: <br>
+ *          - port: port number <br>
+ *      Implementing class: {@link BaseSPIPortConnectionInfo} <br>
  * 
  * @author Michal Konopa
  * @author Rostislav Spinar
@@ -95,8 +110,7 @@ extends AbstractNetworkConnectionStorageFactory<Configuration, NetworkConnection
                 networksSettingsFileName, "network", "id"
         );
         
-        Map<String, AbstractNetworkConnectionInfo> idToConnInfoMap = 
-                new HashMap<String, AbstractNetworkConnectionInfo>();
+        Map<String, AbstractNetworkConnectionInfo> idToConnInfoMap = new HashMap<>();
         
         for (Map.Entry<String, Configuration> networkConfig : networkConfigs.entrySet()) {
             String connTypeStr = networkConfig.getValue().getString("type");
@@ -104,8 +118,7 @@ extends AbstractNetworkConnectionStorageFactory<Configuration, NetworkConnection
             idToConnInfoMap.put(networkConfig.getKey(), connInfo);
         }
         
-        Map<AbstractNetworkConnectionInfo, String> connInfoToIdMap = 
-                new HashMap<AbstractNetworkConnectionInfo, String>();
+        Map<AbstractNetworkConnectionInfo, String> connInfoToIdMap = new HashMap<>();
         
         // creating transposition
         for ( Map.Entry<String, AbstractNetworkConnectionInfo> entry : idToConnInfoMap.entrySet() ) {
