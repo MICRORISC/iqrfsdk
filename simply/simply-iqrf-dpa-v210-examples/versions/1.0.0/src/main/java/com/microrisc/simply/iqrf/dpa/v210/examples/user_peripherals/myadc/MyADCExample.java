@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.microrisc.simply.iqrf.dpa.v210.examples.user_peripherals.myadc;
 
 import com.microrisc.simply.*;
