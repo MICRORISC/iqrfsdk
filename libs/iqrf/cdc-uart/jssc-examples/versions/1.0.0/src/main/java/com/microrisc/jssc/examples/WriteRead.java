@@ -16,8 +16,8 @@
 
 package com.microrisc.jssc.examples;
 
-import com.microrisc.hdlcframing.HDLC_DataTransformer;
-import com.microrisc.hdlcframing.HDLC_FormatException;
+import com.microrisc.hdlcframing.v2.HDLC_DataTransformer;
+import com.microrisc.hdlcframing.v2.HDLC_FormatException;
 import java.io.ByteArrayOutputStream;
 import java.util.LinkedList;
 import java.util.List;

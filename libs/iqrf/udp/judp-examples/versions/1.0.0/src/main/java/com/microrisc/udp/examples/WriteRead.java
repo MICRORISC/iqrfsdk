@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package com.microrisc.udp.example;
+package com.microrisc.udp.examples;
 
-import com.microrisc.udp.example.gweth.GWETH_DataTransformer;
+import com.microrisc.udp.examples.gweth.GWETH_DataTransformer;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;

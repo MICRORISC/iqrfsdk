@@ -27,7 +27,7 @@
         </dependency>
         <dependency>
             <groupId>com.microrisc</groupId>
-            <artifactId>hdlc-framing</artifactId>
+            <artifactId>hdlc-framing-v2</artifactId>
             <version>1.0.0</version>
         </dependency>
     </dependencies>

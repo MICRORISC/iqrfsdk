@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.microrisc.udp.example.gweth;
+package com.microrisc.udp.examples.gweth;
 
 /**
  * Transformation of Simply data to and from GW-ETH-01(02) protocol. 
