@@ -1,7 +1,22 @@
+/* 
+ * Copyright 2014 MICRORISC s.r.o.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.microrisc.simply.iqrf.dpa.v210.examples.user_peripherals.mydallas.def;
 
 import com.microrisc.simply.iqrf.dpa.v210.typeconvertors.DPA_AdditionalInfoConvertor;
-import com.microrisc.simply.iqrf.typeconvertors.PrimArrayUns8Convertor;
 import com.microrisc.simply.iqrf.typeconvertors.Uns16Convertor;
 import com.microrisc.simply.protocol.mapping.CallRequestToPacketMapping;
 import com.microrisc.simply.protocol.mapping.ConstValueToPacketMapping;
@@ -58,7 +73,7 @@ public class UserProtocolMappingFactory implements ProtocolMappingFactory {
         mappings.add(nodeMapping);
         return mappings;
     }
-
+    
     // MyDallas18B20 interface
     static private MethodToPacketMapping createGetMapping() {
         List<ConstValueToPacketMapping> constMapping = new LinkedList<>();
@@ -104,17 +119,15 @@ public class UserProtocolMappingFactory implements ProtocolMappingFactory {
         );
     }
 
-
-
+    
+    
     // RESPONSES MAPPING
     static private PacketToValueMapping createResponseNetworkMapping() {
-        return new PacketToValueMapping(0, 0,
-                StringToByteConvertor.getInstance());
+        return new PacketToValueMapping(0, 0, StringToByteConvertor.getInstance());
     }
 
     static private PacketToValueMapping createResponseNodeMapping() {
-        return new PacketToValueMapping(0, 1,
-                StringToByteConvertor.getInstance());
+        return new PacketToValueMapping(0, 1, StringToByteConvertor.getInstance());
     }
 
     // MyDallas18B20
@@ -122,10 +135,10 @@ public class UserProtocolMappingFactory implements ProtocolMappingFactory {
         List<PacketPositionValues> packetValues = new LinkedList<>();
         packetValues.add(new PacketPositionValues(3, (short) 0x80));
 
-        PacketToValueMapping resultMapping = new PacketToValueMapping(8, PrimArrayUns8Convertor.getInstance());
+        PacketToValueMapping resultMapping = new PacketToValueMapping(8, Uns16Convertor.getInstance());
         return new PacketToMethodMapping("0", packetValues, resultMapping);
     }
-
+    
     static private PacketToInterfaceMapping createResponseMyDeviceMapping() {
         List<PacketPositionValues> packetValues = new LinkedList<>();
         packetValues.add(new PacketPositionValues(2, (short) 0x20));
@@ -133,9 +146,8 @@ public class UserProtocolMappingFactory implements ProtocolMappingFactory {
         Map<String, PacketToMethodMapping> methodMappings = new HashMap<>();
 
         methodMappings.put("0", createResponseGet());
-
-        return new PacketToInterfaceMapping(MyDallas18B20.class, packetValues,
-                methodMappings);
+    
+        return new PacketToInterfaceMapping(MyDallas18B20.class, packetValues, methodMappings);
     }
 
     // creating response mapping for Device Interfaces
@@ -149,8 +161,7 @@ public class UserProtocolMappingFactory implements ProtocolMappingFactory {
     }
 
     static private PacketToValueMapping createAdditionalDataMapping() {
-        return new PacketToValueMapping(4,
-                DPA_AdditionalInfoConvertor.getInstance());
+        return new PacketToValueMapping(4, DPA_AdditionalInfoConvertor.getInstance());
     }
 
     static private PacketToCallResponseMapping createPacketToCallResponseMapping() {
@@ -160,8 +171,7 @@ public class UserProtocolMappingFactory implements ProtocolMappingFactory {
         PacketToValueMapping additionalDataMapping = createAdditionalDataMapping();
 
         return new SimplePacketToCallResponseMapping(
-                networkMapping, nodeMapping, ifaceMappings,
-                additionalDataMapping
+                networkMapping, nodeMapping, ifaceMappings, additionalDataMapping
         );
     }
 
@@ -170,7 +180,7 @@ public class UserProtocolMappingFactory implements ProtocolMappingFactory {
 
     @Override
     public ProtocolMapping createProtocolMapping() throws Exception {
-        if (protocolMapping != null) {
+        if ( protocolMapping != null ) {
             return protocolMapping;
         }
 
