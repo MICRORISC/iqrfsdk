@@ -684,10 +684,10 @@ implements
      * Default pause between subsequent attempts to send request to underlaying
      * network [in miliseconds].
      */
-    private static long ATTEMPT_PAUSE_DEFAULT = 1000;
+    private static long ATTEMPT_PAUSE_DEFAULT = 0;
     
     /** Default minimal pause between sending requests [in miliseconds]. */
-    private static long BETWEEN_SEND_PAUSE_DEFAULT = 1000;
+    private static long BETWEEN_SEND_PAUSE_DEFAULT = 0;
     
     /**
      * Default number of maximal attempts of sending request to underlaying
@@ -1052,10 +1052,10 @@ implements
 
     
     private static long checkAttemptPause(long attemptPause) {
-        if ( attemptPause <= 0 ) {
+        if ( attemptPause < 0 ) {
             throw new IllegalArgumentException(
                     "Pause between subsequent attempts to send request to underlaying "
-                            + "network must be greather then 0"
+                    + "network must be nonnegative."
             );
         }
         return attemptPause;
@@ -1065,9 +1065,8 @@ implements
      * Sets pause between subsequent attempts to send request to underlaying 
      * network.
      * @param attemptPause pause between subsequent attempts to send request to 
-     *                underlaying network [in miliseconds]. Must be greater than 0.
-     * @throws IllegalArgumentException if {@code attemptPause} is less than or 
-     *         equal to 0
+     *                underlaying network [in miliseconds]. Must be nonnegative..
+     * @throws IllegalArgumentException if {@code attemptPause} is less than 0
      */
     @Override
     public void setAttemptPause(long attemptPause) {
@@ -1085,8 +1084,8 @@ implements
     }
     
     private static long checkResponseTimeout(long responseTimeout) {
-        if ( responseTimeout <= 0 ) {
-            throw new IllegalArgumentException("Reponse timeout must be greather then 0");
+        if ( responseTimeout < 0 ) {
+            throw new IllegalArgumentException("Reponse timeout must be nonnegative.");
         }
         return responseTimeout;
     }
@@ -1094,9 +1093,8 @@ implements
     /**
      * Sets timeout for waiting for a response from underlaying network.
      * @param responseTimeout timeout for waiting for a response from underlaying 
-     *                        network [in miliseconds]. Must be greater than 0
-     * @throws IllegalArgumentException if {@code responseTimeout} is less than or 
-     *         equal to 0
+     *                        network [in miliseconds]. Must be nonnegative.
+     * @throws IllegalArgumentException if {@code responseTimeout} is less than 0
      */
     @Override
     public void setResponseTimeout(long responseTimeout) {
@@ -1114,10 +1112,10 @@ implements
     
     
     private static long checkBetweenSendPause(long betweenSendPause) {
-        if ( betweenSendPause <= 0 ) {
+        if ( betweenSendPause < 0 ) {
             throw new IllegalArgumentException(
                     "Minimal pause between sending requests to underlaying "
-                            + "network must be greather then 0"
+                            + "network must be nonnegative."
             );
         }
         return betweenSendPause;
@@ -1126,9 +1124,8 @@ implements
     /**
      * Sets minimal pause between sending requests.
      * @param betweenSendPause minimal pause between sending requests [in miliseconds].
-     *        Must be greater than 0.
-     * @throws IllegalArgumentException if {@code betweenSendPause} is less than or 
-     *         equal to 0
+     *        Must be nonnegative.
+     * @throws IllegalArgumentException if {@code betweenSendPause} is less than 0
      */
     @Override
     public void setBetweenSendPause(long betweenSendPause) {

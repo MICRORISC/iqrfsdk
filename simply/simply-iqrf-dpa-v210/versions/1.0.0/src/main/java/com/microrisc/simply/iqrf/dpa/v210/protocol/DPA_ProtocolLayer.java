@@ -30,6 +30,8 @@ import com.microrisc.simply.iqrf.dpa.asynchrony.DPA_AsynchronousMessage;
 import com.microrisc.simply.iqrf.dpa.asynchrony.SimpleDPA_AsynchronousMessageSource;
 import com.microrisc.simply.iqrf.dpa.broadcasting.BroadcastRequest;
 import com.microrisc.simply.iqrf.dpa.broadcasting.BroadcastResult;
+import com.microrisc.simply.iqrf.dpa.v210.typeconvertors.DPA_ConfirmationConvertor;
+import com.microrisc.simply.iqrf.dpa.v210.types.DPA_Confirmation;
 import com.microrisc.simply.network.BaseNetworkData;
 import com.microrisc.simply.protocol.AbstractProtocolLayer;
 import com.microrisc.simply.protocol.CallRequestComparator;
@@ -49,9 +51,13 @@ import org.slf4j.LoggerFactory;
  * 
  * @author Michal Konopa
  */
-public final class DPA_ProtocolLayer extends AbstractProtocolLayer {
+public final class DPA_ProtocolLayer 
+extends AbstractProtocolLayer
+implements ProtocolStateMachineListener
+{
     /** Logger. */
     private static final Logger logger = LoggerFactory.getLogger(DPA_ProtocolLayer.class);
+
     
     /**
      * Binds sent requests with theirs time of sending.
@@ -71,7 +77,7 @@ public final class DPA_ProtocolLayer extends AbstractProtocolLayer {
     
     
     /** List of all requests, which was sent to network layer. */
-    private List<TimeRequest> sentRequests = new LinkedList<TimeRequest>();
+    private List<TimeRequest> sentRequests = new LinkedList<>();
     
     /** Synchronization object for {@code sentRequest} data structure. */
     private final Object synchroSentRequest = new Object();
@@ -82,6 +88,22 @@ public final class DPA_ProtocolLayer extends AbstractProtocolLayer {
     
     /** Maximal time duration [in ms] of sent requests in the protocol layer. */
     private long maxRequestDuration = MAX_REQUEST_DURATION_DEFAULT;
+    
+    
+    /** State machine supporting DPA protocol communication. */
+    private ProtocolStateMachine protoMachine = null;
+    private final Object synchroProtoMachine = new Object();
+    
+    
+    // implements algorithm of waiting before sending next request 
+    private void doWaitBeforeSendRequest() throws InterruptedException {
+        synchronized ( synchroProtoMachine ) {
+            while ( !protoMachine.isFreeForSend() ) {
+                synchroProtoMachine.wait();
+            }
+        }
+    }
+    
     
     /** 
      * Deletes invalid requests. Request is invalid, if: <br> 
@@ -287,7 +309,7 @@ public final class DPA_ProtocolLayer extends AbstractProtocolLayer {
                 if ( broadcastResponder.isAlive( )) {
                     broadcastResponder.join();
                 }
-            } catch (InterruptedException e) {
+            } catch ( InterruptedException e ) {
                 // restoring interrupt status
                 Thread.currentThread().interrupt();
                 logger.warn("broadcast responder terminating - thread interrupted");
@@ -309,6 +331,14 @@ public final class DPA_ProtocolLayer extends AbstractProtocolLayer {
     ) {
         super(networkLayerService, msgConvertor);
         broadcastResponder = new BroadcastResponder();
+        protoMachine = new ProtocolStateMachine();
+    }
+    
+    @Override
+    public void onFreeForSend() {
+        synchronized ( synchroProtoMachine ) {
+            synchroProtoMachine.notifyAll();
+        }
     }
     
     /**
@@ -327,10 +357,24 @@ public final class DPA_ProtocolLayer extends AbstractProtocolLayer {
         // conversion to format used by application protocol
         short[] protoMsg = msgConvertor.convertToProtoFormat(request);
         
+        // waiting before it is possible to send next request - DPA timing
+        try {   
+            doWaitBeforeSendRequest();
+        } catch ( InterruptedException ex ) {
+            logger.error(
+                "Thread interrupted while waiting for sending next request."
+                + "Request will not be sent", ex
+            );
+            return;
+        }
+        
         if ( request instanceof BroadcastRequest ) {
             synchronized ( synchroSentBroadcastRequest ) {
                 networkLayerService.sendData( new BaseNetworkData(protoMsg, request.getNetworkId()) );
                 sentBroadcastRequests.add( new TimeRequest(request, System.currentTimeMillis()) );
+                synchronized ( synchroProtoMachine ) {
+                    protoMachine.newRequest(request);
+                }
                 synchroSentBroadcastRequest.notify();
             }
         } else {
@@ -341,6 +385,9 @@ public final class DPA_ProtocolLayer extends AbstractProtocolLayer {
                 maintainSentRequest(request);
                 networkLayerService.sendData( new BaseNetworkData(protoMsg, request.getNetworkId()) );
                 sentRequests.add( new TimeRequest(request, System.currentTimeMillis()) );
+                synchronized ( synchroProtoMachine ) {
+                    protoMachine.newRequest(request);
+                }
             }
         }
         
@@ -353,6 +400,8 @@ public final class DPA_ProtocolLayer extends AbstractProtocolLayer {
         
         super.start();
         broadcastResponder.start();
+        protoMachine.start();
+        protoMachine.registerListener(this);
         
         logger.info("Started");
         logger.debug("start - end");
@@ -373,6 +422,10 @@ public final class DPA_ProtocolLayer extends AbstractProtocolLayer {
         sentBroadcastRequests.clear();
         sentBroadcastRequests = null;
         
+        protoMachine.unregisterListener();
+        protoMachine.destroy();
+        protoMachine = null;
+        
         logger.info("Destroyed");
         logger.debug("destroy - end");
     }
@@ -391,12 +444,26 @@ public final class DPA_ProtocolLayer extends AbstractProtocolLayer {
         try {
             responseCode = DPA_ProtocolProperties.getResponseCode(networkData.getData());
         } catch ( ValueConversionException ex ) {
-            logger.error("Error in determining response code: response={}", networkData);
+            logger.error("Error in determining response code. Network data={}", networkData);
             return;
         }
         
         // all confirmations are filtered out
         if ( responseCode == DPA_ResponseCode.CONFIRMATION ) {
+            DPA_Confirmation confirmation = null;
+            
+            try {
+                confirmation = (DPA_Confirmation)DPA_ConfirmationConvertor.
+                        getInstance().toObject(networkData.getData());
+            } catch ( ValueConversionException ex ) {
+                logger.error("Error in conversion of confirmation. Network data={}", networkData);
+                return;
+            }
+            
+            synchronized ( synchroProtoMachine ) {
+                protoMachine.confirmationReceived(confirmation);
+            }
+            
             logger.debug("onGetData - confirmation arrived: {}", networkData);
             return;
         }
@@ -408,6 +475,10 @@ public final class DPA_ProtocolLayer extends AbstractProtocolLayer {
         } catch ( SimplyException e ) {
             logger.error("Conversion error on incomming data", e);
             return;
+        }
+        
+        synchronized ( synchroProtoMachine ) {
+            protoMachine.responseReceived(networkData.getData());
         }
         
         // processing the message

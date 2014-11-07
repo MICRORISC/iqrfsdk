@@ -170,7 +170,11 @@
     <logger name="com.microrisc.simply.iqrf.dpa.v210.protocol.DPA_ProtocolProperties" level="INHERITED">
             <appender-ref ref="FILE" />
     </logger>
-
+    
+    <logger name="com.microrisc.simply.iqrf.dpa.v210.protocol.ProtocolStateMachine" level="INHERITED">
+            <appender-ref ref="FILE" />
+    </logger>
+    
     
     <!-- iqrf.dpa.v210.types package -->
     <logger name="com.microrisc.simply.iqrf.dpa.v210.types.FRC_ResultParser" level="INHERITED">
