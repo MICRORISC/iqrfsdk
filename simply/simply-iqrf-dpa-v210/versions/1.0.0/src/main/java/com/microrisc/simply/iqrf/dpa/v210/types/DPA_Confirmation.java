@@ -23,7 +23,7 @@ package com.microrisc.simply.iqrf.dpa.v210.types;
  */
 public final class DPA_Confirmation {
     /** DPA value. */
-    private final DPA_Parameter dpaParam;
+    private final DPA_Parameter dpaValue;
     
     /** Number of hops used to deliver the DPA request to the addressed node. */
     private final int hops;
@@ -45,7 +45,7 @@ public final class DPA_Confirmation {
     
     /**
      * Creates new object of DPA Confirmation.
-     * @param dpaParam DPA value
+     * @param dpaValue DPA value
      * @param hops Number of hops used to deliver the DPA request to the addressed node.
      * @param timeslotLength Timeslot length used to deliver the DPA request to the addressed node.
      * @param hopsResponse Number of hops used to deliver the DPA response from the addressed 
@@ -53,9 +53,9 @@ public final class DPA_Confirmation {
      *                     there is no response.
      */
     public DPA_Confirmation(
-            DPA_Parameter dpaParam, int hops, int timeslotLength, int hopsResponse
+            DPA_Parameter dpaValue, int hops, int timeslotLength, int hopsResponse
     ) {
-        this.dpaParam = dpaParam;
+        this.dpaValue = dpaValue;
         this.hops = hops;
         this.timeslotLength = timeslotLength;
         this.hopsResponse = hopsResponse;
@@ -64,8 +64,8 @@ public final class DPA_Confirmation {
     /**
      * @return the DPA value
      */
-    public DPA_Parameter getDpaParam() {
-        return dpaParam;
+    public DPA_Parameter getDpaValue() {
+        return dpaValue;
     }
 
     /**
@@ -91,5 +91,19 @@ public final class DPA_Confirmation {
         return hopsResponse;
     }
     
+    @Override
+    public String toString() {
+        StringBuilder strBuilder = new StringBuilder();
+        String NEW_LINE = System.getProperty("line.separator");
+        
+        strBuilder.append(this.getClass().getSimpleName() + " { " + NEW_LINE);
+        strBuilder.append(" DPA value: " + dpaValue + NEW_LINE);
+        strBuilder.append(" Hops: " + hops + NEW_LINE);
+        strBuilder.append(" Timeslot length: " + timeslotLength + NEW_LINE);
+        strBuilder.append(" Hops response: " + hopsResponse + NEW_LINE);
+        strBuilder.append("}");
+        
+        return strBuilder.toString();
+    }
     
 }

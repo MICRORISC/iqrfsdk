@@ -21,6 +21,7 @@ import com.microrisc.simply.ManageableObject;
 import com.microrisc.simply.SimplyException;
 import com.microrisc.simply.iqrf.dpa.broadcasting.BroadcastRequest;
 import com.microrisc.simply.iqrf.dpa.v210.types.DPA_Confirmation;
+import java.util.Arrays;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -96,7 +97,6 @@ public final class ProtocolStateMachine implements ManageableObject {
     
     
     private class WaitingTimeCounter extends Thread {
-        
         @Override
         public void run() {
             while ( true ) {
@@ -133,6 +133,8 @@ public final class ProtocolStateMachine implements ManageableObject {
                     }
                 }
                 
+                logger.info("Time to wait: {}", waitingTime);
+                
                 try {
                     Thread.sleep(waitingTime);
                 } catch ( InterruptedException ex ) {
@@ -149,6 +151,8 @@ public final class ProtocolStateMachine implements ManageableObject {
                         listener.onFreeForSend();
                     }
                 }
+                
+                logger.info("Free for send");
             }
         }
     }
@@ -214,7 +218,7 @@ public final class ProtocolStateMachine implements ManageableObject {
         
         waitingTimeCounter.start();
         
-        logger.info("protocol machine started");
+        logger.info("Protocol Machine started");
         logger.debug("start - end");
     }
     
@@ -223,9 +227,14 @@ public final class ProtocolStateMachine implements ManageableObject {
      * @param listener listener to register
      */
     public void registerListener(ProtocolStateMachineListener listener) {
+        logger.debug("registerListener - start: listener={}", listener);
+        
         synchronized ( synchroObjects ) {
             this.listener = listener;
         }
+        
+        logger.info("Listener registered.");
+        logger.debug("registerListener - end");
     } 
     
     /**
@@ -233,9 +242,14 @@ public final class ProtocolStateMachine implements ManageableObject {
      * Does nothing, if there is no registered listener.
      */
     public void unregisterListener() {
+        logger.debug("unregisterListener - start: ");
+        
         synchronized ( synchroObjects ) {
             this.listener = null;
         }
+        
+        logger.info("Listener unregistered.");
+        logger.debug("unregisterListener - end");
     }
     
     /**
@@ -244,9 +258,15 @@ public final class ProtocolStateMachine implements ManageableObject {
      *         {@code false} otherwise
      */
     public boolean isFreeForSend() {
+        logger.debug("isFreeForSend - start: ");
+        
+        boolean isFreeForSend = false;
         synchronized ( synchroObjects ) {
-            return ( actualState == State.FREE_FOR_SEND ); 
+            isFreeForSend = ( actualState == State.FREE_FOR_SEND ); 
         }
+        
+        logger.debug("isFreeForSend - end: {}", isFreeForSend);
+        return isFreeForSend;
     }
     
     /**
@@ -254,6 +274,8 @@ public final class ProtocolStateMachine implements ManageableObject {
      * @param request sent request
      */
     public void newRequest(CallRequest request) {
+        logger.debug("newRequest - start: request={}", request);
+        
         synchronized ( synchroObjects ) {
             if ( actualState != State.FREE_FOR_SEND ) {
                 throw new IllegalArgumentException(
@@ -272,6 +294,8 @@ public final class ProtocolStateMachine implements ManageableObject {
                 actualState = State.WAITING_FOR_CONFIRMATION;
             }
         }
+        
+        logger.debug("newRequest - end");
     }
     
     /**
@@ -280,6 +304,10 @@ public final class ProtocolStateMachine implements ManageableObject {
      * @param confirmation received confirmation
      */
     public void confirmationReceived(long recvTime, DPA_Confirmation confirmation) {
+        logger.debug("confirmationReceived - start: recvTime={}, confirmation={}",
+                recvTime, confirmation
+        );
+        
         synchronized ( synchroObjects ) { 
             if ( actualState != State.WAITING_FOR_CONFIRMATION ) {
                 throw new IllegalArgumentException(
@@ -300,6 +328,8 @@ public final class ProtocolStateMachine implements ManageableObject {
             this.confirmation = confirmation;
             this.confirmRecvTime = recvTime;
         }
+        
+        logger.debug("confirmationReceived - end");
     }
     
     /**
@@ -317,6 +347,10 @@ public final class ProtocolStateMachine implements ManageableObject {
      * @param responseData data of the received response
      */
     public void responseReceived(long recvTime, short[] responseData) {
+        logger.debug("responseReceived - start: recvTime={}, responseData={}",
+                recvTime, Arrays.toString(responseData)
+        );
+        
         synchronized ( synchroObjects ) {
             if ( actualState != State.WAITING_FOR_RESPONSE ) {
                 throw new IllegalArgumentException(
@@ -332,6 +366,8 @@ public final class ProtocolStateMachine implements ManageableObject {
                 synchroWaiting.notifyAll();
             }
         }
+        
+        logger.debug("responseReceived - end");
     }
     
     /**
