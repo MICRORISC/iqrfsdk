@@ -453,8 +453,14 @@ implements ProtocolStateMachineListener
             DPA_Confirmation confirmation = null;
             
             try {
+                short[] confirmData = new short[
+                            networkData.getData().length - DPA_ProtocolProperties.PDATA_START
+                        ];
+                System.arraycopy(networkData.getData(), DPA_ProtocolProperties.PDATA_START, 
+                        confirmData, 0, confirmData.length
+                );
                 confirmation = (DPA_Confirmation)DPA_ConfirmationConvertor.
-                        getInstance().toObject(networkData.getData());
+                        getInstance().toObject(confirmData);
             } catch ( ValueConversionException ex ) {
                 logger.error("Error in conversion of confirmation. Network data={}", networkData);
                 return;
