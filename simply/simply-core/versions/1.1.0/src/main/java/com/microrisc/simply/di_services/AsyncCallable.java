@@ -43,7 +43,7 @@ public interface AsyncCallable extends WaitingTimeoutService {
      * @param <T> type of result
      * @param callId unique identifier of performed DO method call
      * @param resultClass class of result
-     * @return results of DO method call identified by {@code callId}
+     * @return result of DO method call identified by {@code callId}
      */
     <T> T getCallResultInDefaultWaitingTimeout(UUID callId, Class<T> resultClass);
     
@@ -53,7 +53,7 @@ public interface AsyncCallable extends WaitingTimeoutService {
      * @param <T> type of result
      * @param callId unique identifier of performed DO method call
      * @param resultClass class of result
-     * @return results of DO method call identified by {@code callId}
+     * @return result of DO method call identified by {@code callId}
      */
     <T> T getCallResultImmediately(UUID callId, Class<T> resultClass);
 }

@@ -905,7 +905,7 @@ implements
         logger.debug("startMessaging - end");
     }
     
-     /**
+    /**
      * Terminates worker thread.
      */
     private void terminateWorkedThread() {

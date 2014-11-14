@@ -166,7 +166,7 @@ public final class UDPNetworkLayer extends AbstractNetworkLayer  {
      */
     private class ListenerCaller extends Thread {
         // already consumed data from socket
-        private Queue<short[]> consumedData = new LinkedList<short[]>();
+        private Queue<short[]> consumedData = new LinkedList<>();
         
         // indicates, wheather new data are in socket
         private boolean areDataInSocket() {
@@ -404,7 +404,7 @@ public final class UDPNetworkLayer extends AbstractNetworkLayer  {
         }
         
         // init queue of data comming from socket
-        dataFromSocket = new LinkedList<short[]>();
+        dataFromSocket = new LinkedList<>();
         
         // creating and starting threads
         createAndStartThreads();
