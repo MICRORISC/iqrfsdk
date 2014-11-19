@@ -68,11 +68,17 @@ public final class ProtocolStateMachine implements ManageableObject {
     private long countWaitingTimeAfterResponse() {
         long actualRespTimeslotLength = countTimeslotLength(responseDataLength);
         
-        if ( confirmation != null ) {
+        if ( countWithConfirmation ) {
+            if ( confirmation == null ) {
+                throw new IllegalStateException(
+                        "Confirmation needed for calculation of waiting time after response "
+                                + "but not present."
+                );
+            }
             return ( confirmation.getHops() + 1 ) * confirmation.getTimeslotLength() * 10
                 + ( confirmation.getHopsResponse() + 1 ) * actualRespTimeslotLength  * 10
                 - (System.currentTimeMillis() - responseRecvTime);
-        } 
+        }
         
         return ( actualRespTimeslotLength * 10 ) - (System.currentTimeMillis() - responseRecvTime);
     }
@@ -131,6 +137,11 @@ public final class ProtocolStateMachine implements ManageableObject {
                             );
                             return;
                     }
+                    
+                    // countWithConfirmation already used
+                    if ( actualState == ProtocolStateMachine.State.WAITING_AFTER_RESPONSE ) {
+                        countWithConfirmation = false;
+                    }
                 }
                 
                 logger.info("Time to wait: {}", waitingTime);
@@ -160,6 +171,9 @@ public final class ProtocolStateMachine implements ManageableObject {
     /** Waiting time counter thread. */
     private Thread waitingTimeCounter = null;
     
+    // timeout to wait for worker threads to join
+    private static final long JOIN_WAIT_TIMEOUT = 2000;
+    
     /**
      * Terminates waiting time counter thread.
      */
@@ -169,21 +183,26 @@ public final class ProtocolStateMachine implements ManageableObject {
         // termination signal
         waitingTimeCounter.interrupt();
         
-        // Waiting for waiting time counter to terminate. Cancelling waiting time 
-        // counter thread has higher priority than main thread interruption. 
-        while ( waitingTimeCounter.isAlive() ) {
-            try {
-                if ( waitingTimeCounter.isAlive( )) {
-                    waitingTimeCounter.join();
-                }
-            } catch ( InterruptedException e ) {
-                // restoring interrupt status
-                Thread.currentThread().interrupt();
-                logger.warn("waiting time counter terminating - thread interrupted");
-            }
-        } 
+        // indicates, wheather this thread is interrupted
+        boolean isInterrupted = false;
         
-        logger.info("waiting time counter stopped.");
+        try {
+            if ( waitingTimeCounter.isAlive( )) {
+                waitingTimeCounter.join(JOIN_WAIT_TIMEOUT);
+            }
+        } catch ( InterruptedException e ) {
+            isInterrupted = true;
+            logger.warn("waiting time counter terminating - thread interrupted");
+        }
+        
+        if ( !waitingTimeCounter.isAlive() ) {
+            logger.info("Waiting time counter stopped.");
+        }
+        
+        if ( isInterrupted ) {
+            Thread.currentThread().interrupt();
+        }
+        
         logger.debug("terminateWaitingTimeCounter - end");
     }
     
@@ -193,6 +212,10 @@ public final class ProtocolStateMachine implements ManageableObject {
     
     // received confirmation
     private DPA_Confirmation confirmation = null;
+    
+    // indicates, wheather to count with confirmation in calculation of 
+    // waiting time
+    private boolean countWithConfirmation = false;
     
     // time of reception of a response
     private long responseRecvTime = -1;
@@ -290,8 +313,11 @@ public final class ProtocolStateMachine implements ManageableObject {
 
             if ( isRequestForCoordinator(request) ) {
                 actualState = State.WAITING_FOR_RESPONSE;
+                countWithConfirmation = false;
             } else {
                 actualState = State.WAITING_FOR_CONFIRMATION;
+                confirmation = null;
+                countWithConfirmation = true;
             }
         }
         

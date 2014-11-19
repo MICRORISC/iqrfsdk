@@ -31,7 +31,7 @@ public final class CoordinatorStandardTransformer implements MethodIdTransformer
      * Mapping of method IDs to theirs string representations.
      */
     private static final Map<Coordinator.MethodID, String> methodIdsMap = 
-            new EnumMap<Coordinator.MethodID, String>(Coordinator.MethodID.class);
+            new EnumMap<>(Coordinator.MethodID.class);
     
     private static void initMethodIdsMap() {
         methodIdsMap.put(Coordinator.MethodID.GET_ADDRESSING_INFO, "1");
