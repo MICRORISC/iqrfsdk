@@ -54,15 +54,15 @@ public final class ProtocolStateMachine implements ManageableObject {
     
     private final Object synchroWaiting = new Object();
     
-    // counts timeslot length
+    // counts timeslot length in 10 ms units
     private static long countTimeslotLength(int responseDataLength) {
         if ( responseDataLength < 19 ) {
-            return 80;
+            return 8;
         }
         if ( responseDataLength < 41 ) {
-            return 90;
+            return 9;
         }
-        return 100;
+        return 10;
     }
     
     private long countWaitingTimeAfterResponse() {
