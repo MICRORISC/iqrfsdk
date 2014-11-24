@@ -38,21 +38,30 @@ public final class ProtocolStateMachine implements ManageableObject {
     /**
      * States of the machine.
      */
-    private enum State {
+    public static enum State {
         FREE_FOR_SEND,
         WAITING_FOR_CONFIRMATION,
+        WAITING_FOR_CONFIRMATION_ERROR,
         WAITING_AFTER_CONFIRMATION,
         WAITING_FOR_RESPONSE,
+        WAITING_FOR_RESPONSE_ERROR,
         WAITING_AFTER_RESPONSE
     } 
     
     // actual state
     private State actualState = State.FREE_FOR_SEND;
     
+    /** Default time to wait for confirmation [ in ms ]. */
+    public static final long TIME_TO_WAIT_FOR_CONFIRMATION_DEFAULT = 2000;
+    
+    // actual time to wait for confirmation
+    private long timeToWaitForConfirmation = TIME_TO_WAIT_FOR_CONFIRMATION_DEFAULT;
+    
     // object for synchronized access to entities
     private final Object synchroObjects = new Object();
     
     private final Object synchroWaiting = new Object();
+    
     
     // counts timeslot length in 10 ms units
     private static long countTimeslotLength(int responseDataLength) {
@@ -63,6 +72,20 @@ public final class ProtocolStateMachine implements ManageableObject {
             return 9;
         }
         return 10;
+    }
+    
+    private long countWaitingTimeForConfirmation() {
+        return timeToWaitForConfirmation;
+    }
+    
+    private long countWaitingTimeForResponse() {
+        long requestRoutingTime = 0;
+        if ( countWithConfirmation ) {
+            requestRoutingTime = (confirmation.getHops() + 1) * confirmation.getTimeslotLength() * 10;
+            return requestRoutingTime + 100;
+        }
+        
+        return 100;
     }
     
     private long countWaitingTimeAfterResponse() {
@@ -88,21 +111,126 @@ public final class ProtocolStateMachine implements ManageableObject {
                 - (System.currentTimeMillis() - responseRecvTime);
     }
     
-    // counts waiting time for specified state
-    private long countWaitingTime(State state) {
-        if ( state == State.WAITING_AFTER_RESPONSE ) {
-            return countWaitingTimeAfterResponse();
+    private long countWaitingTime(ProtocolStateMachine.State state) {
+        long waitingTime = 0;
+        switch ( state ) {
+            case FREE_FOR_SEND:
+                waitingTime = 0;
+                break;
+            case WAITING_FOR_CONFIRMATION:
+                waitingTime = countWaitingTimeForConfirmation();
+                break;
+            case WAITING_FOR_RESPONSE:
+                waitingTime = countWaitingTimeForResponse();
+                break;
+            case WAITING_AFTER_CONFIRMATION:
+                waitingTime = countWaitingTimeAfterConfirmation();
+                break;
+            case WAITING_AFTER_RESPONSE:
+                waitingTime = countWaitingTimeAfterResponse();
+                break;
+            default:
+                throw new IllegalStateException("Incorrect state to start waiting from: " + state);
+        }
+
+        if ( waitingTime < 0 ) {
+            waitingTime = 0;
         }
         
-        if ( state == State.WAITING_AFTER_CONFIRMATION ) {
-            return countWaitingTimeAfterConfirmation();
-        }
-        
-        throw new IllegalArgumentException("Incorrect state: " + state);
+        return waitingTime;
     }
     
     
     private class WaitingTimeCounter extends Thread {
+        
+        private void doWaitForConfirmation(long waitingTime) {
+            logger.info("Time to wait for confirmation: {}", waitingTime);
+            synchronized ( synchroWaiting ) {
+                try {
+                    synchroWaiting.wait(waitingTime);
+                } catch ( InterruptedException ex ) {
+                    logger.warn(
+                        "Waiting time counter interrupted while waiting on confirmation", ex
+                    );
+                    return;
+                }
+            }
+
+            synchronized ( synchroObjects ) {
+                // test if confirmation has come in
+                if ( actualState != ProtocolStateMachine.State.WAITING_FOR_RESPONSE ) {
+                    actualState = ProtocolStateMachine.State.WAITING_FOR_CONFIRMATION_ERROR;
+                    if ( listener != null ) {
+                        listener.onConfirmationTimeouted();
+                    }
+                }
+            }
+        }
+        
+        private void doWaitForResponse(long waitingTime) {
+            logger.info("Time to wait for response: {}", waitingTime);
+            synchronized ( synchroWaiting ) {
+                try {
+                    synchroWaiting.wait(waitingTime);
+                } catch ( InterruptedException ex ) {
+                    logger.warn(
+                        "Waiting time counter interrupted while waiting on confirmation", ex
+                    );
+                    return;
+                }
+            }
+
+            synchronized ( synchroObjects ) {
+                // test if response has come in
+                if ( actualState != ProtocolStateMachine.State.WAITING_AFTER_RESPONSE ) {
+                    actualState = ProtocolStateMachine.State.WAITING_FOR_RESPONSE_ERROR;
+                    if ( listener != null ) {
+                        listener.onResponseTimeouted();
+                    }
+                }
+            }
+        }
+        
+        private void doWaitAfter(long waitingTime) {
+            logger.info("Time to wait for sending new request: {}", waitingTime);
+                
+            try {
+                Thread.sleep(waitingTime);
+            } catch ( InterruptedException ex ) {
+                logger.warn(
+                    "Waiting time counter interrupted while waiting on routing end", ex
+                );
+                return;
+            }
+
+            // updating actual state and listener notification
+            synchronized ( synchroObjects ) {
+                actualState = ProtocolStateMachine.State.FREE_FOR_SEND;
+                if ( listener != null ) {
+                    listener.onFreeForSend();
+                }
+            }
+
+            logger.info("Free for send");
+        }
+        
+        private void doWait( ProtocolStateMachine.State state, long waitingTime ) {
+            switch ( state ) {
+                case WAITING_FOR_CONFIRMATION:
+                    doWaitForConfirmation(waitingTime);
+                    break;
+                case WAITING_FOR_RESPONSE:
+                    doWaitForResponse(waitingTime);
+                    break;
+                case WAITING_AFTER_CONFIRMATION:
+                case WAITING_AFTER_RESPONSE:
+                    doWaitAfter(waitingTime);
+                    break;
+                default:
+                    throw new IllegalStateException("Incorrect state to wait in: " + state);
+            }
+        }
+        
         @Override
         public void run() {
             while ( true ) {
@@ -119,51 +247,22 @@ public final class ProtocolStateMachine implements ManageableObject {
                         logger.warn("Waiting time counter interrupted while waiting", ex);
                         return;
                     }
-                }
-
-                long waitingTime = 0;
-                synchronized ( synchroObjects ) {
-                    switch ( actualState ) {
-                        case WAITING_AFTER_CONFIRMATION:
-                        case WAITING_AFTER_RESPONSE:
-                            waitingTime = countWaitingTime(actualState);
-                            if ( waitingTime < 0 ) {
-                                waitingTime = 0;
-                            }
-                            break;
-                        default:
-                            logger.error(
-                                "Bad state for waiting: {}. Waiting time counter finished", actualState
-                            );
-                            return;
+                    
+                    ProtocolStateMachine.State tempState = null;
+                    long waitingTime = 0;
+                    
+                    synchronized ( synchroObjects ) {
+                        tempState = actualState;
+                        waitingTime = countWaitingTime(tempState);
+                        
+                        // countWithConfirmation already used
+                        if ( actualState == ProtocolStateMachine.State.WAITING_AFTER_RESPONSE ) {
+                            countWithConfirmation = false;
+                        }
                     }
                     
-                    // countWithConfirmation already used
-                    if ( actualState == ProtocolStateMachine.State.WAITING_AFTER_RESPONSE ) {
-                        countWithConfirmation = false;
-                    }
+                    doWait( tempState, waitingTime );
                 }
-                
-                logger.info("Time to wait: {}", waitingTime);
-                
-                try {
-                    Thread.sleep(waitingTime);
-                } catch ( InterruptedException ex ) {
-                    logger.warn(
-                        "Waiting time counter interrupted while waiting on routing end", ex
-                    );
-                    return;
-                }
-
-                // updating actual state and listener notification
-                synchronized ( synchroObjects ) {
-                    actualState = ProtocolStateMachine.State.FREE_FOR_SEND;
-                    if ( listener != null ) {
-                        listener.onFreeForSend();
-                    }
-                }
-                
-                logger.info("Free for send");
             }
         }
     }
@@ -230,9 +329,40 @@ public final class ProtocolStateMachine implements ManageableObject {
         return request.getNodeId().equals("0");
     }
     
+    private static long checkTimeToWaitForConfirmation(long time) {
+        if ( time < 0 ) {
+            throw new IllegalArgumentException(
+                    "Time to wait for confirmation cannot be less then 0"
+            );
+        }
+        return time;
+    }
+    
     
     public ProtocolStateMachine() {
         waitingTimeCounter = new WaitingTimeCounter();
+        logger.info("Protocol machine successfully created.");
+    }
+    
+    /**
+     * Returns actual value of time to wait for confirmation arrival [ in ms ].
+     * @return actual value of time to wait for confirmation arrival
+     */
+    public long getTimeToWaitForConfirmation() {
+        synchronized ( synchroObjects ) {
+            return timeToWaitForConfirmation;
+        }
+    }
+    
+    /**
+     * Sets time to wait for confirmation arrival.
+     * @param time new value of time [ in ms ] to wait for confirmation, cannot be less then 0
+     * @throws IllegalArgumentException if specified time is less then 0
+     */
+    public void setTimeToWaitForConfirmation(long time) {
+        synchronized ( synchroObjects ) {
+            this.timeToWaitForConfirmation = checkTimeToWaitForConfirmation(time);
+        }
     }
     
     @Override
@@ -273,6 +403,22 @@ public final class ProtocolStateMachine implements ManageableObject {
         
         logger.info("Listener unregistered.");
         logger.debug("unregisterListener - end");
+    }
+    
+    /**
+     * Returns the actual state of the machine.
+     * @return the actual state of the machine
+     */
+    public State getActualState() {
+        logger.debug("getActualState - start: ");
+        
+        State state = null;
+        synchronized ( synchroObjects ) {
+            state = actualState;
+        }
+        
+        logger.debug("getActualState - end: {}", state);
+        return state;
     }
     
     /**
@@ -321,6 +467,10 @@ public final class ProtocolStateMachine implements ManageableObject {
             }
         }
         
+        synchronized ( synchroWaiting ) {
+            synchroWaiting.notifyAll();
+        }
+        
         logger.debug("newRequest - end");
     }
     
@@ -344,15 +494,16 @@ public final class ProtocolStateMachine implements ManageableObject {
             // broadcast - no response
             if ( confirmation.getHopsResponse() == 0 ) {
                 actualState = State.WAITING_AFTER_CONFIRMATION;
-                synchronized ( synchroWaiting ) {
-                    synchroWaiting.notifyAll();
-                }
             } else {
                 actualState = State.WAITING_FOR_RESPONSE;
             }
             
             this.confirmation = confirmation;
             this.confirmRecvTime = recvTime;
+        }
+        
+        synchronized ( synchroWaiting ) {
+            synchroWaiting.notifyAll();
         }
         
         logger.debug("confirmationReceived - end");
@@ -387,10 +538,10 @@ public final class ProtocolStateMachine implements ManageableObject {
             this.responseRecvTime = recvTime;
             this.responseDataLength = responseData.length;
             this.actualState = State.WAITING_AFTER_RESPONSE;
-            
-            synchronized ( synchroWaiting ) {
-                synchroWaiting.notifyAll();
-            }
+        }
+        
+        synchronized ( synchroWaiting ) {
+            synchroWaiting.notifyAll();
         }
         
         logger.debug("responseReceived - end");
@@ -403,6 +554,28 @@ public final class ProtocolStateMachine implements ManageableObject {
      */
     public void responseReceived(short[] responseData) {
         responseReceived(System.currentTimeMillis(), responseData);
+    }
+    
+    /**
+     * Reseting the machine. 
+     * Its main usage is to get the machine out of one of the error states.
+     */
+    public void reset() {
+        logger.debug("reset - start:");
+        
+        synchronized ( synchroObjects ) {
+            this.actualState = State.FREE_FOR_SEND;
+            
+            this.confirmation = null;
+            this.confirmRecvTime = -1;
+            this.countWithConfirmation = false;
+            
+            this.responseRecvTime = -1;
+            this.responseDataLength = -1;
+        }
+        
+        logger.info("Reseted.");
+        logger.debug("reset - end");
     }
     
     @Override

@@ -19,17 +19,18 @@ package com.microrisc.simply.iqrf.dpa.v210.protocol;
 import com.microrisc.simply.AbstractMessage;
 import com.microrisc.simply.BaseCallResponse;
 import com.microrisc.simply.CallRequest;
-import com.microrisc.simply.SimplyException;
 import com.microrisc.simply.NetworkData;
 import com.microrisc.simply.NetworkLayerService;
 import com.microrisc.simply.SimpleMessageSource;
 import com.microrisc.simply.SimpleMethodMessageSource;
+import com.microrisc.simply.SimplyException;
 import com.microrisc.simply.asynchrony.BaseAsynchronousMessage;
-import com.microrisc.simply.iqrf.dpa.v210.DPA_ResponseCode;
+import com.microrisc.simply.errors.NetworkInternalError;
 import com.microrisc.simply.iqrf.dpa.asynchrony.DPA_AsynchronousMessage;
 import com.microrisc.simply.iqrf.dpa.asynchrony.SimpleDPA_AsynchronousMessageSource;
 import com.microrisc.simply.iqrf.dpa.broadcasting.BroadcastRequest;
 import com.microrisc.simply.iqrf.dpa.broadcasting.BroadcastResult;
+import com.microrisc.simply.iqrf.dpa.v210.DPA_ResponseCode;
 import com.microrisc.simply.iqrf.dpa.v210.typeconvertors.DPA_ConfirmationConvertor;
 import com.microrisc.simply.iqrf.dpa.v210.types.DPA_Confirmation;
 import com.microrisc.simply.network.BaseNetworkData;
@@ -75,6 +76,8 @@ implements ProtocolStateMachineListener
         }
     }
     
+    /** Last sent request. */
+    private TimeRequest lastRequest = null;
     
     /** List of all requests, which was sent to network layer. */
     private List<TimeRequest> sentRequests = new LinkedList<>();
@@ -94,12 +97,22 @@ implements ProtocolStateMachineListener
     private ProtocolStateMachine protoMachine = null;
     private final Object synchroProtoMachine = new Object();
     
+    // type of errors encontered during communication with network layer
+    private static enum COMMUNICATION_ERROR_TYPE {
+        CONFIRMATION_TIMEOUTED,
+        RESPONSE_TIMEOUTED
+    }
     
     // implements algorithm of waiting before sending next request 
     private void doWaitBeforeSendRequest() throws InterruptedException {
         synchronized ( synchroProtoMachine ) {
-            while ( !protoMachine.isFreeForSend() ) {
+            ProtocolStateMachine.State machineState = protoMachine.getActualState();
+            while ( (machineState != ProtocolStateMachine.State.FREE_FOR_SEND)  
+                    && (machineState != ProtocolStateMachine.State.WAITING_FOR_CONFIRMATION_ERROR)
+                    && (machineState != ProtocolStateMachine.State.WAITING_FOR_RESPONSE_ERROR)
+                  ) {
                 synchroProtoMachine.wait();
+                machineState = protoMachine.getActualState();
             }
         }
     }
@@ -229,11 +242,50 @@ implements ProtocolStateMachineListener
         logger.debug("processResponse - end");
     }
     
+    private void sendErrorMessage(COMMUNICATION_ERROR_TYPE errorType, TimeRequest causeRequest) {
+        logger.debug("sendErrorMessage - start: causeRequest={}", causeRequest);
+        
+        String errorMsg = null;
+        switch ( errorType ) {
+            case CONFIRMATION_TIMEOUTED:
+                errorMsg = "Confirmation timeouted";
+                break;
+            case RESPONSE_TIMEOUTED:
+                errorMsg = "Response timeouted";
+                break;
+            default:
+                throw new IllegalStateException("Error " + errorType + " not expected.");
+        }
+        
+        BaseCallResponse errorResponse = new BaseCallResponse(
+                new SimpleMethodMessageSource(
+                        new SimpleMessageSource(
+                                causeRequest.request.getNetworkId(), 
+                                causeRequest.request.getNodeId()
+                        ), 
+                        causeRequest.request.getDeviceInterface(), 
+                        causeRequest.request.getMethodId()
+                       ), 
+                new NetworkInternalError(errorMsg)
+        );
+        synchronized ( synchroSentRequest ) {
+            errorResponse.setRequestId(causeRequest.request.getId());
+            sentRequests.remove(causeRequest);
+        }
+        
+        synchronized ( synchroListener ) {
+            listener.onGetMessage(errorResponse);
+        }
+        
+        logger.debug("sendErrorMessage - end");
+    }
+    
     /** List of broadcast requests, which was sent to network layer. */
     private Queue<TimeRequest> sentBroadcastRequests = new ConcurrentLinkedQueue<>();
     
     /** Synchronization object for {@code sentBroadcastRequest} data structure. */
     private final Object synchroSentBroadcastRequest = new Object();
+    
     
     /**
      * Calling listener callback method to send broadcast responses.
@@ -285,6 +337,9 @@ implements ProtocolStateMachineListener
     // broadcast responder thread
     private Thread broadcastResponder = null;
     
+    // timeout to wait for worker threads to join
+    private static final long JOIN_WAIT_TIMEOUT = 2000;
+    
     /** 
      * Synchronization object for listener. 
      * Listener will be called from incomming network thread and from broadcast
@@ -301,20 +356,25 @@ implements ProtocolStateMachineListener
         // termination signal to broadcast responder thread
         broadcastResponder.interrupt();
         
-        // Waiting for broadcast responder thread to terminate. 
-        // Cancelling of broadcast responder thread has higher priority than main 
-        // thread interruption. 
-        while ( broadcastResponder.isAlive() ) {
-            try {
-                if ( broadcastResponder.isAlive( )) {
-                    broadcastResponder.join();
-                }
-            } catch ( InterruptedException e ) {
-                // restoring interrupt status
-                Thread.currentThread().interrupt();
-                logger.warn("broadcast responder terminating - thread interrupted");
+        // indicates, wheather this thread is interrupted
+        boolean isInterrupted = false;
+        
+        try {
+            if ( broadcastResponder.isAlive( )) {
+                broadcastResponder.join(JOIN_WAIT_TIMEOUT);
             }
-        } 
+        } catch ( InterruptedException e ) {
+            isInterrupted = true;
+            logger.warn("broadcast responder terminating - thread interrupted");
+        }
+        
+        if ( !broadcastResponder.isAlive() ) {
+            logger.info("Broadcast responder stopped.");
+        }
+        
+        if ( isInterrupted ) {
+            Thread.currentThread().interrupt();
+        }
         
         logger.info("broadcast responding stopped.");
         logger.debug("terminateBroadcastResponderThread - end");
@@ -341,6 +401,20 @@ implements ProtocolStateMachineListener
         }
     }
     
+    @Override
+    public void onConfirmationTimeouted() {
+        synchronized ( synchroProtoMachine ) {
+            synchroProtoMachine.notifyAll();
+        }
+    }
+    
+    @Override
+    public void onResponseTimeouted() {
+        synchronized ( synchroProtoMachine ) {
+            synchroProtoMachine.notifyAll();
+        }
+    }
+    
     /**
      * This method works as follows: <br>
      * 1. Converts specified request into sequence of bytes. If an error has
@@ -357,8 +431,8 @@ implements ProtocolStateMachineListener
         // conversion to format used by application protocol
         short[] protoMsg = msgConvertor.convertToProtoFormat(request);
         
-        // waiting before it is possible to send next request - DPA timing
-        try {   
+        // waiting until it is possible to send the request
+        try {
             doWaitBeforeSendRequest();
         } catch ( InterruptedException ex ) {
             logger.error(
@@ -368,10 +442,43 @@ implements ProtocolStateMachineListener
             return;
         }
         
+        ProtocolStateMachine.State machineState = null;
+        synchronized ( synchroProtoMachine ) {
+            machineState = protoMachine.getActualState();
+        }
+        
+        boolean isError = false;
+        
+        // checking if it is possible to send the request
+        switch ( machineState ) {
+            case WAITING_FOR_CONFIRMATION_ERROR:
+                // send an error back to the connector
+                sendErrorMessage(COMMUNICATION_ERROR_TYPE.CONFIRMATION_TIMEOUTED, lastRequest);
+                isError = true;
+                break;
+            case WAITING_FOR_RESPONSE_ERROR:
+                sendErrorMessage(COMMUNICATION_ERROR_TYPE.RESPONSE_TIMEOUTED, lastRequest);
+                isError = true;
+                break;
+            case FREE_FOR_SEND:
+                break;
+            default:
+                throw new IllegalStateException("State not expected: " + machineState);
+        }
+        
+        // reseting machine after error
+        if ( isError ) {
+            synchronized ( synchroProtoMachine ) {
+                protoMachine.reset();
+            }
+        }
+        
+        lastRequest = new TimeRequest(request, System.currentTimeMillis());
+        
         if ( request instanceof BroadcastRequest ) {
             synchronized ( synchroSentBroadcastRequest ) {
                 networkLayerService.sendData( new BaseNetworkData(protoMsg, request.getNetworkId()) );
-                sentBroadcastRequests.add( new TimeRequest(request, System.currentTimeMillis()) );
+                sentBroadcastRequests.add( lastRequest );
                 synchronized ( synchroProtoMachine ) {
                     protoMachine.newRequest(request);
                 }
@@ -384,7 +491,7 @@ implements ProtocolStateMachineListener
                 // maintenance of already sent requests
                 maintainSentRequest(request);
                 networkLayerService.sendData( new BaseNetworkData(protoMsg, request.getNetworkId()) );
-                sentRequests.add( new TimeRequest(request, System.currentTimeMillis()) );
+                sentRequests.add( lastRequest );
                 synchronized ( synchroProtoMachine ) {
                     protoMachine.newRequest(request);
                 }

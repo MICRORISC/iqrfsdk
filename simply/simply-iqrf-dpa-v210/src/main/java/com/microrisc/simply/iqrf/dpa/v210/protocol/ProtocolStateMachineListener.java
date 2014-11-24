@@ -25,5 +25,15 @@ public interface ProtocolStateMachineListener {
     /**
      * Notifies, that it is possible to send next request.
      */
-    public void onFreeForSend();
+    void onFreeForSend();
+    
+    /**
+     * Notifies, that waiting for confirmation arrival timeouted.
+     */
+    void onConfirmationTimeouted();
+    
+    /**
+     * Notifies, that waiting for response arrival timeouted.
+     */
+    void onResponseTimeouted();
 }
