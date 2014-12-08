@@ -330,8 +330,10 @@ extends AbstractInitializer<SimpleDPA_InitObjects, Network> {
         // checking, if coordinator is present at the master
         Coordinator masterCoord = masterNode.getDeviceObject(Coordinator.class);
         if ( masterCoord == null ) {
-            logger.warn("Master node doesn't contain Coordinator interface."
-                    + "No bonded nodes will be created");
+            logger.warn(
+                    "Master node doesn't contain Coordinator interface."
+                    + "No bonded nodes will be created"
+            );
             nodesMap = new HashMap<>();
             nodesMap.put("0", masterNode);
             return new BaseNetwork(networkId, nodesMap);
@@ -341,6 +343,7 @@ extends AbstractInitializer<SimpleDPA_InitObjects, Network> {
         List<Integer> bondedNodesIds = null;
         if ( dpaInitConfig.getBondedNodesConfiguration() != null ) {
             bondedNodesIds = getBondedNodesIds(masterCoord);
+            System.out.println("Number of bonded nodes: " + bondedNodesIds.size());
             System.out.println("Bonded nodes: " + Arrays.toString(bondedNodesIds.toArray(new Integer[0])));
         } else {
             bondedNodesIds = new LinkedList<>();
@@ -349,23 +352,11 @@ extends AbstractInitializer<SimpleDPA_InitObjects, Network> {
         // running discovery process
         if ( dpaInitConfig.getDiscoveryConfiguration() != null ) {
             DiscoveryResult discoResult = runDiscovery(masterCoord);
-            if (discoResult == null) {
+            if ( discoResult == null ) {
                 throw new SimplyException("Discovery failed");
             }
-            System.out.println("Discovered nodes: " + discoResult.getDiscoveredNodesNum());
+            System.out.println("Number of discovered nodes: " + discoResult.getDiscoveredNodesNum());
         }
-        
-        // setting routing hops
-        /*
-        RoutingHopsConfiguration routingHopsConfig = dpaInitConfig.getRoutingHopsConfiguration();
-        if ( routingHopsConfig != null ) {
-            System.out.println("Setting routing hops: ... ");
-            RoutingHops prevRoutingHops = masterCoord.setHops(
-                    new RoutingHops(routingHopsConfig.getRequestHops(), routingHopsConfig.getResponseHops())
-            );
-            System.out.println("Previous routing hops: " + prevRoutingHops);
-        }
-	*/
         
         // creating nodes bonded to Master node
         nodesMap = createBondedNodes(networkId, bondedNodesIds);
