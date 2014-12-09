@@ -51,11 +51,20 @@ public final class ProtocolStateMachine implements ManageableObject {
     // actual state
     private State actualState = State.FREE_FOR_SEND;
     
+    
     /** Default time to wait for confirmation [ in ms ]. */
     public static final long TIME_TO_WAIT_FOR_CONFIRMATION_DEFAULT = 2000;
     
     // actual time to wait for confirmation
     private long timeToWaitForConfirmation = TIME_TO_WAIT_FOR_CONFIRMATION_DEFAULT;
+    
+    
+    /** Default base time to wait for response [ in ms ]. */
+    public static final long BASE_TIME_TO_WAIT_FOR_RESPONSE_DEFAULT = 2000;
+    
+    // actual base time to wait for response
+    private long baseTimeToWaitForResponse = BASE_TIME_TO_WAIT_FOR_RESPONSE_DEFAULT;
+    
     
     // object for synchronized access to entities
     private final Object synchroObjects = new Object();
@@ -82,10 +91,10 @@ public final class ProtocolStateMachine implements ManageableObject {
         long requestRoutingTime = 0;
         if ( countWithConfirmation ) {
             requestRoutingTime = (confirmation.getHops() + 1) * confirmation.getTimeslotLength() * 10;
-            return requestRoutingTime + 100;
+            return baseTimeToWaitForResponse + requestRoutingTime + 100;
         }
         
-        return 100;
+        return baseTimeToWaitForResponse + 100;
     }
     
     private long countWaitingTimeAfterResponse() {
@@ -191,6 +200,7 @@ public final class ProtocolStateMachine implements ManageableObject {
             }
         }
         
+        // waiting after confirmation or response arrival
         private void doWaitAfter(long waitingTime) {
             logger.info("Time to wait for sending new request: {}", waitingTime);
                 
@@ -233,6 +243,10 @@ public final class ProtocolStateMachine implements ManageableObject {
         
         @Override
         public void run() {
+            // it is needed because of automatic execution of next iteration
+            // without waiting for outside signal in some Macine states
+            boolean notToWait = false;
+            
             while ( true ) {
                 if ( this.isInterrupted() ) {
                     logger.info("Waiting time counter end");
@@ -241,12 +255,17 @@ public final class ProtocolStateMachine implements ManageableObject {
                 
                 // waiting for signal for waiting
                 synchronized ( synchroWaiting ) {
-                    try {
-                        synchroWaiting.wait();
-                    } catch ( InterruptedException ex ) {
-                        logger.warn("Waiting time counter interrupted while waiting", ex);
-                        return;
+                    if ( !notToWait ) { 
+                        try {
+                            synchroWaiting.wait();
+                        } catch ( InterruptedException ex ) {
+                            logger.warn("Waiting time counter interrupted while waiting", ex);
+                            return;
+                        }
                     }
+                    
+                    // for next iteration
+                    notToWait = false;
                     
                     ProtocolStateMachine.State tempState = null;
                     long waitingTime = 0;
@@ -261,7 +280,16 @@ public final class ProtocolStateMachine implements ManageableObject {
                         }
                     }
                     
+                    // waiting
                     doWait( tempState, waitingTime );
+                    
+                    synchronized ( synchroObjects ) {
+                        if ( actualState == ProtocolStateMachine.State.WAITING_AFTER_CONFIRMATION
+                            || actualState == ProtocolStateMachine.State.WAITING_AFTER_RESPONSE
+                        ) {
+                            notToWait = true;
+                        }
+                    }
                 }
             }
         }
@@ -338,6 +366,15 @@ public final class ProtocolStateMachine implements ManageableObject {
         return time;
     }
     
+    private static long checkBaseTimeToWaitForResponse(long time) {
+        if ( time < 0 ) {
+            throw new IllegalArgumentException(
+                    "Base time to wait for response cannot be less then 0"
+            );
+        }
+        return time;
+    }
+    
     
     public ProtocolStateMachine() {
         waitingTimeCounter = new WaitingTimeCounter();
@@ -364,6 +401,28 @@ public final class ProtocolStateMachine implements ManageableObject {
             this.timeToWaitForConfirmation = checkTimeToWaitForConfirmation(time);
         }
     }
+    
+    /**
+     * Returns actual value of base time to wait for response arrival [ in ms ].
+     * @return actual value of base time to wait for response arrival
+     */
+    public long getBaseTimeToWaitForResponse() {
+        synchronized ( synchroObjects ) {
+            return baseTimeToWaitForResponse;
+        }
+    }
+    
+    /**
+     * Sets base time to wait for response arrival.
+     * @param time new value of base time [ in ms ] to wait for response, cannot be less then 0
+     * @throws IllegalArgumentException if specified time is less then 0
+     */
+    public void setBaseTimeToWaitForResponse(long time) {
+        synchronized ( synchroObjects ) {
+            this.baseTimeToWaitForResponse = checkBaseTimeToWaitForResponse(time);
+        }
+    }
+    
     
     @Override
     public void start() throws SimplyException {

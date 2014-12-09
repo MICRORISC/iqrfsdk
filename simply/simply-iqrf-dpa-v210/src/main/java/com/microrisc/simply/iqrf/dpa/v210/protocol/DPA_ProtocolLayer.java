@@ -86,6 +86,14 @@ implements ProtocolStateMachineListener
     private final Object synchroSentRequest = new Object();
    
     
+    /**
+     * For ensuring that sending a request to connected network together with 
+     * performing of all needed settings including manipulation with Protocol Machine
+     * will be executed all at once - without interruption of any other threads.
+     */
+    private final Object synchroSendOrReceive = new Object();
+    
+    
     /** Default maximal time duration [in ms] of sent requests in the protocol layer. */
     public static final long MAX_REQUEST_DURATION_DEFAULT = 10000;
     
@@ -126,20 +134,22 @@ implements ProtocolStateMachineListener
     private void deleteInvalidRequests(CallRequest newRequest) {
         logger.debug("deleteInvalidRequests - start: newRequest={}", newRequest);
         
-        Iterator<TimeRequest> requestIt = sentRequests.iterator();
-        while ( requestIt.hasNext() ) {
-            TimeRequest sentRequest = requestIt.next();
-            long requestDuration = System.currentTimeMillis() - sentRequest.sentTime;
-            
-            if ( requestDuration > maxRequestDuration ) {
-                logger.debug("removed request ( time exceed ): {}", sentRequest);
-                requestIt.remove();
-                continue;
-            }
-            
-            if ( CallRequestComparator.areEqual(sentRequest.request, newRequest) ) {
-                logger.debug("removed request ( equality ) : {}", sentRequest);
-                requestIt.remove();
+        synchronized ( synchroSentRequest ) {
+            Iterator<TimeRequest> requestIt = sentRequests.iterator();
+            while ( requestIt.hasNext() ) {
+                TimeRequest sentRequest = requestIt.next();
+                long requestDuration = System.currentTimeMillis() - sentRequest.sentTime;
+
+                if ( requestDuration > maxRequestDuration ) {
+                    logger.debug("removed request ( time exceed ): {}", sentRequest);
+                    requestIt.remove();
+                    continue;
+                }
+
+                if ( CallRequestComparator.areEqual(sentRequest.request, newRequest) ) {
+                    logger.debug("removed request ( equality ) : {}", sentRequest);
+                    requestIt.remove();
+                }
             }
         }
         
@@ -485,13 +495,15 @@ implements ProtocolStateMachineListener
                 synchroSentBroadcastRequest.notify();
             }
         } else {
-            // must be performed altogether
-            // if response comes before sentRequest.add(), error encounters
-            synchronized ( synchroSentRequest ) {
+            // must be performed altogether to eliminating the case, when 
+            // response comes to early
+            synchronized ( synchroSendOrReceive ) {
                 // maintenance of already sent requests
                 maintainSentRequest(request);
                 networkLayerService.sendData( new BaseNetworkData(protoMsg, request.getNetworkId()) );
-                sentRequests.add( lastRequest );
+                synchronized ( synchroSentRequest ) {
+                    sentRequests.add( lastRequest );
+                }
                 synchronized ( synchroProtoMachine ) {
                     protoMachine.newRequest(request);
                 }
@@ -590,12 +602,14 @@ implements ProtocolStateMachineListener
             return;
         }
         
-        synchronized ( synchroProtoMachine ) {
-            protoMachine.responseReceived(networkData.getData());
-        }
+        synchronized ( synchroSendOrReceive ) {
+            synchronized ( synchroProtoMachine ) {
+                protoMachine.responseReceived(networkData.getData());
+            }
         
-        // processing the message
-        processMessage(message, networkData.getData());
+            // processing the message incomming from network
+            processMessage(message, networkData.getData());
+        }
         
         logger.debug("onGetData - end");
     }
