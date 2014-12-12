@@ -103,7 +103,9 @@ implements ProtocolStateMachineListener
     
     /** State machine supporting DPA protocol communication. */
     private ProtocolStateMachine protoMachine = null;
-    private final Object synchroProtoMachine = new Object();
+    
+    // state changed in protocol machine
+    private final Object protoMachineStateChangeSignal = new Object();
     
     // type of errors encontered during communication with network layer
     private static enum COMMUNICATION_ERROR_TYPE {
@@ -111,17 +113,32 @@ implements ProtocolStateMachineListener
         RESPONSE_TIMEOUTED
     }
     
-    // implements algorithm of waiting before sending next request 
+    // waits before sending next request 
     private void doWaitBeforeSendRequest() throws InterruptedException {
-        synchronized ( synchroProtoMachine ) {
-            ProtocolStateMachine.State machineState = protoMachine.getActualState();
+        ProtocolStateMachine.State machineState = null;
+        
+        synchronized ( protoMachineStateChangeSignal ) {
+            machineState = protoMachine.getState();
             while ( (machineState != ProtocolStateMachine.State.FREE_FOR_SEND)  
                     && (machineState != ProtocolStateMachine.State.WAITING_FOR_CONFIRMATION_ERROR)
                     && (machineState != ProtocolStateMachine.State.WAITING_FOR_RESPONSE_ERROR)
                   ) {
-                synchroProtoMachine.wait();
-                machineState = protoMachine.getActualState();
+                protoMachineStateChangeSignal.wait();
+                machineState = protoMachine.getState();
             }
+        }
+        
+        // checking if it is possible to send new request
+        switch ( machineState ) {
+            case WAITING_FOR_CONFIRMATION_ERROR:
+            case WAITING_FOR_RESPONSE_ERROR:
+                // reseting machine after error
+                protoMachine.resetAfterError();
+                break;
+            case FREE_FOR_SEND:
+                break;
+            default:
+                throw new IllegalStateException("State not expected: " + machineState);
         }
     }
     
@@ -252,6 +269,7 @@ implements ProtocolStateMachineListener
         logger.debug("processResponse - end");
     }
     
+    // sends information about encountered error to the registered listener
     private void sendErrorMessage(COMMUNICATION_ERROR_TYPE errorType, TimeRequest causeRequest) {
         logger.debug("sendErrorMessage - start: causeRequest={}", causeRequest);
         
@@ -278,6 +296,7 @@ implements ProtocolStateMachineListener
                        ), 
                 new NetworkInternalError(errorMsg)
         );
+        
         synchronized ( synchroSentRequest ) {
             errorResponse.setRequestId(causeRequest.request.getId());
             sentRequests.remove(causeRequest);
@@ -406,22 +425,24 @@ implements ProtocolStateMachineListener
     
     @Override
     public void onFreeForSend() {
-        synchronized ( synchroProtoMachine ) {
-            synchroProtoMachine.notifyAll();
+        synchronized ( protoMachineStateChangeSignal ) {
+            protoMachineStateChangeSignal.notifyAll();
         }
     }
     
     @Override
     public void onConfirmationTimeouted() {
-        synchronized ( synchroProtoMachine ) {
-            synchroProtoMachine.notifyAll();
+        sendErrorMessage(COMMUNICATION_ERROR_TYPE.CONFIRMATION_TIMEOUTED, lastRequest);
+        synchronized ( protoMachineStateChangeSignal ) {
+            protoMachineStateChangeSignal.notifyAll();
         }
     }
     
     @Override
     public void onResponseTimeouted() {
-        synchronized ( synchroProtoMachine ) {
-            synchroProtoMachine.notifyAll();
+        sendErrorMessage(COMMUNICATION_ERROR_TYPE.RESPONSE_TIMEOUTED, lastRequest);
+        synchronized ( protoMachineStateChangeSignal ) {
+            protoMachineStateChangeSignal.notifyAll();
         }
     }
     
@@ -441,7 +462,7 @@ implements ProtocolStateMachineListener
         // conversion to format used by application protocol
         short[] protoMsg = msgConvertor.convertToProtoFormat(request);
         
-        // waiting until it is possible to send the request
+        // waiting until it is possible to send new request
         try {
             doWaitBeforeSendRequest();
         } catch ( InterruptedException ex ) {
@@ -452,46 +473,13 @@ implements ProtocolStateMachineListener
             return;
         }
         
-        ProtocolStateMachine.State machineState = null;
-        synchronized ( synchroProtoMachine ) {
-            machineState = protoMachine.getActualState();
-        }
-        
-        boolean isError = false;
-        
-        // checking if it is possible to send the request
-        switch ( machineState ) {
-            case WAITING_FOR_CONFIRMATION_ERROR:
-                // send an error back to the connector
-                sendErrorMessage(COMMUNICATION_ERROR_TYPE.CONFIRMATION_TIMEOUTED, lastRequest);
-                isError = true;
-                break;
-            case WAITING_FOR_RESPONSE_ERROR:
-                sendErrorMessage(COMMUNICATION_ERROR_TYPE.RESPONSE_TIMEOUTED, lastRequest);
-                isError = true;
-                break;
-            case FREE_FOR_SEND:
-                break;
-            default:
-                throw new IllegalStateException("State not expected: " + machineState);
-        }
-        
-        // reseting machine after error
-        if ( isError ) {
-            synchronized ( synchroProtoMachine ) {
-                protoMachine.reset();
-            }
-        }
-        
         lastRequest = new TimeRequest(request, System.currentTimeMillis());
         
         if ( request instanceof BroadcastRequest ) {
             synchronized ( synchroSentBroadcastRequest ) {
                 networkLayerService.sendData( new BaseNetworkData(protoMsg, request.getNetworkId()) );
                 sentBroadcastRequests.add( lastRequest );
-                synchronized ( synchroProtoMachine ) {
-                    protoMachine.newRequest(request);
-                }
+                protoMachine.newRequest(request);
                 synchroSentBroadcastRequest.notify();
             }
         } else {
@@ -504,9 +492,7 @@ implements ProtocolStateMachineListener
                 synchronized ( synchroSentRequest ) {
                     sentRequests.add( lastRequest );
                 }
-                synchronized ( synchroProtoMachine ) {
-                    protoMachine.newRequest(request);
-                }
+                protoMachine.newRequest(request);
             }
         }
         
@@ -585,9 +571,7 @@ implements ProtocolStateMachineListener
                 return;
             }
             
-            synchronized ( synchroProtoMachine ) {
-                protoMachine.confirmationReceived(confirmation);
-            }
+            protoMachine.confirmationReceived(confirmation);
             
             logger.debug("onGetData - confirmation arrived: {}", networkData);
             return;
@@ -603,9 +587,7 @@ implements ProtocolStateMachineListener
         }
         
         synchronized ( synchroSendOrReceive ) {
-            synchronized ( synchroProtoMachine ) {
-                protoMachine.responseReceived(networkData.getData());
-            }
+            protoMachine.responseReceived(networkData.getData());
         
             // processing the message incomming from network
             processMessage(message, networkData.getData());
