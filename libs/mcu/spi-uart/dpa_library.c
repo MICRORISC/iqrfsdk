@@ -16,10 +16,10 @@
 
 /*****************************************************************************
  *
- * DPA support library
+ * DPA support library ver.0.70
  *
  *****************************************************************************/
- 
+
 #include <plib.h>
 #include "dpa_library.h"
 
@@ -85,6 +85,7 @@ void DPA_SendUartByte(UINT8 Tx_Byte);
 void DPA_ReceiveUartByte(UINT8 Rx_Byte);
 void DPA_UartInterfaceDriver(void);
 void DPA_SendDataByte(UINT8 dataByte);
+UINT8 DPA_doCRC8(UINT8 inData, UINT8 seed);
 
 #endif
 
@@ -519,7 +520,11 @@ void DPA_UartInterfaceDriver(void)
 				tempData ^= HDLC_FRM_ESCAPE_BIT;		
 			}
 
+			#ifdef __DPA_LIB_VER_2_0x
 			dpaUartIfControl.CRC ^= tempData;													// add Rx byte to CRC
+			#else
+			dpaUartIfControl.CRC = DPA_doCRC8(tempData, dpaUartIfControl.CRC);
+			#endif
 
 			switch(dpaUartIfControl.packetCnt){	
 				case 0: dpaUartIfControl.dpaPacketPtr->NAdr = tempData; break;   				// receive LOW(NAdr)
@@ -559,7 +564,12 @@ void DPA_UartInterfaceDriver(void)
 			if (tempData  == HDLC_FRM_FLAG_SEQUENCE){										// start of packet
 
 				dpaUartIfControl.dpaPacketPtr = &dpaLibDpaAnswer;							// set pointer to DPA receive structure
+
+				#ifdef __DPA_LIB_VER_2_0x
 	           	dpaUartIfControl.CRC = 0x5F;												// initialize CRC
+				#else
+	           	dpaUartIfControl.CRC = 0xFF;												// initialize CRC
+				#endif
 	           	
 	           	dpaUartIfControl.packetLen = sizeof(T_DPA_PACKET);							// maximal size of received data
 				dpaUartIfControl.packetCnt = 0;												// counter of received bytes
@@ -576,7 +586,12 @@ void DPA_UartInterfaceDriver(void)
 			dpaControl.dpaRequestPacketPtr = NULL;
 
 			dpaUartIfControl.packetLen = dpaControl.extraDataSize + 6;						// NAdr + PNum + PCmd + HwProfile + Data 			
+
+			#ifdef __DPA_LIB_VER_2_0x
 			dpaUartIfControl.CRC = 0x5F;													// initialize CRC
+			#else
+           	dpaUartIfControl.CRC = 0xFF;													// initialize CRC
+			#endif
 
 			dpaUartIfControl.packetCnt = 0;													// counter of sent bytes				
 			dpaUartIfControl.direction = UART_TRANSFER_WRITE;								// write data to TR module
@@ -602,8 +617,35 @@ void DPA_SendDataByte(UINT8 dataByte)
 	}
 	else DPA_SendUartByte(dataByte);
 	
+	#ifdef __DPA_LIB_VER_2_0x
 	dpaUartIfControl.CRC ^= dataByte;
+	#else
+	dpaUartIfControl.CRC = DPA_doCRC8(dataByte, dpaUartIfControl.CRC);
+	#endif
 }
-//*************************************************************************** 
+
+/**
+ *  Compute the CRC8 value of a data set
+ *
+ * @param 	inData  One byte of data to compute CRC from
+ *			seed    The starting value of the CRC
+ *
+ * @return	The CRC8 of inData with seed as initial value
+ *
+ **/
+#ifndef __DPA_LIB_VER_2_0x
+UINT8 DPA_doCRC8(UINT8 inData, UINT8 seed)
+{
+    UINT8 bitsLeft;
+
+    for (bitsLeft = 8; bitsLeft > 0; bitsLeft--){
+        if (((seed ^ inData) & 0x01) == 0) seed >>= 1;
+        else seed = (seed >>= 1)^0x8C;
+        inData >>= 1;
+    }
+    return seed;    
+}
 #endif
 
+//*************************************************************************** 
+#endif
