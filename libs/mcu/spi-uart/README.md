@@ -7,8 +7,8 @@ Introduction
 The library aims to help the user with a task of communication with DCTR modules
 running DPA framework. 
 
-The library supports both SPI and UART interfaces. The interface is configurable.
-The library has been tested ONLY with DCTR modules running DPA v2.01.
+The library supports both SPI and UART interfaces. The interface and DPA version 
+is configurable. SPI interface and DPA v2.1x are selected by default. 
  
 
 Tested MCU platforms
@@ -24,11 +24,9 @@ An example for MSP430 is included.
 Plans for official IQRFSDK release
 ----------------------------------
 
--update UART CRC rutine for DPA v2.1x
--perform library tests with DPA v2.1x
--perform library tests for ARM platform 
--add usage examples
--add library documentation
+* add usage examples
+* add library documentation
+* perform library tests for ARM platform 
 
 
 Feedback & contact
