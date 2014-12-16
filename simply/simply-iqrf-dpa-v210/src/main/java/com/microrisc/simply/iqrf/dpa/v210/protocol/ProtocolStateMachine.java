@@ -120,7 +120,9 @@ final class ProtocolStateMachine implements ManageableObject {
                     stateChangeSignal.wait(STATE_CHANGE_TIMEOUT);
                     long endTime = System.currentTimeMillis();
                     if ( (endTime - startTime) >= STATE_CHANGE_TIMEOUT ) {
-                        throw new IllegalStateException("Waiting for state change timeouted.");
+                        throw new IllegalStateException (
+                            "Waiting for state: " + stateToWaitFor  +  " timeouted."
+                        );
                     }
                 } catch ( InterruptedException ex ) {
                     logger.warn("Waiting for next exptected state interrupted.");
@@ -691,8 +693,13 @@ final class ProtocolStateMachine implements ManageableObject {
      * Informs the machine, that confirmation has been received.
      * @param recvTime time of confirmation reception
      * @param confirmation received confirmation
+     * @throws IllegalArgumentException if the machine is not in {@code WAITING_FOR_CONFIRMATION} state
+     * @throws StateTimeoutedException if {@code WAITING_FOR_CONFIRMATION} state was
+     *         timeouted during processing of the specified confirmation
      */
-    synchronized public void confirmationReceived(long recvTime, DPA_Confirmation confirmation) {
+    synchronized public void confirmationReceived(long recvTime, DPA_Confirmation confirmation)
+        throws StateTimeoutedException 
+    {
         logger.debug("confirmationReceived - start: recvTime={}, confirmation={}",
                 recvTime, confirmation
         );
@@ -720,7 +727,19 @@ final class ProtocolStateMachine implements ManageableObject {
             synchroNewEvent.notifyAll();
         }
         
-        waitForStateChangeSignal(nextExpectedState);
+        try {
+            waitForStateChangeSignal(nextExpectedState);
+        } catch ( IllegalStateException e ) {
+            State actualStateCopy = null;
+            synchronized ( synchroActualState ) {
+                actualStateCopy = actualState;
+            }
+            if ( actualStateCopy == State.WAITING_FOR_CONFIRMATION_ERROR ) {
+                throw new StateTimeoutedException("Waiting on confirmation timeouted.");
+            } else {
+                throw e;
+            }
+        }
         
         logger.debug("confirmationReceived - end");
     }
@@ -729,8 +748,13 @@ final class ProtocolStateMachine implements ManageableObject {
      * Informs the machine, that confirmation has been received. Time of calling 
      * of this method will be used as the time of the confirmation reception.
      * @param confirmation received confirmation
+     * @throws IllegalArgumentException if the machine is not in {@code WAITING_FOR_CONFIRMATION} state
+     * @throws StateTimeoutedException if {@code WAITING_FOR_CONFIRMATION} state was
+     *         timeouted during processing of the specified confirmation
      */
-    synchronized public void confirmationReceived(DPA_Confirmation confirmation) {
+    synchronized public void confirmationReceived(DPA_Confirmation confirmation) 
+            throws StateTimeoutedException 
+    {
         confirmationReceived(System.currentTimeMillis(), confirmation);
     }
     
@@ -738,8 +762,13 @@ final class ProtocolStateMachine implements ManageableObject {
      * Informs the machine, that response has been received.
      * @param recvTime time of response reception
      * @param responseData data of the received response
+     * @throws IllegalArgumentException if the machine is not in {@code WAITING_FOR_RESPONSE} state
+     * @throws StateTimeoutedException if {@code WAITING_FOR_RESPONSE} state was
+     *         timeouted during processing of the specified response data
      */
-    synchronized public void responseReceived(long recvTime, short[] responseData) {
+    synchronized public void responseReceived(long recvTime, short[] responseData) 
+        throws StateTimeoutedException 
+    {
         logger.debug("responseReceived - start: recvTime={}, responseData={}",
                 recvTime, Arrays.toString(responseData)
         );
@@ -760,7 +789,19 @@ final class ProtocolStateMachine implements ManageableObject {
             synchroNewEvent.notifyAll();
         }
         
-        waitForStateChangeSignal(nextExpectedState);
+        try {
+            waitForStateChangeSignal(nextExpectedState);
+        } catch ( IllegalStateException e ) {
+            State actualStateCopy = null;
+            synchronized ( synchroActualState ) {
+                actualStateCopy = actualState;
+            }
+            if ( actualStateCopy == State.WAITING_FOR_CONFIRMATION_ERROR ) {
+                throw new StateTimeoutedException("Waiting on response timeouted.");
+            } else {
+                throw e;
+            }
+        }
         
         logger.debug("responseReceived - end");
     }
@@ -769,8 +810,12 @@ final class ProtocolStateMachine implements ManageableObject {
      * Informs the machine, that response has been received. Time of calling of
      * this method will be used as the time of the response reception.
      * @param responseData data of the received response
+     * @throws StateTimeoutedException if {@code WAITING_FOR_RESPONSE} state was
+     *         timeouted during processing of the specified response data
      */
-    synchronized public void responseReceived(short[] responseData) {
+    synchronized public void responseReceived(short[] responseData) 
+            throws StateTimeoutedException  
+    {
         responseReceived(System.currentTimeMillis(), responseData);
     }
     

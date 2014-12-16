@@ -31,6 +31,8 @@ import com.microrisc.simply.iqrf.dpa.asynchrony.SimpleDPA_AsynchronousMessageSou
 import com.microrisc.simply.iqrf.dpa.broadcasting.BroadcastRequest;
 import com.microrisc.simply.iqrf.dpa.broadcasting.BroadcastResult;
 import com.microrisc.simply.iqrf.dpa.v210.DPA_ResponseCode;
+import com.microrisc.simply.iqrf.dpa.v210.devices.Coordinator;
+import com.microrisc.simply.iqrf.dpa.v210.di_services.method_id_transformers.CoordinatorStandardTransformer;
 import com.microrisc.simply.iqrf.dpa.v210.typeconvertors.DPA_ConfirmationConvertor;
 import com.microrisc.simply.iqrf.dpa.v210.types.DPA_Confirmation;
 import com.microrisc.simply.network.BaseNetworkData;
@@ -75,6 +77,25 @@ implements ProtocolStateMachineListener
             this.sentTime = sentTime;
         }
     }
+    
+    // indicates, wheather the specified request is discovery request
+    private static boolean isDiscoveryRequest(CallRequest request) {
+        if ( request.getDeviceInterface() != Coordinator.class ) {
+            return false;
+        }
+        
+        // checking of transformed method ID
+        String discoMethodConvId = CoordinatorStandardTransformer
+                .getInstance()
+                .transform(Coordinator.MethodID.DISCOVERY_DATA
+        ); 
+        
+        return ( request.getMethodId().equals(discoMethodConvId) ); 
+    }
+    
+    // indicates, wheather discovery request is in process
+    private volatile boolean isDiscoveryRequestInProcess = false;
+    
     
     /** Last sent request. */
     private TimeRequest lastRequest = null;
@@ -492,7 +513,12 @@ implements ProtocolStateMachineListener
                 synchronized ( synchroSentRequest ) {
                     sentRequests.add( lastRequest );
                 }
-                protoMachine.newRequest(request);
+                if ( isDiscoveryRequest(request) ) {
+                    isDiscoveryRequestInProcess = true;
+                } else {
+                    isDiscoveryRequestInProcess = false;
+                    protoMachine.newRequest(request);
+                }
             }
         }
         
@@ -571,7 +597,16 @@ implements ProtocolStateMachineListener
                 return;
             }
             
-            protoMachine.confirmationReceived(confirmation);
+            if ( !isDiscoveryRequestInProcess ) {
+                synchronized ( synchroSendOrReceive ) {
+                    try {
+                        protoMachine.confirmationReceived(confirmation);
+                    } catch ( StateTimeoutedException ex ) {
+                        logger.error("Confirmation reception too late. Waiting timeouted.");
+                        return;
+                    }
+                }
+            }
             
             logger.debug("onGetData - confirmation arrived: {}", networkData);
             return;
@@ -587,8 +622,15 @@ implements ProtocolStateMachineListener
         }
         
         synchronized ( synchroSendOrReceive ) {
-            protoMachine.responseReceived(networkData.getData());
-        
+            if ( !isDiscoveryRequestInProcess ) {
+                try {
+                    protoMachine.responseReceived(networkData.getData());
+                } catch ( StateTimeoutedException ex ) {
+                    logger.error("Response reception too late. Waiting timeouted.");
+                    return;
+                }
+            }
+            
             // processing the message incomming from network
             processMessage(message, networkData.getData());
         }
