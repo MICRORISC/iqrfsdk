@@ -87,7 +87,7 @@ implements ProtocolStateMachineListener
         // checking of transformed method ID
         String discoMethodConvId = CoordinatorStandardTransformer
                 .getInstance()
-                .transform(Coordinator.MethodID.DISCOVERY_DATA
+                .transform(Coordinator.MethodID.RUN_DISCOVERY
         ); 
         
         return ( request.getMethodId().equals(discoMethodConvId) ); 
