@@ -34,23 +34,23 @@ implements PeripheralToDevIfaceMapperFactory {
      * Holds mapping between my peripherals and Device Interfaces.
      */
     private class UserPerToDevIfaceMapper implements PeripheralToDevIfaceMapper {
-        private final Map<String, Class> peripheralToIface; 
-        private final Map<Class, String> ifaceToPeripheral;
+        private final Map<Integer, Class> peripheralToIface; 
+        private final Map<Class, Integer> ifaceToPeripheral;
     
     
         private void createMappings() {
-            peripheralToIface.put("32", MyLED.class);
+            peripheralToIface.put(32, MyLED.class);
 
             // creating transposition
-            for ( Map.Entry<String, Class> entry : peripheralToIface.entrySet() ) {
+            for ( Map.Entry<Integer, Class> entry : peripheralToIface.entrySet() ) {
                 ifaceToPeripheral.put(entry.getValue(), entry.getKey());
             }
         }
     
     
         public UserPerToDevIfaceMapper() {
-            peripheralToIface = new HashMap<String, Class>();
-            ifaceToPeripheral = new HashMap<Class, String>();
+            peripheralToIface = new HashMap<>();
+            ifaceToPeripheral = new HashMap<>();
             createMappings();
         }
     
@@ -60,13 +60,18 @@ implements PeripheralToDevIfaceMapperFactory {
         }
 
         @Override   
-        public Class getDeviceInterface(String perId) {
+        public Class getDeviceInterface(int perId) {
             return peripheralToIface.get(perId);
         }
 
         @Override
-        public String getPeripheralId(Class devInterface) {
+        public Integer getPeripheralId(Class devInterface) {
             return ifaceToPeripheral.get(devInterface);
+        }
+
+        @Override
+        public Set<Integer> getMappedPeripherals() {
+            return peripheralToIface.keySet();
         }
     }
     
