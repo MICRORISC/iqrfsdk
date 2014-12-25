@@ -43,7 +43,7 @@ implements DPA_StandardServices {
     private int requestHwProfile = DEFAULT_REQUEST_HW_PROFILE;
     
     
-    private int checkRequestHwProfile( int requestHwProfile ) {
+    private static int checkRequestHwProfile( int requestHwProfile ) {
         if ( (requestHwProfile < 0x0000) || (requestHwProfile > 0xFFFF) ) {
             throw new IllegalArgumentException("Invalid value of request HW profile: " + requestHwProfile);
         }
