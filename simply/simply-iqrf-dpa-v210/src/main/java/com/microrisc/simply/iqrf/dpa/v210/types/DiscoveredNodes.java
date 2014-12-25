@@ -38,6 +38,14 @@ public final class DiscoveredNodes {
     }
     
     /**
+     * Returns number of all discovered nodes.
+     * @return number of all discovered nodes
+     */
+    public int getNodesNumber() {
+        return discoveredNodesList.getSize();
+    }
+    
+    /**
      * Returns indication, wheather node of specified address is discovered or not.
      * @param nodeAddress address of node to examine
      * @return {@code true} if node with specified address is discovered

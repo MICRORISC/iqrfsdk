@@ -37,6 +37,14 @@ public final class BondedNodes {
     }
     
     /**
+     * Returns number of all bonded nodes.
+     * @return number of all bonded nodes
+     */
+    public int getNodesNumber() {
+        return bondedNodesList.getSize();
+    }
+    
+    /**
      * Returns indication, wheather node of specified address is bonded or not.
      * @param nodeAddress address of node to examine
      * @return {@code true} if node with specified address is bonded

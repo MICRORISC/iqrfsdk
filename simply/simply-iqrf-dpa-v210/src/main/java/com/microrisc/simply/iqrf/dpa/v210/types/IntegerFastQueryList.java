@@ -44,13 +44,21 @@ public final class IntegerFastQueryList {
             throw new IllegalArgumentException("Nodes list cannot be null");
         }
         
-        this.members = new HashSet<Integer>();
-        this.membersList = new LinkedList<Integer>();
+        this.members = new HashSet<>();
+        this.membersList = new LinkedList<>();
         
-        for ( Integer nodeId : membersList ) {
-            this.membersList.add(new Integer(nodeId));
+        for ( int nodeId : membersList ) {
+            this.membersList.add(nodeId);
             this.members.add(nodeId);
         }
+    }
+    
+    /**
+     * Returns the size of the list.
+     * @return the size of the list.
+     */
+    public int getSize() {
+        return members.size();
     }
     
     /**
@@ -68,9 +76,9 @@ public final class IntegerFastQueryList {
      * @return list of all members.
      */
     public List<Integer> getList() {
-        List<Integer> listToReturn = new LinkedList<Integer>();
+        List<Integer> listToReturn = new LinkedList<>();
         for ( Integer nodeId : membersList ) {
-            listToReturn.add(new Integer(nodeId));
+            listToReturn.add(nodeId);
         }
         return listToReturn;
     }
