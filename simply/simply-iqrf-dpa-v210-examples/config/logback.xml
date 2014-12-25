@@ -156,7 +156,11 @@
     <logger name="com.microrisc.simply.iqrf.dpa.v210.init.DPA_Initializer" level="INHERITED">
             <appender-ref ref="FILE" />
     </logger>
-
+	
+	<logger name="com.microrisc.simply.iqrf.dpa.v210.init.NodeFactory" level="INHERITED">
+            <appender-ref ref="FILE" />
+    </logger>
+	
 
     <!-- iqrf.dpa.protocol package -->
     <logger name="com.microrisc.simply.iqrf.dpa.v210.protocol.DPA_MessageConvertor" level="INHERITED">
@@ -336,7 +340,7 @@
 
 
     <!-- root -->
-    <root level="info">
+    <root level="debug">
         <!-- appender-ref ref="STDOUT" / -->
     </root>
 </configuration>

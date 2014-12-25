@@ -36,6 +36,7 @@ import com.microrisc.simply.iqrf.dpa.broadcasting.BroadcastingConnectorService;
 import com.microrisc.simply.iqrf.dpa.broadcasting.services.BroadcastServices;
 import com.microrisc.simply.iqrf.dpa.v210.init.DPA_InitObjectsFactory;
 import com.microrisc.simply.iqrf.dpa.v210.init.DPA_Initializer;
+import com.microrisc.simply.iqrf.dpa.v210.init.NodeFactory;
 import com.microrisc.simply.iqrf.dpa.v210.init.SimpleDPA_InitObjects;
 import java.util.Map;
 import org.apache.commons.configuration.Configuration;
@@ -124,6 +125,7 @@ public final class DPA_SimplyFactory {
             Configuration configuration = ConfigurationReader.fromFile(configFile);
             SimpleDPA_InitObjects initObjects = 
                     (new DPA_InitObjectsFactory()).getInitObjects(configuration);
+            NodeFactory.init(initObjects);
             networkMap = new DPA_Initializer().initialize(initObjects);
             connStack = initObjects.getConnectionStack();
             broadcastServices = createBroadcastServices(configuration, connStack.getConnector());

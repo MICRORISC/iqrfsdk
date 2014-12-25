@@ -17,15 +17,14 @@
 package com.microrisc.simply.iqrf.dpa.v210.init;
 
 import com.microrisc.simply.BaseNetwork;
-import com.microrisc.simply.BaseNode;
 import com.microrisc.simply.ConnectorService;
-import com.microrisc.simply.DeviceObject;
-import com.microrisc.simply.SimplyException;
 import com.microrisc.simply.Network;
 import com.microrisc.simply.Node;
 import com.microrisc.simply.SimpleDeviceObjectFactory;
+import com.microrisc.simply.SimplyException;
 import com.microrisc.simply.connector.response_waiting.ResponseWaitingConnector;
 import com.microrisc.simply.init.AbstractInitializer;
+import com.microrisc.simply.init.InitConfigSettings;
 import com.microrisc.simply.iqrf.dpa.v210.devices.Coordinator;
 import com.microrisc.simply.iqrf.dpa.v210.devices.PeripheralInfoGetter;
 import com.microrisc.simply.iqrf.dpa.v210.types.BondedNodes;
@@ -34,9 +33,11 @@ import com.microrisc.simply.iqrf.dpa.v210.types.DiscoveryResult;
 import com.microrisc.simply.iqrf.dpa.v210.types.PeripheralEnumeration;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import org.apache.commons.configuration.Configuration;
 import org.slf4j.Logger;
@@ -48,16 +49,18 @@ import org.slf4j.LoggerFactory;
  * @author Michal Konopa
  */
 public final class DPA_Initializer 
-extends AbstractInitializer<SimpleDPA_InitObjects, Network> {
+extends 
+    AbstractInitializer<DPA_InitObjects<InitConfigSettings<Configuration, Map<String, Configuration>>>, Network> 
+{
     /** Logger. */
     private static final Logger logger = LoggerFactory.getLogger(DPA_Initializer.class);
     
     
     /** Inner objects. */
-    private SimpleDPA_InitObjects initObjects = null;
+    private DPA_InitObjects<InitConfigSettings<Configuration, Map<String, Configuration>>> initObjects = null;
     
     /** Device object factory. */
-    private SimpleDeviceObjectFactory devObjectFactory = new SimpleDeviceObjectFactory();
+    private final SimpleDeviceObjectFactory devObjectFactory = new SimpleDeviceObjectFactory();
     
     /** Configuration settings for initializer. */
     private DPA_InitializerConfiguration dpaInitConfig = null;
@@ -81,9 +84,9 @@ extends AbstractInitializer<SimpleDPA_InitObjects, Network> {
     /**
      * Returns peripheral numbers provided by specified node.
      * @param infoDeviceObj
-     * @return array of peripheral numbers the device supports
+     * @return set of peripheral numbers the device supports
      */
-    private int[] getPeripheralNumbers(PeripheralInfoGetter infoDeviceObj) 
+    private Set<Integer> getPeripheralNumbers(PeripheralInfoGetter infoDeviceObj) 
             throws SimplyException {
         logger.debug("getPeripheralNumbers - start: infoDeviceObj={}", infoDeviceObj);
         
@@ -118,74 +121,18 @@ extends AbstractInitializer<SimpleDPA_InitObjects, Network> {
         
         int[] defaultPerNumbers = perEnum.getDefaultPeripherals();
         int userPerTotal = perEnum.getUserDefPeripheralsNum();
-        int[] allPerNumbers = new int[defaultPerNumbers.length + userPerTotal];
-        System.arraycopy(defaultPerNumbers, 0, allPerNumbers, 0, defaultPerNumbers.length);
+        Set<Integer> allPerNumbers = new HashSet<>();
+        for ( int defPerNumber : defaultPerNumbers ) {
+            allPerNumbers.add(defPerNumber);
+        }
         
         final int STANDARD_PER_NUM = 32;
         for ( int userPerNum = 0; userPerNum < userPerTotal; userPerNum++ ) {
-            allPerNumbers[defaultPerNumbers.length + userPerNum] = STANDARD_PER_NUM + userPerNum;
+            allPerNumbers.add(STANDARD_PER_NUM + userPerNum);
         }
         
         logger.debug("getPeripheralNumbers - end: {}", allPerNumbers);
         return allPerNumbers;
-    }
-    
-    /**
-     * For specified node ID creates map of services and returns it.
-     * @param networkId ID of network, which the node belongs to
-     * @param nodeId ID of node
-     */
-    private Map<Class, DeviceObject> createNodeServices(String networkId, String nodeId) 
-            throws Exception {
-        logger.debug("createNodeServices - start: nodeId={}", nodeId);
-        
-        System.out.println("Creating node services: ");
-        
-        // services map
-        Map<Class, DeviceObject> services = new HashMap<>();
-        
-        // creating Peripheral Information object
-        PeripheralInfoGetter perInfoObject = createPerInfoObject(networkId, nodeId);
-            
-        // put info object into service's map
-        services.put(PeripheralInfoGetter.class, (DeviceObject)perInfoObject);
-        
-        // getting all supported services
-        int[] perNumbers = getPeripheralNumbers(perInfoObject);
-        
-        System.out.print("Services: ");
-        for (int perId : perNumbers) {
-            System.out.print(perId + " ");
-            
-            Class devIface = initObjects.getPeripheralToDevIfaceMapper().
-                    getDeviceInterface(String.valueOf(perId)
-            );
-            
-            // IMPORTANT: if no device interface for specified peripheral number is found,
-            // continue, not throw an exception
-            if ( devIface == null ) {
-                logger.warn("Interface not found for peripheral: {}", perId);
-                continue;
-            }
-            
-            Class implClass = initObjects.getImplClassMapper().getImplClass(devIface);
-            if ( implClass == null ) {
-                throw new RuntimeException("Implementation for " + devIface.getName() + " not found");
-            }
-            
-            // creating new device object for implementation class
-            DeviceObject newDeviceObj = devObjectFactory.getDeviceObject(
-                    networkId, nodeId, initObjects.getConnectionStack().getConnector(), 
-                    implClass, initObjects.getConfigSettings().getGeneralSettings()
-            );
-            
-            // put object into service's map
-            services.put(devIface, newDeviceObj);
-        }
-        
-        System.out.println("\nNode services created");
-        logger.debug("createNodeServices - end");
-        return services;
     }
     
     /**
@@ -234,8 +181,14 @@ extends AbstractInitializer<SimpleDPA_InitObjects, Network> {
         logger.debug("createNode - start: networkId={}, nodeId={}", networkId, nodeId);
         System.out.println("Creating node " + nodeId + ":");
         
-        Map<Class, DeviceObject> nodeServices = createNodeServices(networkId, nodeId);
-        Node node = new BaseNode(networkId, nodeId, nodeServices);
+        // creating Peripheral Information object to get all supported peripherals
+        PeripheralInfoGetter perInfoObject = createPerInfoObject(networkId, nodeId);
+        
+        // TODO: choose either enumeration or some other method of peripheral selection
+        Set<Integer> peripheralNumbers = getPeripheralNumbers(perInfoObject);
+        System.out.println("Peripherals: " + Arrays.toString(peripheralNumbers.toArray(new Integer[0])) );
+        
+        Node node = NodeFactory.createNode(networkId, nodeId, peripheralNumbers);
         
         System.out.println("Node created\n");
         logger.debug("createNode - end: {}", node);
@@ -370,8 +323,9 @@ extends AbstractInitializer<SimpleDPA_InitObjects, Network> {
     }
     
     @Override
-    public Map<String, Network> initialize(SimpleDPA_InitObjects initObjects)
-            throws Exception {
+    public Map<String, Network> initialize(
+            DPA_InitObjects<InitConfigSettings<Configuration, Map<String, Configuration>>> initObjects
+    ) throws Exception {
         logger.debug("initialize - start: innerObjects={}", initObjects);
         System.out.println("Starting initialization of Simply ...");
         
