@@ -16,6 +16,8 @@
 
 package com.microrisc.simply.iqrf.dpa.v210.types;
 
+import java.util.Arrays;
+
 /**
  * Module ID of the remotely bonded node.
  * 
@@ -28,6 +30,14 @@ public final class RemotelyBondedModuleId {
     /** User data. */
     private final short[] userData;
     
+    
+    private static boolean areModuleIdsEqual(short[] moduleId_1, short[] moduleId_2) {
+        return Arrays.equals(moduleId_2, moduleId_1);
+    }
+    
+    private static boolean areUserDataEqual(short[] userData_1, short[] userData_2) {
+        return Arrays.equals(userData_2, userData_1);
+    }
     
     /**
      * Creates new remotely bonded module ID.
@@ -58,6 +68,25 @@ public final class RemotelyBondedModuleId {
         short[] userDataToReturn = new short[userData.length];
         System.arraycopy(userData, 0, userDataToReturn, 0, userData.length);
         return userDataToReturn;
+    }
+    
+    @Override
+    public boolean equals(Object obj) {
+        if ( !(obj instanceof RemotelyBondedModuleId) ) {
+            return false;
+        }
+        
+        RemotelyBondedModuleId remoBondedModuleId = (RemotelyBondedModuleId) obj;
+        
+        if ( !areModuleIdsEqual(this.moduleId, remoBondedModuleId.moduleId) ) {
+            return false;
+        }
+        
+        if ( !areUserDataEqual(this.userData, remoBondedModuleId.userData) ) {
+            return false;
+        }
+        
+        return true;
     }
    
 }
