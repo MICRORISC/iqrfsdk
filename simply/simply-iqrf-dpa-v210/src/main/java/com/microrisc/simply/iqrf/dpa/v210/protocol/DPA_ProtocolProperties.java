@@ -192,19 +192,37 @@ public final class DPA_ProtocolProperties {
         */
        public static enum TYPE {
            DEFAULT,
+           RESERVED,
            CERTIFIED,
            USER,
-           RESERVED
+           DO_NOT_CHECK
        }
 
        /** Default HW profile. */
        public static final int DEFAULT = 0x00;
+       
+       /** "Do not check" HW profile value. */
+       public static final int DO_NOT_CHECK = 0xFFFF;
+       
 
        // Suppress default constructor for noninstantiability
        private HWPID_Properties() {
            throw new AssertionError();
        }
-
+       
+       /**
+        * Indicates, wheather the specified value of HWPID is reserved.
+        * @param hwpId HWPID to check
+        * @return {@code true} if {@code hwpId} is reserved HW profile <br>
+        *         {@code false} otherwise
+        */
+       public static boolean isReserved(int hwpId) {
+           if ( hwpId == DEFAULT ) {
+               return false;
+           }
+           return (hwpId & 0b01) == 0 || (hwpId == 0xFFFF);
+       }
+       
        /**
         * Indicates, wheather the specified value of HWPID is cirtified HW profile.
         * @param hwpId HWPID to check
@@ -229,17 +247,15 @@ public final class DPA_ProtocolProperties {
        }
 
        /**
-        * Indicates, wheather the specified value of HWPID is reserved.
-        * @param hwpId HWPID to check
-        * @return {@code true} if {@code hwpId} is reserved HW profile <br>
+        * Indicates, wheather the specified value of HWPID is "Do not check".
+        * @param hwpId HW profile to check
+        * @return {@code true} if {@code hwpId} is "Do not check"<br>
         *         {@code false} otherwise
         */
-       public static boolean isReserved(int hwpId) {
-           if ( hwpId == DEFAULT ) {
-               return false;
-           }
-           return (hwpId & 0b01) == 0 || (hwpId == 0xFFFF);
+       public static boolean isDoNotCheck(int hwpId) {
+           return ( hwpId == DO_NOT_CHECK );
        }
+       
 
        /**
         * Returns type of the specified value of HW profile. 
@@ -263,7 +279,11 @@ public final class DPA_ProtocolProperties {
            if ( isUser(hwpId) ) {
                return TYPE.USER;
            }
-
+           
+           if ( isDoNotCheck(hwpId) ) {
+               return TYPE.DO_NOT_CHECK;
+           }
+           
            if ( isReserved(hwpId) ) {
                return TYPE.RESERVED;
            }
