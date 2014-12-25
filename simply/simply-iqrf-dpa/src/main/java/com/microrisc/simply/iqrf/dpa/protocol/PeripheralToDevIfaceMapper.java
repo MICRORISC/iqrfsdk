@@ -25,18 +25,25 @@ import java.util.Set;
  */
 public interface PeripheralToDevIfaceMapper {
     /**
-     * Returns set of Device Interfaces, each of which there exists concrete mapping for.
-     * @return set of Device Interfaces, each of which there exists concrete mapping for.
+     * Returns set of IDs of DPA peripherals, each of which there exists a concrete mapping for.
+     * @return set of IDs of DPA peripherals, each of which there exists a concrete mapping for.
+     */
+    Set<Integer> getMappedPeripherals();
+    
+    
+    /**
+     * Returns set of Device Interfaces, each of which there exists a concrete mapping for.
+     * @return set of Device Interfaces, each of which there exists a concrete mapping for.
      */
     Set<Class> getMappedDeviceInterfaces();
     
     /**
      * Returns Device Interface, which corresponds to specified peripheral.
-     * @param perId peripheral DI
+     * @param perId ID of peripheral
      * @return Device Interface, which corresponds to specified peripheral <br>
      *         {@code null}, if DI was not found
      */
-    Class getDeviceInterface(String perId);
+    Class getDeviceInterface(int perId);
 
     /**
      * Returns identifier of peripheral, which corresponds to specified DI.
@@ -44,6 +51,6 @@ public interface PeripheralToDevIfaceMapper {
      * @return identifier of peripheral, which corresponds to specified DI <br>
      *         {@code null}, if peripheral was not found
      */
-    String getPeripheralId(Class devInterface);
+    Integer getPeripheralId(Class devInterface);
     
 }

@@ -4,7 +4,7 @@
     <groupId>com.microrisc.simply.iqrf.dpa</groupId>
     <artifactId>simply-iqrf-dpa</artifactId>
     <packaging>jar</packaging>
-    <version>2.1.0-SNAPSHOT</version>
+    <version>3.0.0-SNAPSHOT</version>
     
     <name>simply-iqrf-dpa</name>
     <description>IQRF DPA functionality of Simply framework.</description>
