@@ -41,10 +41,12 @@ import com.microrisc.simply.protocol.CallRequestComparator;
 import com.microrisc.simply.protocol.MessageConvertor;
 import com.microrisc.simply.protocol.SimpleRequestToResponseMatcher;
 import com.microrisc.simply.typeconvertors.ValueConversionException;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
+import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -78,8 +80,56 @@ implements ProtocolStateMachineListener
         }
     }
     
-    // indicates, wheather the specified request is discovery request
-    private static boolean isDiscoveryRequest(CallRequest request) {
+    // information about potentionally time unlimited request - i.e. request,
+    // whose response time is not inherently bounded, i.e. discovery
+    private static class TimeUnlimitedRequestInfo {
+        Class devIface;
+        String methodId;
+        
+        public TimeUnlimitedRequestInfo(Class devIface, String methodId) {
+            this.devIface = devIface;
+            this.methodId = methodId;
+        }
+        
+        @Override
+        public boolean equals(Object o) {
+            if ( !(o instanceof TimeUnlimitedRequestInfo) ) {
+                return false;
+            }
+            
+            TimeUnlimitedRequestInfo requestInfo = (TimeUnlimitedRequestInfo)o;
+            return ( 
+                    requestInfo.devIface.equals(this.devIface) 
+                    && requestInfo.methodId.equals(this.methodId)  
+            );
+        }
+    }
+    
+    // set of time unlimited requests
+    private Set<TimeUnlimitedRequestInfo> timeUnlimitedRequests = new HashSet<>();
+    
+    // initialize set of time limited requests
+    private void initTimeUnlimitedRequests() {
+        timeUnlimitedRequests.add(
+                new TimeUnlimitedRequestInfo(
+                        Coordinator.class,
+                        CoordinatorStandardTransformer
+                            .getInstance()
+                            .transform(Coordinator.MethodID.RUN_DISCOVERY)
+                )
+        );
+        timeUnlimitedRequests.add(
+                new TimeUnlimitedRequestInfo(
+                        Coordinator.class,
+                        CoordinatorStandardTransformer
+                            .getInstance()
+                            .transform(Coordinator.MethodID.BOND_NODE)
+                )
+        );
+    }
+    
+    // indicates, wheather the specified request is time unlimited
+    private static boolean isTimeUnlimitedRequest(CallRequest request) {
         if ( request.getDeviceInterface() != Coordinator.class ) {
             return false;
         }
@@ -93,8 +143,8 @@ implements ProtocolStateMachineListener
         return ( request.getMethodId().equals(discoMethodConvId) ); 
     }
     
-    // indicates, wheather discovery request is in process
-    private volatile boolean isDiscoveryRequestInProcess = false;
+    // indicates, wheather a time unlimited request is in process
+    private volatile boolean isTimeUnlimitedRequestInProcess = false;
     
     
     /** Last sent request. */
@@ -442,6 +492,7 @@ implements ProtocolStateMachineListener
         super(networkLayerService, msgConvertor);
         broadcastResponder = new BroadcastResponder();
         protoMachine = new ProtocolStateMachine();
+        initTimeUnlimitedRequests();
     }
     
     @Override
@@ -513,10 +564,10 @@ implements ProtocolStateMachineListener
                 synchronized ( synchroSentRequest ) {
                     sentRequests.add( lastRequest );
                 }
-                if ( isDiscoveryRequest(request) ) {
-                    isDiscoveryRequestInProcess = true;
+                if ( isTimeUnlimitedRequest(request) ) {
+                    isTimeUnlimitedRequestInProcess = true;
                 } else {
-                    isDiscoveryRequestInProcess = false;
+                    isTimeUnlimitedRequestInProcess = false;
                     protoMachine.newRequest(request);
                 }
             }
@@ -597,7 +648,7 @@ implements ProtocolStateMachineListener
                 return;
             }
             
-            if ( !isDiscoveryRequestInProcess ) {
+            if ( !isTimeUnlimitedRequestInProcess ) {
                 synchronized ( synchroSendOrReceive ) {
                     try {
                         protoMachine.confirmationReceived(confirmation);
@@ -622,7 +673,7 @@ implements ProtocolStateMachineListener
         }
         
         synchronized ( synchroSendOrReceive ) {
-            if ( !isDiscoveryRequestInProcess ) {
+            if ( !isTimeUnlimitedRequestInProcess ) {
                 try {
                     protoMachine.responseReceived(networkData.getData());
                 } catch ( StateTimeoutedException ex ) {
