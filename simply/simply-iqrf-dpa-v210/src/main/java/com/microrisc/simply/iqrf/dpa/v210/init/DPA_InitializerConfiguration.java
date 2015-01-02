@@ -21,35 +21,33 @@ package com.microrisc.simply.iqrf.dpa.v210.init;
  * 
  * @author Michal Konopa
  */
-public class DPA_InitializerConfiguration {
-    /** Configuration of enumeration process. */
+public final class DPA_InitializerConfiguration {
+    // type of initialization
+    private final InitializationType initType;
+    
+    // configuration of enumeration process
     private final EnumerationConfiguration enumConfig;
     
-    /** Configuration of processing of bonded nodes. */
-    private final BondedNodesConfiguration bondedNodesConfig;
+    // fixed initialization configuration
+    private final FixedInitConfiguration fixedInitConfig;
     
-    /** Configuration of discovery process. */
-    private final DiscoveryConfiguration discoConfig;
-
     
     public static class Builder {
+        private final InitializationType initType;
         private EnumerationConfiguration enumConfig;
-        private BondedNodesConfiguration bondedNodesConfig;
-        private DiscoveryConfiguration discoConfig;
+        private FixedInitConfiguration fixedInitConfig;
         
+        public Builder(InitializationType initType) {
+            this.initType = initType;
+        }
         
         public Builder enumerationConfiguration(EnumerationConfiguration enumConfig) {
             this.enumConfig = enumConfig;
             return this;
         }
         
-        public Builder bondedNodesConfiguration(BondedNodesConfiguration bondedNodesConfig) {
-            this.bondedNodesConfig = bondedNodesConfig;
-            return this;
-        }
-        
-        public Builder discoveryConfiguration(DiscoveryConfiguration discoConfig) {
-            this.discoConfig = discoConfig;
+        public Builder fixedInitConfiguration(FixedInitConfiguration fixedInitConfig) {
+            this.fixedInitConfig = fixedInitConfig;
             return this;
         }
         
@@ -58,15 +56,44 @@ public class DPA_InitializerConfiguration {
         }
     }
     
+    private static InitializationType checkInitType(InitializationType initType) {
+        if ( initType == null ) {
+            throw new IllegalArgumentException("Initialization type cannot be null.");
+        }
+        return initType;
+    }
+    
     /**
      * Creates configuration of DPA initializer.
      */
     private DPA_InitializerConfiguration(Builder builder) {
+        this.initType = checkInitType(builder.initType);
         this.enumConfig = builder.enumConfig;
-        this.bondedNodesConfig = builder.bondedNodesConfig;
-        this.discoConfig = builder.discoConfig;
+        this.fixedInitConfig = builder.fixedInitConfig;
+        
+        switch ( initType ) {
+            case ENUMERATION:
+                if ( this.enumConfig == null ) {
+                    throw new IllegalArgumentException("Enumeration configuration not defined.");
+                }
+                break;
+            case FIXED:
+                if ( this.fixedInitConfig == null ) {
+                    throw new IllegalArgumentException("Fixed initialization configuration not defined.");
+                }
+                break;
+            default:
+                throw new IllegalStateException("Unsupported type of configuration: " + initType);
+        }
     }
     
+    
+    /**
+     * @return initialization type
+     */
+    public InitializationType getInitializationType() {
+        return initType;
+    }
     
     /**
      * @return enumeration configuration
@@ -74,18 +101,12 @@ public class DPA_InitializerConfiguration {
     public EnumerationConfiguration getEnumerationConfiguration() {
         return enumConfig;
     }
-
-    /**
-     * @return processing of bonded nodes configuration
-     */
-    public BondedNodesConfiguration getBondedNodesConfiguration() {
-        return bondedNodesConfig;
-    }
     
     /**
-     * @return discovery configuration
+     * @return fixed initialization configuration
      */
-    public DiscoveryConfiguration getDiscoveryConfiguration() {
-        return discoConfig;
+    public FixedInitConfiguration getFixedInitConfiguration() {
+        return fixedInitConfig;
     }
+    
 }

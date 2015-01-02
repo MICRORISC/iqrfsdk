@@ -17,66 +17,67 @@
 package com.microrisc.simply.iqrf.dpa.v210.init;
 
 /**
- * Configuration of enumeration process.
+ * Configuration of the enumeration process.
  * 
  * @author Michal Konopa
  */
-public class EnumerationConfiguration {
-    /** Default value of number of attempts of getting peripherals from node. */
-    public static int DEFAULT_GET_PER_ATTEMPTS_NUM = 3;
+public final class EnumerationConfiguration {
+    // configuration of the process of getting peripherals from nodes
+    private final GettingPeripheralsConfiguration gettingPerConfig;
     
-    /** Default value of timeout [in ms] of operation of getting peripherals from node. */
-    public static int DEFAULT_GET_PER_TIMEOUT = 10000;
+    // configuration of processing of bonded nodes
+    private final BondedNodesConfiguration bondedNodesConfig;
     
-    
-    /** Number of attempts of getting peripherals from node. */
-    private int getPerAttemptsNum;
+    // configuration of discovery process
+    private final DiscoveryConfiguration discoConfig;
 
-    /** Timeout [in ms] of operation of getting peripherals from node. */
-    private long getPerTimeout;
     
-    
-    private int checkGetPerAttemptsNum(int getPerAttemptsNum) {
-        if (getPerAttemptsNum <= 0) {
-            throw new IllegalArgumentException(
-                "Value of number of attempts of getting peripherals from node must be positive"
-            );
+    private static GettingPeripheralsConfiguration checkGettingPeripheralsConfiguration(
+        GettingPeripheralsConfiguration gettingPerConfig
+    ) {
+        if ( gettingPerConfig == null ) {
+            throw new IllegalArgumentException("Getting peripherals configuration cannot be null.");
         }
-        return getPerAttemptsNum;
-    } 
-    
-    private long checkGetPerTimeout(long getPerTimeout) {
-        if (getPerTimeout < 0) {
-            throw new IllegalArgumentException(
-                "Value of timeout [in ms] of operation of getting peripherals from node must be nonnegative"
-            );
-        }
-        return getPerTimeout;
+        return gettingPerConfig;
     }
     
     
     /**
-     * Creates new object of enumeration configuration.
-     * @param getPerAttemptsNum number of attempts of getting peripherals from node
-     * @param getPerTimeout timeout [in ms] of operation of getting peripherals from node
+     * Creates configuration of DPA initializer.
+     * @param gettingPerConfig getting peripherals configuration
+     * @param bondedNodesConfig bonded nodes configuration
+     * @param discoConfig discovery configuration
      */
-    public EnumerationConfiguration(int getPerAttemptsNum, long getPerTimeout) {
-        this.getPerAttemptsNum = checkGetPerAttemptsNum(getPerAttemptsNum);
-        this.getPerTimeout = checkGetPerTimeout(getPerTimeout);
+    public EnumerationConfiguration(
+            GettingPeripheralsConfiguration gettingPerConfig,
+            BondedNodesConfiguration bondedNodesConfig,
+            DiscoveryConfiguration discoConfig
+    ) {
+        this.gettingPerConfig = checkGettingPeripheralsConfiguration(gettingPerConfig);
+        this.bondedNodesConfig = bondedNodesConfig;
+        this.discoConfig = discoConfig;
     }
     
+    
     /**
-     * @return number of attempts of getting peripherals from node
+     * @return getting peripherals configuration
      */
-    public int getPerAttemptsNum() {
-        return getPerAttemptsNum;
+    public GettingPeripheralsConfiguration getGettingPeripheralsConfiguration() {
+        return gettingPerConfig;
     }
 
     /**
-     * @return timeout [in ms] of operation of getting peripherals from node
+     * @return processing of bonded nodes configuration
      */
-    public long getPerTimeout() {
-        return getPerTimeout;
+    public BondedNodesConfiguration getBondedNodesConfiguration() {
+        return bondedNodesConfig;
+    }
+    
+    /**
+     * @return discovery configuration
+     */
+    public DiscoveryConfiguration getDiscoveryConfiguration() {
+        return discoConfig;
     }
     
 }
