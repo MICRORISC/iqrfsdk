@@ -80,14 +80,14 @@ public final class DPA_RequestConvertor extends AbstractConvertor {
     }
     
     private short getPNUM(DPA_Request dpaRequest) {
-        Integer pNum = ProtocolObjects.getPeripheralToDevIfaceMapper().
+        String pNumStr = ProtocolObjects.getPeripheralToDevIfaceMapper().
                 getPeripheralId(dpaRequest.getDeviceInterface());
-        if ( pNum == null ) {
+        if ( pNumStr == null ) {
             throw new IllegalArgumentException(
                 "Peripheral ID not found for" + dpaRequest.getDeviceInterface()
             );
         }
-        return pNum.shortValue();
+        return Short.decode(pNumStr);
     }
     
     private short getPCMD(DPA_Request dpaRequest) {

@@ -34,8 +34,8 @@ import java.util.Set;
  */
 final class MultiPeripheralToDevIfaceMapper implements PeripheralToDevIfaceMapper {
     private PeripheralToDevIfaceMapper[] mappers;
-    private Map<Integer, Class> peripheralToIface; 
-    private Map<Class, Integer> ifaceToPeripheral;
+    private Map<String, Class> peripheralToIface; 
+    private Map<Class, String> ifaceToPeripheral;
     
     private PeripheralToDevIfaceMapper[] checkPeripheralToDevIfaceMappers( 
             PeripheralToDevIfaceMapper[] mappers 
@@ -55,10 +55,10 @@ final class MultiPeripheralToDevIfaceMapper implements PeripheralToDevIfaceMappe
         peripheralToIface = new HashMap<>();
         ifaceToPeripheral = new HashMap<>();
         
-        for ( PeripheralToDevIfaceMapper mapper : mappers ) {
+        for (PeripheralToDevIfaceMapper mapper : mappers) {
             Set<Class> mapperDevIfaces = mapper.getMappedDeviceInterfaces();
-            for ( Class mapperDevIface : mapperDevIfaces ) {
-                Integer perId = mapper.getPeripheralId(mapperDevIface);
+            for (Class mapperDevIface : mapperDevIfaces) {
+                String perId = mapper.getPeripheralId(mapperDevIface);
                 if ( ifaceToPeripheral.containsKey(mapperDevIface) ) {
                     throw new IllegalArgumentException(
                             "Mappers haven't discjunctive"
@@ -111,18 +111,13 @@ final class MultiPeripheralToDevIfaceMapper implements PeripheralToDevIfaceMappe
     }
     
     @Override
-    public Class getDeviceInterface(int perId) {
+    public Class getDeviceInterface(String perId) {
         return peripheralToIface.get(perId);
     }
 
     @Override
-    public Integer getPeripheralId(Class devInterface) {
+    public String getPeripheralId(Class devInterface) {
         return ifaceToPeripheral.get(devInterface);
-    }
-
-    @Override
-    public Set<Integer> getMappedPeripherals() {
-        return peripheralToIface.keySet();
     }
 
 }
