@@ -17,54 +17,72 @@
 package com.microrisc.simply.iqrf.dpa.v210.init;
 
 import org.apache.commons.configuration.Configuration;
+import org.apache.commons.configuration.ConfigurationException;
 
 /**
  * DPA initializer configuration factory.
  * 
  * @author Michal Konopa
  */
-public class DPA_InitializerConfigurationFactory {
+public final class DPA_InitializerConfigurationFactory {
     
-    private static EnumerationConfiguration createEnumerationConfiguration(
+    // parses and returns type of initialization 
+    private static InitializationType getInitType(Configuration configuration) {
+        String initTypeStr = configuration.getString("initialization.type");
+        if ( initTypeStr == null ) {
+            throw new IllegalArgumentException("Undefined type of initialization.");
+        }
+        
+        switch ( initTypeStr ) {
+            case "dpa.enumeration":
+                return InitializationType.ENUMERATION;
+            case "dpa.fixed":
+                return InitializationType.FIXED;
+            default:
+                throw new IllegalArgumentException("Unsupported type of initialization.");
+        }
+    }
+    
+    private static GettingPeripheralsConfiguration createGettingPeripheralsConfiguration(
             Configuration configuration
     ) {
         int getPerAttemptsNum = configuration.getInt(
                 "initialization.type.dpa.enumeration.getPeripheral.num_attempts",
-                EnumerationConfiguration.DEFAULT_GET_PER_ATTEMPTS_NUM
+                GettingPeripheralsConfiguration.DEFAULT_GET_PER_ATTEMPTS_NUM
         );
         
         long getPerTimeout = configuration.getLong(
                 "initialization.type.dpa.enumeration.getPeripheral.timeout",
-                EnumerationConfiguration.DEFAULT_GET_PER_TIMEOUT
+                GettingPeripheralsConfiguration.DEFAULT_GET_PER_TIMEOUT
         );
         
-        return new EnumerationConfiguration(getPerAttemptsNum, getPerTimeout);
+        return new GettingPeripheralsConfiguration(getPerAttemptsNum, getPerTimeout);
     }
     
     private static BondedNodesConfiguration createBondedNodesConfiguration(
             Configuration configuration
     ) {
         
-        int processBondedNodes = configuration.getInt("initialization.type.dpa.getBondedNodes", 0);
-        if (processBondedNodes == 0) {
+        int processBondedNodes = configuration.getInt("initialization.type.dpa.enumeration.getBondedNodes", 0);
+        if ( processBondedNodes == 0 ) {
             return null;
         }
         
         int getBondedNodesAttemptsNum = configuration.getInt(
-                "initialization.type.dpa.getBondedNodes.num_attempts", -1
+                "initialization.type.dpa.enumeration.getBondedNodes.num_attempts", -1
         );
         
         long getBondeNodesTimeout = configuration.getLong(
-                "initialization.type.dpa.getBondedNodes.timeout", -1
+                "initialization.type.dpa.enumeration.getBondedNodes.timeout", -1
         );
         
         // if user explicitly sets to process bonded nodes
-        if (processBondedNodes > 0) {
-            if (getBondedNodesAttemptsNum == -1) {
+        if ( processBondedNodes > 0 ) {
+            if ( getBondedNodesAttemptsNum == -1 ) {
                 getBondedNodesAttemptsNum = BondedNodesConfiguration.DEFAULT_GET_BONDED_NODES_ATTEMPTS_NUM;
             }
             
-            if (getBondeNodesTimeout == -1) {
+            if ( getBondeNodesTimeout == -1 ) {
                 getBondeNodesTimeout = BondedNodesConfiguration.DEFAULT_GET_BONDED_NODES_TIMEOUT;
             }
         }
@@ -77,26 +95,26 @@ public class DPA_InitializerConfigurationFactory {
     private static DiscoveryConfiguration createDiscoveryConfiguration(
             Configuration configuration
     ) {
-        int doDiscovery = configuration.getInt("initialization.type.dpa.discovery", 0);
-        if (doDiscovery == 0) {
+        int doDiscovery = configuration.getInt("initialization.type.dpa.enumeration.discovery", 0);
+        if ( doDiscovery == 0 ) {
             return null;
         }
         
         long discoveryTimeout = configuration.getLong(
-                "initialization.type.dpa.discovery.timeout", -1
+                "initialization.type.dpa.enumeration.discovery.timeout", -1
         );
         
         int discoveryTxPower = configuration.getInt(
-                "initialization.type.dpa.discovery.txPower", -1
+                "initialization.type.dpa.enumeration.discovery.txPower", -1
         );
        
         // if user explicitly sets to do discovery
-        if (doDiscovery > 0) {
-            if (discoveryTimeout == -1) {
+        if ( doDiscovery > 0 ) {
+            if ( discoveryTimeout == -1 ) {
                 discoveryTimeout = DiscoveryConfiguration.DEFAULT_DISCOVERY_TIMEOUT;
             }
             
-            if (discoveryTxPower == -1) {
+            if ( discoveryTxPower == -1 ) {
                 discoveryTxPower = DiscoveryConfiguration.DEFAULT_DISCOVERY_TX_POWER;
             }
         }
@@ -104,23 +122,56 @@ public class DPA_InitializerConfigurationFactory {
         return new DiscoveryConfiguration(discoveryTimeout, discoveryTxPower);
     }
     
+    private static EnumerationConfiguration createEnumerationConfiguration(
+            Configuration configuration
+    ) {
+        return new EnumerationConfiguration(
+                createGettingPeripheralsConfiguration(configuration), 
+                createBondedNodesConfiguration(configuration),
+                createDiscoveryConfiguration(configuration)
+        );
+    }
+    
+    private static FixedInitConfiguration createFixedInitConfiguration(
+        Configuration configuration
+    ) throws ConfigurationException {
+        String sourceFileName = configuration.getString(
+                "initialization.type.dpa.fixed.sourceFile",
+                "PeripheralDistribution.xml"
+        );
+        
+        NetworksFunctionalityToSimplyMapping networkFuncMapping 
+                = NetworksFunctionalityToSimplyMappingParser.parse(sourceFileName);
+        
+        return new FixedInitConfiguration(networkFuncMapping);
+    }
+    
+    
     /**
      * Returns DPA initializer configuration settings.
      * @param configuration source configuration
      * @return DPA initializer configuration settings
+     * @throws org.apache.commons.configuration.ConfigurationException if an
+     *         error has occured during creation of intitializer configuration
      */
     public static DPA_InitializerConfiguration getDPA_InitializerConfiguration(
             Configuration configuration
-    ) {
-        EnumerationConfiguration enumConfig = createEnumerationConfiguration(configuration);
-        BondedNodesConfiguration bondedNodesConfig = createBondedNodesConfiguration(configuration);
-        DiscoveryConfiguration discConfig = createDiscoveryConfiguration(configuration);
-        
-        return new DPA_InitializerConfiguration.Builder().
-                enumerationConfiguration(enumConfig).
-                bondedNodesConfiguration(bondedNodesConfig).
-                discoveryConfiguration(discConfig).
-        build();
+    ) throws ConfigurationException {
+        InitializationType initType = getInitType(configuration);
+        switch ( initType ) {
+            case ENUMERATION:
+                EnumerationConfiguration enumConfig = createEnumerationConfiguration(configuration);
+                return new DPA_InitializerConfiguration.Builder(initType)
+                        .enumerationConfiguration(enumConfig)
+                        .build();
+            case FIXED:
+                FixedInitConfiguration fixedInitConfig = createFixedInitConfiguration(configuration);
+                return new DPA_InitializerConfiguration.Builder(initType)
+                        .fixedInitConfiguration(fixedInitConfig)
+                        .build();
+            default:
+                throw new IllegalArgumentException("Unsupported type of initialization.");
+        }
     }
     
 }

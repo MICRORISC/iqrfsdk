@@ -90,20 +90,21 @@ extends
             throws SimplyException {
         logger.debug("getPeripheralNumbers - start: infoDeviceObj={}", infoDeviceObj);
         
-        EnumerationConfiguration enumConfig = dpaInitConfig.getEnumerationConfiguration();
-        if ( enumConfig == null ) {
-            throw new SimplyException("No enumeration configuration found");
+        GettingPeripheralsConfiguration gettingPerConfig 
+                = dpaInitConfig.getEnumerationConfiguration().getGettingPeripheralsConfiguration();
+        if ( gettingPerConfig == null ) {
+            throw new SimplyException("Getting peripherals configuration not available");
         }
         
         int attemptId = 0;
         PeripheralEnumeration perEnum = null;
-        while ( (attemptId < enumConfig.getPerAttemptsNum()) && ( perEnum == null ) ) {
+        while ( (attemptId < gettingPerConfig.getPerAttemptsNum()) && ( perEnum == null ) ) {
             logger.info("Getting peripheral enumeration: {} attempt", attemptId+1);
             
             UUID uid = infoDeviceObj.async_getPeripheralEnumeration();
             if ( uid != null ) {
                 perEnum = infoDeviceObj.getCallResult(uid, PeripheralEnumeration.class,
-                        enumConfig.getPerTimeout()
+                        gettingPerConfig.getPerTimeout()
                 );
             }  
             
@@ -143,7 +144,8 @@ extends
     private List<Integer> getBondedNodesIds(Coordinator coord) throws Exception {
         logger.debug("getBondedNodesIds - start: coord={}", coord);
         
-        BondedNodesConfiguration bondedNodesConfig = dpaInitConfig.getBondedNodesConfiguration();
+        BondedNodesConfiguration bondedNodesConfig 
+                = dpaInitConfig.getEnumerationConfiguration().getBondedNodesConfiguration();
         if ( bondedNodesConfig == null ) {
             throw new SimplyException("No configuration found for bonded nodes.");
         }
@@ -184,14 +186,14 @@ extends
         // creating Peripheral Information object to get all supported peripherals
         PeripheralInfoGetter perInfoObject = createPerInfoObject(networkId, nodeId);
         
-        // TODO: choose either enumeration or some other method of peripheral selection
         Set<Integer> peripheralNumbers = getPeripheralNumbers(perInfoObject);
-        System.out.println("Peripherals: " + Arrays.toString(peripheralNumbers.toArray(new Integer[0])) );
+        System.out.println("Peripherals: " + Arrays.toString(peripheralNumbers.toArray( new Integer[0])) );
         
         Node node = NodeFactory.createNode(networkId, nodeId, peripheralNumbers);
         
         System.out.println("Node created\n");
         logger.debug("createNode - end: {}", node);
+        
         return node;
     }
     
@@ -238,9 +240,10 @@ extends
      */
     private DiscoveryResult runDiscovery(Coordinator coord) throws SimplyException {
         // run discovery process
-        System.out.println("Run discovery...");
+        System.out.println("Run discovery ...");
         
-        DiscoveryConfiguration discConfig = dpaInitConfig.getDiscoveryConfiguration();
+        DiscoveryConfiguration discConfig 
+                = dpaInitConfig.getEnumerationConfiguration().getDiscoveryConfiguration();
         if ( discConfig == null ) {
             throw new SimplyException("No configuration for discovery found");
         }
@@ -261,18 +264,14 @@ extends
         return discResult;
     }
     
-    /**
-     * Creates and returns new network - according to specified settings.
-     * @param networkId ID of created network
-     * @param networkSettings settings of created network
-     * @return network
-     */
-    private Network createNetwork(String networkId, Configuration networkSettings) 
-            throws Exception {
-        logger.debug("createNetwork - start: networkId={}, networkSettings={}", 
-                networkId, networkSettings);
-        System.out.println("Creating network " + networkId + " ...");
-        
+    // creates network enumerated using enumeration of devices inside IQRF network
+    private Network createEnumeratedNetwork(String networkId, Configuration networkSettings) 
+            throws Exception 
+    {
+        logger.debug("createEnumeratedNetwork - start: networkId={}, networkSettings={}", 
+                networkId, networkSettings
+        );
+
         // creating master node
         Node masterNode = createNode(networkId, "0");
         logger.info("Master node created");
@@ -292,9 +291,11 @@ extends
             return new BaseNetwork(networkId, nodesMap);
         }
         
+        EnumerationConfiguration enumConfig = dpaInitConfig.getEnumerationConfiguration();
+        
         // getting currently bonded nodes
         List<Integer> bondedNodesIds = null;
-        if ( dpaInitConfig.getBondedNodesConfiguration() != null ) {
+        if ( enumConfig.getBondedNodesConfiguration() != null ) {
             bondedNodesIds = getBondedNodesIds(masterCoord);
             System.out.println("Number of bonded nodes: " + bondedNodesIds.size());
             System.out.println("Bonded nodes: " + Arrays.toString(bondedNodesIds.toArray(new Integer[0])));
@@ -303,7 +304,7 @@ extends
         }
         
         // running discovery process
-        if ( dpaInitConfig.getDiscoveryConfiguration() != null ) {
+        if ( enumConfig.getDiscoveryConfiguration() != null ) {
             DiscoveryResult discoResult = runDiscovery(masterCoord);
             if ( discoResult == null ) {
                 throw new SimplyException("Discovery failed");
@@ -315,6 +316,89 @@ extends
         nodesMap = createBondedNodes(networkId, bondedNodesIds);
         nodesMap.put("0", masterNode);
         Network network = new BaseNetwork(networkId, nodesMap);
+        
+        logger.debug("createEnumeratedNetwork - end: {}", network);
+        return network;
+    }
+    
+    // creates nodes map from specified fixed mapping
+    private Map<String, Node> createNodesFromNetworkFuncMapping(
+            String networkId, NetworksFunctionalityToSimplyMapping networkFuncMapping
+    ) throws SimplyException, Exception {
+        Map<String, Set<Integer>> networkMapping = networkFuncMapping.getMapping().get(networkId);
+        if ( networkMapping == null ) {
+            throw new SimplyException(
+                "Mapping of functionality for network " + networkId + " not available."
+            );
+        }
+        
+        Map<String, Node> nodesMap = new HashMap<>();
+        for ( Map.Entry<String, Set<Integer>> nodeMappingEntry : networkMapping.entrySet() ) {
+            System.out.println("Creating node " + nodeMappingEntry.getKey() + ":");
+            System.out.println("Peripherals: " + Arrays.toString(nodeMappingEntry.getValue().toArray( new Integer[0])) );
+            
+            Node node = NodeFactory.createNode(
+                    networkId, nodeMappingEntry.getKey(), nodeMappingEntry.getValue()
+            );
+            nodesMap.put(nodeMappingEntry.getKey(), node);
+            
+            System.out.println("Node created");
+        }
+        
+        return nodesMap;
+    }
+    
+    // creates network defined by fixed entity
+    private Network createFixedNetwork(String networkId, Configuration networkSettings) 
+            throws Exception {
+        logger.debug("createFixedNetwork - start: networkId={}, networkSettings={}", 
+                networkId, networkSettings
+        );
+        
+        FixedInitConfiguration fixedInitConfig = dpaInitConfig.getFixedInitConfiguration();
+        if ( fixedInitConfig == null ) {
+            throw new SimplyException("Fixed initialization configuration is missing."); 
+        }
+        
+        // creating nodes bonded to the Master node
+        Map<String, Node> nodesMap = createNodesFromNetworkFuncMapping(
+                networkId, fixedInitConfig.getNetworksFunctionalityToSimplyMapping()
+        );
+        Network network = new BaseNetwork(networkId, nodesMap);
+        
+        logger.debug("createFixedNetwork - end: {}", network);
+        return network;
+    }
+    
+    
+    /**
+     * Creates and returns new network - according to specified settings.
+     * @param networkId ID of created network
+     * @param networkSettings settings of created network
+     * @return network
+     */
+    private Network createNetwork(String networkId, Configuration networkSettings) 
+            throws Exception {
+        logger.debug("createNetwork - start: networkId={}, networkSettings={}", 
+                networkId, networkSettings
+        );
+        
+        System.out.println("Creating network " + networkId + " ...");
+        
+        Network network = null;
+        
+        switch ( dpaInitConfig.getInitializationType() ) {
+            case ENUMERATION:
+                network = createEnumeratedNetwork(networkId, networkSettings);
+                break;
+            case FIXED:
+                network = createFixedNetwork(networkId, networkSettings);
+                break;
+            default:
+                throw new SimplyException("Unsupported initialization type: " 
+                        + dpaInitConfig.getInitializationType()
+                );
+        }
         
         System.out.println("Network " + networkId + " successfully created.");
         

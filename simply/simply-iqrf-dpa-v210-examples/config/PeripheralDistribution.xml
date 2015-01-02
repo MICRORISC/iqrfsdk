@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : PeripheralDistribution.xml
+    Created on : 31.12. 2014
+    Author     : Michal Konopa
+    Description:
+        Distribution of peripherals on nodes in connected IQRF networks.
+-->
+
+<networks>
+	<network id="1">
+		<nodes>
+			<node id="0">
+				<peripherals>0,1,2,3,4,5,9</peripherals>
+			</node>
+			<node id="1">
+				<peripherals>1,2,6,7,10</peripherals>
+			</node>
+		</nodes>
+	</network>
+</networks>
