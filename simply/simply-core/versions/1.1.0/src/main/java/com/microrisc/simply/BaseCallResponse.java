@@ -81,7 +81,7 @@ public class BaseCallResponse extends AbstractMessage {
     
     /**
      * Protected constructor. 
-     * Effecive main data will be set to {@code null}.
+     * Effective main data will be set to {@code null}.
      * @param additionalData effective additional data
      * @param source sender of this message
      * @param procError processing error.

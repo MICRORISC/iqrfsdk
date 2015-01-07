@@ -39,7 +39,8 @@ public class BaseNetwork implements Network {
     
     /**
      * Creates new network.
-     * @param nodesMap mapping of identifiers of nodes to that nodes
+     * @param id ID of the network
+     * @param nodesMap mapping of identifiers of nodes to that nodes objects
      */
     public BaseNetwork(String id, Map<String, Node> nodesMap) {
         this.id = id;
