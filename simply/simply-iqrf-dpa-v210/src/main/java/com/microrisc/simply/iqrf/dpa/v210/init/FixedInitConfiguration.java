@@ -30,6 +30,10 @@ public final class FixedInitConfiguration {
     // networks functionality mapping
     private final NetworksFunctionalityToSimplyMapping networkFuncMapping; 
     
+    // configuration of processing of bonded nodes
+    private final BondedNodesConfiguration bondedNodesConfig;
+    
+    
     private static NetworksFunctionalityToSimplyMapping 
         checkNetworksFunctionalityToSimplyMapping(
                 NetworksFunctionalityToSimplyMapping networkFuncMapping
@@ -52,6 +56,22 @@ public final class FixedInitConfiguration {
             NetworksFunctionalityToSimplyMapping networkFuncMapping
     ) {
         this.networkFuncMapping = checkNetworksFunctionalityToSimplyMapping(networkFuncMapping);
+        this.bondedNodesConfig = null;
+    }
+    
+    /**
+     * Creates fixed initialization configuration object with specified 
+     * networks functionality mapping.
+     * @param networkFuncMapping networks functionality mapping
+     * @param bondedNodesConfig bonded nodes configuration
+     * @throws IllegalArgumentException if {@code networkFuncMapping} is {@code null}
+     */
+    public FixedInitConfiguration(
+            NetworksFunctionalityToSimplyMapping networkFuncMapping,
+            BondedNodesConfiguration bondedNodesConfig
+    ) {
+        this.networkFuncMapping = checkNetworksFunctionalityToSimplyMapping(networkFuncMapping);
+        this.bondedNodesConfig = bondedNodesConfig;
     }
     
     /**
@@ -59,5 +79,12 @@ public final class FixedInitConfiguration {
      */
     public NetworksFunctionalityToSimplyMapping getNetworksFunctionalityToSimplyMapping() {
         return networkFuncMapping;
+    }
+    
+    /**
+     * @return processing of bonded nodes configuration
+     */
+    public BondedNodesConfiguration getBondedNodesConfiguration() {
+        return bondedNodesConfig;
     }
 }

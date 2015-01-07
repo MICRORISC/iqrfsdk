@@ -27,6 +27,7 @@ import com.microrisc.simply.init.AbstractInitializer;
 import com.microrisc.simply.init.InitConfigSettings;
 import com.microrisc.simply.iqrf.dpa.v210.devices.Coordinator;
 import com.microrisc.simply.iqrf.dpa.v210.devices.PeripheralInfoGetter;
+import com.microrisc.simply.iqrf.dpa.v210.protocol.DPA_ProtocolProperties;
 import com.microrisc.simply.iqrf.dpa.v210.types.BondedNodes;
 import com.microrisc.simply.iqrf.dpa.v210.types.DiscoveryParams;
 import com.microrisc.simply.iqrf.dpa.v210.types.DiscoveryResult;
@@ -144,8 +145,16 @@ extends
     private List<Integer> getBondedNodesIds(Coordinator coord) throws Exception {
         logger.debug("getBondedNodesIds - start: coord={}", coord);
         
-        BondedNodesConfiguration bondedNodesConfig 
-                = dpaInitConfig.getEnumerationConfiguration().getBondedNodesConfiguration();
+        BondedNodesConfiguration bondedNodesConfig = null;
+        switch ( dpaInitConfig.getInitializationType() ) {
+            case ENUMERATION:
+                bondedNodesConfig = dpaInitConfig.getEnumerationConfiguration().getBondedNodesConfiguration();
+                break;
+            case FIXED:
+                bondedNodesConfig = dpaInitConfig.getFixedInitConfiguration().getBondedNodesConfiguration();
+                break;
+        }
+        
         if ( bondedNodesConfig == null ) {
             throw new SimplyException("No configuration found for bonded nodes.");
         }
@@ -197,26 +206,20 @@ extends
         return node;
     }
     
-    /**
-     * Creates and returns map of nodes, which are bonded to specified coordinator.
-     * @param coord 
-     */
+    // Creates and returns map of nodes, which are bonded to specified coordinator.
     private Map<String, Node> createBondedNodes(String networkId, List<Integer> bondedNodesIds) 
             throws Exception {
         logger.debug("createBondedNodes - start: networkId={}, master={}", 
-                networkId, Arrays.toString(bondedNodesIds.toArray(new Integer[0]))
+                networkId, Arrays.toString(bondedNodesIds.toArray( new Integer[0] ))
         );
         
         // for new line in the printed output
-        System.out.println();
-        
-        // maximal node number to use
-        final int MAX_BONDED_NODE_NUMBER = 0xEF;
+        System.out.println();        
         
         Map<String, Node> nodesMap = new HashMap<>();
         for ( Integer bondedNodeId : bondedNodesIds ) {
-            if (bondedNodeId > MAX_BONDED_NODE_NUMBER) {
-                break;
+            if ( bondedNodeId > DPA_ProtocolProperties.NADR_Properties.IQMESH_NODE_ADDRESS_MAX ) {
+                continue;
             }
             
             Node bondedNode = null;
@@ -242,11 +245,7 @@ extends
         // run discovery process
         System.out.println("Run discovery ...");
         
-        DiscoveryConfiguration discConfig 
-                = dpaInitConfig.getEnumerationConfiguration().getDiscoveryConfiguration();
-        if ( discConfig == null ) {
-            throw new SimplyException("No configuration for discovery found");
-        }
+        DiscoveryConfiguration discConfig = dpaInitConfig.getDiscoveryConfiguration();
         
         // setting connector
         ConnectorService connector = initObjects.getConnectionStack().getConnector();
@@ -292,6 +291,9 @@ extends
         }
         
         EnumerationConfiguration enumConfig = dpaInitConfig.getEnumerationConfiguration();
+        if ( enumConfig == null ) {
+            throw new SimplyException("Configuration for enumeration not found.");
+        }
         
         // getting currently bonded nodes
         List<Integer> bondedNodesIds = null;
@@ -304,12 +306,20 @@ extends
         }
         
         // running discovery process
-        if ( enumConfig.getDiscoveryConfiguration() != null ) {
+        if ( dpaInitConfig.getDiscoveryConfiguration() != null ) {
             DiscoveryResult discoResult = runDiscovery(masterCoord);
             if ( discoResult == null ) {
                 throw new SimplyException("Discovery failed");
             }
             System.out.println("Number of discovered nodes: " + discoResult.getDiscoveredNodesNum());
+            
+            if ( bondedNodesIds.size() != discoResult.getDiscoveredNodesNum() ) {
+                logger.warn(
+                        "Number of bonded nodes NOT equal to the number of discovered nodes:"
+                        + " bonded nodes number = " + bondedNodesIds.size()
+                        + " discovered nodes number = " + discoResult.getDiscoveredNodesNum()
+                );
+            } 
         }
         
         // creating nodes bonded to the Master node
@@ -323,18 +333,32 @@ extends
     
     // creates nodes map from specified fixed mapping
     private Map<String, Node> createNodesFromNetworkFuncMapping(
-            String networkId, NetworksFunctionalityToSimplyMapping networkFuncMapping
-    ) throws SimplyException, Exception {
-        Map<String, Set<Integer>> networkMapping = networkFuncMapping.getMapping().get(networkId);
-        if ( networkMapping == null ) {
-            throw new SimplyException(
-                "Mapping of functionality for network " + networkId + " not available."
-            );
+            String networkId, Map<String, Set<Integer>> networkMapping, Set<Integer> bondedNodesIds
+    ) throws SimplyException, Exception 
+    {
+        logger.debug("createNodesFromNetworkFuncMapping - start: networkId={}, networkMapping={}", 
+                networkId, networkMapping
+        );
+        
+        FixedInitConfiguration fixedInitConfig = dpaInitConfig.getFixedInitConfiguration();
+        if ( fixedInitConfig == null ) {
+            throw new SimplyException("Configuration for fixed initialization not found.");
         }
         
         Map<String, Node> nodesMap = new HashMap<>();
         for ( Map.Entry<String, Set<Integer>> nodeMappingEntry : networkMapping.entrySet() ) {
-            System.out.println("Creating node " + nodeMappingEntry.getKey() + ":");
+            int nodeId = Integer.parseInt(nodeMappingEntry.getKey());
+            // coordinator was already created
+            if ( nodeId == 0 ) {
+                continue;
+            }
+            
+            if ( !bondedNodesIds.contains(nodeId) ) {
+                logger.warn("Node " + nodeId + " not bonded. Representation will not be created." );
+                continue;
+            }
+            
+            System.out.println("Creating node " + nodeId + ":");
             System.out.println("Peripherals: " + Arrays.toString(nodeMappingEntry.getValue().toArray( new Integer[0])) );
             
             Node node = NodeFactory.createNode(
@@ -345,6 +369,7 @@ extends
             System.out.println("Node created");
         }
         
+        logger.debug("createNodesFromNetworkFuncMapping - end: {}", nodesMap);
         return nodesMap;
     }
     
@@ -360,10 +385,62 @@ extends
             throw new SimplyException("Fixed initialization configuration is missing."); 
         }
         
+        Map<String, Set<Integer>> networkMapping 
+                = fixedInitConfig.getNetworksFunctionalityToSimplyMapping().getMapping().get(networkId);
+        if ( networkMapping == null ) {
+            throw new SimplyException(
+                "Mapping of functionality for network " + networkId + " not available."
+            );
+        }
+        
+        // creating master node
+        Node masterNode = NodeFactory.createNode(networkId, "0", networkMapping.get("0"));
+        logger.info("Master node created");
+        
+        // checking, if coordinator is present at the master
+        Coordinator masterCoord = masterNode.getDeviceObject(Coordinator.class);
+        if ( masterCoord == null ) {
+            logger.warn(
+                    "Master node doesn't contain Coordinator interface."
+                    + "No bonded nodes will be created"
+            );
+            Map<String, Node> nodesMap = new HashMap<>();
+            nodesMap.put("0", masterNode);
+            return new BaseNetwork(networkId, nodesMap);
+        }
+        
+        // getting currently bonded nodes
+        List<Integer> bondedNodesIds = null;
+        if ( fixedInitConfig.getBondedNodesConfiguration() != null ) {
+            bondedNodesIds = getBondedNodesIds(masterCoord);
+            System.out.println("Number of bonded nodes: " + bondedNodesIds.size());
+            System.out.println("Bonded nodes: " + Arrays.toString(bondedNodesIds.toArray(new Integer[0])));
+        } else {
+            bondedNodesIds = new LinkedList<>();
+        }
+        
+        // running discovery process
+        if ( dpaInitConfig.getDiscoveryConfiguration() != null ) {
+            DiscoveryResult discoResult = runDiscovery(masterCoord);
+            if ( discoResult == null ) {
+                throw new SimplyException("Discovery failed");
+            }
+            System.out.println("Number of discovered nodes: " + discoResult.getDiscoveredNodesNum());
+            
+            if ( bondedNodesIds.size() != discoResult.getDiscoveredNodesNum() ) {
+                logger.warn(
+                        "Number of bonded nodes NOT equal to the number of discovered nodes:"
+                        + " bonded nodes number = " + bondedNodesIds.size()
+                        + " ,discovered nodes number = " + discoResult.getDiscoveredNodesNum()
+                );
+            } 
+        }
+        
         // creating nodes bonded to the Master node
         Map<String, Node> nodesMap = createNodesFromNetworkFuncMapping(
-                networkId, fixedInitConfig.getNetworksFunctionalityToSimplyMapping()
+                networkId, networkMapping, new HashSet<>(bondedNodesIds)
         );
+        nodesMap.put("0", masterNode);
         Network network = new BaseNetwork(networkId, nodesMap);
         
         logger.debug("createFixedNetwork - end: {}", network);
@@ -395,8 +472,8 @@ extends
                 network = createFixedNetwork(networkId, networkSettings);
                 break;
             default:
-                throw new SimplyException("Unsupported initialization type: " 
-                        + dpaInitConfig.getInitializationType()
+                throw new SimplyException(
+                        "Unsupported initialization type: " + dpaInitConfig.getInitializationType()
                 );
         }
         
@@ -427,9 +504,7 @@ extends
         // initialize each network
         Map<String, Configuration> networksSettings = initObjects.getConfigSettings().getNetworksSettings(); 
         for ( Map.Entry<String, Configuration> networkEntry : networksSettings.entrySet() ) {
-            Network network = createNetwork(
-                    networkEntry.getKey(), networkEntry.getValue()
-            );
+            Network network = createNetwork(networkEntry.getKey(), networkEntry.getValue());
             networksMap.put(networkEntry.getKey(), network);
         }
         System.out.println("Initialization of Simply complete.");
