@@ -27,9 +27,6 @@ public final class EnumerationConfiguration {
     
     // configuration of processing of bonded nodes
     private final BondedNodesConfiguration bondedNodesConfig;
-    
-    // configuration of discovery process
-    private final DiscoveryConfiguration discoConfig;
 
     
     private static GettingPeripheralsConfiguration checkGettingPeripheralsConfiguration(
@@ -45,17 +42,27 @@ public final class EnumerationConfiguration {
     /**
      * Creates configuration of DPA initializer.
      * @param gettingPerConfig getting peripherals configuration
+     * @throws IllegalArgumentException if {@code gettingPerConfig} is {@code null}
+     */
+    public EnumerationConfiguration(
+            GettingPeripheralsConfiguration gettingPerConfig
+    ) {
+        this.gettingPerConfig = checkGettingPeripheralsConfiguration(gettingPerConfig);
+        this.bondedNodesConfig = null;
+    }
+    
+    /**
+     * Creates configuration of DPA initializer.
+     * @param gettingPerConfig getting peripherals configuration
      * @param bondedNodesConfig bonded nodes configuration
-     * @param discoConfig discovery configuration
+     * @throws IllegalArgumentException if {@code gettingPerConfig} is {@code null}
      */
     public EnumerationConfiguration(
             GettingPeripheralsConfiguration gettingPerConfig,
-            BondedNodesConfiguration bondedNodesConfig,
-            DiscoveryConfiguration discoConfig
+            BondedNodesConfiguration bondedNodesConfig
     ) {
         this.gettingPerConfig = checkGettingPeripheralsConfiguration(gettingPerConfig);
         this.bondedNodesConfig = bondedNodesConfig;
-        this.discoConfig = discoConfig;
     }
     
     
@@ -71,13 +78,6 @@ public final class EnumerationConfiguration {
      */
     public BondedNodesConfiguration getBondedNodesConfiguration() {
         return bondedNodesConfig;
-    }
-    
-    /**
-     * @return discovery configuration
-     */
-    public DiscoveryConfiguration getDiscoveryConfiguration() {
-        return discoConfig;
     }
     
 }

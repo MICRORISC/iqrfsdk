@@ -31,11 +31,15 @@ public final class DPA_InitializerConfiguration {
     // fixed initialization configuration
     private final FixedInitConfiguration fixedInitConfig;
     
+    // discovery configuration
+    private final DiscoveryConfiguration discoveryConfig;
+    
     
     public static class Builder {
         private final InitializationType initType;
         private EnumerationConfiguration enumConfig;
         private FixedInitConfiguration fixedInitConfig;
+        private DiscoveryConfiguration discoveryConfig;
         
         public Builder(InitializationType initType) {
             this.initType = initType;
@@ -48,6 +52,11 @@ public final class DPA_InitializerConfiguration {
         
         public Builder fixedInitConfiguration(FixedInitConfiguration fixedInitConfig) {
             this.fixedInitConfig = fixedInitConfig;
+            return this;
+        }
+        
+        public Builder discoveryConfiguration(DiscoveryConfiguration discoveryConfig) {
+            this.discoveryConfig = discoveryConfig;
             return this;
         }
         
@@ -70,6 +79,7 @@ public final class DPA_InitializerConfiguration {
         this.initType = checkInitType(builder.initType);
         this.enumConfig = builder.enumConfig;
         this.fixedInitConfig = builder.fixedInitConfig;
+        this.discoveryConfig = builder.discoveryConfig;
         
         switch ( initType ) {
             case ENUMERATION:
@@ -109,4 +119,10 @@ public final class DPA_InitializerConfiguration {
         return fixedInitConfig;
     }
     
+    /**
+     * @return discovery process configuration
+     */
+    public DiscoveryConfiguration getDiscoveryConfiguration() {
+        return discoveryConfig;
+    }
 }
