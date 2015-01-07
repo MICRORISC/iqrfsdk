@@ -157,7 +157,9 @@ extends AbstractInitializer<SimpleDPA_InitObjects, Network> {
         for (int perId : perNumbers) {
             System.out.print(perId + " ");
             
-            Class devIface = initObjects.getPeripheralToDevIfaceMapper().getDeviceInterface(perId);
+            Class devIface = initObjects.getPeripheralToDevIfaceMapper().
+                    getDeviceInterface(String.valueOf(perId)
+            );
             
             // IMPORTANT: if no device interface for specified peripheral number is found,
             // continue, not throw an exception
