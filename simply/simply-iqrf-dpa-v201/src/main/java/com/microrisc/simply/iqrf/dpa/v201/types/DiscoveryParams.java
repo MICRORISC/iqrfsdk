@@ -44,21 +44,22 @@ public final class DiscoveryParams {
     
     private static int checkTxPower(int txPower) {
         if ( (txPower < TXPOWER_LOWER_BOUND) || (txPower > TXPOWER_UPPER_BOUND) ) {
-            throw new IllegalArgumentException("TX power out of bounds");
+            throw new IllegalArgumentException(
+                    "TX power out of the bounds of"
+                    + "[" + TXPOWER_LOWER_BOUND + ".." + TXPOWER_UPPER_BOUND + "]"
+                    + ": " + txPower
+            );
         }
         return txPower;
     }
     
-    /** Max. node address lower bound. */
-    public static final int MAXADDR_LOWER_BOUND = 0x00; 
-    
-    /** Max. node address upper bound. */
-    public static final int MAXADDR_UPPER_BOUND = 0x07; 
-    
-    
     private static int checkMaxNodeAddress(int maxNodeAddress) {
-        if ( (maxNodeAddress < MAXADDR_LOWER_BOUND) || (maxNodeAddress > MAXADDR_UPPER_BOUND) ) {
-            throw new IllegalArgumentException("TX power out of bounds");
+        if ( (maxNodeAddress < 0 ) || (maxNodeAddress > 0xEF) ) 
+        {
+            throw new IllegalArgumentException(
+                    "Max node address out of the bounds of " + "[" + 0 + ".." + 0xEF + "]"
+                    + " : " + maxNodeAddress
+            );
         }
         return maxNodeAddress;
     }
@@ -70,7 +71,7 @@ public final class DiscoveryParams {
      * process.
      * @throws IllegalArgumentException if: <br> 
      *         specified TX power is out of [{@code TXPOWER_LOWER_BOUND}..{@code TXPOWER_UPPER_BOUND}] interval <br> 
-     *         specified node address is out of [{@code MAXADDR_LOWER_BOUND}..{@code MAXADDR_UPPER_BOUND}] interval
+     *         specified node address is out of [{@code 0}..{@code 239}] interval
      */
     public DiscoveryParams(int txPower, int maxAddr) {
         this.txPower = checkTxPower(txPower);
