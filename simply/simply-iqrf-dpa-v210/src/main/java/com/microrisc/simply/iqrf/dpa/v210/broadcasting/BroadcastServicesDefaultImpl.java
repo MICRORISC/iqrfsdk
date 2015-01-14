@@ -72,9 +72,16 @@ implements ConnectorListener, BroadcastServices
     }
     
     private static long checkDefaultWaitingTimeout(long timeout) {
-        if ( timeout < 0 ) {
-            throw new IllegalArgumentException("Default waiting timeout cannot be less then 0");
+        if ( timeout == UNLIMITED_WAITING_TIMEOUT ) {
+            return timeout;
         }
+        
+        if ( timeout < 0 ) {
+            throw new IllegalArgumentException(
+                    "Waiting timeout must be nonnegative or equal to " + UNLIMITED_WAITING_TIMEOUT
+            );
+        }
+        
         return timeout;
     }
     
@@ -99,10 +106,15 @@ implements ConnectorListener, BroadcastServices
         return methodId;
     }
     
-    /** 
-     * Checks results container for validity.
-     * @param resultsContainer results container to check
-     */
+    private static BroadcastingConnectorService checkBroadcastingConnectorService(
+            BroadcastingConnectorService broadcastingConnService
+    ) {
+        if ( broadcastingConnService == null ) {
+            throw new IllegalArgumentException("Broadcasting connecttor service cannot be null");
+        }
+        return broadcastingConnService;
+    }
+    
     private static CallRequestProcessingInfoContainer checkResultsContainer(
             CallRequestProcessingInfoContainer resultsContainer
     ) {
@@ -111,6 +123,7 @@ implements ConnectorListener, BroadcastServices
         }
         return resultsContainer;
     }
+    
     
     // returns processing info for specified broadcast request
     private CallRequestProcessingInfo getCallRequestProcessingInfo(UUID requestId) 
@@ -125,8 +138,8 @@ implements ConnectorListener, BroadcastServices
         // if proc info is still null, something get wrong in the connector
         if ( procInfo == null ) {
             throw new IllegalStateException(
-                    "Could not get broadcast request processing info from connector for "
-                            + "request: " + requestId 
+                "Could not get broadcast request processing info from connector for "
+                + "request: " + requestId 
             );
         }
         return procInfo;
@@ -146,17 +159,21 @@ implements ConnectorListener, BroadcastServices
         return requestHwProfile;
     }
     
+    
+    
     /**
      * Creates new simple broadcaster.
      * @param broadcastingConnService broadcasting connector service to use 
      * @param resultsContainer container, where to store incomming results of 
      *                         performed broadcast calls.
+     * @throws IllegalArgumentException if {@code broadcastingConnService} or
+     *         {@code resultsContainer} is {@code null}
      */
     public BroadcastServicesDefaultImpl(
             BroadcastingConnectorService broadcastingConnService,
             CallRequestProcessingInfoContainer resultsContainer
     ) {
-        this.broadcastingConnService = broadcastingConnService;
+        this.broadcastingConnService = checkBroadcastingConnectorService(broadcastingConnService);
         this.results = checkResultsContainer(resultsContainer);
     }
     
@@ -192,15 +209,9 @@ implements ConnectorListener, BroadcastServices
             String networkId, Class deviceInterface, Object methodId, Object[] args, 
             MethodIdTransformer methodIdTransformer
     ) {
-        Object[] logArgs = new Object[5];
-        logArgs[0] = networkId;
-        logArgs[1] = deviceInterface;
-        logArgs[2] = methodId;
-        logArgs[3] = args;
-        logArgs[4] = methodIdTransformer;
-        
-        logger.debug("sendRequest - start: methodId={}, deviceInterface={}, "
-                + "methodId={}, args={}, methodIdTransformer={}" , logArgs
+        logger.debug("sendRequest - start: networkId={}, deviceInterface={}, "
+                + "methodId={}, args={}, methodIdTransformer={}" , 
+                networkId, deviceInterface, methodId, args, methodIdTransformer
         );
         
         checkNetworkId(networkId);
@@ -208,8 +219,8 @@ implements ConnectorListener, BroadcastServices
         checkMethodId(methodId);
         
         if ( methodIdTransformer == null ) {
-            methodIdTransformer = StandardMethodIdTransformers.getInstance().
-                    getTransformer(deviceInterface);
+            methodIdTransformer = StandardMethodIdTransformers.getInstance()
+                    .getTransformer(deviceInterface);
             if ( methodIdTransformer == null ) {
                 throw new IllegalStateException("Method transformer has not been found");
             }
@@ -278,14 +289,9 @@ implements ConnectorListener, BroadcastServices
             String networkId, Class deviceInterface, Object methodId, Object[] args, 
             MethodIdTransformer methodIdTransformer
     ) {
-        Object[] logArgs = new Object[5];
-        logArgs[0] = networkId;
-        logArgs[1] = deviceInterface;
-        logArgs[2] = methodId;
-        logArgs[3] = args;
-        logArgs[4] = methodIdTransformer;
-        logger.debug("broadcast - start: methodId={}, deviceInterface={}, "
-                + "methodId={}, args={}, methodIdTransformer={}" , logArgs
+        logger.debug("broadcast - start: networkId={}, deviceInterface={}, "
+                + "methodId={}, args={}, methodIdTransformer={}", 
+                networkId, deviceInterface, methodId, args, methodIdTransformer
         );
         
         checkNetworkId(networkId);
@@ -293,8 +299,8 @@ implements ConnectorListener, BroadcastServices
         checkMethodId(methodId);
         
         if ( methodIdTransformer == null ) {
-            methodIdTransformer = StandardMethodIdTransformers.getInstance().
-                    getTransformer(deviceInterface);
+            methodIdTransformer = StandardMethodIdTransformers.
+                    getInstance().getTransformer(deviceInterface);
             if ( methodIdTransformer == null ) {
                 throw new IllegalStateException("Method transformer has not been found");
             }
@@ -352,8 +358,12 @@ implements ConnectorListener, BroadcastServices
         
         checkCallId(callId);
         
+        if ( timeout == UNLIMITED_WAITING_TIMEOUT ) {
+            return getCallResultInUnlimitedWaitingTimeout(callId, resultClass);
+        }
+        
         if ( timeout < 0 ) {
-            throw new IllegalArgumentException("Negative timeout - " + timeout);
+            throw new IllegalArgumentException("Bad value of timeout: " + timeout);
         }
         
         if ( timeout == 0 ) {
@@ -361,7 +371,7 @@ implements ConnectorListener, BroadcastServices
         }
         
         // setting processing timeout
-        broadcastingConnService.setCallRequestProcessingTime(callId, timeout);
+        broadcastingConnService.setCallRequestMaximalProcessingTime(callId, timeout);
         
         long startTime = System.currentTimeMillis();
         synchronized( results ) {
@@ -417,10 +427,39 @@ implements ConnectorListener, BroadcastServices
         return (T)methodCallResult;
     }
     
+    @Override
+    public <T> T getCallResultInUnlimitedWaitingTimeout(UUID callId, Class<T> resultClass) {
+        logger.debug("getCallResultInUnlimitedWaitingTimeout - start: callId={}", 
+                callId
+        );
+        
+        checkCallId(callId);
+        
+        // setting of processing timeout
+        broadcastingConnService.setCallRequestMaximalProcessingTime(callId, UNLIMITED_WAITING_TIMEOUT);
+        
+        synchronized( results ) {
+            while ( results.get(callId) == null ) {
+                try {
+                    results.wait( 0 );
+                } catch ( InterruptedException e ) {
+                    logger.warn("Get call result - interrupted");
+                    break;
+                }
+            }
+        }
+        
+        T callResult = getCallResultImmediately(callId, resultClass);
+        
+        logger.debug("getCallResultInUnlimitedWaitingTimeout - end: {}", callResult);
+        return callResult;
+    }
+    
     /**
      * Timeout must be nonnegative.
      * @param timeout timeout to set
-     * @throws IllegalArgumentException if specified timeout value is less then {@code 0}
+     * @throws IllegalArgumentException if specified timeout is not nonnegative 
+     *         or is not equal to the {@code UNLIMITED_WAITING_TIMEOUT}
      */
     @Override
     public void setDefaultWaitingTimeout(long timeout) {

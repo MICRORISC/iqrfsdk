@@ -47,7 +47,8 @@ implements
     
     /**
      * Sets protocol layer service communication object to the specified one.
-     * @param protocolLayerService protocol layer service object to set, cannot be {@code null}
+     * @param protocolLayerService protocol layer service object to set
+     * @throws IllegalArgumentException if {@code protocolLayerService} is {@code null}
      */
     protected AbstractConnector(ProtocolLayerService protocolLayerService) {
         this.protocolLayerService = checkProtocolLayer(protocolLayerService);

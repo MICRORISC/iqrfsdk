@@ -4,7 +4,7 @@
     <groupId>com.microrisc.simply.iqrf</groupId>
     <artifactId>simply-iqrf</artifactId>
     <packaging>jar</packaging>
-    <version>2.0.0</version>
+    <version>2.0.1-SNAPSHOT</version>
     
     <name>simply-iqrf</name>
     <description>IQRF functionality of Simply framework.</description>
@@ -23,14 +23,14 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.microrisc.simply</groupId>
-            <artifactId>simply-core</artifactId>
-            <version>1.1.0</version>
-        </dependency>
-        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>1.7.6</version>
+        </dependency>
+        <dependency>
+            <groupId>com.microrisc.simply</groupId>
+            <artifactId>simply-core</artifactId>
+            <version>2.0.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
     <build>

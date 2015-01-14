@@ -4,7 +4,7 @@
     
     <groupId>com.microrisc.simply.network.serial</groupId>
     <artifactId>simply-network-serial-v1</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
     
     <description>Serial port implementation of network layer for Simply.</description>
@@ -28,11 +28,6 @@
             <version>2.8.0</version>
         </dependency>
         <dependency>
-            <groupId>com.microrisc.simply</groupId>
-            <artifactId>simply-core</artifactId>
-            <version>1.1.0</version>
-        </dependency>
-        <dependency>
             <groupId>commons-configuration</groupId>
             <artifactId>commons-configuration</artifactId>
             <version>1.8</version>
@@ -46,6 +41,11 @@
             <groupId>com.microrisc</groupId>
             <artifactId>hdlc-framing-v1</artifactId>
             <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.microrisc.simply</groupId>
+            <artifactId>simply-core</artifactId>
+            <version>2.0.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
     

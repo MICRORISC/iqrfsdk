@@ -25,6 +25,10 @@ import java.util.UUID;
  * @author Michal Konopa
  */
 public interface ConnectorService {
+    /** Unlimited maximal processing time for a call request. */
+    long UNLIMITED_MAXIMAL_PROCESSING_TIME = -1;
+    
+    
     /**
      * Performs action on underlaying network device, which corresponds to 
      * specified device object, called method, and parameters of that method.<br>
@@ -52,39 +56,39 @@ public interface ConnectorService {
     );
     
     /**
-     * Sets processing time for specified call request.
+     * Sets maximal processing time for specified call request.
      * @param requestId ID of a call request, whose processing time to set
      * @param maxProcTime processing time of the specified request 
      */
-    void setCallRequestProcessingTime(UUID requestId, long maxProcTime);
+    void setCallRequestMaximalProcessingTime(UUID requestId, long maxProcTime);
     
     /**
      * Returns information about processing of executed call request as specified
      * by {@code callId}.
-     * @param callId ID of call request, which to return information for
+     * @param requestId ID of a call request, which to return information for
      * @return information about processing of executed call request as specified
      *         by {@code callId}.
      */
-    CallRequestProcessingInfo getCallRequestProcessingInfo(UUID callId);
+    CallRequestProcessingInfo getCallRequestProcessingInfo(UUID requestId);
     
     /**
      * Cancels processing of a call request as specified by {@code callId}.
-     * @param callId ID of a call request whose processing to cancell
+     * @param requestId ID of a call request whose processing to cancell
      */
-    void cancelCallRequest(UUID callId);
+    void cancelCallRequest(UUID requestId);
     
     /**
-     * Returns maximal time ( in ms ), during which call requests can be present
+     * Returns maximal time ( in ms ), during which the call requests can be present
      * at a connector without any interaction. When a request is idle for specific
- time period, it means:
- - no call result has arrived for the request
- - no client queried the request
- for that period of time.
-
- Connector Service must garantee, that idle request will not be
- silently cancelled and removed from the connector during this period of time.
+     * time period, it means:
+     * - no call result has arrived for the request
+     * - no client queried the request
+     * for that period of time.
+     * 
+     * Connector Service must garantee that idle request will not be
+     * silently cancelled and removed from the connector during this period of time.
      * 
      * @return maximal idle time period for the requests present at a connector
      */
-    long getMaxCallRequestIdleTime();
+    long getCallRequestsMaximalIdleTime();
 }

@@ -85,8 +85,17 @@ extends AbstractConnector implements ResponseWaitingConnector {
         /** Time, when last request was sended. */
         private long lastSendTime = 0;
         
-        /** Call request, which was lastly sent to underlaying network. */
+        // call request, which was lastly sent to underlaying network
         private CallRequestToProcess lastRequestToProc =  null;
+        
+        // synchronization object for access to lastRequestToProc
+        private final Object synchroLastRequestToProc = new Object();
+        
+        // indicates, wheather the last request was cancelled
+        private volatile boolean isCancelledLastRequest = false;
+        
+        // synchronization for cancelling a request
+        private final Object syncCancelRequest = new Object();
         
         /** 
          * Returns value of sleep time before sending next request to
@@ -101,15 +110,12 @@ extends AbstractConnector implements ResponseWaitingConnector {
                 } else {
                     return ( betweenSendPause - waitedTime );
                 }
-
             }
             return ( betweenSendPause - waitedTime );
         } 
         
         /**
-         * Sends specified DO method call request to protocol layer. <br>
-         * SOME TIMEOUT IS MANDATORY, OTHERWISE THE CONNECTION DEVICE MAY
-         * CRASH !!!
+         * Sends specified DO method call request to protocol layer.
          * @param request DO method call-request
          */
         private void sendRequestToProtocolLayer(CallRequest request) 
@@ -169,7 +175,10 @@ extends AbstractConnector implements ResponseWaitingConnector {
         
         // indicates, wheather a response arrived for the last call request
         private boolean responseArrivedForLastRequest() {
+            logger.debug("responseArrivedForLastRequest - start: ");
+            
             if ( msgFromNetwork.isEmpty() ) {
+                logger.debug("responseArrivedForLastRequest - end: false");
                 return false;
             }
             
@@ -177,9 +186,12 @@ extends AbstractConnector implements ResponseWaitingConnector {
             if ( message instanceof BaseCallResponse ) {
                 BaseCallResponse response = (BaseCallResponse) message;
                 if ( response.getRequestId().equals(currProcRequestInfo.getRequestId()) ) {
+                    logger.debug("responseArrivedForLastRequest - end: true");
                     return true;
                 }
             }
+            
+            logger.debug("responseArrivedForLastRequest - end: false");
             return false;
         }
         
@@ -273,8 +285,8 @@ extends AbstractConnector implements ResponseWaitingConnector {
         }
         
         // info about currently processed request 
-        private VariableCallRequestProcessingInfo currProcRequestInfo = 
-                new VariableCallRequestProcessingInfo();
+        private VariableCallRequestProcessingInfo currProcRequestInfo 
+                = new VariableCallRequestProcessingInfo();
         private final Object syncCurrProcRequestInfo = new Object(); 
         
         
@@ -295,7 +307,7 @@ extends AbstractConnector implements ResponseWaitingConnector {
                 while ( requestIt.hasNext() ) {
                     IdleRequest idleRequest = requestIt.next();
                     long idleTime = System.currentTimeMillis() - idleRequest.startIdleTime;
-                    if ( idleTime > maxCallRequestIdleTime ) {
+                    if ( idleTime > callRequestMaxIdleTime ) {
                         requestIt.remove();
                         continue;
                     }
@@ -341,7 +353,7 @@ extends AbstractConnector implements ResponseWaitingConnector {
                 while ( requestIt.hasNext() ) {
                     IdleRequest idleRequest = requestIt.next();
                     long idleTime = System.currentTimeMillis() - idleRequest.startIdleTime;
-                    if ( idleTime > maxCallRequestIdleTime ) {
+                    if ( idleTime > callRequestMaxIdleTime ) {
                         requestIt.remove();
                         continue;
                     }
@@ -363,15 +375,29 @@ extends AbstractConnector implements ResponseWaitingConnector {
         
         /**
          * Cancels processing of specified request.
-         * @param reqId ID of request to cancel
+         * @param reqId ID of request to cancelCallRequest
          */
         public void cancelCallRequest(UUID reqId) {
-            synchronized ( syncRequestsToProcess ) {
-                Iterator<CallRequestToProcess> requestIt = requestsToProcess.iterator();
-                while ( requestIt.hasNext() ) {
-                    CallRequestToProcess reqToProc = requestIt.next();
-                    if ( reqToProc.callRequest.getId().equals(reqId) ) {
-                        requestIt.remove();
+            // must be tied together because the last request is polled from 
+            // requests to process
+            synchronized ( syncCancelRequest ) {
+                // cancel the last request
+                synchronized ( syncMsgfromNetwork ) {
+                    if ( lastRequestToProc.callRequest.getId().equals(reqId) ) {
+                        isCancelledLastRequest = true;
+                        syncMsgfromNetwork.notifyAll();
+                        return;
+                    }
+                }
+                
+                // cancel request to process
+                synchronized ( syncRequestsToProcess ) {
+                    Iterator<CallRequestToProcess> requestIt = requestsToProcess.iterator();
+                    while ( requestIt.hasNext() ) {
+                        CallRequestToProcess reqToProc = requestIt.next();
+                        if ( reqToProc.callRequest.getId().equals(reqId) ) {
+                            requestIt.remove();
+                        }
                     }
                 }
             }
@@ -379,10 +405,11 @@ extends AbstractConnector implements ResponseWaitingConnector {
             synchronized ( syncIdleRequests ) {
                 boolean found = false;
                 Iterator<IdleRequest> requestIt = idleRequests.iterator();
+                
                 while ( requestIt.hasNext() ) {
                     IdleRequest idleRequest = requestIt.next();
                     long idleTime = System.currentTimeMillis() - idleRequest.startIdleTime;
-                    if ( idleTime > maxCallRequestIdleTime ) {
+                    if ( idleTime > callRequestMaxIdleTime ) {
                         requestIt.remove();
                         continue;
                     }
@@ -406,7 +433,7 @@ extends AbstractConnector implements ResponseWaitingConnector {
                 while ( requestIt.hasNext() ) {
                     IdleRequest idleRequest = requestIt.next();
                     long idleTime = System.currentTimeMillis() - idleRequest.startIdleTime;
-                    if ( idleTime > maxCallRequestIdleTime ) {
+                    if ( idleTime > callRequestMaxIdleTime ) {
                         requestIt.remove();
                     }
                 }
@@ -422,19 +449,26 @@ extends AbstractConnector implements ResponseWaitingConnector {
                 }
                 
                 // nothing to do - so wait for messages
-                synchronized( syncRequestsToProcess ) {
+                synchronized ( syncRequestsToProcess ) {
                     while ( requestsToProcess.isEmpty() ) {
                         try {
                             syncRequestsToProcess.wait();
                         } catch ( InterruptedException e ) {
-                            logger.warn("Worker thread interrupted while waiting "
-                                    + "on messages", e);
+                            logger.warn(
+                                "Worker thread interrupted while waiting on messages", e
+                            );
                             return;
                         }
                     }
                 }
                 
-                lastRequestToProc = requestsToProcess.poll();
+                synchronized ( syncCancelRequest ) {
+                    synchronized ( syncRequestsToProcess ) {
+                        lastRequestToProc = requestsToProcess.poll();
+                        isCancelledLastRequest = false;
+                    }
+                }
+                
                 currProcRequestInfo.setAll( lastRequestToProc.callRequest.getId(), 
                         WAITING_FOR_PROCESSING, null, null
                 );
@@ -462,25 +496,30 @@ extends AbstractConnector implements ResponseWaitingConnector {
                 }
                 
                 currProcRequestInfo.setState( WAITING_FOR_RESULT );
-                synchronized( syncMsgfromNetwork ) {
+                synchronized ( syncMsgfromNetwork ) {
                     // while cycle is needed because other responses may
-                    // arrived to connector
+                    // arrive to connector
                     long totalWaitingTime = 0;
                     respArrivedForLastRequest = responseArrivedForLastRequest();
                     
-                    while ( !respArrivedForLastRequest ) {
+                    while ( !respArrivedForLastRequest && !isCancelledLastRequest ) {
                         try {
-                            long beforeWaitTime = System.currentTimeMillis();
-                            syncMsgfromNetwork.wait( lastRequestToProc.maxProcTime );
-                            totalWaitingTime += System.currentTimeMillis() - beforeWaitTime;
+                            if ( lastRequestToProc.maxProcTime == UNLIMITED_MAXIMAL_PROCESSING_TIME ) {
+                                syncMsgfromNetwork.wait();
+                            } else {
+                                long beforeWaitTime = System.currentTimeMillis();
+                                syncMsgfromNetwork.wait( lastRequestToProc.maxProcTime );
+                                totalWaitingTime += System.currentTimeMillis() - beforeWaitTime;
 
-                            respArrivedForLastRequest = responseArrivedForLastRequest();
-                            if ( totalWaitingTime >= lastRequestToProc.maxProcTime ) {
-                                break;
+                                if ( totalWaitingTime >= lastRequestToProc.maxProcTime ) {
+                                    break;
+                                }
                             }
+                            respArrivedForLastRequest = responseArrivedForLastRequest();
                         } catch ( InterruptedException e ) {
-                            logger.warn("Worker thread interrupted while "
-                                    + "waiting on response", e);
+                            logger.warn(
+                                    "Worker thread interrupted while waiting on response", e
+                            );
                             return;
                         }
                     }
@@ -491,12 +530,16 @@ extends AbstractConnector implements ResponseWaitingConnector {
                     processAllIncommingMessages();
                     if ( !respArrivedForLastRequest ) {
                         // there wasn't a response for a last request
-                        idleRequests.add( new IdleRequest(lastRequestToProc, System.currentTimeMillis()) );
-                        logger.warn("No messages arrived for last request.");
+                        logger.warn("No messages arrived for the last request.");
+                        if ( !isCancelledLastRequest ) {
+                            idleRequests.add( new IdleRequest(lastRequestToProc, System.currentTimeMillis()) );
+                        }
                     }
                 } else {
                     // no messages arrived in the timeout
-                    idleRequests.add( new IdleRequest(lastRequestToProc, System.currentTimeMillis()) );
+                    if ( !isCancelledLastRequest ) {
+                        idleRequests.add( new IdleRequest(lastRequestToProc, System.currentTimeMillis()) );
+                    }
                     logger.warn("No messages arrived at timeout");
                 }
                 
@@ -516,8 +559,7 @@ extends AbstractConnector implements ResponseWaitingConnector {
     /** 
      * Queue of incomming call requests to process.
      */
-    private Queue<CallRequestToProcess> requestsToProcess = 
-            new ConcurrentLinkedQueue<>();
+    private Queue<CallRequestToProcess> requestsToProcess = new ConcurrentLinkedQueue<>();
     
     /**
      * Synchronization object for {@code requestsToProcess}. 
@@ -549,7 +591,7 @@ extends AbstractConnector implements ResponseWaitingConnector {
     
     
     private static long MAX_CALL_REQUEST_IDLE_TIME_DEFAULT = 30000;
-    private volatile long maxCallRequestIdleTime = MAX_CALL_REQUEST_IDLE_TIME_DEFAULT;
+    private volatile long callRequestMaxIdleTime = MAX_CALL_REQUEST_IDLE_TIME_DEFAULT;
     
     
     /**
@@ -593,21 +635,54 @@ extends AbstractConnector implements ResponseWaitingConnector {
     private volatile long betweenSendPause = BETWEEN_SEND_PAUSE_DEFAULT;
     
     
+    private static ConnectedDeviceObject checkDeviceObject(ConnectedDeviceObject deviceObject) {
+        if ( deviceObject == null ) {
+            throw new IllegalArgumentException("Device Object cannot be null");
+        }
+        return deviceObject;
+    }
+    
+    private static Class checkDeviceInterface(Class deviceIface) {
+        if ( deviceIface == null ) {
+            throw new IllegalArgumentException("Device Interface cannot be null");
+        }
+        return deviceIface;
+    }
+    
+    private static String checkMethodId(String methodId) {
+        if ( methodId == null ) {
+            throw new IllegalArgumentException("Method ID cannot be null");
+        }
+        return methodId;
+    }
     
     private static long checkMaxProcessingTime( long maxProcTime ) {
-        if ( maxProcTime <= 0 ) {
-            throw new IllegalArgumentException("Maximal processing time must be greather then 0");
+        if ( maxProcTime == UNLIMITED_MAXIMAL_PROCESSING_TIME ) {
+            return maxProcTime;
         }
+        
+        if ( maxProcTime <= 0 ) {
+            throw new IllegalArgumentException(
+                "Maximal processing time must be positive or equal to " + UNLIMITED_MAXIMAL_PROCESSING_TIME
+            );
+        }
+        
         return maxProcTime;
     }
     
-    
+    private static UUID checkRequestId(UUID requestId) {
+        if ( requestId == null ) {
+            throw new IllegalArgumentException("Call request ID cannot be null");
+        }
+        return requestId;
+    }
     
     
     
     /**
      * Creates new response-waiting connector.
      * @param protocolLayerService protocol layer service to use
+     * @throws IllegalArgumentException if {@code protocolLayerService} is {@code null}
      */
     public SimpleResponseWaitingConnector(ProtocolLayerService protocolLayerService) {
        super( protocolLayerService );
@@ -623,18 +698,16 @@ extends AbstractConnector implements ResponseWaitingConnector {
     public UUID callMethod( ConnectedDeviceObject devObject, Class deviceIface, 
             String methodId, Object[] args, long maxProcTime
     ) {
-        Object[] logArgs = new Object[5];
-        logArgs[0] = devObject.getNodeId();
-        logArgs[1] = deviceIface.getName();
-        logArgs[2] = methodId;
-        logArgs[3] = args;
-        logArgs[4] = maxProcTime;
-        logger.debug("callMethod - start: devObject={}, devIface={}, methodId={}, "
-                + "args={}, timeout={}", logArgs
+        logger.debug(
+                "callMethod - start: devObject={}, devIface={}, methodId={}, "
+                + "args={}, timeout={}", 
+                devObject, deviceIface, methodId, args, maxProcTime
         );
         
-        // checking maximal processing time
-        maxProcTime = checkMaxProcessingTime( maxProcTime );
+        checkDeviceObject(devObject);
+        checkDeviceInterface(deviceIface);
+        checkMethodId( methodId );
+        checkMaxProcessingTime( maxProcTime );
         
         UUID callId = UUID.randomUUID();
         CallRequest request = new CallRequest(
@@ -664,26 +737,29 @@ extends AbstractConnector implements ResponseWaitingConnector {
     }
     
     @Override
-    public void setCallRequestProcessingTime(UUID requestId, long maxProcTime) {
-        workerThread.setCallRequestProcessingTime(requestId, maxProcTime);
+    public void setCallRequestMaximalProcessingTime(UUID requestId, long maxProcTime) {
+        workerThread.setCallRequestProcessingTime(
+                checkRequestId(requestId), checkMaxProcessingTime(maxProcTime)
+        );
     }
     
     @Override
-    public CallRequestProcessingInfo getCallRequestProcessingInfo(UUID callId) {
-        CallRequestProcessingInfo procInfo = workerThread.getCallRequestProcessingInfo(callId);
+    public CallRequestProcessingInfo getCallRequestProcessingInfo(UUID requestId) {
+        CallRequestProcessingInfo procInfo 
+                = workerThread.getCallRequestProcessingInfo(checkRequestId(requestId));
         if ( procInfo != null ) {
             return procInfo;
         }
         
         // if procInfo == null, then workerThread hasn't any information about
         // specified request - so it is neccessary to query listener thread
-        procInfo = callResultsSender.getCallRequestProcessingInfo(callId);
+        procInfo = callResultsSender.getCallRequestProcessingInfo(requestId);
         return procInfo;
     }
 
     @Override
-    public void cancelCallRequest(UUID callId) {
-        workerThread.cancelCallRequest(callId);
+    public void cancelCallRequest(UUID requestId) {
+        workerThread.cancelCallRequest(checkRequestId(requestId));
     }
     
     @Override
@@ -700,6 +776,9 @@ extends AbstractConnector implements ResponseWaitingConnector {
         logger.debug("startMessaging - end");
     }
     
+    // timeout to wait for worker threads to join
+    private static final long JOIN_WAIT_TIMEOUT = 2000;
+    
     /**
      * Terminates worker thread.
      */
@@ -709,19 +788,25 @@ extends AbstractConnector implements ResponseWaitingConnector {
         // termination signal to worker thread
         workerThread.interrupt();
         
-        // Waiting for threads to terminate. Cancelling worker threads has higher 
-        // priority than main thread interruption. 
-        while ( workerThread.isAlive() ) {
-            try {
-                if ( workerThread.isAlive() ) {
-                    workerThread.join();
-                }
-            } catch ( InterruptedException e ) {
-                // restoring interrupt status
-                Thread.currentThread().interrupt();
-                logger.warn("Stop messaging - connector interrupted");
+        // indicates, wheather this thread is interrupted
+        boolean isInterrupted = false;
+         
+        try {
+            if ( workerThread.isAlive() ) {
+                workerThread.join(JOIN_WAIT_TIMEOUT);
             }
-        } 
+        } catch ( InterruptedException e ) {
+            isInterrupted = true;
+            logger.warn("Stop messaging - connector interrupted");
+        }
+        
+        if ( !workerThread.isAlive() ) {
+            logger.info("Worker thread stopped.");
+        }
+        
+        if ( isInterrupted ) {
+            Thread.currentThread().interrupt();
+        }
         
         logger.info("Messaging stopped.");
         logger.debug("stopMessaging - end");
@@ -757,10 +842,10 @@ extends AbstractConnector implements ResponseWaitingConnector {
      }
     
     
-    private static long checkMaxCallRequestIdleTime(long idleTime) {
+    private static long checkCallRequestMaximalIdleTime(long idleTime) {
         if ( idleTime < 0 ) {
             throw new IllegalArgumentException(
-                    "Maximal call request idle time must be nonnegative"
+                    "Call request maximal idle time must be nonnegative"
             );
         }
         return idleTime;
@@ -772,13 +857,13 @@ extends AbstractConnector implements ResponseWaitingConnector {
      *         equal to 0
      */
     @Override
-    public void setMaxCallRequestIdleTime(long idleTime) {
-        maxCallRequestIdleTime = checkMaxCallRequestIdleTime(idleTime);
+    public void setCallRequestsMaximalIdleTime(long idleTime) {
+        callRequestMaxIdleTime = checkCallRequestMaximalIdleTime(idleTime);
     }
     
     @Override
-    public long getMaxCallRequestIdleTime() {
-        return maxCallRequestIdleTime;
+    public long getCallRequestsMaximalIdleTime() {
+        return callRequestMaxIdleTime;
     }
     
     

@@ -61,26 +61,18 @@ implements CallRequestDispatcher, ConnectorListener {
     }
     
     
-    /** 
-     * Checks connector for validity.
-     * @param connector connector to check
-     */
     private static ConnectorService checkConnector(ConnectorService connector) {
-        if (connector == null) {
-            throw new NullPointerException("Connector cannot be null");
+        if ( connector == null ) {
+            throw new IllegalArgumentException("Connector cannot be null");
         }
         return connector;
     }
     
-    /** 
-     * Checks results container for validity.
-     * @param resultsContainer results container to check
-     */
     private static CallRequestProcessingInfoContainer checkResultsContainer(
             CallRequestProcessingInfoContainer resultsContainer
     ) {
         if ( resultsContainer == null ) {
-            throw new NullPointerException("Results container cannot be null");
+            throw new IllegalArgumentException("Results container cannot be null");
         }
         return resultsContainer;
     }
@@ -94,6 +86,8 @@ implements CallRequestDispatcher, ConnectorListener {
      * @param connector connector to underlaying network.
      * @param resultsContainer container, where to store incomming results of 
      *                         performed method calls.
+     * @throws IllegalArgumentException if any one of {@code networkId}, {@code nodeId},
+     *         {@code connector} or {@code resultsContainer} is {@code null}
      */
     public ConnectedDeviceObject(
             String networkId, String nodeId, ConnectorService connector, 
@@ -107,8 +101,8 @@ implements CallRequestDispatcher, ConnectorListener {
     
     @Override
     public UUID dispatchCall(String methodId, Object[] args) {
-        logger.debug(logPrefix + "dispatchCall - start: methodId={}, arguments={}", 
-                methodId, args
+        logger.debug("{}dispatchCall - start: methodId={}, arguments={}", 
+                logPrefix, methodId, args
         );
         
         lastDispatchError = null;
@@ -120,27 +114,23 @@ implements CallRequestDispatcher, ConnectorListener {
         } catch ( Exception e ) {
             lastCallId = null;
             lastDispatchError = e;
-            logger.error(logPrefix + "Error while dispatching call: ", e);
+            logger.error("{}Error while dispatching call: {}", logPrefix, e);
             return null;
         }
         
         lastCallId = callId;
         
         logger.debug("{}dispatchCall - end: {}", logPrefix, callId);
-        logger.info(logPrefix + "Method {} call dispatched, id={}", methodId, callId);
+        logger.info("{}Method {} call dispatched, id={}", logPrefix, methodId, callId);
         return callId;
     }
     
     
     @Override
     public UUID dispatchCall(String methodId, Object[] args, long timeout) {
-        Object[] logArgs = new Object[4];
-        logArgs[0] = logPrefix;
-        logArgs[1] = methodId;
-        logArgs[2] = args;
-        logArgs[3] = timeout;
-        
-        logger.debug("{}dispatchCall - start: methodId={}, arguments={}, timeout={}", logArgs);
+        logger.debug("{}dispatchCall - start: methodId={}, arguments={}, timeout={}", 
+                logPrefix, methodId, args, timeout
+        );
         
         lastDispatchError = null;
         UUID callId = null;
@@ -151,14 +141,14 @@ implements CallRequestDispatcher, ConnectorListener {
         } catch ( Exception e ) {
             lastCallId = null;
             lastDispatchError = e;
-            logger.error(logPrefix + "Error while dispatching call: ", e);
+            logger.error("{}Error while dispatching call: {}", logPrefix, e);
             return null;
         }
         
         lastCallId = callId;
         
         logger.debug("{}dispatchCall - end: {}", logPrefix, callId);
-        logger.info(logPrefix + "Method {} call dispatched, id={}", methodId, callId);
+        logger.info("{}Method {} call dispatched, id={}", logPrefix, methodId, callId);
         return callId;
     }
     
@@ -166,8 +156,8 @@ implements CallRequestDispatcher, ConnectorListener {
     public void onCallRequestProcessingInfo(
             CallRequestProcessingInfo procInfo, UUID callId
     ) {
-        logger.debug(logPrefix + "onCallRequestProcessingInfo - start: procInfo={}, callId={}", 
-                procInfo, callId
+        logger.debug("{}onCallRequestProcessingInfo - start: procInfo={}, callId={}", 
+                logPrefix, procInfo, callId
         );
         
         synchronized( results ) {

@@ -56,5 +56,16 @@ public interface AsyncCallable extends WaitingTimeoutService {
      * @return result of DO method call identified by {@code callId}
      */
     <T> T getCallResultImmediately(UUID callId, Class<T> resultClass);
+    
+    /**
+     * Returns results of DO method call, which is identified by specified 
+     * method call ID. Blocks, until results for specified method call is 
+     * present. Can block for a potentially infinite long time.
+     * @param <T> type of result
+     * @param callId unique identifier of performed DO method call
+     * @param resultClass class of result
+     * @return result of DO method call identified by {@code callId}
+     */
+    <T> T getCallResultInUnlimitedWaitingTimeout(UUID callId, Class<T> resultClass);
 }
  

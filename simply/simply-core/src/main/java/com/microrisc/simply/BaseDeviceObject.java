@@ -32,23 +32,15 @@ public class BaseDeviceObject implements DeviceObject {
     protected final Class implementedDeviceInterface;
     
     
-    /** 
-     * Checks network ID for validity.
-     * @param networkId network ID to check
-     */
     private static String checkNetworkId(String networkId) {
-        if (networkId == null) {
+        if ( networkId == null ) {
             throw new IllegalArgumentException("Network ID cannot be null");
         }
         return networkId;
     }
     
-    /** 
-     * Checks node ID for validity.
-     * @param nodeId node ID to check
-     */
     private static String checkNodeId(String nodeId) {
-        if (nodeId == null) {
+        if ( nodeId == null ) {
             throw new IllegalArgumentException("Node ID cannot be null");
         }
         return nodeId;
@@ -61,7 +53,7 @@ public class BaseDeviceObject implements DeviceObject {
      */
     private Class discoverImplementedDeviceInterface() {
         Class[] implIfaces = this.getClass().getInterfaces();
-        for (Class implIface : implIfaces) {
+        for ( Class implIface : implIfaces ) {
             if (implIface.isAnnotationPresent(DeviceInterface.class)) {
                 return implIface;
             }
@@ -69,12 +61,8 @@ public class BaseDeviceObject implements DeviceObject {
         return null;
     }
     
-    /** 
-     * Checks node ID for validity.
-     * @param nodeId node ID to check
-     */
     private static Class checkImplementedDeviceInterface(Class devIface) {
-        if (devIface == null) {
+        if ( devIface == null ) {
             throw new IllegalStateException(
                     "Device object doesn't implement no device interface"
             );
@@ -110,10 +98,23 @@ public class BaseDeviceObject implements DeviceObject {
         return nodeId;
     }
 
-    
     @Override
     public Class getImplementedDeviceInterface() {
         return implementedDeviceInterface;
+    }
+    
+    @Override
+    public String toString() {
+        StringBuilder strBuilder = new StringBuilder();
+        String NEW_LINE = System.getProperty("line.separator");
+        
+        strBuilder.append(this.getClass().getSimpleName() + " { " + NEW_LINE);
+        strBuilder.append(" Network ID: " + networkId + NEW_LINE);
+        strBuilder.append(" Node ID: " + nodeId + NEW_LINE);
+        strBuilder.append(" Implemented device interface: " + implementedDeviceInterface + NEW_LINE);
+        strBuilder.append("}");
+        
+        return strBuilder.toString();
     }
     
 }

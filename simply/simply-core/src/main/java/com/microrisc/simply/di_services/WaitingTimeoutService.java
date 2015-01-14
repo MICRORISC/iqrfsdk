@@ -22,6 +22,9 @@ package com.microrisc.simply.di_services;
  * @author Michal Konopa
  */
 public interface WaitingTimeoutService {
+    /** Unlimited waiting timeout. */
+    long UNLIMITED_WAITING_TIMEOUT = -1;
+    
     /**
      * Returns default timeout ( in ms ) to wait for result from DO method calls.
      * @return default timeout ( in ms ) to wait for result from DO method calls.
