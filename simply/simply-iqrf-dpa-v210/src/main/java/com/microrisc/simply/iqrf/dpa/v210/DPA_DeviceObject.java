@@ -55,6 +55,7 @@ implements DPA_StandardServices {
             CallRequestProcessingInfoContainer resultsContainer
     ) {
         super(networkId, nodeId, connector, resultsContainer);
+        this.waitingTimeout = UNLIMITED_WAITING_TIMEOUT;
     }
     
     @Override

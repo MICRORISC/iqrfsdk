@@ -48,3 +48,11 @@ simply/simply-network-serial-v2/versions/1.0.0/target/
 /simply/simply-iqrf-dpa/target/
 /simply/simply-iqrf-dpa-v201/target/
 /simply/simply-iqrf-dpa-v201-examples/target/
+/simply/simply-core/target/
+/simply/simply-iqrf/target/
+/simply/simply-asynchrony/target/
+/simply/simply-network-serial-v2/target/
+/simply/simply-network-serial-v1/target/
+/simply/simply-network-spi/target/
+/simply/simply-network-udp/target/
+/simply/simply-network-usbcdc/target/

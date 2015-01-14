@@ -26,17 +26,17 @@ import com.microrisc.simply.ManageableObject;
  */
 public interface Connector extends ManageableObject, ConnectorService {
     /**
-     * Sets maximal time period ( in ms ), during which the requests can be 'idle'. 
+     * Sets maximal time period ( in ms ), during which the call requests can be 'idle'. 
      * When a request is idle for specific time period, it means:
      * - no call result has arrived for the request
      * - no client queried the request
      * for that period of time.
      * @param idleTime maximal time period, during which requests can be idle
      */
-    void setMaxCallRequestIdleTime(long idleTime);
+    void setCallRequestsMaximalIdleTime(long idleTime);
     
     /**
-     * Returns maximal time period ( in ms ), during which the requests can be 'idle'. 
+     * Returns maximal time period ( in ms ), during which requests can be 'idle'. 
      * When a request is idle for specific time period, it means:
      * - no call result has arrived for the request
      * - no client queried the request
@@ -44,5 +44,5 @@ public interface Connector extends ManageableObject, ConnectorService {
      * @return maximal time period, during which requests can be idle
      */
     @Override
-    long getMaxCallRequestIdleTime();
+    long getCallRequestsMaximalIdleTime();
 }

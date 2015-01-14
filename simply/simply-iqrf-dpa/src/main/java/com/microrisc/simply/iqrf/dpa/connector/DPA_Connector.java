@@ -57,7 +57,7 @@ import org.slf4j.LoggerFactory;
  */
 public final class DPA_Connector
 extends AbstractConnector 
-implements 
+implements
         ResponseWaitingConnector, 
         BroadcastingConnectorService,
         AsynchronousMessagesGenerator<DPA_AsynchronousMessage>
@@ -155,8 +155,14 @@ implements
         /** Time, when last request was sended. */
         private long lastSendTime = 0;
         
-        /** Call request, which was lastly sent to protocol layer. */
+        // call request, which was lastly sent to underlaying network
         private CallRequestToProcess lastRequestToProc = null;
+        
+        // indicates, wheather the last request was cancelled
+        private volatile boolean isCancelledLastRequest = false;
+        
+        // synchronization for cancelling a request
+        private final Object syncCancelRequest = new Object();
         
         /** 
          * Returns value of sleep time before sending next request to
@@ -171,15 +177,12 @@ implements
                 } else {
                     return ( betweenSendPause - waitedTime );
                 }
-
             }
             return ( betweenSendPause - waitedTime );
         }   
         
         /**
-         * Sends specified DO method call request to protocol layer. <br>
-         * SOME TIMEOUT IS MANDATORY, OTHERWISE THE CONNECTION DEVICE MAY
-         * CRASH !!!
+         * Sends specified DO method call request to protocol layer.
          * @param request DO method call-request
          */
         private void sendRequestToProtocolLayer(CallRequest request) 
@@ -237,7 +240,10 @@ implements
         }
         
         private boolean responseArrivedForLastRequest() {
+            logger.debug("responseArrivedForLastRequest - start: ");
+            
             if ( msgFromProtoLayer.isEmpty() ) {
+                logger.debug("responseArrivedForLastRequest - end: false");
                 return false;
             }
             
@@ -245,9 +251,12 @@ implements
             if ( message instanceof BaseCallResponse ) {
                 BaseCallResponse response = (BaseCallResponse) message;
                 if ( response.getRequestId().equals(currProcRequestInfo.getRequestId()) ) {
+                    logger.debug("responseArrivedForLastRequest - end: true");
                     return true;
                 }
             }
+            
+            logger.debug("responseArrivedForLastRequest - end: false");
             return false;
         }
         
@@ -356,8 +365,8 @@ implements
         }
         
         // info about currently processed request 
-        private VariableCallRequestProcessingInfo currProcRequestInfo = 
-                new VariableCallRequestProcessingInfo();
+        private VariableCallRequestProcessingInfo currProcRequestInfo 
+                = new VariableCallRequestProcessingInfo();
         private final Object syncCurrProcRequestInfo = new Object(); 
         
         
@@ -449,12 +458,24 @@ implements
          * @param reqId ID of request to cancel
          */
         public void cancelCallRequest(UUID reqId) {
-            synchronized ( syncRequestsToProcess ) {
-                Iterator<CallRequestToProcess> requestIt = requestsToProcess.iterator();
-                while ( requestIt.hasNext() ) {
-                    CallRequestToProcess reqToProc = requestIt.next();
-                    if ( reqToProc.callRequest.getId().equals(reqId) ) {
-                        requestIt.remove();
+            // must be tied together because the last request is polled from 
+            // requests to process
+            synchronized ( syncCancelRequest ) {
+                synchronized ( syncMsgfromProtoLayer ) {
+                    if ( lastRequestToProc.callRequest.getId().equals(reqId) ) {
+                        isCancelledLastRequest = true;
+                        syncMsgfromProtoLayer.notifyAll();
+                        return;
+                    }
+                }
+            
+                synchronized ( syncRequestsToProcess ) {
+                    Iterator<CallRequestToProcess> requestIt = requestsToProcess.iterator();
+                    while ( requestIt.hasNext() ) {
+                        CallRequestToProcess reqToProc = requestIt.next();
+                        if ( reqToProc.callRequest.getId().equals(reqId) ) {
+                            requestIt.remove();
+                        }
                     }
                 }
             }
@@ -513,8 +534,8 @@ implements
                             syncRequestOrMessage.wait();
                         } catch ( InterruptedException e ) {
                             logger.warn(
-                                    "Worker thread interrupted while waiting on requests"
-                                            + " and messages", e
+                                "Worker thread interrupted while waiting on requests"
+                                + " and messages", e
                             );
                             return;
                         }
@@ -528,12 +549,15 @@ implements
                     }
                 }
                 
-                // checking, if there are some new requests to process
-                synchronized( syncRequestsToProcess ) {
-                    if ( !requestsToProcess.isEmpty() ) {
-                        lastRequestToProc = requestsToProcess.poll();
-                    } else {
-                        lastRequestToProc = null;
+                synchronized ( syncCancelRequest ) {
+                    // checking, if there are some new requests to process
+                    synchronized( syncRequestsToProcess ) {
+                        if ( !requestsToProcess.isEmpty() ) {
+                            lastRequestToProc = requestsToProcess.poll();
+                            isCancelledLastRequest = false;
+                        } else {
+                            lastRequestToProc = null;
+                        }
                     }
                 }
                 
@@ -579,19 +603,24 @@ implements
                     long totalWaitingTime = 0;
                     respArrivedForLastRequest = responseArrivedForLastRequest();
                     
-                    while ( !respArrivedForLastRequest ) {
+                    while ( !respArrivedForLastRequest && !isCancelledLastRequest ) {
                         try {
-                            long beforeWaitTime = System.currentTimeMillis();
-                            syncMsgfromProtoLayer.wait( lastRequestToProc.maxProcTime );
-                            totalWaitingTime += System.currentTimeMillis() - beforeWaitTime;
+                            if ( lastRequestToProc.maxProcTime == UNLIMITED_MAXIMAL_PROCESSING_TIME ) {
+                                syncMsgfromProtoLayer.wait();
+                            } else {
+                                long beforeWaitTime = System.currentTimeMillis();
+                                syncMsgfromProtoLayer.wait( lastRequestToProc.maxProcTime );
+                                totalWaitingTime += System.currentTimeMillis() - beforeWaitTime;
 
-                            respArrivedForLastRequest = responseArrivedForLastRequest();
-                            if ( totalWaitingTime >= lastRequestToProc.maxProcTime ) {
-                                break;
+                                if ( totalWaitingTime >= lastRequestToProc.maxProcTime ) {
+                                    break;
+                                }
                             }
+                            respArrivedForLastRequest = responseArrivedForLastRequest();
                         } catch ( InterruptedException e ) {
-                            logger.warn("Worker thread interrupted while "
-                                    + "waiting on response", e);
+                            logger.warn(
+                                    "Worker thread interrupted while waiting on response", e
+                            );
                             return;
                         }
                     }
@@ -602,12 +631,16 @@ implements
                     processAllIncommingMessages();
                     if ( !respArrivedForLastRequest ) {
                         // there wasn't a response for a last request
-                        idleRequests.add( new IdleRequest(lastRequestToProc, System.currentTimeMillis()) );
-                        logger.warn("No messages arrived for last request.");
+                        logger.warn("No messages arrived for the last request.");
+                        if ( !isCancelledLastRequest ) {
+                            idleRequests.add( new IdleRequest(lastRequestToProc, System.currentTimeMillis()) );
+                        }
                     }
                 } else {
                     // no messages arrived in the timeout
-                    idleRequests.add( new IdleRequest(lastRequestToProc, System.currentTimeMillis()) );
+                    if ( !isCancelledLastRequest ) {
+                        idleRequests.add( new IdleRequest(lastRequestToProc, System.currentTimeMillis()) );
+                    }
                     logger.warn("No messages arrived at timeout");
                 }
                 
@@ -667,8 +700,7 @@ implements
     /** 
      * Queue of asynchronous messages received from protocol layer.  
      */  
-    private Queue<DPA_AsynchronousMessage> asyncMsgFromProtoLayer = 
-            new ConcurrentLinkedQueue<>();
+    private Queue<DPA_AsynchronousMessage> asyncMsgFromProtoLayer = new ConcurrentLinkedQueue<>();
     
     /**
      * Synchronization object for asynchronous messages incomming from protocol layer.
@@ -721,11 +753,60 @@ implements
     private volatile long betweenSendPause = BETWEEN_SEND_PAUSE_DEFAULT;
     
     
-    private static long checkMaxProcessingTime( long maxProcTime ) {
-        if ( maxProcTime <= 0 ) {
-            throw new IllegalArgumentException("Maximal processing time must be greather then 0");
+    private static ConnectedDeviceObject checkDeviceObject(ConnectedDeviceObject deviceObject) {
+        if ( deviceObject == null ) {
+            throw new IllegalArgumentException("Device Object cannot be null");
         }
+        return deviceObject;
+    }
+    
+    private static Class checkDeviceInterface(Class deviceIface) {
+        if ( deviceIface == null ) {
+            throw new IllegalArgumentException("Device Interface cannot be null");
+        }
+        return deviceIface;
+    }
+    
+    private static String checkMethodId(String methodId) {
+        if ( methodId == null ) {
+            throw new IllegalArgumentException("Method ID cannot be null");
+        }
+        return methodId;
+    }
+    
+    private static long checkMaxProcessingTime( long maxProcTime ) {
+        if ( maxProcTime == UNLIMITED_MAXIMAL_PROCESSING_TIME ) {
+            return maxProcTime;
+        }
+        
+        if ( maxProcTime <= 0 ) {
+            throw new IllegalArgumentException(
+                "Maximal processing time must be positive or equal to " + UNLIMITED_MAXIMAL_PROCESSING_TIME
+            );
+        }
+        
         return maxProcTime;
+    }
+    
+    private static UUID checkRequestId(UUID requestId) {
+        if ( requestId == null ) {
+            throw new IllegalArgumentException("Call request ID cannot be null");
+        }
+        return requestId;
+    }
+    
+    private static ConnectorListener checkConnectorListener(ConnectorListener connListener) {
+        if ( connListener == null ) {
+            throw new IllegalArgumentException("Connector listener cannot be null");
+        }
+        return connListener;
+    }
+    
+    private static String checkNetworkId(String networkId) {
+        if ( networkId == null ) {
+            throw new IllegalArgumentException("Network ID cannot be null");
+        }
+        return networkId;
     }
     
     
@@ -733,6 +814,7 @@ implements
     /**
      * Creates new response-waiting connector.
      * @param protocolLayerService protocol layer service to use
+     * @throws IllegalArgumentException if {@code protocolLayerService} is {@code null}
      */
     public DPA_Connector(ProtocolLayerService protocolLayerService) {
        super( protocolLayerService );
@@ -749,18 +831,16 @@ implements
     public UUID callMethod( ConnectedDeviceObject devObject, Class deviceIface, 
             String methodId, Object[] args, long maxProcTime
     ) {
-        Object[] logArgs = new Object[5];
-        logArgs[0] = devObject.getNodeId();
-        logArgs[1] = deviceIface.getName();
-        logArgs[2] = methodId;
-        logArgs[3] = args;
-        logArgs[4] = maxProcTime;
-        logger.debug("callMethod - start: devObject={}, devIface={}, methodId={}, "
-                + "args={}, timeout={}", logArgs
+        logger.debug(
+                "callMethod - start: devObject={}, devIface={}, methodId={}, "
+                + "args={}, timeout={}", 
+                devObject, deviceIface, methodId, args, maxProcTime
         );
         
-        // checking maximal processing time
-        maxProcTime = checkMaxProcessingTime( maxProcTime );
+        checkDeviceObject(devObject);
+        checkDeviceInterface(deviceIface);
+        checkMethodId( methodId );
+        checkMaxProcessingTime( maxProcTime );
         
         UUID callId = UUID.randomUUID();
         CallRequest request = new CallRequest(
@@ -793,26 +873,29 @@ implements
     }
     
     @Override
-    public void setCallRequestProcessingTime(UUID requestId, long maxProcTime) {
-        workerThread.setCallRequestProcessingTime(requestId, maxProcTime);
+    public void setCallRequestMaximalProcessingTime(UUID requestId, long maxProcTime) {
+        workerThread.setCallRequestProcessingTime(
+                checkRequestId(requestId), checkMaxProcessingTime(maxProcTime)
+        );
     }
     
     @Override
-    public CallRequestProcessingInfo getCallRequestProcessingInfo(UUID callId) {
-        CallRequestProcessingInfo procInfo = workerThread.getCallRequestProcessingInfo(callId);
+    public CallRequestProcessingInfo getCallRequestProcessingInfo(UUID requestId) {
+        CallRequestProcessingInfo procInfo 
+                = workerThread.getCallRequestProcessingInfo(checkRequestId(requestId));
         if ( procInfo != null ) {
             return procInfo;
         }
         
         // if procInfo == null, then workerThread hasn't any information about
         // specified request - so it is neccessary to query listener thread
-        procInfo = callResultsSender.getCallRequestProcessingInfo(callId);
+        procInfo = callResultsSender.getCallRequestProcessingInfo(requestId);
         return procInfo;
     }
 
     @Override
-    public void cancelCallRequest(UUID callId) {
-        workerThread.cancelCallRequest(callId);
+    public void cancelCallRequest(UUID requestId) {
+        workerThread.cancelCallRequest(checkRequestId(requestId));
     }
     
     @Override
@@ -824,18 +907,15 @@ implements
             Object[] args,
             long maxProcTime
     ) {
-        Object[] logArgs = new Object[6];
-        logArgs[0] = connListener;
-        logArgs[1] = networkId;
-        logArgs[2] = deviceIface;
-        logArgs[3] = methodId;
-        logArgs[4] = args;
-        logArgs[5] = maxProcTime;
         logger.debug("broadcastCallMethod - start: connListener={}, networkId={}, "
-                + "devIface={}, methodId={}, args={}, maxProcTime={}", logArgs
+                + "devIface={}, methodId={}, args={}, maxProcTime={}", 
+                connListener, networkId, deviceIface, methodId, args, maxProcTime
         );
         
-        // checking maximal processing time
+        connListener = checkConnectorListener(connListener);
+        networkId = checkNetworkId(networkId);
+        deviceIface = checkDeviceInterface(deviceIface);
+        methodId = checkMethodId(methodId);
         maxProcTime = checkMaxProcessingTime( maxProcTime );
         
         UUID requestId = UUID.randomUUID();
@@ -905,6 +985,9 @@ implements
         logger.debug("startMessaging - end");
     }
     
+    // timeout to wait for worker threads to join
+    private static final long JOIN_WAIT_TIMEOUT = 2000;
+    
     /**
      * Terminates worker thread.
      */
@@ -914,19 +997,25 @@ implements
         // termination signal to worker thread
         workerThread.interrupt();
         
-        // Waiting for threads to terminate. Cancelling worker threads has higher 
-        // priority than main thread interruption. 
-        while ( workerThread.isAlive() ) {
-            try {
-                if ( workerThread.isAlive() ) {
-                    workerThread.join();
-                }
-            } catch ( InterruptedException e ) {
-                // restoring interrupt status
-                Thread.currentThread().interrupt();
-                logger.warn("Stop messaging - connector interrupted");
+        // indicates, wheather this thread is interrupted
+        boolean isInterrupted = false;
+         
+        try {
+            if ( workerThread.isAlive() ) {
+                workerThread.join(JOIN_WAIT_TIMEOUT);
             }
-        } 
+        } catch ( InterruptedException e ) {
+            isInterrupted = true;
+            logger.warn("Stop messaging - connector interrupted");
+        }
+        
+        if ( !workerThread.isAlive() ) {
+            logger.info("Worker thread stopped.");
+        }
+        
+        if ( isInterrupted ) {
+            Thread.currentThread().interrupt();
+        }
         
         logger.info("Messaging stopped.");
         logger.debug("stopMessaging - end");
@@ -981,10 +1070,10 @@ implements
     
     
     
-    private static long checkMaxCallRequestIdleTime(long idleTime) {
+    private static long checkCallRequestMaximalIdleTime(long idleTime) {
         if ( idleTime < 0 ) {
             throw new IllegalArgumentException(
-                    "Maximal call request idle time must be nonnegative"
+                    "Call request maximal idle time must be nonnegative"
             );
         }
         return idleTime;
@@ -996,12 +1085,12 @@ implements
      *         equal to 0
      */
     @Override
-    public void setMaxCallRequestIdleTime(long idleTime) {
-        maxCallRequestIdleTime = checkMaxCallRequestIdleTime(idleTime);
+    public void setCallRequestsMaximalIdleTime(long idleTime) {
+        maxCallRequestIdleTime = checkCallRequestMaximalIdleTime(idleTime);
     }
     
     @Override
-    public long getMaxCallRequestIdleTime() {
+    public long getCallRequestsMaximalIdleTime() {
         return maxCallRequestIdleTime;
     }
     

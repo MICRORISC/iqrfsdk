@@ -4,7 +4,7 @@
     <groupId>com.microrisc.simply.network.udp</groupId>
     <artifactId>simply-network-udp</artifactId>
     <packaging>jar</packaging>
-    <version>1.0.0</version>
+    <version>1.0.1-SNAPSHOT</version>
     
     <name>simply-network-udp</name>
     <description>UDP implementation of network layer for Simply framework.</description>
@@ -34,11 +34,10 @@
             <artifactId>slf4j-api</artifactId>
             <version>1.7.6</version>
         </dependency>
-        
         <dependency>
             <groupId>com.microrisc.simply</groupId>
             <artifactId>simply-core</artifactId>
-            <version>1.1.0</version>
+            <version>2.0.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
     

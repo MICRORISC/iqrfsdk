@@ -29,19 +29,19 @@
             <version>1.8</version>
         </dependency>
         <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.6</version>
+        </dependency>
+        <dependency>
             <groupId>com.microrisc.simply.iqrf</groupId>
             <artifactId>simply-iqrf</artifactId>
-            <version>2.0.0</version>
+            <version>2.0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.microrisc.simply.asynchrony</groupId>
             <artifactId>simply-asynchrony</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>1.7.6</version>
+            <version>1.0.1-SNAPSHOT</version>
         </dependency>
     </dependencies>
     <build>

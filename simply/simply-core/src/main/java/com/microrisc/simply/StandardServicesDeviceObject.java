@@ -35,18 +35,24 @@ implements StandardServices
     /** Logger. */
     private static final Logger logger = LoggerFactory.getLogger(StandardServicesDeviceObject.class);
     
-    
-    /** Default max. timeout to wait for result from DO method call. */
-    public static long DEFAULT_WAITING_TIMEOUT = 10000;
+    /** Initial value of timeout to wait for result from DO method call. */
+    public static final long INITIAL_WAITING_TIMEOUT = 10000;
     
     /** Timeout to wait for result from DO method call. */
-    protected long waitingTimeout = DEFAULT_WAITING_TIMEOUT;
+    protected long waitingTimeout = INITIAL_WAITING_TIMEOUT;
     
     
     private static long checkWaitingTimeout(long waitingTimeout) {
-        if ( waitingTimeout == 0 ) {
-            throw new IllegalArgumentException("Waiting timeout cannot be less then 0");
+        if ( waitingTimeout == UNLIMITED_WAITING_TIMEOUT ) {
+            return waitingTimeout;
         }
+        
+        if ( waitingTimeout < 0 ) {
+            throw new IllegalArgumentException(
+                    "Waiting timeout must be nonnegative or equal to " + UNLIMITED_WAITING_TIMEOUT
+            );
+        }
+        
         return waitingTimeout;
     }
     
@@ -97,22 +103,26 @@ implements StandardServices
      */
     @Override
     public <T> T getCallResult(UUID callId, Class<T> resultClass, long timeout) {
-        logger.debug(logPrefix + "getCallResult - start: callId={}, timeout={}", 
-                callId, timeout
+        logger.debug("{}getCallResult - start: callId={}, timeout={}", 
+                logPrefix, callId, timeout
         );
         
         checkCallId(callId);
         
+        if ( timeout == UNLIMITED_WAITING_TIMEOUT ) {
+            return getCallResultInUnlimitedWaitingTimeout(callId, resultClass);
+        }
+        
         if ( timeout < 0 ) {
-            throw new IllegalArgumentException("Negative timeout - " + timeout);
+            throw new IllegalArgumentException("Bad value of timeout: " + timeout);
         }
         
         if ( timeout == 0 ) {
             return getCallResultImmediately(callId, resultClass);
         }
         
-        // setting processing timeout
-        connector.setCallRequestProcessingTime(callId, timeout);
+        // setting of processing timeout
+        connector.setCallRequestMaximalProcessingTime(callId, timeout);
         
         long startTime = System.currentTimeMillis();
         synchronized( results ) {
@@ -143,6 +153,34 @@ implements StandardServices
         return getCallResult(callId, resultClass, waitingTimeout);
     }
     
+    @Override
+    public <T> T getCallResultInUnlimitedWaitingTimeout(UUID callId, Class<T> resultClass) {
+        logger.debug("{}getCallResultInUnlimitedWaitingTimeout - start: callId={}", 
+                logPrefix, callId
+        );
+        
+        checkCallId(callId);
+        
+        // setting of processing timeout
+        connector.setCallRequestMaximalProcessingTime(callId, UNLIMITED_WAITING_TIMEOUT);
+        
+        synchronized( results ) {
+            while ( results.get(callId) == null ) {
+                try {
+                    results.wait( 0 );
+                } catch ( InterruptedException e ) {
+                    logger.warn("{}Get call result - interrupted", logPrefix);
+                    break;
+                }
+            }
+        }
+        
+        T callResult = getCallResultImmediately(callId, resultClass);
+        
+        logger.debug("{}getCallResultInUnlimitedWaitingTimeout - end: {}", logPrefix, callResult);
+        return callResult;
+    }
+    
     /**
      * @return {@code null} if result for specified method call ID doesn't
      *                      exist. 
@@ -171,7 +209,8 @@ implements StandardServices
     /**
      * Timeout must be nonnegative.
      * @param timeout timeout to set
-     * @throws IllegalArgumentException if specified timeout value is less then {@code 0}
+     * @throws IllegalArgumentException if specified timeout is not nonnegative 
+     *         or is not equal to the {@code UNLIMITED_WAITING_TIMEOUT}
      */
     @Override
     public void setDefaultWaitingTimeout(long timeout) {
