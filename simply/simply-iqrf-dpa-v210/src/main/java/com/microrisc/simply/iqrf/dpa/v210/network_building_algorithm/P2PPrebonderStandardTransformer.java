@@ -31,8 +31,8 @@ implements MethodIdTransformer
     /**
      * Mapping of method IDs to theirs string representations.
      */
-    private static final Map<P2PPrebonder.MethodID, String> methodIdsMap = 
-            new EnumMap<>(P2PPrebonder.MethodID.class);
+    private static final Map<P2PPrebonder.MethodID, String> methodIdsMap 
+            = new EnumMap<>(P2PPrebonder.MethodID.class);
     
     private static void initMethodIdsMap() {
         methodIdsMap.put(P2PPrebonder.MethodID.SEND_PREBONDING_DATA, "2");

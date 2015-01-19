@@ -136,5 +136,18 @@ public final class DPA_Request {
     public MethodIdTransformer getMethodTransformer() {
         return methodTransformer;
     }
-
+    
+    public String toString() {
+        StringBuilder strBuilder = new StringBuilder();
+        String NEW_LINE = System.getProperty("line.separator");
+        
+        strBuilder.append(this.getClass().getSimpleName() + " { " + NEW_LINE);
+        strBuilder.append(" Device Interface: " + deviceIface + NEW_LINE);
+        strBuilder.append(" Method ID: " + methodId + NEW_LINE);
+        strBuilder.append(" Method arguments: " + args + NEW_LINE);
+        strBuilder.append(" HW profile: " + hwProfile + NEW_LINE);
+        strBuilder.append("}");
+        
+        return strBuilder.toString();
+    }
 }

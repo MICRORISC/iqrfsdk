@@ -59,7 +59,7 @@ public final class DPA_RequestConvertor extends AbstractConvertor {
                     getTransformer(dpaRequest.getDeviceInterface());
             if ( methodIdTransformer == null ) {
                 throw new IllegalArgumentException(
-                        "Method ID transformer not found for" + dpaRequest.getDeviceInterface()
+                        "Method ID transformer not found for " + dpaRequest.getDeviceInterface()
                 );
             }
         }

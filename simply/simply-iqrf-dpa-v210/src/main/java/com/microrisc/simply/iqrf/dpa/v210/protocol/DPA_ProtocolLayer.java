@@ -67,7 +67,7 @@ implements ProtocolStateMachineListener
     /**
      * Binds sent requests with theirs time of sending.
      */
-    private class TimeRequest {
+    private static class TimeRequest {
         // sent request
         CallRequest request;
         
@@ -77,6 +77,18 @@ implements ProtocolStateMachineListener
         TimeRequest(CallRequest request, long sentTime) {
             this.request = request;
             this.sentTime = sentTime;
+        }
+        
+        public String toString() {
+            StringBuilder strBuilder = new StringBuilder();
+            String NEW_LINE = System.getProperty("line.separator");
+
+            strBuilder.append(this.getClass().getSimpleName() + " { " + NEW_LINE);
+            strBuilder.append(" Request: " + request + NEW_LINE);
+            strBuilder.append(" Sent: " + sentTime + NEW_LINE);
+            strBuilder.append("}");
+
+            return strBuilder.toString();
         }
     }
     
@@ -652,6 +664,11 @@ implements ProtocolStateMachineListener
                 synchronized ( synchroSendOrReceive ) {
                     try {
                         protoMachine.confirmationReceived(confirmation);
+                    } catch ( IllegalArgumentException ex ) {
+                        logger.error(
+                            "Protocol State Machine not in the WAITING_FOR_CONFIRMATION state: " + ex
+                        );
+                        return;
                     } catch ( StateTimeoutedException ex ) {
                         logger.error("Confirmation reception too late. Waiting timeouted.");
                         return;
@@ -672,10 +689,23 @@ implements ProtocolStateMachineListener
             return;
         }
         
+        // messages, which are NOT base call responses - typically asynchronous messages - 
+        // must be processed out of the Protocol State Machine
+        if ( !(message instanceof BaseCallResponse) ) {
+            processMessage(message, networkData.getData());
+            logger.debug("onGetData - end");
+            return;
+        }
+        
         synchronized ( synchroSendOrReceive ) {
             if ( !isTimeUnlimitedRequestInProcess ) {
                 try {
                     protoMachine.responseReceived(networkData.getData());
+                } catch ( IllegalArgumentException ex ) {
+                    logger.error(
+                        "Protocol State Machine not in the WAITING_FOR_RESPONSE state: " + ex
+                    );
+                    return;
                 } catch ( StateTimeoutedException ex ) {
                     logger.error("Response reception too late. Waiting timeouted.");
                     return;

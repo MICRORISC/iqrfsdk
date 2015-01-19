@@ -210,7 +210,7 @@ implements ConnectorListener, BroadcastServices
             MethodIdTransformer methodIdTransformer
     ) {
         logger.debug("sendRequest - start: networkId={}, deviceInterface={}, "
-                + "methodId={}, args={}, methodIdTransformer={}" , 
+                + "methodId={}, args={}, methodIdTransformer={}", 
                 networkId, deviceInterface, methodId, args, methodIdTransformer
         );
         

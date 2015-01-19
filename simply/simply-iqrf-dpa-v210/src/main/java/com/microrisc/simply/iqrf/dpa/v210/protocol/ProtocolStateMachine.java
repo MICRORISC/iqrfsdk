@@ -98,12 +98,8 @@ final class ProtocolStateMachine implements ManageableObject {
     private final Object synchroActualState = new Object();
     
     
-    // first new state after processing of new event
-    // IMPORTANT: some states are NOT fixed but they are rather timeout dependent.
-    //      For example WAITING_AFTER_CONFIRMATION. After specific timeout
-    //      elapses and no events come during that timeout, the next state will 
-    //      be FREE_FOR_SEND.    
-    private State firstNewStateAfterEvent = null;
+    // indication, that state has been changed  
+    private volatile boolean stateChanged = false;
     
     // signal of state change
     private final Object stateChangeSignal = new Object();
@@ -111,18 +107,17 @@ final class ProtocolStateMachine implements ManageableObject {
     // event triggered state change timeout [in ms]
     private static final long STATE_CHANGE_TIMEOUT = 1000;
     
-    // waits for specified state to come in
-    private void waitForStateChangeSignal(State stateToWaitFor) {
+    // waits for state change
+    private void waitForStateChangeSignal() {
         synchronized ( stateChangeSignal ) {
-            while ( firstNewStateAfterEvent != stateToWaitFor ) {
+            while ( !stateChanged ) {
                 try {
                     long startTime = System.currentTimeMillis();
                     stateChangeSignal.wait(STATE_CHANGE_TIMEOUT);
+                    //logger.info("waitForStateChangeSignal - after waiting.");
                     long endTime = System.currentTimeMillis();
                     if ( (endTime - startTime) >= STATE_CHANGE_TIMEOUT ) {
-                        throw new IllegalStateException (
-                            "Waiting for state: " + stateToWaitFor  +  " timeouted."
-                        );
+                        throw new IllegalStateException ("Waiting for state timeouted.");
                     }
                 } catch ( InterruptedException ex ) {
                     logger.warn("Waiting for next exptected state interrupted.");
@@ -133,14 +128,14 @@ final class ProtocolStateMachine implements ManageableObject {
     
     
     /** Default time to wait for confirmation [ in ms ]. */
-    public static final long TIME_TO_WAIT_FOR_CONFIRMATION_DEFAULT = 500;
+    public static final long TIME_TO_WAIT_FOR_CONFIRMATION_DEFAULT = 2000;
     
     // actual time to wait for confirmation
     private volatile long timeToWaitForConfirmation = TIME_TO_WAIT_FOR_CONFIRMATION_DEFAULT;
     
     
     /** Default base time to wait for response [ in ms ]. */
-    public static final long BASE_TIME_TO_WAIT_FOR_RESPONSE_DEFAULT = 500;
+    public static final long BASE_TIME_TO_WAIT_FOR_RESPONSE_DEFAULT = 1000;
     
     // actual base time to wait for response
     private volatile long baseTimeToWaitForResponse = BASE_TIME_TO_WAIT_FOR_RESPONSE_DEFAULT;
@@ -178,7 +173,7 @@ final class ProtocolStateMachine implements ManageableObject {
             if ( confirmation == null ) {
                 throw new IllegalStateException(
                         "Confirmation needed for calculation of waiting time after response "
-                                + "but not present."
+                        + "but not present."
                 );
             }
             return ( confirmation.getHops() + 1 ) * confirmation.getTimeslotLength() * 10
@@ -379,10 +374,11 @@ final class ProtocolStateMachine implements ManageableObject {
                                 || actualState == ProtocolStateMachine.State.WAITING_FOR_RESPONSE
                           ) {
                             try {
+                                //logger.info("run - waiting for confirmation - before waiting");
                                 long startTime = System.currentTimeMillis();
                                 synchroNewEvent.wait(waitingTime);
                                 long endTime = System.currentTimeMillis();
-                                
+                                //logger.info("run - waiting for confirmation - after waiting");
                                 if ( (endTime - startTime) >= waitingTime ) {
                                     timeouted = true;
                                     // IMPORTANT !!! Go out of a while-cycle.
@@ -413,6 +409,7 @@ final class ProtocolStateMachine implements ManageableObject {
                         // consume new event icluding update of variables by
                         // information present in the event
                         consumeNewEvent();
+                        //logger.info("run - new event received.");
                     }
                 }
                 
@@ -429,11 +426,13 @@ final class ProtocolStateMachine implements ManageableObject {
                 // for example for FREE_FOR_SEND state
                 waitingTime = countWaitingTime();
                 
+                //logger.info("run - before state change.");
                 // notify waiting clients about the state change
                 synchronized ( stateChangeSignal ) {
-                    firstNewStateAfterEvent = actualState;
+                    stateChanged = true;
                     stateChangeSignal.notifyAll();
                 }
+                //logger.info("run - after state change.");
             }
         }
     }
@@ -664,27 +663,23 @@ final class ProtocolStateMachine implements ManageableObject {
             }
         }
         
-        State nextExpectedState = null; 
-        
         // signaling that new event has come in and what is the next expected state
         synchronized ( synchroNewEvent ) {
             newEvent = new NewRequestEvent(request);
-            if ( request instanceof BroadcastRequest ) {
-                nextExpectedState = State.WAITING_FOR_CONFIRMATION;
-            } else {
+            if ( !(request instanceof BroadcastRequest) ) {
                 if ( isRequestForCoordinator(request) ) {
                     ((NewRequestEvent)newEvent).countWithConfirmation = false;
-                    nextExpectedState = State.WAITING_FOR_RESPONSE;
                 } else {
                     ((NewRequestEvent)newEvent).countWithConfirmation = true;
-                    nextExpectedState = State.WAITING_FOR_CONFIRMATION; 
                 }
             }
+            
+            stateChanged = false;
             synchroNewEvent.notifyAll();
         }
         
-        // waiting till actual state changes to the expected one
-        waitForStateChangeSignal(nextExpectedState);
+        // waiting till actual state changes
+        waitForStateChangeSignal();
         
         logger.debug("newRequest - end");
     }
@@ -694,8 +689,8 @@ final class ProtocolStateMachine implements ManageableObject {
      * @param recvTime time of confirmation reception
      * @param confirmation received confirmation
      * @throws IllegalArgumentException if the machine is not in {@code WAITING_FOR_CONFIRMATION} state
-     * @throws StateTimeoutedException if {@code WAITING_FOR_CONFIRMATION} state was
-     *         timeouted during processing of the specified confirmation
+     * @throws StateTimeoutedException if {@code WAITING_FOR_CONFIRMATION} state was timeouted
+     *         during processing of the specified confirmation
      */
     synchronized public void confirmationReceived(long recvTime, DPA_Confirmation confirmation)
         throws StateTimeoutedException 
@@ -712,23 +707,16 @@ final class ProtocolStateMachine implements ManageableObject {
             }
         }
         
-        State nextExpectedState = null; 
-        
         // signaling that confirmation has come in
         synchronized ( synchroNewEvent ) {
             newEvent = new ConfirmationReceivedEvent(recvTime, confirmation);
-            
-            // broadcast - no response
-            if ( confirmation.getHopsResponse() == 0 ) {
-                nextExpectedState = State.WAITING_AFTER_CONFIRMATION;
-            } else {
-                nextExpectedState = State.WAITING_FOR_RESPONSE;
-            }
+            stateChanged = false;
             synchroNewEvent.notifyAll();
         }
         
+        //logger.info("confirmationReceived - before waiting for signal");
         try {
-            waitForStateChangeSignal(nextExpectedState);
+            waitForStateChangeSignal();
         } catch ( IllegalStateException e ) {
             State actualStateCopy = null;
             synchronized ( synchroActualState ) {
@@ -749,8 +737,8 @@ final class ProtocolStateMachine implements ManageableObject {
      * of this method will be used as the time of the confirmation reception.
      * @param confirmation received confirmation
      * @throws IllegalArgumentException if the machine is not in {@code WAITING_FOR_CONFIRMATION} state
-     * @throws StateTimeoutedException if {@code WAITING_FOR_CONFIRMATION} state was
-     *         timeouted during processing of the specified confirmation
+     * @throws StateTimeoutedException if {@code WAITING_FOR_CONFIRMATION} state was timeouted
+     *         during processing of the specified confirmation
      */
     synchronized public void confirmationReceived(DPA_Confirmation confirmation) 
             throws StateTimeoutedException 
@@ -781,22 +769,20 @@ final class ProtocolStateMachine implements ManageableObject {
             }
         }
         
-        State nextExpectedState = null;
-        
         synchronized ( synchroNewEvent ) {
             newEvent = new ResponseReceivedEvent(recvTime, responseData);
-            nextExpectedState = State.WAITING_AFTER_RESPONSE;
+            stateChanged = false;
             synchroNewEvent.notifyAll();
         }
         
         try {
-            waitForStateChangeSignal(nextExpectedState);
+            waitForStateChangeSignal();
         } catch ( IllegalStateException e ) {
             State actualStateCopy = null;
             synchronized ( synchroActualState ) {
                 actualStateCopy = actualState;
             }
-            if ( actualStateCopy == State.WAITING_FOR_CONFIRMATION_ERROR ) {
+            if ( actualStateCopy == State.WAITING_FOR_RESPONSE_ERROR ) {
                 throw new StateTimeoutedException("Waiting on response timeouted.");
             } else {
                 throw e;
@@ -838,10 +824,11 @@ final class ProtocolStateMachine implements ManageableObject {
         
         synchronized ( synchroNewEvent ) {
             newEvent = new ResetEvent();
+            stateChanged = false;
             synchroNewEvent.notifyAll();
         }
         
-        waitForStateChangeSignal(State.FREE_FOR_SEND);
+        waitForStateChangeSignal();
         
         logger.info("Reseted.");
         logger.debug("resetAfterError - end");

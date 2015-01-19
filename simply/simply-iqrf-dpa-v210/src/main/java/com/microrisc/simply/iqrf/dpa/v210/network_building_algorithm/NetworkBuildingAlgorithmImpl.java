@@ -20,6 +20,7 @@ import com.microrisc.simply.BaseNetwork;
 import com.microrisc.simply.CallRequestProcessingState;
 import com.microrisc.simply.DeviceInterfaceMethodId;
 import com.microrisc.simply.Network;
+import com.microrisc.simply.di_services.MethodIdTransformer;
 import com.microrisc.simply.errors.CallRequestProcessingError;
 import com.microrisc.simply.iqrf.dpa.broadcasting.BroadcastResult;
 import com.microrisc.simply.iqrf.dpa.broadcasting.services.BroadcastServices;
@@ -114,6 +115,9 @@ public final class NetworkBuildingAlgorithmImpl implements NetworkBuildingAlgori
     // use FRC automatically in checking accessibility of new bonded nodes
     private final boolean autoUseFrc;
     
+    // method ID transformer for P2P Prebonder
+    private final MethodIdTransformer p2pPrebonderMethodIdTransformer;
+    
     
     // checkers
     private static int checkDiscoveryTxPower(int discoveryTxPower) {
@@ -122,7 +126,7 @@ public final class NetworkBuildingAlgorithmImpl implements NetworkBuildingAlgori
         ) {
             throw new IllegalArgumentException(
                 "Discovery TX power must be in the " + DISCOVERY_TX_POWER_MIN 
-                + ".."  + DISCOVERY_TX_POWER_MAX + "interval."
+                + ".."  + DISCOVERY_TX_POWER_MAX + " interval."
             );
         }
         return discoveryTxPower;
@@ -176,7 +180,8 @@ public final class NetworkBuildingAlgorithmImpl implements NetworkBuildingAlgori
         private int discoveryRetries = DISCOVERY_RETRIES_DEFAULT;
         private long temporaryAddressTimeout = TEMPORARY_ADDRESS_TIMEOUT_DEFAULT;
         private boolean autoUseFrc = AUTOUSE_FRC_DEFAULT;
-       
+        private MethodIdTransformer p2pPrebonderMethodIdTransformer = null;
+        
         
         public Builder(Network network, BroadcastServices broadcastServices) {
             this.network = network;
@@ -210,6 +215,11 @@ public final class NetworkBuildingAlgorithmImpl implements NetworkBuildingAlgori
         
         public Builder autoUseFrc(boolean val) {
             this.autoUseFrc = val;
+            return this;
+        }
+        
+        public Builder p2pPrebonderMethodIdTransformer(MethodIdTransformer val) {
+            this.p2pPrebonderMethodIdTransformer = val;
             return this;
         }
         
@@ -484,7 +494,9 @@ public final class NetworkBuildingAlgorithmImpl implements NetworkBuildingAlgori
         Class p2pSender;
         DeviceInterfaceMethodId methodId;
         
-        P2PPrebondingInfo(Class p2pSender, DeviceInterfaceMethodId methodId) {
+        P2PPrebondingInfo(
+                Class p2pSender, DeviceInterfaceMethodId methodId
+        ) {
             this.p2pSender = p2pSender;
             this.methodId = methodId;
         }
@@ -521,8 +533,8 @@ public final class NetworkBuildingAlgorithmImpl implements NetworkBuildingAlgori
     }
     
     private P2PPrebondingInfo getP2PPrebondingInfo() throws Exception {
-       Class p2pSender = ProtocolObjects.getPeripheralToDevIfaceMapper().
-               getDeviceInterface(FIRST_USER_PERIPHERAL);
+       Class p2pSender = ProtocolObjects.getPeripheralToDevIfaceMapper()
+               .getDeviceInterface(FIRST_USER_PERIPHERAL);
        if ( p2pSender == null ) {
            throw new Exception("Could not found first user peripheral.");
        }
@@ -544,12 +556,14 @@ public final class NetworkBuildingAlgorithmImpl implements NetworkBuildingAlgori
         if ( bondingMask > 0xFF ) {
             bondingMask = 0xFF;
         }
-
+        
+        // 100 ms unit
         int wTimeout = (int)( ( (long)temporaryAddressTimeout * 1000 ) / 10 );
         int waitBonding = bondedNodes.getNodesNumber() * 1;
 
         // how long to wait for prebonding [ in seconds ]
         waitBonding = (int)Math.min( Math.max( 10, waitBonding ), prebondingInterval );
+        // 10 ms unit
         int waitBonding10ms = waitBonding * 100;
 
         logger.info(
@@ -567,40 +581,43 @@ public final class NetworkBuildingAlgorithmImpl implements NetworkBuildingAlgori
             nodesEnableUid = broadcastServices.sendRequest(
                 networkId, 
                 OS.class, 
-                OS.MethodID.BATCH, 
-                new DPA_Request[] {
-                    new DPA_Request(
-                            LEDR.class, 
-                            LEDR.MethodID.SET, 
-                            new Object[] { LED_State.ON }, 
-                            0xFFFF 
-                    ),
-                    new DPA_Request(
-                            Node.class, 
-                            Node.MethodID.ENABLE_REMOTE_BONDING, 
-                            new Object[] { 
-                                bondingMask, 
-                                1, 
-                                new short[] { 
-                                    (short)(wTimeout >> 0), 
-                                    (short)(wTimeout >> 8)
-                                }
-                            }, 
-                            0xFFFF 
-                    ),
-                    new DPA_Request(
-                            p2pInfo.p2pSender, 
-                            p2pInfo.methodId, 
-                            new Object[] { 
-                                new short[] { 
-                                    0x55, 
-                                    (short)(waitBonding10ms >> 0 ), 
-                                    (short)(waitBonding10ms >> 8 ), 
-                                    (short)(bondedNodes.getNodesNumber() + 2) 
-                                } 
-                            }, 
-                            0xFFFF 
-                    )
+                OS.MethodID.BATCH,
+                new Object[] {
+                    new DPA_Request[] {
+                        new DPA_Request(
+                                LEDR.class, 
+                                LEDR.MethodID.SET, 
+                                new Object[] { LED_State.ON }, 
+                                0xFFFF 
+                        ),
+                        new DPA_Request(
+                                Node.class, 
+                                Node.MethodID.ENABLE_REMOTE_BONDING, 
+                                new Object[] { 
+                                    bondingMask,
+                                    1,
+                                    new short[] { 
+                                        (short)(wTimeout >> 0), 
+                                        (short)(wTimeout >> 8)
+                                    }
+                                }, 
+                                0xFFFF 
+                        ),
+                        new DPA_Request(
+                                p2pInfo.p2pSender, 
+                                p2pInfo.methodId, 
+                                new Object[] { 
+                                    new short[] { 
+                                        0x55, 
+                                        (short)(waitBonding10ms >> 0 ), 
+                                        (short)(waitBonding10ms >> 8 ), 
+                                        (short)(bondedNodes.getNodesNumber() + 3) 
+                                    } 
+                                }, 
+                                0xFFFF,
+                                p2pPrebonderMethodIdTransformer
+                        )
+                    }
                 }
             );
             
@@ -609,8 +626,11 @@ public final class NetworkBuildingAlgorithmImpl implements NetworkBuildingAlgori
                         "Error while sending request for enabling remote bonding on nodes"
                 );
             }
+        
+            // wait the whole above broadcast and all peer2peer LP slots
+            Thread.sleep( ( bondedNodes.getNodesNumber() + 1 ) * 40 + bondedNodes.getNodesNumber()  * 60 );
         }
-
+        
         UUID coordEnableUid = coordOs.call(
                 OS.MethodID.BATCH, 
                 new Object[] { 
@@ -639,7 +659,8 @@ public final class NetworkBuildingAlgorithmImpl implements NetworkBuildingAlgori
                                         1 
                                     } 
                                 }, 
-                                0xFFFF 
+                                0xFFFF,
+                                p2pPrebonderMethodIdTransformer
                         )
                     }
                 } 
@@ -1154,6 +1175,7 @@ public final class NetworkBuildingAlgorithmImpl implements NetworkBuildingAlgori
         this.discoveryRetries = checkDiscoveryRetries(builder.discoveryRetries);
         this.temporaryAddressTimeout = checkTemporaryAddressTimeout(builder.temporaryAddressTimeout);
         this.autoUseFrc = builder.autoUseFrc;
+        this.p2pPrebonderMethodIdTransformer = builder.p2pPrebonderMethodIdTransformer;
         
         this.algoThread = new AlgoThread();
     }
