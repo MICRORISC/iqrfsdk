@@ -23,6 +23,7 @@ import com.microrisc.simply.iqrf.dpa.DPA_Simply;
 import com.microrisc.simply.iqrf.dpa.v210.DPA_SimplyFactory;
 import com.microrisc.simply.iqrf.dpa.v210.network_building_algorithm.NetworkBuildingAlgorithm;
 import com.microrisc.simply.iqrf.dpa.v210.network_building_algorithm.NetworkBuildingAlgorithmImpl;
+import com.microrisc.simply.iqrf.dpa.v210.network_building_algorithm.P2PPrebonderStandardTransformer;
 import java.io.File;
 
 /**
@@ -45,7 +46,7 @@ public final class Example_1 {
     public static void main(String[] args) throws InterruptedException {
         // creating the Simply instance
         try {
-            simply = DPA_SimplyFactory.getSimply("config" + File.separator + "Simply-standard_per.properties");
+            simply = DPA_SimplyFactory.getSimply("config" + File.separator + "Simply-user_per.properties");
         } catch ( SimplyException ex ) {
             printMessageAndExit("Error while creating Simply: " + ex);
         }
@@ -68,6 +69,7 @@ public final class Example_1 {
                     .discoveryRetries(1)
                     .temporaryAddressTimeout(100000)
                     .autoUseFrc(true)
+                    .p2pPrebonderMethodIdTransformer(P2PPrebonderStandardTransformer.getInstance())
                 .build();
 
         // start the algorithm
