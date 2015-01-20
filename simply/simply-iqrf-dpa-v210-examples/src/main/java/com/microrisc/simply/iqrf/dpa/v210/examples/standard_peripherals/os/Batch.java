@@ -52,7 +52,7 @@ public class Batch {
     public static void main(String[] args) throws InterruptedException {
         // creating Simply instance
         try {
-            simply = DPA_SimplyFactory.getSimply("config" + File.separator + "Simply-standard_per.properties");
+            simply = DPA_SimplyFactory.getSimply("config" + File.separator + "Simply.properties");
         } catch ( SimplyException ex ) {
             printMessageAndExit("Error while creating Simply: " + ex.getMessage());
         }

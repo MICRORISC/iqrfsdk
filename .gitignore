@@ -56,3 +56,7 @@ simply/simply-network-serial-v2/versions/1.0.0/target/
 /simply/simply-network-spi/target/
 /simply/simply-network-udp/target/
 /simply/simply-network-usbcdc/target/
+/libs/raspberry/io/jlibrpi-io/target/
+/libs/iqrf/cdc-iqrf/jlibcdc/target/
+/libs/raspberry/spi/jlibrpi-spi-iqrf/target/
+/libs/raspberry/spi/jlibrpi-spi/target/

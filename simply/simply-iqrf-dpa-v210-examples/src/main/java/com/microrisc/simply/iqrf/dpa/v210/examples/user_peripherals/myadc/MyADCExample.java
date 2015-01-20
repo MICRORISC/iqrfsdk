@@ -62,7 +62,7 @@ public class MyADCExample {
         // get simply
         try {
             simply = DPA_SimplyFactory.getSimply(
-                "config" + File.separator + "Simply-user_per.properties"
+                "config" + File.separator + "Simply.properties"
             );
         } catch (SimplyException ex) {
             printMessageAndExit("Error while creating Simply: " + ex.getMessage());

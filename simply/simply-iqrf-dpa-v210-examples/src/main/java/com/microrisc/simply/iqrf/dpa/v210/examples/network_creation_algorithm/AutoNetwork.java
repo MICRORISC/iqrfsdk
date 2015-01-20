@@ -17,7 +17,6 @@
 package com.microrisc.simply.iqrf.dpa.v210.examples.network_creation_algorithm;
 
 import com.microrisc.simply.Network;
-import com.microrisc.simply.Node;
 import com.microrisc.simply.SimplyException;
 import com.microrisc.simply.iqrf.dpa.DPA_Simply;
 import com.microrisc.simply.iqrf.dpa.v210.DPA_SimplyFactory;
@@ -30,7 +29,7 @@ import java.io.File;
  *
  * @author Michal Konopa
  */
-public final class Example_1 {
+public final class AutoNetwork {
     // reference to Simply
     private static DPA_Simply simply = null;
     
@@ -46,7 +45,7 @@ public final class Example_1 {
     public static void main(String[] args) throws InterruptedException {
         // creating the Simply instance
         try {
-            simply = DPA_SimplyFactory.getSimply("config" + File.separator + "Simply-user_per.properties");
+            simply = DPA_SimplyFactory.getSimply("config" + File.separator + "Simply.properties");
         } catch ( SimplyException ex ) {
             printMessageAndExit("Error while creating Simply: " + ex);
         }

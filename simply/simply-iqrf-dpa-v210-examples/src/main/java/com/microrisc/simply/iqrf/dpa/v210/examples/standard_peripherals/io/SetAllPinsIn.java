@@ -50,7 +50,7 @@ public class SetAllPinsIn {
     public static void main(String[] args) {
         // creating Simply instance
         try {
-            simply = DPA_SimplyFactory.getSimply("config" + File.separator + "Simply-standard_per.properties");
+            simply = DPA_SimplyFactory.getSimply("config" + File.separator + "Simply.properties");
         } catch ( SimplyException ex ) {
             System.err.println("Error while creating Simply: " + ex.getMessage());
             return;

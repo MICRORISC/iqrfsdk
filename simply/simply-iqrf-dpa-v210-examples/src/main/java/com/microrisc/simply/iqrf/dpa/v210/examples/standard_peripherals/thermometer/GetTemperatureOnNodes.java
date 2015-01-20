@@ -75,7 +75,7 @@ public class GetTemperatureOnNodes {
     public static void main(String[] args) {
         // creating Simply instance
         try {
-            simply = DPA_SimplyFactory.getSimply("config" + File.separator + "Simply-standard_per.properties");
+            simply = DPA_SimplyFactory.getSimply("config" + File.separator + "Simply.properties");
         } catch ( SimplyException ex ) {
             printMessageAndExit("Error while creating Simply: " + ex.getMessage());
         }
@@ -132,7 +132,7 @@ public class GetTemperatureOnNodes {
                 // getting thermometer on the node
                 Thermometer thermo = thermos.get(nodeId);
                     
-                // blocking upto waiting timeout - 5s
+                // blocking for default timeout, waiting timeout result
                 Thermometer_values result = thermo.get();
                 
                 if ( result != null ) {
