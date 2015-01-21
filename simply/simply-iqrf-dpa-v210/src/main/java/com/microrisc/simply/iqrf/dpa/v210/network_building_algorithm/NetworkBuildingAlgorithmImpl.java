@@ -687,7 +687,7 @@ public final class NetworkBuildingAlgorithmImpl implements NetworkBuildingAlgori
                 }
                 BroadcastResult nodesDisablingResult = broadcastServices.broadcast(
                     networkId, Node.class, Node.MethodID.ENABLE_REMOTE_BONDING,
-                        new Object[] { 0, 0, new short[] { 0 } }
+                        new Object[] { 0, 0, new short[] { 0, 0 } }
                 );
                 if ( nodesDisablingResult == null ) {
                     throw new Exception("Error while disabling remote bonding on nodes");
@@ -695,7 +695,7 @@ public final class NetworkBuildingAlgorithmImpl implements NetworkBuildingAlgori
             }
 
             logger.info("Disable coordinator prebonding");
-            VoidType coordDisablingResult = coordinator.enableRemoteBonding(0, 0, new short[] { 0 });
+            VoidType coordDisablingResult = coordinator.enableRemoteBonding(0, 0, new short[] { 0, 0 });
             if ( coordDisablingResult == null ) {
                 throw new Exception("Error while disabling remote bonding on coordinator");
             }
