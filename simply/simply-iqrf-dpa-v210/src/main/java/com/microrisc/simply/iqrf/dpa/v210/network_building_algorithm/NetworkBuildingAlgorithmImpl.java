@@ -623,7 +623,7 @@ public final class NetworkBuildingAlgorithmImpl implements NetworkBuildingAlgori
             
             if ( nodesEnableUid == null ) {
                 throw new Exception(
-                        "Error while sending request for enabling remote bonding on nodes"
+                    "Error while sending request for enabling remote bonding on nodes"
                 );
             }
         
@@ -699,15 +699,20 @@ public final class NetworkBuildingAlgorithmImpl implements NetworkBuildingAlgori
             if ( coordDisablingResult == null ) {
                 throw new Exception("Error while disabling remote bonding on coordinator");
             }
+            
+            throw ex;
         }
         
-        // getting results of enabling remote bonding 
-        BroadcastResult nodesEnableResult = broadcastServices.getBroadcastResultImmediately(nodesEnableUid);
-        if ( nodesEnableResult == null ) {
-            throw new Exception(
-                    "Result not available for enabling remote bonding on nodes. "
-                    + "Current state: " + broadcastServices.getCallRequestProcessingState(nodesEnableUid)
-            );
+        // getting results of enabling remote bonding
+        if ( nodesEnableUid != null ) {
+            BroadcastResult nodesEnableResult = broadcastServices
+                    .getBroadcastResultImmediately(nodesEnableUid);
+            if ( nodesEnableResult == null ) {
+                throw new Exception(
+                        "Result not available for enabling remote bonding on nodes. "
+                        + "Current state: " + broadcastServices.getCallRequestProcessingState(nodesEnableUid)
+                );
+            }
         }
         
         VoidType coordEnableResult = coordOs.getCallResultImmediately(coordEnableUid, VoidType.class);
