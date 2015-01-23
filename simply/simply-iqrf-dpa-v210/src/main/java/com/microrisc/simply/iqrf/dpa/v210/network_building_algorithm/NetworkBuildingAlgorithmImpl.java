@@ -22,6 +22,7 @@ import com.microrisc.simply.DeviceInterfaceMethodId;
 import com.microrisc.simply.Network;
 import com.microrisc.simply.di_services.MethodIdTransformer;
 import com.microrisc.simply.errors.CallRequestProcessingError;
+import com.microrisc.simply.errors.CallRequestProcessingErrorType;
 import com.microrisc.simply.iqrf.dpa.broadcasting.BroadcastResult;
 import com.microrisc.simply.iqrf.dpa.broadcasting.services.BroadcastServices;
 import com.microrisc.simply.iqrf.dpa.protocol.ProtocolObjects;
@@ -96,7 +97,7 @@ public final class NetworkBuildingAlgorithmImpl implements NetworkBuildingAlgori
     
     /** 
      * Default indicator, wheather to use FRC automatically in checking 
-     * the accessibility of new bonded nodes. 
+     * the accessability of new bonded nodes. 
      */
     public static final boolean AUTOUSE_FRC_DEFAULT = true;
     
@@ -112,7 +113,7 @@ public final class NetworkBuildingAlgorithmImpl implements NetworkBuildingAlgori
     // timeout [in ms] for holding temporary address
     private final long temporaryAddressTimeout;
     
-    // use FRC automatically in checking accessibility of new bonded nodes
+    // use FRC automatically in checking the accessibility of new bonded nodes
     private final boolean autoUseFrc;
     
     // method ID transformer for P2P Prebonder
@@ -781,18 +782,17 @@ public final class NetworkBuildingAlgorithmImpl implements NetworkBuildingAlgori
             }
 
             RemotelyBondedModuleId remoBondedModuleId = nodeIface.readRemotelyBondedModuleId();
-            if ( remoBondedModuleId == null ) {
-                logger.error("Error reading prebonded MID from node {}", nodeAddr);
-                continue;
-            }
-
-            logger.info("Node {} prebonded MID={}, UserData={}", 
+            if ( remoBondedModuleId != null ) {
+                logger.info("Node {} prebonded MID={}, UserData={}", 
                     nodeAddr, remoBondedModuleId.getModuleId(),
                     remoBondedModuleId.getUserData()
-            );
+                );
 
-            if ( !prebondedMIDs.contains(remoBondedModuleId) ) {
-                prebondedMIDs.add(remoBondedModuleId);
+                if ( !prebondedMIDs.contains(remoBondedModuleId) ) {
+                    prebondedMIDs.add(remoBondedModuleId);
+                }
+            } else {
+                logger.error("Unable to read prebonded MID from node {}", nodeAddr);
             }
         }
     }
@@ -805,17 +805,16 @@ public final class NetworkBuildingAlgorithmImpl implements NetworkBuildingAlgori
         List<RemotelyBondedModuleId> prebondedMIDs = new LinkedList<>();
         
         RemotelyBondedModuleId remoBondedModuleId = coordinator.readRemotelyBondedModuleId();
-        if ( remoBondedModuleId == null ) {
-            throw new Exception("Error while reading remotely bonded moduleID from coordinator");
-        }
-        
-        logger.info(
+        if ( remoBondedModuleId != null ) {
+            logger.info(
                 "Coordinator prebonded MID={}, UserData={}", 
                 Arrays.toString(remoBondedModuleId.getModuleId()), 
                 Arrays.toString(remoBondedModuleId.getUserData())
-        );
-                
-        prebondedMIDs.add(remoBondedModuleId);
+            );
+            prebondedMIDs.add(remoBondedModuleId);
+        } else {
+            logger.error("Unable to read prebonded MID from coordinator {}");
+        }
         
         if ( bondedNodes.getNodesNumber() == 0 ) {
             return prebondedMIDs;
