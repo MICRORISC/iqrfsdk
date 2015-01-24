@@ -310,7 +310,7 @@ public final class NetworkBuildingAlgorithmImpl implements NetworkBuildingAlgori
     public static enum State {
         PREPARED,
         RUNNING,
-        FINISHED,
+        FINISHED_OK,
         CANCELLED,
         ERROR
     }
@@ -669,7 +669,7 @@ public final class NetworkBuildingAlgorithmImpl implements NetworkBuildingAlgori
         
         if ( coordEnableUid == null ) {
             throw new Exception(
-                    "Error while sending request for enabling remote bonding on coordinator"
+                "Error while sending request for enabling remote bonding on coordinator"
             );
         }
 
@@ -1157,7 +1157,7 @@ public final class NetworkBuildingAlgorithmImpl implements NetworkBuildingAlgori
             }
         }
         
-        setState(State.FINISHED);
+        setState(State.FINISHED_OK);
         logger.debug("runAlgorithm - end");
     }
     
@@ -1228,7 +1228,11 @@ public final class NetworkBuildingAlgorithmImpl implements NetworkBuildingAlgori
     @Override
     public boolean isFinished() {
         synchronized ( synchroActualState ) {
-            return ( actualState == State.FINISHED );
+            return ( 
+                actualState == State.FINISHED_OK
+                || actualState == State.CANCELLED
+                || actualState == State.ERROR
+            );
         }
     }
     

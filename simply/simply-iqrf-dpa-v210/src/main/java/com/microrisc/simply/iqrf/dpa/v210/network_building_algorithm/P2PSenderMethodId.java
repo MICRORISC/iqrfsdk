@@ -22,13 +22,12 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Annotation type. Indicates, that the annotated method ID serves for sending
- * P2P packet in the process of prebonding.
+ * Indicates, that the annotated method ID serves for sending P2P packet in the 
+ * process of prebonding.
  * 
  * @author Michal Konopa
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-public @interface P2PSenderMethodId {
-    
+public @interface P2PSenderMethodId {   
 }
