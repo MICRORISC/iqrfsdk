@@ -1,6 +1,6 @@
 
 
-package com.microrisc.simply.iqrf.dpa.v210.network_building_algorithm.demo;
+package com.microrisc.simply.iqrf.dpa.v210.autonetwork.demo;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

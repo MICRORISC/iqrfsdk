@@ -14,25 +14,24 @@
  * limitations under the License.
  */
 
-package com.microrisc.simply.iqrf.dpa.v210.network_building_algorithm.demo;
+package com.microrisc.simply.iqrf.dpa.v210.autonetwork.demo;
 
 import com.microrisc.simply.Network;
 import com.microrisc.simply.SimplyException;
 import com.microrisc.simply.di_services.MethodIdTransformer;
 import com.microrisc.simply.iqrf.dpa.DPA_Simply;
 import com.microrisc.simply.iqrf.dpa.v210.DPA_SimplyFactory;
-import com.microrisc.simply.iqrf.dpa.v210.network_building_algorithm.NetworkBuildingAlgorithm;
-import com.microrisc.simply.iqrf.dpa.v210.network_building_algorithm.NetworkBuildingAlgorithmImpl;
-import com.microrisc.simply.iqrf.dpa.v210.network_building_algorithm.NetworkBuildingAlgorithmImpl.State;
-import com.microrisc.simply.iqrf.dpa.v210.network_building_algorithm.P2PPrebonderStandardTransformer;
+import com.microrisc.simply.iqrf.dpa.v210.autonetwork.AutoNetworkAlgorithm;
+import com.microrisc.simply.iqrf.dpa.v210.autonetwork.AutoNetworkAlgorithmImpl;
+import com.microrisc.simply.iqrf.dpa.v210.autonetwork.AutoNetworkAlgorithmImpl.State;
+import com.microrisc.simply.iqrf.dpa.v210.autonetwork.P2PPrebonderStandardTransformer;
 import java.io.File;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.apache.commons.cli.BasicParser;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
@@ -73,6 +72,13 @@ public final class AutoNetworkDemo {
     
     // inits command line options
     private static void initCmdLineOptions() {
+        options.addOption(
+                OptionBuilder
+                    .isRequired(false)
+                    .withDescription("Prints this message")
+                    .create("help")
+        );
+        
         options.addOption(
                 OptionBuilder
                     .isRequired(false)
@@ -147,8 +153,13 @@ public final class AutoNetworkDemo {
                             + "for not to limit the maximal running time."
                     )
                     .create("maxRunningTime")
-        );
-        
+        );    
+    }
+    
+    // prints help message
+    private static void printHelpMessage() {
+        HelpFormatter formatter = new HelpFormatter();
+        formatter.printHelp( "[OPTION]...", options, true );
     }
     
     // sets the maximal running time according to the command line
@@ -221,7 +232,7 @@ public final class AutoNetworkDemo {
     }
     
     // creates instance of algorithm according to specified command line arguments
-    private static NetworkBuildingAlgorithm createNetworkBuildingAlgorithm(
+    private static AutoNetworkAlgorithm createNetworkBuildingAlgorithm(
             DPA_Simply simply, CommandLine cmdLine
     ) {
         String networkId = NETWORK_ID_DEFAULT;
@@ -235,32 +246,32 @@ public final class AutoNetworkDemo {
             printMessageAndExit("Network " + networkId + " doesn't exist");
         }
         
-        int discoveryTxPower = NetworkBuildingAlgorithmImpl.DISCOVERY_TX_POWER_DEFAULT;
+        int discoveryTxPower = AutoNetworkAlgorithmImpl.DISCOVERY_TX_POWER_DEFAULT;
         if ( cmdLine.hasOption("discoveryTxPower") ) {
             discoveryTxPower = Integer.parseInt(cmdLine.getOptionValue("discoveryTxPower"));
         }
         
-        long prebondingInterval = NetworkBuildingAlgorithmImpl.PREBONDING_INTERVAL_DEFAULT;
+        long prebondingInterval = AutoNetworkAlgorithmImpl.PREBONDING_INTERVAL_DEFAULT;
         if ( cmdLine.hasOption("prebondingInterval") ) {
             prebondingInterval = Long.parseLong(cmdLine.getOptionValue("prebondingInterval"));
         }
         
-        int authorizeRetries = NetworkBuildingAlgorithmImpl.AUTHORIZE_RETRIES_DEFAULT;
+        int authorizeRetries = AutoNetworkAlgorithmImpl.AUTHORIZE_RETRIES_DEFAULT;
         if ( cmdLine.hasOption("authorizeRetries") ) {
             authorizeRetries = Integer.parseInt(cmdLine.getOptionValue("authorizeRetries"));
         }
         
-        int discoveryRetries = NetworkBuildingAlgorithmImpl.DISCOVERY_RETRIES_DEFAULT;
+        int discoveryRetries = AutoNetworkAlgorithmImpl.DISCOVERY_RETRIES_DEFAULT;
         if ( cmdLine.hasOption("discoveryRetries") ) {
             discoveryRetries = Integer.parseInt(cmdLine.getOptionValue("discoveryRetries"));
         }
         
-        long temporaryAddressTimeout = NetworkBuildingAlgorithmImpl.TEMPORARY_ADDRESS_TIMEOUT_DEFAULT;
+        long temporaryAddressTimeout = AutoNetworkAlgorithmImpl.TEMPORARY_ADDRESS_TIMEOUT_DEFAULT;
         if ( cmdLine.hasOption("temporaryAddressTimeout") ) {
             temporaryAddressTimeout = Long.parseLong(cmdLine.getOptionValue("temporaryAddressTimeout"));
         }
         
-        boolean autoUseFrc = NetworkBuildingAlgorithmImpl.AUTOUSE_FRC_DEFAULT ;
+        boolean autoUseFrc = AutoNetworkAlgorithmImpl.AUTOUSE_FRC_DEFAULT ;
         if ( cmdLine.hasOption("autoUseFrc") ) {
             autoUseFrc = Boolean.parseBoolean(cmdLine.getOptionValue("autoUseFrc"));
         }
@@ -273,7 +284,7 @@ public final class AutoNetworkDemo {
         // get reference to algorithm object with reference to a network which
         // the algorithm will be running on
         // it is possible to set algorithm parameters or to leave theirs default values 
-        return new NetworkBuildingAlgorithmImpl.Builder(network, simply.getBroadcastServices())
+        return new AutoNetworkAlgorithmImpl.Builder(network, simply.getBroadcastServices())
                 .discoveryTxPower(discoveryTxPower)
                 .prebondingInterval(prebondingInterval)
                 .authorizeRetries(authorizeRetries)
@@ -296,6 +307,12 @@ public final class AutoNetworkDemo {
             printMessageAndExit("Error while parsing command line arguments: " + ex);
         }
         
+        // if there is the 'help' option, print it and exit
+        if ( cmdLine.hasOption("help") ) {
+            printHelpMessage();
+            return;
+        }
+        
         // set the maximal running time
         setMaxRunningTime(cmdLine);
         
@@ -307,7 +324,7 @@ public final class AutoNetworkDemo {
         }
         
         // create object of algorithm configured via command line arguments
-	NetworkBuildingAlgorithm algo = createNetworkBuildingAlgorithm(simply, cmdLine);
+	AutoNetworkAlgorithm algo = createNetworkBuildingAlgorithm(simply, cmdLine);
 
         // start the algorithm
         algo.start();
@@ -320,7 +337,7 @@ public final class AutoNetworkDemo {
                     printMessageAndExit("Algorithm interrupted.");
                 }
             }
-            State algState = ((NetworkBuildingAlgorithmImpl)(algo)).getState();
+            State algState = ((AutoNetworkAlgorithmImpl)(algo)).getState();
             switch ( algState ) {
                 case FINISHED_OK:
                     System.out.println("Algorithm succesfully finished.");
@@ -349,7 +366,7 @@ public final class AutoNetworkDemo {
         }
         
         // view the result of the algorithm run
-        Network resultNetwork = ((NetworkBuildingAlgorithmImpl)algo).getResultNetwork();
+        Network resultNetwork = ((AutoNetworkAlgorithmImpl)algo).getResultNetwork();
         System.out.println("Number of nodes in the network: " + resultNetwork.getNodesMap().size());
         
         // end working with Simply
