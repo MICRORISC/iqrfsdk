@@ -161,7 +161,7 @@
             <appender-ref ref="FILE" />
     </logger>
     
-    <logger name="com.microrisc.simply.iqrf.dpa.v210.network_building_algorithm.NetworkBuildingAlgorithmImpl" level="INHERITED">
+    <logger name="com.microrisc.simply.iqrf.dpa.v210.autonetwork.AutoNetworkNetworkAlgorithmImpl" level="INHERITED">
             <appender-ref ref="FILE" />
     </logger>
 

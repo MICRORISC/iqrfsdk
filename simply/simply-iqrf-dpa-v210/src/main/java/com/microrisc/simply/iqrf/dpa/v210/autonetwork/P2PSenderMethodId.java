@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.microrisc.simply.iqrf.dpa.v210.network_building_algorithm;
+package com.microrisc.simply.iqrf.dpa.v210.autonetwork;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package com.microrisc.simply.iqrf.dpa.v210.network_building_algorithm;
+package com.microrisc.simply.iqrf.dpa.v210.autonetwork;
 
 /**
  * Interface to the algorithm managing the process of building of networks.
  * 
  * @author Michal Konopa
  */
-public interface NetworkBuildingAlgorithm {
+public interface AutoNetworkAlgorithm {
     /**
      * Starts the algorithm.
      */

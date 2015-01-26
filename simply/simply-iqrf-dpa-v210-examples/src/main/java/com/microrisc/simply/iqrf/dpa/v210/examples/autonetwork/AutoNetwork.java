@@ -14,19 +14,20 @@
  * limitations under the License.
  */
 
-package com.microrisc.simply.iqrf.dpa.v210.examples.network_creation_algorithm;
+package com.microrisc.simply.iqrf.dpa.v210.examples.autonetwork;
 
 import com.microrisc.simply.Network;
 import com.microrisc.simply.SimplyException;
 import com.microrisc.simply.iqrf.dpa.DPA_Simply;
 import com.microrisc.simply.iqrf.dpa.v210.DPA_SimplyFactory;
-import com.microrisc.simply.iqrf.dpa.v210.network_building_algorithm.NetworkBuildingAlgorithm;
-import com.microrisc.simply.iqrf.dpa.v210.network_building_algorithm.NetworkBuildingAlgorithmImpl;
-import com.microrisc.simply.iqrf.dpa.v210.network_building_algorithm.P2PPrebonderStandardTransformer;
+import com.microrisc.simply.iqrf.dpa.v210.autonetwork.AutoNetworkAlgorithm;
+import com.microrisc.simply.iqrf.dpa.v210.autonetwork.AutoNetworkAlgorithmImpl;
+import com.microrisc.simply.iqrf.dpa.v210.autonetwork.P2PPrebonderStandardTransformer;
 import java.io.File;
 
 /**
- *
+ * Simple example of usage of algorithm for network creation.
+ * 
  * @author Michal Konopa
  */
 public final class AutoNetwork {
@@ -60,8 +61,8 @@ public final class AutoNetwork {
         // get reference to algorithm object with reference to a network which
         // the algorithm will be running on
         // it is possible to set algorithm parameters or to leave theirs default values 
-        NetworkBuildingAlgorithm algo 
-                = new NetworkBuildingAlgorithmImpl.Builder(network1, simply.getBroadcastServices())
+        AutoNetworkAlgorithm algo 
+                = new AutoNetworkAlgorithmImpl.Builder(network1, simply.getBroadcastServices())
                     .discoveryTxPower(4)
                     .prebondingInterval(10000)
                     .authorizeRetries(1)
@@ -88,7 +89,7 @@ public final class AutoNetwork {
         }
         
         // view the result of the algorithm run
-        Network resultNetwork = ((NetworkBuildingAlgorithmImpl)algo).getResultNetwork();
+        Network resultNetwork = ((AutoNetworkAlgorithmImpl)algo).getResultNetwork();
         System.out.println("Number of nodes in the network: " + resultNetwork.getNodesMap().size());
         
         // end working with Simply

@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package com.microrisc.simply.iqrf.dpa.v210.examples.network_creation_algorithm.def;
+package com.microrisc.simply.iqrf.dpa.v210.examples.autonetwork.def;
 
-import com.microrisc.simply.iqrf.dpa.v210.network_building_algorithm.P2PPrebonder;
+import com.microrisc.simply.iqrf.dpa.v210.autonetwork.P2PPrebonder;
 import com.microrisc.simply.iqrf.dpa.v210.typeconvertors.DPA_AdditionalInfoConvertor;
 import com.microrisc.simply.iqrf.typeconvertors.ArrayUns8Convertor;
 import com.microrisc.simply.iqrf.typeconvertors.Uns16Convertor;

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.microrisc.simply.iqrf.dpa.v210.network_building_algorithm;
+package com.microrisc.simply.iqrf.dpa.v210.autonetwork;
 
 import com.microrisc.simply.BaseNetwork;
 import com.microrisc.simply.CallRequestProcessingState;
@@ -22,7 +22,6 @@ import com.microrisc.simply.DeviceInterfaceMethodId;
 import com.microrisc.simply.Network;
 import com.microrisc.simply.di_services.MethodIdTransformer;
 import com.microrisc.simply.errors.CallRequestProcessingError;
-import com.microrisc.simply.errors.CallRequestProcessingErrorType;
 import com.microrisc.simply.iqrf.dpa.broadcasting.BroadcastResult;
 import com.microrisc.simply.iqrf.dpa.broadcasting.services.BroadcastServices;
 import com.microrisc.simply.iqrf.dpa.protocol.ProtocolObjects;
@@ -65,13 +64,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Implementation of {@link NetworkBuildingAlgorithm} interface.
+ * Implementation of {@link AutoNetworkAlgorithm} interface.
  * 
  * @author Michal Konopa
  */
-public final class NetworkBuildingAlgorithmImpl implements NetworkBuildingAlgorithm {
+public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
     /** Logger. */
-    private static final Logger logger = LoggerFactory.getLogger(NetworkBuildingAlgorithmImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(AutoNetworkAlgorithmImpl.class);
     
     
     /** Minimal discovery TX power. */
@@ -167,7 +166,7 @@ public final class NetworkBuildingAlgorithmImpl implements NetworkBuildingAlgori
     }
     
     /**
-     * Builder for {@code NetworkBuildingAlgorithmImpl} class.
+     * Builder for {@code AutoNetworkAlgorithmImpl} class.
      */
     public static class Builder {
         // required parameters
@@ -224,8 +223,8 @@ public final class NetworkBuildingAlgorithmImpl implements NetworkBuildingAlgori
             return this;
         }
         
-        public NetworkBuildingAlgorithmImpl build() {
-            return new NetworkBuildingAlgorithmImpl(this);
+        public AutoNetworkAlgorithmImpl build() {
+            return new AutoNetworkAlgorithmImpl(this);
         }
     }
     
@@ -1167,7 +1166,7 @@ public final class NetworkBuildingAlgorithmImpl implements NetworkBuildingAlgori
      * @param network network to start the algorithm with
      * @throws IllegalArgumentException if {@code network} is {@code null}
      */
-    private NetworkBuildingAlgorithmImpl(Builder builder) {
+    private AutoNetworkAlgorithmImpl(Builder builder) {
         this.network = checkNetwork(builder.network);
         this.resultNetwork = createDynamicNetwork(network);
         
