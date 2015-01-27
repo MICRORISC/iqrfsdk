@@ -80,18 +80,14 @@ public final class DPA_RequestConvertor extends AbstractConvertor {
     }
     
     private short getPNUM(DPA_Request dpaRequest) {
-        Integer pNum = ProtocolObjects.getPeripheralToDevIfaceMapper().
-                getPeripheralId(dpaRequest.getDeviceInterface());
+        Integer pNum = ProtocolObjects.getPeripheralToDevIfaceMapper()
+                .getPeripheralId(dpaRequest.getDeviceInterface());
         if ( pNum == null ) {
             throw new IllegalArgumentException(
                 "Peripheral ID not found for" + dpaRequest.getDeviceInterface()
             );
         }
         return pNum.shortValue();
-    }
-    
-    private short getPCMD(DPA_Request dpaRequest) {
-        return Short.decode(getStringMethodId(dpaRequest));
     }
     
     private short[] getSerializedRequest(DPA_Request dpaRequest) 
@@ -106,7 +102,23 @@ public final class DPA_RequestConvertor extends AbstractConvertor {
             argsWithHwProfile[0] = dpaRequest.getHwProfile();
             System.arraycopy( dpaRequest.getArgs(), 0, argsWithHwProfile, 1, dpaRequest.getArgs().length );
         }
-   
+        
+        List<PacketFragment> methodFragments = ProtocolObjects.getProtocolMapping().
+                getCallRequestToPacketMapping().getSerializedMethodData(
+                        dpaRequest.getDeviceInterface(), strMethodId
+        );
+        
+        if ( methodFragments == null ) {
+            throw new ValueConversionException("Mapping of method to PCMD not found");
+        }
+        
+        if ( methodFragments.size() != 1 ) {
+            throw new ValueConversionException(
+                "Cannot map method to PCMD. Expected number of packet fragments: 1"
+                + " got: " + methodFragments.size()
+            );
+        }
+        
         List<PacketFragment> argFragments = ProtocolObjects.getProtocolMapping().
                 getCallRequestToPacketMapping().getSerializedMethodArgs( 
                         dpaRequest.getDeviceInterface(), strMethodId, argsWithHwProfile
@@ -119,7 +131,7 @@ public final class DPA_RequestConvertor extends AbstractConvertor {
         List<PacketFragment> allFragments = new LinkedList<>();
         allFragments.add( new PacketFragment(0, new short[] { (short) (0) } ));
         allFragments.add( new PacketFragment(1, new short[] { getPNUM(dpaRequest) } ));
-        allFragments.add( new PacketFragment(2, new short[] { getPCMD(dpaRequest) } ));
+        allFragments.add( new PacketFragment(2, methodFragments.get(0).getData() ));
         allFragments.addAll(subtractedArgFragments);
    
         short[] serRequest = RequestPacketCreator.createRequestPacket(allFragments);
