@@ -55,8 +55,8 @@ public final class DPA_RequestConvertor extends AbstractConvertor {
     private String getStringMethodId(DPA_Request dpaRequest) { 
         MethodIdTransformer methodIdTransformer = dpaRequest.getMethodTransformer();
         if ( methodIdTransformer == null ) {
-            methodIdTransformer = StandardMethodIdTransformers.getInstance().
-                    getTransformer(dpaRequest.getDeviceInterface());
+            methodIdTransformer = StandardMethodIdTransformers.getInstance()
+                    .getTransformer(dpaRequest.getDeviceInterface());
             if ( methodIdTransformer == null ) {
                 throw new IllegalArgumentException(
                         "Method ID transformer not found for " + dpaRequest.getDeviceInterface()
@@ -109,12 +109,16 @@ public final class DPA_RequestConvertor extends AbstractConvertor {
         );
         
         if ( methodFragments == null ) {
-            throw new ValueConversionException("Mapping of method to PCMD not found");
+            throw new ValueConversionException(
+                "Mapping of method: " + dpaRequest.getDeviceInterface().getCanonicalName()
+                + ":" + strMethodId + " to PCMD not found"
+            );
         }
         
         if ( methodFragments.size() != 1 ) {
             throw new ValueConversionException(
-                "Cannot map method to PCMD. Expected number of packet fragments: 1"
+                "Cannot map method: " + dpaRequest.getDeviceInterface().getCanonicalName()
+                + ":" + strMethodId + " to PCMD. Expected number of packet fragments: 1"
                 + " got: " + methodFragments.size()
             );
         }
