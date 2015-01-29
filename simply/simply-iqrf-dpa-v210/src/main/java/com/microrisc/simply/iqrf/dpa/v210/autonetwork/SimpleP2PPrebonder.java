@@ -61,7 +61,7 @@ extends DPA_DeviceObject implements P2PPrebonder {
     
     @Override
     public VoidType sendPrebondingData(short[] prebondingData) {
-        UUID uid = dispatchCall("2", new Object[] { getRequestHwProfile() }, getDefaultWaitingTimeout());
+        UUID uid = dispatchCall("1", new Object[] { getRequestHwProfile() }, getDefaultWaitingTimeout());
         if ( uid == null ) {
             return null;
         }

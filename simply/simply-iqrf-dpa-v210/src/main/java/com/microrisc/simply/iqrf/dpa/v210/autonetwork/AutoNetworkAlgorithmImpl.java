@@ -83,7 +83,7 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
     public static final int DISCOVERY_TX_POWER_DEFAULT = 4;
     
     /** Default prebonding interval [ in ms ]. */
-    public static final long PREBONDING_INTERVAL_DEFAULT = 10000;
+    public static final long PREBONDING_INTERVAL_DEFAULT = 60000;
     
     /** Default number of retries to authorize new bonded node. */
     public static final int AUTHORIZE_RETRIES_DEFAULT = 1;
@@ -588,7 +588,7 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
                                 LEDR.class, 
                                 LEDR.MethodID.SET, 
                                 new Object[] { LED_State.ON }, 
-                                0xFFFF 
+                                0xFFFF
                         ),
                         new DPA_Request(
                                 Node.class, 
@@ -640,7 +640,7 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
                                 Coordinator.MethodID.ENABLE_REMOTE_BONDING,
                                 new Object[] { 
                                     bondingMask, 
-                                    1, 
+                                    1,
                                     new short[] { 
                                         (short)(wTimeout >> 0), 
                                         (short)(wTimeout >> 8)

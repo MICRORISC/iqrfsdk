@@ -35,7 +35,7 @@ implements MethodIdTransformer
             = new EnumMap<>(P2PPrebonder.MethodID.class);
     
     private static void initMethodIdsMap() {
-        methodIdsMap.put(P2PPrebonder.MethodID.SEND_PREBONDING_DATA, "2");
+        methodIdsMap.put(P2PPrebonder.MethodID.SEND_PREBONDING_DATA, "1");
     }
     
     static  {
