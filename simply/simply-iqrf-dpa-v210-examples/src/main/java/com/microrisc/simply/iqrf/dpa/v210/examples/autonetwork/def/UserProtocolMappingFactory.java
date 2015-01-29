@@ -79,6 +79,7 @@ public class UserProtocolMappingFactory implements ProtocolMappingFactory  {
     // P2PPrebonder interface
     static private MethodToPacketMapping createSendPrebondingDataMapping() {
         List<ConstValueToPacketMapping> constMapping = new LinkedList<>();
+        constMapping.add( new ConstValueToPacketMapping(3, new short[] { 0x02 } ));
         
         List<ValueToPacketMapping> argMapping = new LinkedList<>();
         argMapping.add( new ValueToPacketMapping(4, Uns16Convertor.getInstance()));
@@ -92,7 +93,7 @@ public class UserProtocolMappingFactory implements ProtocolMappingFactory  {
         constMappings.add( new ConstValueToPacketMapping(2, new short[] { 0x20 }) ); 
         
         Map<String, MethodToPacketMapping> methodMappings = new HashMap<>();
-        methodMappings.put("2", createSendPrebondingDataMapping());
+        methodMappings.put("1", createSendPrebondingDataMapping());
         
         return new InterfaceToPacketMapping(constMappings, methodMappings);
     }
@@ -136,12 +137,12 @@ public class UserProtocolMappingFactory implements ProtocolMappingFactory  {
     
     static private PacketToMethodMapping createResponseSendPrebondingData() {
         List<PacketPositionValues> packetValues = new LinkedList<>();
-        packetValues.add( new PacketPositionValues(3, (short)0x81));
+        packetValues.add( new PacketPositionValues(3, (short)0x82));
         
         PacketToValueMapping resultMapping = new PacketToValueMapping(
                 8, 0, VoidTypeConvertor.getInstance()
         );
-        return new PacketToMethodMapping("2", packetValues, resultMapping);
+        return new PacketToMethodMapping("1", packetValues, resultMapping);
     }
     
     
@@ -150,7 +151,7 @@ public class UserProtocolMappingFactory implements ProtocolMappingFactory  {
         packetValues.add( new PacketPositionValues(2, (short)0x20));
         
         Map<String, PacketToMethodMapping> methodMappings = new HashMap<>();
-        methodMappings.put("2", createResponseSendPrebondingData());
+        methodMappings.put("1", createResponseSendPrebondingData());
         
         return new PacketToInterfaceMapping(P2PPrebonder.class, packetValues, methodMappings);
     }
