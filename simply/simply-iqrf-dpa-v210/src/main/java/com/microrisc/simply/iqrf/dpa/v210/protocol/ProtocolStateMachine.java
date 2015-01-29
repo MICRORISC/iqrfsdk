@@ -135,7 +135,7 @@ final class ProtocolStateMachine implements ManageableObject {
     
     
     /** Default base time to wait for response [ in ms ]. */
-    public static final long BASE_TIME_TO_WAIT_FOR_RESPONSE_DEFAULT = 1000;
+    public static final long BASE_TIME_TO_WAIT_FOR_RESPONSE_DEFAULT = 2000;
     
     // actual base time to wait for response
     private volatile long baseTimeToWaitForResponse = BASE_TIME_TO_WAIT_FOR_RESPONSE_DEFAULT;
