@@ -274,7 +274,7 @@ public final class AutoNetworkDemo {
     ) {
         String networkId = NETWORK_ID_DEFAULT;
         if ( cmdLine.hasOption("networkId") ) {
-            networkId = cmdLine.getOptionValue("discoveryTxPower");
+            networkId = cmdLine.getOptionValue("networkId");
         }
         
         // getting network
