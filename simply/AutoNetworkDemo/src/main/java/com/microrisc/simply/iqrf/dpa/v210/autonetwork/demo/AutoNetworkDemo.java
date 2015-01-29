@@ -26,6 +26,7 @@ import com.microrisc.simply.iqrf.dpa.v210.autonetwork.AutoNetworkAlgorithmImpl;
 import com.microrisc.simply.iqrf.dpa.v210.autonetwork.AutoNetworkAlgorithmImpl.State;
 import com.microrisc.simply.iqrf.dpa.v210.autonetwork.P2PPrebonderStandardTransformer;
 import java.io.File;
+import java.io.PrintWriter;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import org.apache.commons.cli.BasicParser;
@@ -83,7 +84,10 @@ public final class AutoNetworkDemo {
                 OptionBuilder
                     .isRequired(false)
                     .hasArg()
-                    .withDescription("ID of the network to run the algorithm on")
+                    .withDescription(
+                            "ID of the network to run the algorithm on.\n"
+                            + "Default value: " + NETWORK_ID_DEFAULT
+                    )
                     .create("networkId")
         );
         
@@ -91,7 +95,10 @@ public final class AutoNetworkDemo {
                 OptionBuilder
                     .isRequired(false)
                     .hasArg()
-                    .withDescription("Method ID transformer for P2P Prebonder")
+                    .withDescription(
+                            "Method ID transformer for P2P Prebonder.\n"
+                            + "Default value: " + P2PPrebonderStandardTransformer.class.getCanonicalName()
+                    )
                     .create("methodIdTransformer")
         );
         
@@ -99,7 +106,10 @@ public final class AutoNetworkDemo {
                 OptionBuilder
                     .isRequired(false)
                     .hasArg()
-                    .withDescription("Discovery TX power")
+                    .withDescription(
+                            "Discovery TX power\n"
+                            + "Default value: " + AutoNetworkAlgorithmImpl.DISCOVERY_TX_POWER_DEFAULT
+                    )
                     .create("discoveryTxPower")
         );
         
@@ -107,7 +117,10 @@ public final class AutoNetworkDemo {
                 OptionBuilder
                     .isRequired(false)
                     .hasArg()
-                    .withDescription("Prebonding interval")
+                    .withDescription(
+                            "Prebonding interval [in ms]\n"
+                            + "Default value: " + AutoNetworkAlgorithmImpl.PREBONDING_INTERVAL_DEFAULT
+                    )
                     .create("prebondingInterval")
         );
         
@@ -115,7 +128,10 @@ public final class AutoNetworkDemo {
                 OptionBuilder
                     .isRequired(false)
                     .hasArg()
-                    .withDescription("Authorize retries")
+                    .withDescription(
+                            "Authorize retries\n"
+                            + "Default value: " + AutoNetworkAlgorithmImpl.AUTHORIZE_RETRIES_DEFAULT
+                    )
                     .create("authorizeRetries")
         );
         
@@ -123,7 +139,10 @@ public final class AutoNetworkDemo {
                 OptionBuilder
                     .isRequired(false)
                     .hasArg()
-                    .withDescription("Discovery retries")
+                    .withDescription(
+                            "Discovery retries\n"
+                            + "Default value: " + AutoNetworkAlgorithmImpl.DISCOVERY_RETRIES_DEFAULT
+                    )
                     .create("discoveryRetries")
         );
         
@@ -131,7 +150,10 @@ public final class AutoNetworkDemo {
                 OptionBuilder
                     .isRequired(false)
                     .hasArg()
-                    .withDescription("Temporary address timeout")
+                    .withDescription(
+                            "Temporary address timeout [in ms]\n"
+                            + "Default value: " + AutoNetworkAlgorithmImpl.TEMPORARY_ADDRESS_TIMEOUT_DEFAULT
+                    )
                     .create("temporaryAddressTimeout")
         );
         
@@ -139,7 +161,10 @@ public final class AutoNetworkDemo {
                 OptionBuilder
                     .isRequired(false)
                     .hasArg()
-                    .withDescription("Use FRC automatically in checking the accessibility of newly bonded nodes")
+                    .withDescription(
+                            "Use FRC automatically in checking the accessibility of newly bonded nodes\n"
+                            + "Default value: " + AutoNetworkAlgorithmImpl.AUTOUSE_FRC_DEFAULT
+                    )
                     .create("autoUseFrc")
         );
         
@@ -150,7 +175,8 @@ public final class AutoNetworkDemo {
                     .withDescription(
                             "Maximal running time of the algorithm [in ms]."
                             + "Set the " + MAX_RUNNING_TIME_UNLIMITED + " value "
-                            + "for not to limit the maximal running time."
+                            + "for not to limit the maximal running time.\n"
+                            + "Default value: " + MAX_RUNNING_TIME_UNLIMITED 
                     )
                     .create("maxRunningTime")
         );    
@@ -158,8 +184,19 @@ public final class AutoNetworkDemo {
     
     // prints help message
     private static void printHelpMessage() {
+        System.out.println();
+        System.out.println(
+            "Demo of algorithm for automatic network creation.\n"
+            + "Runs algorithm for automatic network creation. Parameters of \n"
+            + "the algorithm can be specified by user. If a parameter is not \n"
+            + "specified, the default one is used."    
+        );
+        System.out.println();
+        
+        PrintWriter printWriter = new PrintWriter(System.out, true);
         HelpFormatter formatter = new HelpFormatter();
-        formatter.printHelp( "[OPTION]...", options, true );
+        formatter.printUsage(printWriter, 80, "", options);
+        formatter.printOptions(printWriter, 80, options, 1, 1);
     }
     
     // sets the maximal running time according to the command line
@@ -316,13 +353,13 @@ public final class AutoNetworkDemo {
         // set the maximal running time
         setMaxRunningTime(cmdLine);
         
-        // creating the Simply instance
+        // creating the Simply instance    
         try {
             simply = DPA_SimplyFactory.getSimply("config" + File.separator + "Simply.properties");
         } catch ( SimplyException ex ) {
             printMessageAndExit("Error while creating Simply: " + ex);
         }
-        
+         
         // create object of algorithm configured via command line arguments
 	AutoNetworkAlgorithm algo = createNetworkBuildingAlgorithm(simply, cmdLine);
 
@@ -345,7 +382,7 @@ public final class AutoNetworkDemo {
                 case ERROR:
                     System.out.println("Error occured during algorithm run.");
                 default:
-                    System.out.println("Algorithm succesfully finished with state: " + algState);
+                    System.out.println("Algorithm finished with state: " + algState);
             }
         } else {
             try {
