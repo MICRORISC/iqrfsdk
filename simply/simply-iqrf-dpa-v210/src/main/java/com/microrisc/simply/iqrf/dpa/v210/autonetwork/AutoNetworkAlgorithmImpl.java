@@ -551,6 +551,10 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
     private void prebond(OS coordOs, Coordinator coordinator, P2PPrebondingInfo p2pInfo) 
             throws Exception 
     {
+        logger.debug("prebond - start: coordOs={}, coordinator={}, p2pInfo={}",
+                coordOs, coordinator, p2pInfo
+        );
+        
         int bondingMask = (bondedNodes.getNodesNumber() == 0) ? 
             0 : (int)Math.pow( 2, 1 + (int)log2( bondedNodes.getNodesNumber()) ) - 1;
         if ( bondingMask > 0xFF ) {
@@ -722,6 +726,8 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
                     + "Current state: " + coordOs.getCallRequestProcessingState(coordEnableUid)
             );
         }
+        
+        logger.debug("prebond - end: ");
     }
     
     // disables prebonding and returns results of the disabling request
@@ -801,6 +807,9 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
             Coordinator coordinator, com.microrisc.simply.Node coordNode
     ) throws Exception 
     {
+        logger.debug("getPrebondedMIDs - start: coordinator={}, coordNode={}",
+                coordinator, coordNode
+        );
         List<RemotelyBondedModuleId> prebondedMIDs = new LinkedList<>();
         
         RemotelyBondedModuleId remoBondedModuleId = coordinator.readRemotelyBondedModuleId();
@@ -816,6 +825,7 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
         }
         
         if ( bondedNodes.getNodesNumber() == 0 ) {
+            logger.debug("getPrebondedMIDs - end: []");
             return prebondedMIDs;
         }
         
@@ -840,6 +850,7 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
         List<Integer> prebondingNodes = getPrebondingNodes(sortedPrebondDisablingResult);        
         if ( prebondingNodes.isEmpty() ) {
             logger.info("No node prebonded.");
+            logger.debug("getPrebondedMIDs - end: []");
             return prebondedMIDs;
         }
         
@@ -848,6 +859,7 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
         // adding prebonded MIDs from prebonding nodes
         addPrebondedMIDsFromPrebondingNodes(prebondingNodes, prebondedMIDs);
         
+        logger.debug("getPrebondedMIDs - end: {}", prebondedMIDs);
         return prebondedMIDs;
     }
     
@@ -856,6 +868,10 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
     private List<Integer> authorizeBonds(
             Coordinator coordinator, List<RemotelyBondedModuleId> prebondedMIDs
     ) throws Exception {
+        logger.debug("authorizeBonds - start: coordinator={}, prebondedMIDs={}",
+                coordinator, prebondedMIDs
+        );
+        
         List<Integer> newAddrs = new LinkedList<>();
         int nextAddr = DPA_ProtocolProperties.NADR_Properties.IQMESH_NODE_ADDRESS_MAX;
 
@@ -864,10 +880,14 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
                 if ( authorizeRetry == authorizeRetries ) {
                     nextAddr = nextFreeAddr(bondedNodes, nextAddr);
                 }
-
+                
+                // getting lowest 2 bytes of module ID
+                short[] lowest2bytes = new short[2];
+                System.arraycopy(moduleId.getModuleId(), 0, lowest2bytes, 0, 2);
+                
                 UUID authorizeBondUid = coordinator.call(
                         Coordinator.MethodID.AUTHORIZE_BOND, 
-                        new Object[] { nextAddr, moduleId.getModuleId() } 
+                        new Object[] { nextAddr, lowest2bytes } 
                 );
                 
                 if ( authorizeBondUid == null ) {
@@ -907,6 +927,8 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
                 }
             }
         }
+        
+        logger.debug("authorizeBonds - end: {}", newAddrs);
         return newAddrs;
     }
     
@@ -914,6 +936,10 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
     private void checkNewNodes(
             Coordinator coordinator, com.microrisc.simply.Node coordNode, List<Integer> newAddrs
     ) throws Exception {
+        logger.debug("checkNewNodes - start: coordinator={}, coordNode={}, newAddrs={}",
+                coordinator, coordNode, newAddrs
+        );
+        
         FRC coordFrc = coordNode.getDeviceObject(FRC.class);
         if ( coordFrc == null ) {
             throw new Exception("FRC peripheral could not been found on coordinator");
@@ -930,10 +956,14 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
                 }
             }
         }
+        
+        logger.debug("checkNewNodes - end:");
     }
     
     // runs discovery
     private void runDiscovery(Coordinator coordinator) throws Exception {
+        logger.debug("runDiscovery - start: coordinator={}", coordinator);
+        
         for ( int discoveryRetry = discoveryRetries; discoveryRetry != 0; discoveryRetry-- ) {
             UUID uid = coordinator.call(
                     Coordinator.MethodID.RUN_DISCOVERY, 
@@ -985,10 +1015,14 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
                 break;
             }
         }
+        
+        logger.debug("runDiscovery - end: ");
     }
     
     // creates and adds new nodes into result network
     private void addNewNodesWithAllPeripherals(List<Integer> newAddrs) throws Exception {
+        logger.debug("addNewNodesWithAllPeripherals - start: newAddrs={}", newAddrs);
+        
         String networkId = null;
         synchronized ( synchroResultNetwork ) {
             networkId = resultNetwork.id;
@@ -1002,6 +1036,8 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
                 resultNetwork.addNode(newNode);
             } 
         }
+        
+        logger.debug("addNewNodesWithAllPeripherals - end: {}");
     }
     
     // performs the algorithm

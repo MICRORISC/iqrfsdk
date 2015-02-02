@@ -63,7 +63,7 @@ public final class AutoNetwork {
         // it is possible to set algorithm parameters or to leave theirs default values 
         AutoNetworkAlgorithm algo 
                 = new AutoNetworkAlgorithmImpl.Builder(network1, simply.getBroadcastServices())
-                    .discoveryTxPower(4)
+                    .discoveryTxPower(7)
                     .prebondingInterval(10000)
                     .authorizeRetries(1)
                     .discoveryRetries(1)
@@ -76,7 +76,7 @@ public final class AutoNetwork {
         algo.start();
 
         // do some other work for some time ...
-        Thread.sleep(10000);
+        Thread.sleep(30000);
 
         // is algorithm finished?
         if ( algo.isFinished() ) {

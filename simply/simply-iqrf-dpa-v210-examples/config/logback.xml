@@ -142,11 +142,16 @@
 
 
     <!-- iqrf.dpa.v210 package -->
-
+    
     <logger name="com.microrisc.simply.iqrf.dpa.v210.DPA_DeviceObject" level="INHERITED">
             <appender-ref ref="FILE" />
     </logger>
-
+    
+    <!-- iqrf.dpa.v210.autonetwork package -->
+    <logger name="com.microrisc.simply.iqrf.dpa.v210.autonetwork.AutoNetworkAlgorithmImpl" level="INHERITED">
+            <appender-ref ref="FILE" />
+    </logger>
+    
     <!-- iqrf.dpa.broadcasting package -->
     <logger name="com.microrisc.simply.iqrf.dpa.v210.broadcasting.BroadcastServicesDefaultImpl" level="INHERITED">
             <appender-ref ref="FILE" />
