@@ -69,7 +69,7 @@ extends DPA_DeviceObject implements Coordinator {
         }
         
         for ( int argId = 0; argId < args.length; argId++ ) {
-            if ( !(argTypes[argId].getClass().isAssignableFrom(args[argId].getClass())) ) {
+            if ( !(argTypes[argId].isAssignableFrom(args[argId].getClass())) ) {
                 throw new IllegalArgumentException(
                     "Type mismatch by the " + argId + ". argument."
                     + "Expected: " + argTypes[argId].getClass().getName()
