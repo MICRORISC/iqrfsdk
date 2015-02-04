@@ -825,7 +825,7 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
         }
         
         if ( bondedNodes.getNodesNumber() == 0 ) {
-            logger.debug("getPrebondedMIDs - end: []");
+            logger.debug("getPrebondedMIDs - end: {}", prebondedMIDs);
             return prebondedMIDs;
         }
         
@@ -897,8 +897,14 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
                     );
                 }
                 
+                // IMPORTANT NOTE !!!
+                // because of the Simply own overhead, the sleeping time must be
+                // increased adequately. Value of the increase will be subject
+                // of the future testing
+                long simplyOverhead = 500;
+                
                 // waiting with the possibility of interruption
-                Thread.sleep(bondedNodes.getNodesNumber() * 40 + 150);
+                Thread.sleep( bondedNodes.getNodesNumber() * 40 + 150 + simplyOverhead );
                 
                 // getting authorization result
                 BondedNode bondedNode = coordinator.getCallResultImmediately(authorizeBondUid, BondedNode.class);
@@ -915,15 +921,14 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
                     continue;
                 }
 
-                // what to do with pinging - omit completely?
                 if ( authorizeRetry != 1 ) {
                     Integer devCount = coordinator.removeBondedNode(nextAddr);
                     if ( devCount == null ) {
-                        logger.error("Error remove bond {}");
-                    } else {
-                        newAddrs.add(Integer.valueOf(bondedNode.getBondedAddress()));
-                        updateNodesInfo(coordinator);
-                    }
+                        logger.error("Error while removing bond");
+                    } 
+                } else {
+                    newAddrs.add(Integer.valueOf(bondedNode.getBondedAddress()));
+                    updateNodesInfo(coordinator);
                 }
             }
         }

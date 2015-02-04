@@ -88,5 +88,17 @@ public final class RemotelyBondedModuleId {
         
         return true;
     }
+    
+    public String toString() {
+        StringBuilder strBuilder = new StringBuilder();
+        String NEW_LINE = System.getProperty("line.separator");
+        
+        strBuilder.append(this.getClass().getSimpleName() + " { " + NEW_LINE);
+        strBuilder.append(" Module ID: " + Arrays.toString(moduleId) + NEW_LINE);
+        strBuilder.append(" User data: " + Arrays.toString(userData) + NEW_LINE);
+        strBuilder.append("}");
+        
+        return strBuilder.toString();
+    }
    
 }
