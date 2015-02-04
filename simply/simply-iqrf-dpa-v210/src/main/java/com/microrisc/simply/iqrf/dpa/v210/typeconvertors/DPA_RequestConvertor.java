@@ -17,14 +17,16 @@
 package com.microrisc.simply.iqrf.dpa.v210.typeconvertors;
 
 import com.microrisc.simply.di_services.MethodIdTransformer;
-import com.microrisc.simply.iqrf.dpa.v210.di_services.method_id_transformers.StandardMethodIdTransformers;
 import com.microrisc.simply.iqrf.dpa.protocol.ProtocolObjects;
+import com.microrisc.simply.iqrf.dpa.v210.di_services.method_id_transformers.StandardMethodIdTransformers;
+import com.microrisc.simply.iqrf.dpa.v210.protocol.DPA_ProtocolProperties;
 import com.microrisc.simply.iqrf.dpa.v210.types.DPA_Request;
 import com.microrisc.simply.protocol.RequestPacketCreator;
 import com.microrisc.simply.protocol.mapping.PacketFragment;
 import com.microrisc.simply.protocol.mapping.ProtocolMappingException;
 import com.microrisc.simply.typeconvertors.AbstractConvertor;
 import com.microrisc.simply.typeconvertors.ValueConversionException;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import org.slf4j.Logger;
@@ -115,18 +117,50 @@ public final class DPA_RequestConvertor extends AbstractConvertor {
             );
         }
         
+        boolean methodFragInArgs = false;
         if ( methodFragments.size() != 1 ) {
-            throw new ValueConversionException(
-                "Cannot map method: " + dpaRequest.getDeviceInterface().getCanonicalName()
-                + ":" + strMethodId + " to PCMD. Expected number of packet fragments: 1"
-                + " got: " + methodFragments.size()
-            );
+            // ATTENTION: 
+            // some DPA methods can have its specification defined as a part of
+            // their arguments - it is needed to discover arguments mapping 
+            // with respect to mapped positions inside DPA packet
+            if ( methodFragments.isEmpty() ) {
+                methodFragInArgs = true;
+            } else {
+                throw new ValueConversionException(
+                    "Cannot map method: " + dpaRequest.getDeviceInterface().getCanonicalName()
+                    + ":" + strMethodId + " to PCMD. Expected number of method packet fragments: 0 or 1"
+                    + " got: " + methodFragments.size()
+                );
+            }
         }
         
         List<PacketFragment> argFragments = ProtocolObjects.getProtocolMapping().
                 getCallRequestToPacketMapping().getSerializedMethodArgs( 
                         dpaRequest.getDeviceInterface(), strMethodId, argsWithHwProfile
         );
+        
+        // if there is PCMD specification in arguments
+        if ( methodFragInArgs ) {
+            PacketFragment methodFragment = null;
+            Iterator<PacketFragment> argFragIter = argFragments.iterator();
+            while ( argFragIter.hasNext() ) {
+                PacketFragment argFragment = argFragIter.next();
+                if ( argFragment.getStartingPosition() == DPA_ProtocolProperties.PCMD_START ) {
+                    methodFragment = argFragment;
+                    argFragIter.remove();
+                    break;
+                }
+            }
+            
+            if ( methodFragment != null ) {
+                methodFragments.add(methodFragment);
+            } else {
+                throw new ValueConversionException(
+                    "Cannot map method: " + dpaRequest.getDeviceInterface().getCanonicalName()
+                    + ":" + strMethodId + " to PCMD. No PCMD specification packet fragments found"
+                );
+            }
+        }
         
         // ATTENTION: all starting position of all argument packet fragments must
         // be subtracted by 1 because batched request has no NADR field
