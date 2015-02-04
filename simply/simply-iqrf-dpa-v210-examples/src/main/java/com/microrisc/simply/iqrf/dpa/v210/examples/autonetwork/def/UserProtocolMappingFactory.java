@@ -79,7 +79,7 @@ public class UserProtocolMappingFactory implements ProtocolMappingFactory  {
     // P2PPrebonder interface
     static private MethodToPacketMapping createSendPrebondingDataMapping() {
         List<ConstValueToPacketMapping> constMapping = new LinkedList<>();
-        constMapping.add( new ConstValueToPacketMapping(3, new short[] { 0x02 } ));
+        constMapping.add( new ConstValueToPacketMapping(3, new short[] { 0x00 } ));
         
         List<ValueToPacketMapping> argMapping = new LinkedList<>();
         argMapping.add( new ValueToPacketMapping(4, Uns16Convertor.getInstance()));
@@ -137,7 +137,7 @@ public class UserProtocolMappingFactory implements ProtocolMappingFactory  {
     
     static private PacketToMethodMapping createResponseSendPrebondingData() {
         List<PacketPositionValues> packetValues = new LinkedList<>();
-        packetValues.add( new PacketPositionValues(3, (short)0x82));
+        packetValues.add( new PacketPositionValues(3, (short)0x80));
         
         PacketToValueMapping resultMapping = new PacketToValueMapping(
                 8, 0, VoidTypeConvertor.getInstance()
