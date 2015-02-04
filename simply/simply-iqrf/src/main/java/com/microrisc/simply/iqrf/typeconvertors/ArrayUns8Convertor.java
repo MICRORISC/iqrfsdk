@@ -60,7 +60,7 @@ public final class ArrayUns8Convertor extends ArrayConvertor{
      */
     @Override
     public short[] toProtoValue(Object valueToConv) throws ValueConversionException {
-        logger.debug("toIQValue - start: valueToConv={}", valueToConv);
+        logger.debug("toProtoValue - start: valueToConv={}", valueToConv);
         
         Short[] shortArr = null;
         if ( valueToConv instanceof short[] ) {
@@ -80,7 +80,7 @@ public final class ArrayUns8Convertor extends ArrayConvertor{
             totalCopied += elemSize;
         }
         
-        logger.debug("toIQValue - end: {}", finalIqValue);
+        logger.debug("toProtoValue - end: {}", finalIqValue);
         return finalIqValue;
     }
 

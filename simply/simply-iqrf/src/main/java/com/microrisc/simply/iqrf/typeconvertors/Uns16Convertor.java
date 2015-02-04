@@ -57,7 +57,7 @@ public final class Uns16Convertor extends PrimitiveConvertor {
     
     @Override
     public short[] toProtoValue(Object valueToConv) throws ValueConversionException {
-        logger.debug("toIQValue - start: valueToConv={}", valueToConv);
+        logger.debug("toProtoValue - start: valueToConv={}", valueToConv);
         
         if ( !(valueToConv instanceof Integer) ) {
             throw new ValueConversionException("Value to convert has not proper type.");
@@ -74,7 +74,7 @@ public final class Uns16Convertor extends PrimitiveConvertor {
             iqValue[byteId] = (short)(byteBuffer.get() & 0xFF);
         }
         
-        logger.debug("toIQValue - end: {}", iqValue);
+        logger.debug("toProtoValue - end: {}", iqValue);
         return iqValue;
     }
   
@@ -94,7 +94,7 @@ public final class Uns16Convertor extends PrimitiveConvertor {
             byteBuffer.put((byte)iqValue[byteId]);
         }
         
-        logger.debug("toIQValue - end: {}", byteBuffer.getInt(0));
+        logger.debug("toObject - end: {}", byteBuffer.getInt(0));
         return byteBuffer.getInt(0);
     }   
 }
