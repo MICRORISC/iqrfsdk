@@ -406,6 +406,8 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
     
     // updates information about nodes
     private void updateNodesInfo(Coordinator coordinator) throws Exception {
+        logger.debug("updateNodesInfo - start: coordinator={}", coordinator);
+        
         this.bondedNodes = coordinator.getBondedNodes();
         if ( bondedNodes == null ) {
             throw new Exception("Error while getting bonded nodes.");
@@ -427,6 +429,7 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
             }
         }
         logger.info("NOT discovered nodes: {}", StringUtils.join(notDiscovered, ','));
+        logger.debug("updateNodesInfo - end: ");
     }
     
     // checks, if there are some discovered nodes which are not bonded
@@ -632,7 +635,9 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
             }
         
             // wait the whole above broadcast and all peer2peer LP slots
-            Thread.sleep( ( bondedNodes.getNodesNumber() + 1 ) * 40 + bondedNodes.getNodesNumber()  * 60 );
+            Thread.sleep( 
+                ( bondedNodes.getNodesNumber() + 1 ) * 40 + bondedNodes.getNodesNumber()  * 60 
+            );
         }
         
         UUID coordEnableUid = coordOs.call(
@@ -676,7 +681,7 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
             );
         }
 
-        logger.info("Waiting for prebonding for {} seconds ...", waitBonding);
+        logger.info("Waiting for prebonding for {} seconds ... ", waitBonding);
 
         try {
             Thread.sleep(waitBonding * 1000 + 1000);
@@ -699,7 +704,9 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
             }
 
             logger.info("Disable coordinator prebonding");
-            VoidType coordDisablingResult = coordinator.enableRemoteBonding(0, 0, new short[] { 0, 0 });
+            VoidType coordDisablingResult = coordinator.enableRemoteBonding(
+                    0, 0, new short[] { 0, 0 }
+            );
             if ( coordDisablingResult == null ) {
                 throw new Exception("Error while disabling remote bonding on coordinator");
             }
@@ -714,7 +721,8 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
             if ( nodesEnableResult == null ) {
                 throw new Exception(
                         "Result not available for enabling remote bonding on nodes. "
-                        + "Current state: " + broadcastServices.getCallRequestProcessingState(nodesEnableUid)
+                        + "Current state: " 
+                        + broadcastServices.getCallRequestProcessingState(nodesEnableUid)
                 );
             }
         }
@@ -825,7 +833,7 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
         }
         
         if ( bondedNodes.getNodesNumber() == 0 ) {
-            logger.debug("getPrebondedMIDs - end: {}", prebondedMIDs);
+            logger.debug("getPrebondedMIDs - end: {}", StringUtils.join(prebondedMIDs, ','));
             return prebondedMIDs;
         }
         
@@ -854,12 +862,12 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
             return prebondedMIDs;
         }
         
-        logger.info("Nodes provided prebonding: {}" + StringUtils.join(prebondingNodes, ',')) ;
+        logger.info("Nodes provided prebonding: {}", StringUtils.join(prebondingNodes, ',')) ;
         
         // adding prebonded MIDs from prebonding nodes
         addPrebondedMIDsFromPrebondingNodes(prebondingNodes, prebondedMIDs);
         
-        logger.debug("getPrebondedMIDs - end: {}", prebondedMIDs);
+        logger.debug("getPrebondedMIDs - end: {}", StringUtils.join(prebondedMIDs, ','));
         return prebondedMIDs;
     }
     
@@ -885,42 +893,24 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
                 short[] lowest2bytes = new short[2];
                 System.arraycopy(moduleId.getModuleId(), 0, lowest2bytes, 0, 2);
                 
-                UUID authorizeBondUid = coordinator.call(
-                        Coordinator.MethodID.AUTHORIZE_BOND, 
-                        new Object[] { nextAddr, lowest2bytes } 
-                );
-                
-                if ( authorizeBondUid == null ) {
+                BondedNode bondedNode = coordinator.authorizeBond(nextAddr, lowest2bytes);
+                if ( bondedNode == null ) {
                     throw new Exception(
                         "Error while doing authorizing bond request."
                          + "Module ID: " + moduleId
                     );
                 }
                 
-                // IMPORTANT NOTE !!!
-                // because of the Simply own overhead, the sleeping time must be
-                // increased adequately. Value of the increase will be subject
-                // of the future testing
-                long simplyOverhead = 500;
+                logger.info(
+                    "Authorizing node {}, address={}, devices count={}, waiting to finish authorization...", 
+                    Arrays.toString(moduleId.getModuleId()), 
+                    bondedNode.getBondedAddress(), 
+                    bondedNode.getBondedNodesNum()
+                );
                 
                 // waiting with the possibility of interruption
-                Thread.sleep( bondedNodes.getNodesNumber() * 40 + 150 + simplyOverhead );
+                Thread.sleep( bondedNodes.getNodesNumber() * 40 + 150 );
                 
-                // getting authorization result
-                BondedNode bondedNode = coordinator.getCallResultImmediately(authorizeBondUid, BondedNode.class);
-                
-                if ( bondedNode != null ) {
-                    logger.info(
-                        "Authorizing node {}, address={}, devices count={}, waiting to finish authorization...", 
-                        Arrays.toString(moduleId.getModuleId()), 
-                        bondedNode.getBondedAddress(), 
-                        bondedNode.getBondedNodesNum()
-                    );
-                } else {
-                    logger.error("Authorizing node {}, error", moduleId );
-                    continue;
-                }
-
                 if ( authorizeRetry != 1 ) {
                     Integer devCount = coordinator.removeBondedNode(nextAddr);
                     if ( devCount == null ) {
@@ -933,7 +923,7 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
             }
         }
         
-        logger.debug("authorizeBonds - end: {}", newAddrs);
+        logger.debug("authorizeBonds - end: {}", StringUtils.join(newAddrs, ','));
         return newAddrs;
     }
     
@@ -942,7 +932,7 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
             Coordinator coordinator, com.microrisc.simply.Node coordNode, List<Integer> newAddrs
     ) throws Exception {
         logger.debug("checkNewNodes - start: coordinator={}, coordNode={}, newAddrs={}",
-                coordinator, coordNode, newAddrs
+                coordinator, coordNode, StringUtils.join(newAddrs, ',')
         );
         
         FRC coordFrc = coordNode.getDeviceObject(FRC.class);
@@ -1026,7 +1016,9 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
     
     // creates and adds new nodes into result network
     private void addNewNodesWithAllPeripherals(List<Integer> newAddrs) throws Exception {
-        logger.debug("addNewNodesWithAllPeripherals - start: newAddrs={}", newAddrs);
+        logger.debug("addNewNodesWithAllPeripherals - start: newAddrs={}", 
+                StringUtils.join(newAddrs, ',')
+        );
         
         String networkId = null;
         synchronized ( synchroResultNetwork ) {
@@ -1042,7 +1034,7 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
             } 
         }
         
-        logger.debug("addNewNodesWithAllPeripherals - end: {}");
+        logger.debug("addNewNodesWithAllPeripherals - end:");
     }
     
     // performs the algorithm
@@ -1115,7 +1107,9 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
         }
         
         logger.info("No LED indication and use of optimal time slot length");
-        DPA_Parameter prevParam = coordinator.setDPA_Param( new DPA_Parameter(DPA_Parameter.DPA_ValueType.LAST_RSSI, false, false) );
+        DPA_Parameter prevParam = coordinator.setDPA_Param( 
+                new DPA_Parameter(DPA_Parameter.DPA_ValueType.LAST_RSSI, false, false) 
+        );
         if ( prevParam == null ) {
             setState(State.ERROR);
             logger.error("Error while setting DPA parameter");
@@ -1179,7 +1173,7 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
                     checkNewNodes(coordinator, coordNode, newAddrs);
                 }
 
-                logger.info( "Running discovery...");
+                logger.info( "Running discovery ...");
                 runDiscovery(coordinator); 
                 
                 // adding new bonded nodes into network
