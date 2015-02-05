@@ -16,8 +16,9 @@
 
 package com.microrisc.simply.iqrf.dpa.v210.devices.impl;
 
-import com.microrisc.simply.ConnectorService;
 import com.microrisc.simply.CallRequestProcessingInfoContainer;
+import com.microrisc.simply.ConnectorService;
+import com.microrisc.simply.di_services.MethodArgumentsChecker;
 import com.microrisc.simply.iqrf.dpa.v210.DPA_DeviceObject;
 import com.microrisc.simply.iqrf.dpa.v210.devices.PeripheralInfoGetter;
 import com.microrisc.simply.iqrf.dpa.v210.di_services.method_id_transformers.PeripheralInfoGetterStandardTransformer;
@@ -46,14 +47,33 @@ extends DPA_DeviceObject implements PeripheralInfoGetter {
             return null;
         }
         
-        if ( args == null ) {
-            return dispatchCall( methodIdStr, new Object[] { getRequestHwProfile() } );
+        switch ( (PeripheralInfoGetter.MethodID)methodId ) {
+            case GET_PERIPHERAL_ENUMERATION:
+                MethodArgumentsChecker.checkArgumentTypes(args, new Class[] { } );
+                return dispatchCall(
+                        methodIdStr, 
+                        new Object[] { getRequestHwProfile() },
+                        getDefaultWaitingTimeout()
+                );
+            case GET_PERIPHERAL_INFO:
+                MethodArgumentsChecker.checkArgumentTypes(args, new Class[] { Integer.class } );
+                checkPeripheralId((Integer)args[0]);
+                return dispatchCall(
+                        methodIdStr,
+                        new Object[] { getRequestHwProfile(), (Integer)args[0] }, 
+                        getDefaultWaitingTimeout()
+                );
+            case GET_MORE_PERIPHERALS_INFO:
+                MethodArgumentsChecker.checkArgumentTypes(args, new Class[] { Integer.class } );
+                checkPeripheralId((Integer)args[0]);
+                return dispatchCall(
+                        methodIdStr, 
+                        new Object[] { getRequestHwProfile(), (Integer)args[0] }, 
+                        getDefaultWaitingTimeout()
+                );
+            default:
+                throw new IllegalArgumentException("Unsupported command: " + methodId);
         }
-        
-        Object[] argsWithHwProfile = new Object[ args.length + 1 ];
-        argsWithHwProfile[0] = getRequestHwProfile();
-        System.arraycopy( args, 0, argsWithHwProfile, 1, args.length );
-        return dispatchCall( methodIdStr, argsWithHwProfile);
     }
     
     @Override
@@ -63,12 +83,16 @@ extends DPA_DeviceObject implements PeripheralInfoGetter {
     
     @Override
     public UUID async_getPeripheralEnumeration() {
-        return dispatchCall("1", new Object[] { getRequestHwProfile() }, getDefaultWaitingTimeout() );
+        return dispatchCall(
+                "1", new Object[] { getRequestHwProfile() }, getDefaultWaitingTimeout() 
+        );
     }
     
     @Override
     public PeripheralEnumeration getPeripheralEnumeration() {
-        UUID uid = dispatchCall("1", new Object[] { getRequestHwProfile() }, getDefaultWaitingTimeout() );
+        UUID uid = dispatchCall(
+                "1", new Object[] { getRequestHwProfile() }, getDefaultWaitingTimeout() 
+        );
         if ( uid == null ) {
             return null;
         }

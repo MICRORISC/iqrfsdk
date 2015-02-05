@@ -16,8 +16,9 @@
 
 package com.microrisc.simply.iqrf.dpa.v210.devices.impl;
 
-import com.microrisc.simply.ConnectorService;
 import com.microrisc.simply.CallRequestProcessingInfoContainer;
+import com.microrisc.simply.ConnectorService;
+import com.microrisc.simply.di_services.MethodArgumentsChecker;
 import com.microrisc.simply.iqrf.dpa.v210.DPA_DeviceObject;
 import com.microrisc.simply.iqrf.dpa.v210.devices.EEEPROM;
 import com.microrisc.simply.iqrf.dpa.v210.di_services.method_id_transformers.EEEPROMStandardTransformer;
@@ -45,14 +46,28 @@ extends DPA_DeviceObject implements EEEPROM {
             return null;
         }
         
-        if ( args == null ) {
-            return dispatchCall( methodIdStr, new Object[] { getRequestHwProfile() } );
+        switch ( (EEEPROM.MethodID)methodId ) {
+            case READ:
+                MethodArgumentsChecker.checkArgumentTypes(args, new Class[] { Integer.class, Integer.class } );
+                checkBlockNumber((Integer)args[0]);
+                checkDataLenToRead((Integer)args[1]);
+                return dispatchCall(
+                        methodIdStr, 
+                        new Object[] { getRequestHwProfile(), (Integer)args[0], (Integer)args[1] },
+                        getDefaultWaitingTimeout()
+                );
+            case WRITE:
+                MethodArgumentsChecker.checkArgumentTypes(args, new Class[] { Integer.class, short.class } );
+                checkBlockNumber((Integer)args[0]);
+                checkDataToWrite((short[])args[1]);
+                return dispatchCall(
+                        methodIdStr, 
+                        new Object[] { getRequestHwProfile(), (Integer)args[0], (short[])args[1] }, 
+                        getDefaultWaitingTimeout()
+                );
+            default:
+                throw new IllegalArgumentException("Unsupported command: " + methodId);
         }
-        
-        Object[] argsWithHwProfile = new Object[ args.length + 1 ];
-        argsWithHwProfile[0] = getRequestHwProfile();
-        System.arraycopy( args, 0, argsWithHwProfile, 1, args.length );
-        return dispatchCall( methodIdStr, argsWithHwProfile);
     }
     
     @Override

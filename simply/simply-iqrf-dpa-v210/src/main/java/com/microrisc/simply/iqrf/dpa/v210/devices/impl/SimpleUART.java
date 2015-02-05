@@ -16,8 +16,9 @@
 
 package com.microrisc.simply.iqrf.dpa.v210.devices.impl;
 
-import com.microrisc.simply.ConnectorService;
 import com.microrisc.simply.CallRequestProcessingInfoContainer;
+import com.microrisc.simply.ConnectorService;
+import com.microrisc.simply.di_services.MethodArgumentsChecker;
 import com.microrisc.simply.iqrf.dpa.v210.DPA_DeviceObject;
 import com.microrisc.simply.iqrf.dpa.v210.devices.UART;
 import com.microrisc.simply.iqrf.dpa.v210.di_services.method_id_transformers.UARTStandardTransformer;
@@ -46,14 +47,35 @@ extends DPA_DeviceObject implements UART {
             return null;
         }
         
-        if ( args == null ) {
-            return dispatchCall( methodIdStr, new Object[] { getRequestHwProfile() } );
+        switch ( (UART.MethodID)methodId ) {
+            case OPEN:
+                MethodArgumentsChecker.checkArgumentTypes(args, new Class[] { BaudRate.class } );
+                return dispatchCall(
+                        methodIdStr, 
+                        new Object[] { getRequestHwProfile(), (BaudRate)args[0] },
+                        getDefaultWaitingTimeout()
+                );
+            case CLOSE:
+                MethodArgumentsChecker.checkArgumentTypes(args, new Class[] { } );
+                return dispatchCall(
+                        methodIdStr,
+                        new Object[] { getRequestHwProfile() }, 
+                        getDefaultWaitingTimeout()
+                );
+            case WRITE_AND_READ:
+                MethodArgumentsChecker.checkArgumentTypes(
+                        args, new Class[] { Integer.class, short[].class } 
+                );
+                checkReadTimeout((Integer)args[0]);
+                checkDataToWrite((short[])args[1]);
+                return dispatchCall(
+                        methodIdStr, 
+                        new Object[] { getRequestHwProfile(), (Integer)args[0], (short[])args[1] }, 
+                        getDefaultWaitingTimeout()
+                );
+            default:
+                throw new IllegalArgumentException("Unsupported command: " + methodId);
         }
-        
-        Object[] argsWithHwProfile = new Object[ args.length + 1 ];
-        argsWithHwProfile[0] = getRequestHwProfile();
-        System.arraycopy( args, 0, argsWithHwProfile, 1, args.length );
-        return dispatchCall( methodIdStr, argsWithHwProfile);
     }
     
     @Override
@@ -74,7 +96,9 @@ extends DPA_DeviceObject implements UART {
     
     @Override
     public VoidType close() {
-        UUID uid = dispatchCall("2", new Object[] { getRequestHwProfile() }, getDefaultWaitingTimeout() );
+        UUID uid = dispatchCall(
+                "2", new Object[] { getRequestHwProfile() }, getDefaultWaitingTimeout() 
+        );
         if ( uid == null ) {
             return null;
         }

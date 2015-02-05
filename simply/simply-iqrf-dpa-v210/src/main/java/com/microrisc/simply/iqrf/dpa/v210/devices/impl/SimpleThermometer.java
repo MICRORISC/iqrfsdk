@@ -16,8 +16,9 @@
 
 package com.microrisc.simply.iqrf.dpa.v210.devices.impl;
 
-import com.microrisc.simply.ConnectorService;
 import com.microrisc.simply.CallRequestProcessingInfoContainer;
+import com.microrisc.simply.ConnectorService;
+import com.microrisc.simply.di_services.MethodArgumentsChecker;
 import com.microrisc.simply.iqrf.dpa.v210.DPA_DeviceObject;
 import com.microrisc.simply.iqrf.dpa.v210.devices.Thermometer;
 import com.microrisc.simply.iqrf.dpa.v210.di_services.method_id_transformers.ThermometerStandardTransformer;
@@ -45,14 +46,17 @@ extends DPA_DeviceObject implements Thermometer {
             return null;
         }
         
-        if ( args == null ) {
-            return dispatchCall( methodIdStr, new Object[] { getRequestHwProfile() } );
+        switch ( (Thermometer.MethodID)methodId ) {
+            case GET:
+                MethodArgumentsChecker.checkArgumentTypes(args, new Class[] { } );
+                return dispatchCall(
+                        methodIdStr, 
+                        new Object[] { getRequestHwProfile() },
+                        getDefaultWaitingTimeout()
+                );
+            default:
+                throw new IllegalArgumentException("Unsupported command: " + methodId);
         }
-        
-        Object[] argsWithHwProfile = new Object[ args.length + 1 ];
-        argsWithHwProfile[0] = getRequestHwProfile();
-        System.arraycopy( args, 0, argsWithHwProfile, 1, args.length );
-        return dispatchCall( methodIdStr, argsWithHwProfile);
     }
     
     @Override
@@ -67,7 +71,9 @@ extends DPA_DeviceObject implements Thermometer {
 
     @Override
     public Thermometer_values get() {
-        UUID uid = dispatchCall("1", new Object[] { getRequestHwProfile() } , getDefaultWaitingTimeout() );
+        UUID uid = dispatchCall(
+                "1", new Object[] { getRequestHwProfile() } , getDefaultWaitingTimeout() 
+        );
         if ( uid == null ) {
             return null;
         }

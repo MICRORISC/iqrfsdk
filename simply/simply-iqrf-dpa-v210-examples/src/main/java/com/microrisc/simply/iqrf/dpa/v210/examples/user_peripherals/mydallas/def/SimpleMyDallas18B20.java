@@ -18,6 +18,7 @@ package com.microrisc.simply.iqrf.dpa.v210.examples.user_peripherals.mydallas.de
 
 import com.microrisc.simply.CallRequestProcessingInfoContainer;
 import com.microrisc.simply.ConnectorService;
+import com.microrisc.simply.di_services.MethodArgumentsChecker;
 import com.microrisc.simply.iqrf.dpa.v210.DPA_DeviceObject;
 import java.util.EnumMap;
 import java.util.Map;
@@ -34,8 +35,8 @@ extends DPA_DeviceObject implements MyDallas18B20 {
     /**
      * Mapping of method IDs to theirs string representations.
      */
-    private static final Map<MyDallas18B20.MethodID, String> methodIdsMap = 
-            new EnumMap<>(MyDallas18B20.MethodID.class);
+    private static final Map<MyDallas18B20.MethodID, String> methodIdsMap 
+            = new EnumMap<>(MyDallas18B20.MethodID.class);
 
     private static void initMethodIdsMap() {
         methodIdsMap.put(MyDallas18B20.MethodID.GET, "0");
@@ -59,14 +60,17 @@ extends DPA_DeviceObject implements MyDallas18B20 {
             return null;
         }
 
-        if ( args == null ) {
-            return dispatchCall(methodIdStr, new Object[]{getRequestHwProfile()});
+        switch ( (MyDallas18B20.MethodID)methodId ) {
+            case GET:
+                MethodArgumentsChecker.checkArgumentTypes(args, new Class[] { } );
+                return dispatchCall(
+                        methodIdStr, 
+                        new Object[] { getRequestHwProfile() },
+                        getDefaultWaitingTimeout()
+                );
+            default:
+                throw new IllegalArgumentException("Unsupported command: " + methodId);
         }
-
-        Object[] argsWithHwProfile = new Object[args.length + 1];
-        argsWithHwProfile[0] = getRequestHwProfile();
-        System.arraycopy(args, 0, argsWithHwProfile, 1, args.length);
-        return dispatchCall(methodIdStr, argsWithHwProfile);
     }
 
     @Override
@@ -81,8 +85,9 @@ extends DPA_DeviceObject implements MyDallas18B20 {
 
     @Override
     public short get() {
-        UUID uid = dispatchCall("0", new Object[]{getRequestHwProfile()},
-                getDefaultWaitingTimeout());
+        UUID uid = dispatchCall(
+                "0", new Object[]{getRequestHwProfile()}, getDefaultWaitingTimeout()
+        );
         if ( uid == null ) {
             return Short.MAX_VALUE;
         }

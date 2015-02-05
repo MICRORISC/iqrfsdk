@@ -18,6 +18,7 @@ package com.microrisc.simply.iqrf.dpa.v210.autonetwork;
 
 import com.microrisc.simply.CallRequestProcessingInfoContainer;
 import com.microrisc.simply.ConnectorService;
+import com.microrisc.simply.di_services.MethodArgumentsChecker;
 import com.microrisc.simply.iqrf.dpa.v210.DPA_DeviceObject;
 import com.microrisc.simply.iqrf.types.VoidType;
 import java.util.UUID;
@@ -44,14 +45,17 @@ extends DPA_DeviceObject implements P2PPrebonder {
             return null;
         }
         
-        if ( args == null ) {
-            return dispatchCall( methodIdStr, new Object[] { getRequestHwProfile() } );
+        switch ( (P2PPrebonder.MethodID)methodId ) {
+            case SEND_PREBONDING_DATA:
+                MethodArgumentsChecker.checkArgumentTypes(args, new Class[] { short[].class } );
+                return dispatchCall(
+                        methodIdStr, 
+                        new Object[] { getRequestHwProfile(), (short[])args[0] },
+                        getDefaultWaitingTimeout()
+                );
+            default:
+                throw new IllegalArgumentException("Unsupported command: " + methodId);
         }
-        
-        Object[] argsWithHwProfile = new Object[ args.length + 1 ];
-        argsWithHwProfile[0] = getRequestHwProfile();
-        System.arraycopy( args, 0, argsWithHwProfile, 1, args.length );
-        return dispatchCall( methodIdStr, argsWithHwProfile);
     }
     
     @Override

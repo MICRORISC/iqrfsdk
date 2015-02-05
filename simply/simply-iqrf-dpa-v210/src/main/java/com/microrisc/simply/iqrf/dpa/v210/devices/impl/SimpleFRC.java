@@ -18,6 +18,7 @@ package com.microrisc.simply.iqrf.dpa.v210.devices.impl;
 
 import com.microrisc.simply.CallRequestProcessingInfoContainer;
 import com.microrisc.simply.ConnectorService;
+import com.microrisc.simply.di_services.MethodArgumentsChecker;
 import com.microrisc.simply.iqrf.dpa.v210.DPA_DeviceObject;
 import com.microrisc.simply.iqrf.dpa.v210.devices.FRC;
 import com.microrisc.simply.iqrf.dpa.v210.di_services.method_id_transformers.FRCStandardTransformer;
@@ -47,14 +48,25 @@ extends DPA_DeviceObject implements FRC {
             return null;
         }
         
-        if ( args == null ) {
-            return dispatchCall( methodIdStr, new Object[] { getRequestHwProfile() } );
+        switch ( (FRC.MethodID)methodId ) {
+            case SEND:
+                MethodArgumentsChecker.checkArgumentTypes(args, new Class[] { FRC_Command.class } );
+                checkCommand((FRC_Command)args[0]);
+                return dispatchCall(
+                        methodIdStr, 
+                        new Object[] { getRequestHwProfile(), (FRC_Command)args[0] },
+                        getDefaultWaitingTimeout()
+                );
+            case EXTRA_RESULT:
+                MethodArgumentsChecker.checkArgumentTypes(args, new Class[] { } );
+                return dispatchCall(
+                        methodIdStr,
+                        new Object[] { getRequestHwProfile() }, 
+                        getDefaultWaitingTimeout()
+                );
+            default:
+                throw new IllegalArgumentException("Unsupported command: " + methodId);
         }
-        
-        Object[] argsWithHwProfile = new Object[ args.length + 1 ];
-        argsWithHwProfile[0] = getRequestHwProfile();
-        System.arraycopy( args, 0, argsWithHwProfile, 1, args.length );
-        return dispatchCall( methodIdStr, argsWithHwProfile);
     }
     
     @Override
