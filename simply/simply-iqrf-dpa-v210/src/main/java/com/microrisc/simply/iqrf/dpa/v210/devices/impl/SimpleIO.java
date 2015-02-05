@@ -16,8 +16,9 @@
 
 package com.microrisc.simply.iqrf.dpa.v210.devices.impl;
 
-import com.microrisc.simply.ConnectorService;
 import com.microrisc.simply.CallRequestProcessingInfoContainer;
+import com.microrisc.simply.ConnectorService;
+import com.microrisc.simply.di_services.MethodArgumentsChecker;
 import com.microrisc.simply.iqrf.dpa.v210.DPA_DeviceObject;
 import com.microrisc.simply.iqrf.dpa.v210.devices.IO;
 import com.microrisc.simply.iqrf.dpa.v210.di_services.method_id_transformers.IOStandardTransformer;
@@ -47,14 +48,35 @@ extends DPA_DeviceObject implements IO {
             return null;
         }
         
-        if ( args == null ) {
-            return dispatchCall( methodIdStr, new Object[] { getRequestHwProfile() } );
+        switch ( (IO.MethodID)methodId ) {
+            case SET_DIRECTION:
+                MethodArgumentsChecker.checkArgumentTypes(
+                        args, new Class[] { IO_DirectionSettings[].class } 
+                );
+                return dispatchCall(
+                        methodIdStr, 
+                        new Object[] { getRequestHwProfile(), (IO_DirectionSettings[])args[0] },
+                        getDefaultWaitingTimeout()
+                );
+            case SET_OUTPUT_STATE:
+                MethodArgumentsChecker.checkArgumentTypes(
+                        args, new Class[] { IO_Command[].class } 
+                );
+                return dispatchCall(
+                        methodIdStr, 
+                        new Object[] { getRequestHwProfile(), (IO_Command[])args[0] }, 
+                        getDefaultWaitingTimeout()
+                );
+            case GET:
+                MethodArgumentsChecker.checkArgumentTypes(args, new Class[] { } );
+                return dispatchCall(
+                        methodIdStr, 
+                        new Object[] { getRequestHwProfile() }, 
+                        getDefaultWaitingTimeout()
+                );
+            default:
+                throw new IllegalArgumentException("Unsupported command: " + methodId);
         }
-        
-        Object[] argsWithHwProfile = new Object[ args.length + 1 ];
-        argsWithHwProfile[0] = getRequestHwProfile();
-        System.arraycopy( args, 0, argsWithHwProfile, 1, args.length );
-        return dispatchCall( methodIdStr, argsWithHwProfile);
     }
     
     @Override

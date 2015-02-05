@@ -16,8 +16,9 @@
 
 package com.microrisc.simply.iqrf.dpa.v210.devices.impl;
 
-import com.microrisc.simply.ConnectorService;
 import com.microrisc.simply.CallRequestProcessingInfoContainer;
+import com.microrisc.simply.ConnectorService;
+import com.microrisc.simply.di_services.MethodArgumentsChecker;
 import com.microrisc.simply.iqrf.dpa.v210.DPA_DeviceObject;
 import com.microrisc.simply.iqrf.dpa.v210.devices.Node;
 import com.microrisc.simply.iqrf.dpa.v210.di_services.method_id_transformers.NodeStandardTransformer;
@@ -25,7 +26,6 @@ import com.microrisc.simply.iqrf.dpa.v210.types.NodeStatusInfo;
 import com.microrisc.simply.iqrf.dpa.v210.types.RemotelyBondedModuleId;
 import com.microrisc.simply.iqrf.types.VoidType;
 import java.util.UUID;
-import org.apache.commons.lang.ArrayUtils;
 
 /**
  * Simple {@code Node} implementation.
@@ -48,14 +48,76 @@ extends DPA_DeviceObject implements Node {
             return null;
         }
         
-        if ( args == null ) {
-            return dispatchCall( methodIdStr, new Object[] { getRequestHwProfile() } );
+        switch ( (Node.MethodID)methodId ) {
+            case READ:
+                MethodArgumentsChecker.checkArgumentTypes(args, new Class[] { } );
+                return dispatchCall(
+                        methodIdStr, 
+                        new Object[] { getRequestHwProfile() },
+                        getDefaultWaitingTimeout()
+                );
+            case REMOVE_BOND:
+                MethodArgumentsChecker.checkArgumentTypes(args, new Class[] { } );
+                return dispatchCall(
+                        methodIdStr, 
+                        new Object[] { getRequestHwProfile() }, 
+                        getDefaultWaitingTimeout()
+                );
+            case ENABLE_REMOTE_BONDING:
+                MethodArgumentsChecker.checkArgumentTypes(
+                        args, new Class[] { Integer.class, Integer.class, short[].class } 
+                );
+                checkBondingMask((Integer)args[0]);
+                checkControl((Integer)args[1]);
+                checkUserData((short[])args[2]);
+                return dispatchCall(
+                        methodIdStr, 
+                        new Object[] { 
+                            getRequestHwProfile(), (Integer)args[0], 
+                            (Integer)args[1], (short[])args[2] 
+                        }, 
+                        getDefaultWaitingTimeout()
+                );
+            case READ_REMOTELY_BONDED_MODULE_ID:
+                MethodArgumentsChecker.checkArgumentTypes(args, new Class[] { } );
+                return dispatchCall(
+                        methodIdStr, 
+                        new Object[] { getRequestHwProfile() }, 
+                        getDefaultWaitingTimeout()
+                );
+            case CLEAR_REMOTELY_BONDED_MODULE_ID:
+                MethodArgumentsChecker.checkArgumentTypes(args, new Class[] { } );
+                return dispatchCall(
+                        methodIdStr, 
+                        new Object[] { getRequestHwProfile() }, 
+                        getDefaultWaitingTimeout()
+                );
+            case REMOVE_BOND_ADDRESS:
+                MethodArgumentsChecker.checkArgumentTypes(args, new Class[] { } );
+                return dispatchCall(
+                        methodIdStr, 
+                        new Object[] { getRequestHwProfile() }, 
+                        getDefaultWaitingTimeout()
+                );
+            case BACKUP:
+                MethodArgumentsChecker.checkArgumentTypes(args, new Class[] { Integer.class } );
+                checkIndex((Integer)args[0]);
+                return dispatchCall(
+                        methodIdStr, 
+                        new Object[] { getRequestHwProfile(), (Integer)args[0] }, 
+                        getDefaultWaitingTimeout()
+                );
+            case RESTORE:
+                MethodArgumentsChecker.checkArgumentTypes(args, new Class[] { short[].class } );
+                checkNetworkData((short[])args[0]);
+                return dispatchCall(
+                        methodIdStr, 
+                        new Object[] { getRequestHwProfile(), (short[])args[0] }, 
+                        getDefaultWaitingTimeout()
+                );
+            default:
+                throw new IllegalArgumentException("Unsupported command: " + methodId);
         }
-        
-        Object[] argsWithHwProfile = new Object[ args.length + 1 ];
-        argsWithHwProfile[0] = getRequestHwProfile();
-        System.arraycopy( args, 0, argsWithHwProfile, 1, args.length );
-        return dispatchCall( methodIdStr, argsWithHwProfile);
     }
     
     @Override

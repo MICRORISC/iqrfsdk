@@ -16,8 +16,9 @@
 
 package com.microrisc.simply.iqrf.dpa.v210.devices.impl;
 
-import com.microrisc.simply.ConnectorService;
 import com.microrisc.simply.CallRequestProcessingInfoContainer;
+import com.microrisc.simply.ConnectorService;
+import com.microrisc.simply.di_services.MethodArgumentsChecker;
 import com.microrisc.simply.iqrf.dpa.v210.DPA_DeviceObject;
 import com.microrisc.simply.iqrf.dpa.v210.devices.Coordinator;
 import com.microrisc.simply.iqrf.dpa.v210.di_services.method_id_transformers.CoordinatorStandardTransformer;
@@ -48,37 +49,6 @@ extends DPA_DeviceObject implements Coordinator {
         super(networkId, nodeId, connector, resultsContainer);
     }
     
-    // checks specified arguments of a called method
-    private void checkArgumentTypes(Object[] args, Class[] argTypes) {
-        if ( args == null || args.length == 0 ) {
-            if ( argTypes.length == 0 ) {
-                return;
-            } else {
-                throw new IllegalArgumentException(
-                        "Arguments number mismatch. "
-                        + "Expected: " + argTypes.length +  ", got: 0" 
-                );
-            }
-        }
-        
-        if ( args.length != argTypes.length ) {
-            throw new IllegalArgumentException(
-                    "Arguments number mismatch. "
-                    + "Expected: " + argTypes.length + ", got: " + args.length
-            );
-        }
-        
-        for ( int argId = 0; argId < args.length; argId++ ) {
-            if ( !(argTypes[argId].isAssignableFrom(args[argId].getClass())) ) {
-                throw new IllegalArgumentException(
-                    "Type mismatch by the " + argId + ". argument."
-                    + "Expected: " + argTypes[argId].getClass().getName()
-                    + ", got: " + args[argId].getClass()
-                );
-            }
-        }
-    }
-    
     
     @Override
     public UUID call(Object methodId, Object[] args) {
@@ -89,119 +59,141 @@ extends DPA_DeviceObject implements Coordinator {
         
         switch ( (Coordinator.MethodID)methodId ) {
             case GET_ADDRESSING_INFO:
-                checkArgumentTypes(args, new Class[] {} );
+                MethodArgumentsChecker.checkArgumentTypes(args, new Class[] {} );
                 return dispatchCall(
-                    methodIdStr, new Object[] { getRequestHwProfile() }, getDefaultWaitingTimeout()
+                        methodIdStr, 
+                        new Object[] { getRequestHwProfile() }, 
+                        getDefaultWaitingTimeout()
                 );
             case GET_DISCOVERED_NODES:
-                checkArgumentTypes(args, new Class[] {} );
+                MethodArgumentsChecker.checkArgumentTypes(args, new Class[] {} );
                 return dispatchCall(
-                    methodIdStr, new Object[] { getRequestHwProfile() }, getDefaultWaitingTimeout()
+                        methodIdStr, 
+                        new Object[] { getRequestHwProfile() }, 
+                        getDefaultWaitingTimeout()
                 );
             case GET_BONDED_NODES:
-                checkArgumentTypes(args, new Class[] {} );
+                MethodArgumentsChecker.checkArgumentTypes(args, new Class[] {} );
                 return dispatchCall(
-                    methodIdStr, new Object[] { getRequestHwProfile() }, getDefaultWaitingTimeout()
+                        methodIdStr, 
+                        new Object[] { getRequestHwProfile() }, 
+                        getDefaultWaitingTimeout()
                 );
             case CLEAR_ALL_BONDS:
-                checkArgumentTypes(args, new Class[] {} );
+                MethodArgumentsChecker.checkArgumentTypes(args, new Class[] {} );
                 return dispatchCall(
-                    methodIdStr, new Object[] { getRequestHwProfile() }, getDefaultWaitingTimeout()
+                        methodIdStr, 
+                        new Object[] { getRequestHwProfile() }, 
+                        getDefaultWaitingTimeout()
                 );
             case BOND_NODE:
-                checkArgumentTypes(args, new Class[] { Integer.class, Integer.class } );
+                MethodArgumentsChecker.checkArgumentTypes(args, new Class[] { Integer.class, Integer.class } );
                 checkNodeAddress((Integer)args[0]);
                 checkBondingMask((Integer)args[1]);
                 return dispatchCall(
-                    methodIdStr, new Object[] { getRequestHwProfile(), args[0], args[1] }, 
+                        methodIdStr, 
+                        new Object[] { getRequestHwProfile(), args[0], args[1] }, 
                         getDefaultWaitingTimeout()
                 );
             case REMOVE_BONDED_NODE:
-                checkArgumentTypes(args, new Class[] { Integer.class } );
+                MethodArgumentsChecker.checkArgumentTypes(args, new Class[] { Integer.class } );
                 checkNodeAddress((Integer)args[0]);
                 return dispatchCall(
-                    methodIdStr, new Object[] { getRequestHwProfile(), args[0] }, 
+                        methodIdStr, 
+                        new Object[] { getRequestHwProfile(), args[0] }, 
                         getDefaultWaitingTimeout()
                 );
             case REBOND_NODE:
-                checkArgumentTypes(args, new Class[] { Integer.class } );
+                MethodArgumentsChecker.checkArgumentTypes(args, new Class[] { Integer.class } );
                 checkNodeAddress((Integer)args[0]);
                 return dispatchCall(
-                    methodIdStr, new Object[] { getRequestHwProfile(), args[0] }, 
+                        methodIdStr, 
+                        new Object[] { getRequestHwProfile(), args[0] }, 
                         getDefaultWaitingTimeout()
                 );
             case RUN_DISCOVERY:
-                checkArgumentTypes(args, new Class[] { DiscoveryParams.class } );
+                MethodArgumentsChecker.checkArgumentTypes(args, new Class[] { DiscoveryParams.class } );
                 return dispatchCall(
-                    methodIdStr, new Object[] { getRequestHwProfile(), args[0] }, 
+                        methodIdStr, 
+                        new Object[] { getRequestHwProfile(), args[0] }, 
                         getDefaultWaitingTimeout()
                 );
             case SET_DPA_PARAM:
-                checkArgumentTypes(args, new Class[] { DPA_Parameter.class } );
+                MethodArgumentsChecker.checkArgumentTypes(args, new Class[] { DPA_Parameter.class } );
                 return dispatchCall(
-                    methodIdStr, new Object[] { getRequestHwProfile(), args[0] }, 
+                        methodIdStr, 
+                        new Object[] { getRequestHwProfile(), args[0] }, 
                         getDefaultWaitingTimeout()
                 );
             case SET_HOPS:
-                checkArgumentTypes(args, new Class[] { RoutingHops.class } );
+                MethodArgumentsChecker.checkArgumentTypes(args, new Class[] { RoutingHops.class } );
                 return dispatchCall(
-                    methodIdStr, new Object[] { getRequestHwProfile(), args[0] }, 
+                        methodIdStr, 
+                        new Object[] { getRequestHwProfile(), args[0] }, 
                         getDefaultWaitingTimeout()
                 );
             case DISCOVERY_DATA:
-                checkArgumentTypes(args, new Class[] { Integer.class } );
+                MethodArgumentsChecker.checkArgumentTypes(args, new Class[] { Integer.class } );
                 checkNodeAddress((Integer)args[0]);
                 return dispatchCall(
-                    methodIdStr, new Object[] { getRequestHwProfile(), args[0] }, 
+                        methodIdStr, 
+                        new Object[] { getRequestHwProfile(), args[0] }, 
                         getDefaultWaitingTimeout()
                 );
             case BACKUP:
-                checkArgumentTypes(args, new Class[] { Integer.class } );
+                MethodArgumentsChecker.checkArgumentTypes(args, new Class[] { Integer.class } );
                 checkIndex((Integer)args[0]);
                 return dispatchCall(
-                    methodIdStr, new Object[] { getRequestHwProfile(), args[0] }, 
+                        methodIdStr, 
+                        new Object[] { getRequestHwProfile(), args[0] }, 
                         getDefaultWaitingTimeout()
                 );
             case RESTORE:
-                checkArgumentTypes(args, new Class[] { short[].class } );
+                MethodArgumentsChecker.checkArgumentTypes(args, new Class[] { short[].class } );
                 checkNetworkData((short[]) args[0]);
                 return dispatchCall(
-                    methodIdStr, new Object[] { getRequestHwProfile(), args[0] }, 
+                        methodIdStr, 
+                        new Object[] { getRequestHwProfile(), args[0] }, 
                         getDefaultWaitingTimeout()
                 );
             case AUTHORIZE_BOND:
-                checkArgumentTypes(args, new Class[] { Integer.class, short[].class } );
+                MethodArgumentsChecker.checkArgumentTypes(args, new Class[] { Integer.class, short[].class } );
                 checkNodeAddress((Integer)args[0]);
                 checkModuleId((short[])args[1]);
                 return dispatchCall(
-                    methodIdStr, new Object[] { getRequestHwProfile(), args[0], args[1] }, 
+                        methodIdStr, 
+                        new Object[] { getRequestHwProfile(), args[0], args[1] }, 
                         getDefaultWaitingTimeout()
                 );
             case BRIDGE:
-                checkArgumentTypes(args, new Class[] { SubDPARequest.class } );
+                MethodArgumentsChecker.checkArgumentTypes(args, new Class[] { SubDPARequest.class } );
                 return dispatchCall(
-                    methodIdStr, new Object[] { getRequestHwProfile(), args[0] }, 
+                        methodIdStr, 
+                        new Object[] { getRequestHwProfile(), args[0] }, 
                         getDefaultWaitingTimeout()
                 );
             case ENABLE_REMOTE_BONDING:
-                checkArgumentTypes(args, new Class[] { Integer.class, Integer.class, short[].class } );
+                MethodArgumentsChecker.checkArgumentTypes(args, new Class[] { Integer.class, Integer.class, short[].class } );
                 checkBondingMask((Integer)args[0]);
                 checkControl((Integer)args[1]);
                 checkUserData((short[]) args[2]);
                 return dispatchCall(
-                    methodIdStr, new Object[] { getRequestHwProfile(), args[0], args[1], args[2] }, 
-                    getDefaultWaitingTimeout()
+                        methodIdStr, 
+                        new Object[] { getRequestHwProfile(), args[0], args[1], args[2] }, 
+                        getDefaultWaitingTimeout()
                 );
             case READ_REMOTELY_BONDED_MODULE_ID:
-                checkArgumentTypes(args, new Class[] {} );
+                MethodArgumentsChecker.checkArgumentTypes(args, new Class[] {} );
                 return dispatchCall(
-                    methodIdStr, new Object[] { getRequestHwProfile() }, 
+                        methodIdStr, 
+                        new Object[] { getRequestHwProfile() }, 
                         getDefaultWaitingTimeout()
                 );
             case CLEAR_REMOTELY_BONDED_MODULE_ID:
-                checkArgumentTypes(args, new Class[] {} );
+                MethodArgumentsChecker.checkArgumentTypes(args, new Class[] {} );
                 return dispatchCall(
-                    methodIdStr, new Object[] { getRequestHwProfile() }, 
+                        methodIdStr, 
+                        new Object[] { getRequestHwProfile() }, 
                         getDefaultWaitingTimeout()
                 );
             default:
