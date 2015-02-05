@@ -111,7 +111,10 @@ public class BaseDeviceObject implements DeviceObject {
         strBuilder.append(this.getClass().getSimpleName() + " { " + NEW_LINE);
         strBuilder.append(" Network ID: " + networkId + NEW_LINE);
         strBuilder.append(" Node ID: " + nodeId + NEW_LINE);
-        strBuilder.append(" Implemented device interface: " + implementedDeviceInterface + NEW_LINE);
+        strBuilder.append(
+                " Implemented device interface: " 
+                + implementedDeviceInterface.getCanonicalName() + NEW_LINE
+        );
         strBuilder.append("}");
         
         return strBuilder.toString();

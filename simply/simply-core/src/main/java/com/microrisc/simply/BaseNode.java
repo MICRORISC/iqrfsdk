@@ -88,4 +88,18 @@ public class BaseNode implements Node {
         hash = 67 * hash + (this.networkId != null ? this.networkId.hashCode() : 0);
         return hash;
     }
+    
+    @Override
+    public String toString() {
+        StringBuilder strBuilder = new StringBuilder();
+        String NEW_LINE = System.getProperty("line.separator");
+        
+        strBuilder.append(this.getClass().getSimpleName() + " { " + NEW_LINE);
+        strBuilder.append(" ID: " + id + NEW_LINE);
+        strBuilder.append(" Network ID: " + networkId + NEW_LINE);
+        strBuilder.append(" Devices map: " + devicesMap + NEW_LINE);
+        strBuilder.append("}");
+        
+        return strBuilder.toString();
+    }
 }
