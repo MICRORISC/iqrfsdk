@@ -70,6 +70,7 @@ public final class AutoNetwork {
                     .temporaryAddressTimeout(100000)
                     .autoUseFrc(true)
                     .p2pPrebonderMethodIdTransformer(P2PPrebonderStandardTransformer.getInstance())
+                    .numberOfNodesToBond(5)
                 .build();
 
         // start the algorithm

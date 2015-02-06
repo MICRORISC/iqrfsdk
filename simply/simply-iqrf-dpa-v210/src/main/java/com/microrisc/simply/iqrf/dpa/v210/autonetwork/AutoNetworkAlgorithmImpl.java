@@ -100,6 +100,12 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
      */
     public static final boolean AUTOUSE_FRC_DEFAULT = true;
     
+    /** 
+     * Denotes, that the number of nodes to bond will be maximal - according to
+     * the IQRF DPA network size limitations.  
+     */
+    public static final int NODES_NUMBER_TO_BOND_MAX = -1;
+    
     
     // TX power for discovery process
     private final int discoveryTxPower;
@@ -117,6 +123,9 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
     
     // method ID transformer for P2P Prebonder
     private final MethodIdTransformer p2pPrebonderMethodIdTransformer;
+    
+    // number of nodes to bond
+    private int numberOfNodesToBond;
     
     
     // checkers
@@ -165,6 +174,21 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
         return temporaryAddressTimeout;
     }
     
+    private static int checkNumberOfNodesToBond(int numberOfNodesToBond) {
+        if ( numberOfNodesToBond != NODES_NUMBER_TO_BOND_MAX 
+                && 
+            !(numberOfNodesToBond >= 0 && numberOfNodesToBond <= DPA_ProtocolProperties.NADR_Properties.IQMESH_NODE_ADDRESS_MAX)  
+        ) {
+            throw new IllegalArgumentException(
+                "Number of nodes to bond must be in the interval of "
+                + "[" + 0 + ".." +  DPA_ProtocolProperties.NADR_Properties.IQMESH_NODE_ADDRESS_MAX + "]"
+                + " or equal to " + NODES_NUMBER_TO_BOND_MAX
+            );
+        }
+        return numberOfNodesToBond;
+    }
+    
+    
     /**
      * Builder for {@code AutoNetworkAlgorithmImpl} class.
      */
@@ -181,6 +205,7 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
         private long temporaryAddressTimeout = TEMPORARY_ADDRESS_TIMEOUT_DEFAULT;
         private boolean autoUseFrc = AUTOUSE_FRC_DEFAULT;
         private MethodIdTransformer p2pPrebonderMethodIdTransformer = null;
+        private int numberOfNodesToBond = NODES_NUMBER_TO_BOND_MAX;
         
         
         public Builder(Network network, BroadcastServices broadcastServices) {
@@ -220,6 +245,11 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
         
         public Builder p2pPrebonderMethodIdTransformer(MethodIdTransformer val) {
             this.p2pPrebonderMethodIdTransformer = val;
+            return this;
+        }
+        
+        public Builder numberOfNodesToBond(int val) {
+            this.numberOfNodesToBond = val;
             return this;
         }
         
@@ -884,6 +914,14 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
         int nextAddr = DPA_ProtocolProperties.NADR_Properties.IQMESH_NODE_ADDRESS_MAX;
 
         for ( RemotelyBondedModuleId moduleId : prebondedMIDs ) {
+            if ( newBondedNodesCount == numberOfNodesToBond ) {
+                logger.info(
+                    "Required number of new bonded nodes reached. Authorization"
+                    + " prematurely finished. "
+                );
+                break;
+            }
+            
             for ( int authorizeRetry = authorizeRetries; authorizeRetry != 0; authorizeRetry-- ) {
                 if ( authorizeRetry == authorizeRetries ) {
                     nextAddr = nextFreeAddr(bondedNodes, nextAddr);
@@ -1037,6 +1075,28 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
         logger.debug("addNewNodesWithAllPeripherals - end:");
     }
     
+    // number of nodes already bonded to the network from the start of the algorithm
+    private int newBondedNodesCount = 0;
+    
+    // indicates, wheather there is currently bonded the user specified number of nodes
+    // in the network
+    private boolean isBondedRequiredNumberOfNodes() {
+        if ( numberOfNodesToBond == NODES_NUMBER_TO_BOND_MAX ) {
+            if ( bondedNodes.getNodesNumber() 
+                    == DPA_ProtocolProperties.NADR_Properties.IQMESH_NODE_ADDRESS_MAX 
+            ) {
+                return true;
+            }
+            return false;
+        }
+        
+        if ( numberOfNodesToBond == newBondedNodesCount ) {
+            return true;
+        }
+        return false;
+    }
+    
+    
     // performs the algorithm
     private void runAlgorithm() {
         logger.debug("runAlgorithm - start: ");
@@ -1128,10 +1188,19 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
         
         logger.info("Automatic network construction in progress");
         
+        // adjusting number of nodes to bond with respect to the number of nodes
+        // currently bonded to the network
+        if ( ( bondedNodes.getNodesNumber() + numberOfNodesToBond ) 
+                >  
+            DPA_ProtocolProperties.NADR_Properties.IQMESH_NODE_ADDRESS_MAX  
+        ) {
+            numberOfNodesToBond = DPA_ProtocolProperties.NADR_Properties.IQMESH_NODE_ADDRESS_MAX
+                    - bondedNodes.getNodesNumber();
+        }
+        
         int round = 1;
-        for ( ; 
-                bondedNodes.getNodesNumber() != DPA_ProtocolProperties.NADR_Properties.IQMESH_NODE_ADDRESS_MAX; 
-                round++
+        while ( 
+            !isBondedRequiredNumberOfNodes()
         ) {
             if ( Thread.interrupted() ) {
                 setState(State.CANCELLED);
@@ -1165,6 +1234,7 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
 
                 // no new addresses authorized - continue with next iteration
                 if ( newAddrs.isEmpty() ) {
+                    round++;
                     continue;
                 }
             
@@ -1178,6 +1248,7 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
                 
                 // adding new bonded nodes into network
                 addNewNodesWithAllPeripherals(newAddrs);
+                newBondedNodesCount += newAddrs.size();
             } catch ( InterruptedException e ) {
                 setState(State.CANCELLED);
                 logger.warn("Algorithm cancelled");
@@ -1189,6 +1260,7 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
                 logger.debug("runAlgorithm - end");
                 return;
             }
+            round++;
         }
         
         setState(State.FINISHED_OK);
@@ -1214,6 +1286,7 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
         this.temporaryAddressTimeout = checkTemporaryAddressTimeout(builder.temporaryAddressTimeout);
         this.autoUseFrc = builder.autoUseFrc;
         this.p2pPrebonderMethodIdTransformer = builder.p2pPrebonderMethodIdTransformer;
+        this.numberOfNodesToBond = checkNumberOfNodesToBond(builder.numberOfNodesToBond);
         
         this.algoThread = new AlgoThread();
     }
