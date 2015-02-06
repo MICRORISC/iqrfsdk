@@ -15,6 +15,17 @@
             </encoder>
     </appender>
 	
+    <appender name="AUTONETWORK_ALGO_STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <!-- encoders are assigned the type ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
+        <Target>System.out</Target>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>    
+        <encoder>
+            <pattern>%msg%n</pattern>
+        </encoder>
+    </appender>
+	
 	
     <!-- core package -->
     <!-- Simply root -->
@@ -161,9 +172,6 @@
             <appender-ref ref="FILE" />
     </logger>
     
-    <logger name="com.microrisc.simply.iqrf.dpa.v210.autonetwork.AutoNetworkNetworkAlgorithmImpl" level="INHERITED">
-            <appender-ref ref="FILE" />
-    </logger>
 
     <!-- iqrf.dpa.protocol package -->
     <logger name="com.microrisc.simply.iqrf.dpa.v210.protocol.DPA_MessageConvertor" level="INHERITED">
@@ -182,6 +190,12 @@
             <appender-ref ref="FILE" />
     </logger>
     
+    
+    <!-- iqrf.dpa.v210.autonetwork package -->
+    <logger name="com.microrisc.simply.iqrf.dpa.v210.autonetwork.AutoNetworkAlgorithmImpl" level="INHERITED">
+            <appender-ref ref="FILE" />
+            <appender-ref ref="AUTONETWORK_ALGO_STDOUT" />
+    </logger>
     
     <!-- iqrf.dpa.v210.types package -->
     <logger name="com.microrisc.simply.iqrf.dpa.v210.types.FRC_ResultParser" level="INHERITED">
