@@ -173,6 +173,20 @@ public final class AutoNetworkDemo {
                     .isRequired(false)
                     .hasArg()
                     .withDescription(
+                            "Number of nodes to bond\n"
+                            + "Set the " + AutoNetworkAlgorithmImpl.NODES_NUMBER_TO_BOND_MAX + " value "
+                            + " for maximal number of nodes to bond according to "
+                            + " the IQRF DPA networks limitations.\n"
+                            + "Default value: " + AutoNetworkAlgorithmImpl.NODES_NUMBER_TO_BOND_MAX
+                    )
+                    .create("nodesNumberToBond")
+        );
+        
+        options.addOption(
+                OptionBuilder
+                    .isRequired(false)
+                    .hasArg()
+                    .withDescription(
                             "Maximal running time of the algorithm [in ms]."
                             + "Set the " + MAX_RUNNING_TIME_UNLIMITED + " value "
                             + "for not to limit the maximal running time.\n"
@@ -318,6 +332,11 @@ public final class AutoNetworkDemo {
             methodIdTransformer = getMethodIdTransformer(cmdLine);
         }
         
+        int numberOfNodesToBond = AutoNetworkAlgorithmImpl.NODES_NUMBER_TO_BOND_MAX;
+        if ( cmdLine.hasOption("nodesNumberToBond") ) {
+            numberOfNodesToBond = Integer.parseInt(cmdLine.getOptionValue("nodesNumberToBond"));
+        }
+        
         // get reference to algorithm object with reference to a network which
         // the algorithm will be running on
         // it is possible to set algorithm parameters or to leave theirs default values 
@@ -329,6 +348,7 @@ public final class AutoNetworkDemo {
                 .temporaryAddressTimeout(temporaryAddressTimeout)
                 .autoUseFrc(autoUseFrc)
                 .p2pPrebonderMethodIdTransformer(methodIdTransformer)
+                .numberOfNodesToBond(numberOfNodesToBond)
         .build();
     }
     
