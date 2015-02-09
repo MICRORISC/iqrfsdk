@@ -867,7 +867,10 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
             return prebondedMIDs;
         }
         
-        logger.info("Running FRC to disable and check for prebonding");
+        logger.info(
+            "Running FRC to disable and check for prebonding ( bit 0 is 1 when "
+            + "node is accessible; bit1 is 1 if the node provided pre-bonding to a new node )"
+        );
         
         Map<String, FRC_Prebonding.Result> prebondDisablingResult = disablePrebonding(coordNode);
                     
@@ -879,7 +882,7 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
         for ( Map.Entry<String, FRC_Prebonding.Result> dataEntry : sortedPrebondDisablingResult.entrySet()
         ) {
             logger.info(
-                "Node: {}, bit0: {}, bit.1: {}", 
+                "Node: {}, bit 0: {}, bit 1: {}", 
                 dataEntry.getKey(), dataEntry.getValue().getBit0(), dataEntry.getValue().getBit1()
             );
         }
