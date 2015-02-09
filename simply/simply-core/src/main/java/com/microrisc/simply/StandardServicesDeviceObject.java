@@ -124,21 +124,24 @@ implements StandardServices
         // setting of processing timeout
         connector.setCallRequestMaximalProcessingTime(callId, timeout);
         
-        long startTime = System.currentTimeMillis();
         synchronized( results ) {
             while ( results.get(callId) == null ) {
+                long startTime, timeElapsed;
                 try {
+                    startTime = System.nanoTime();
                     results.wait( timeout );
+                    timeElapsed = System.nanoTime() - startTime;
                 } catch ( InterruptedException e ) {
                     logger.warn("{}Get call result - interrupted", logPrefix);
                     break;
                 }
                 
-                long timeElapsed = System.currentTimeMillis() - startTime;
                 if ( timeElapsed >= timeout ) {
                     logger.info("{}Get call result - time elapsed", logPrefix);
                     break;
                 }
+                
+                timeout -= timeElapsed;
             }
         }
         

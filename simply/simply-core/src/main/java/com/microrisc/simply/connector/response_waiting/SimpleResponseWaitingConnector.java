@@ -499,7 +499,7 @@ extends AbstractConnector implements ResponseWaitingConnector {
                 synchronized ( syncMsgfromNetwork ) {
                     // while cycle is needed because other responses may
                     // arrive to connector
-                    long totalWaitingTime = 0;
+                    long timeToWait = lastRequestToProc.maxProcTime;
                     respArrivedForLastRequest = responseArrivedForLastRequest();
                     
                     while ( !respArrivedForLastRequest && !isCancelledLastRequest ) {
@@ -507,13 +507,15 @@ extends AbstractConnector implements ResponseWaitingConnector {
                             if ( lastRequestToProc.maxProcTime == UNLIMITED_MAXIMAL_PROCESSING_TIME ) {
                                 syncMsgfromNetwork.wait();
                             } else {
-                                long beforeWaitTime = System.currentTimeMillis();
-                                syncMsgfromNetwork.wait( lastRequestToProc.maxProcTime );
-                                totalWaitingTime += System.currentTimeMillis() - beforeWaitTime;
+                                long startTime = System.nanoTime();
+                                syncMsgfromNetwork.wait( timeToWait );
+                                long timeElapsed = System.nanoTime() - startTime;
 
-                                if ( totalWaitingTime >= lastRequestToProc.maxProcTime ) {
+                                if ( timeElapsed >= timeToWait ) {
                                     break;
                                 }
+                                
+                                timeToWait -= timeElapsed; 
                             }
                             respArrivedForLastRequest = responseArrivedForLastRequest();
                         } catch ( InterruptedException e ) {

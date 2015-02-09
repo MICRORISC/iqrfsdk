@@ -600,7 +600,7 @@ implements
                 synchronized( syncMsgfromProtoLayer ) {
                     // while-cycle is needed because other responses may
                     // arrive to the connector
-                    long totalWaitingTime = 0;
+                    long timeToWait = lastRequestToProc.maxProcTime;
                     respArrivedForLastRequest = responseArrivedForLastRequest();
                     
                     while ( !respArrivedForLastRequest && !isCancelledLastRequest ) {
@@ -608,13 +608,15 @@ implements
                             if ( lastRequestToProc.maxProcTime == UNLIMITED_MAXIMAL_PROCESSING_TIME ) {
                                 syncMsgfromProtoLayer.wait();
                             } else {
-                                long beforeWaitTime = System.currentTimeMillis();
-                                syncMsgfromProtoLayer.wait( lastRequestToProc.maxProcTime );
-                                totalWaitingTime += System.currentTimeMillis() - beforeWaitTime;
+                                long startTime = System.nanoTime();
+                                syncMsgfromProtoLayer.wait( timeToWait );
+                                long timeElapsed = System.nanoTime() - startTime;
 
-                                if ( totalWaitingTime >= lastRequestToProc.maxProcTime ) {
+                                if ( timeElapsed >= timeToWait ) {
                                     break;
                                 }
+                                
+                                timeToWait -= timeElapsed; 
                             }
                             respArrivedForLastRequest = responseArrivedForLastRequest();
                         } catch ( InterruptedException e ) {
