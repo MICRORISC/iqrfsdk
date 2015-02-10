@@ -37,6 +37,31 @@ import java.util.UUID;
 public final class SimpleOS 
 extends DPA_DeviceObject implements OS {
     
+    private static final int USER_ADDR_LOWER_BOUND = 0x00;
+    private static final int USER_ADDR_UPPER_BOUND = 0xFFFF;
+    
+    private static int checkUserAddress(int userAddress) {
+        if ( (userAddress < USER_ADDR_LOWER_BOUND) || (userAddress > USER_ADDR_UPPER_BOUND) ) {
+            throw new IllegalArgumentException("User address out of bounds");
+        }
+        return userAddress;
+    }
+    
+    // MID key length
+    private static final int MID_KEY_LENGTH = 24; 
+    
+    private static void checkKey(short[] key) {
+        if ( key == null ) {
+            throw new IllegalArgumentException("Key cannot be null");
+        }
+        if ( key.length != MID_KEY_LENGTH ) {
+            throw new IllegalArgumentException(
+                    "Invalid key length. Expected: " + MID_KEY_LENGTH
+            );
+        }
+    }
+    
+    
     public SimpleOS(String networkId, String nodeId, ConnectorService connector, 
             CallRequestProcessingInfoContainer resultsContainer
     ) {
@@ -120,6 +145,72 @@ extends DPA_DeviceObject implements OS {
     }
     
     
+    
+    // ASYNCHRONOUS METHODS IMPLEMENTATIONS
+    
+    @Override
+    public UUID async_read() {
+        return dispatchCall(
+                "1", new Object[] { getRequestHwProfile() }, getDefaultWaitingTimeout() 
+        );
+    }
+    
+    @Override
+    public UUID async_reset() {
+        return dispatchCall(
+                "2", new Object[] { getRequestHwProfile() }, getDefaultWaitingTimeout() 
+        );
+    }
+    
+    @Override
+    public UUID async_readHWPConfiguration() {
+        return dispatchCall(
+                "3", new Object[] { getRequestHwProfile() }, getDefaultWaitingTimeout() 
+        );
+    }
+    
+    @Override
+    public UUID async_runRFPGM() {
+        return dispatchCall(
+                "4", new Object[] { getRequestHwProfile() }, getDefaultWaitingTimeout() 
+        );
+    }
+    
+    @Override
+    public UUID async_sleep(SleepInfo sleepInfo) {
+        return dispatchCall(
+                "5", new Object[] { getRequestHwProfile(), sleepInfo }, 
+                getDefaultWaitingTimeout() 
+        );
+    }
+    
+    @Override
+    public UUID async_batch(DPA_Request[] requests) {
+        return dispatchCall(
+                "6", new Object[] { getRequestHwProfile(), requests }, getDefaultWaitingTimeout() 
+        );
+    }
+    
+    @Override
+    public UUID async_setUSEC(int value) {
+        checkUserAddress(value);
+        return dispatchCall(
+                "7", new Object[] { getRequestHwProfile(), value }, getDefaultWaitingTimeout() 
+        );
+    }
+    
+    @Override
+    public UUID async_setMID(short[] key) {
+        checkKey(key);
+        return dispatchCall(
+                "8", new Object[] { getRequestHwProfile(), key }, getDefaultWaitingTimeout() 
+        );
+    }
+    
+    
+    
+    // SYNCHRONOUS WRAPPERS IMPLEMENTATIONS
+    
     @Override
     public OsInfo read() {
         UUID uid = dispatchCall(
@@ -155,7 +246,9 @@ extends DPA_DeviceObject implements OS {
  
     @Override
     public VoidType runRFPGM() {
-        UUID uid = dispatchCall("4", new Object[] { getRequestHwProfile() }, getDefaultWaitingTimeout() );
+        UUID uid = dispatchCall(
+                "4", new Object[] { getRequestHwProfile() }, getDefaultWaitingTimeout() 
+        );
         if ( uid == null ) {
             return null;
         }
@@ -164,7 +257,8 @@ extends DPA_DeviceObject implements OS {
 
     @Override
     public VoidType sleep(SleepInfo sleepInfo) {
-        UUID uid = dispatchCall("5", new Object[] { getRequestHwProfile(), sleepInfo }, 
+        UUID uid = dispatchCall(
+                "5", new Object[] { getRequestHwProfile(), sleepInfo }, 
                 getDefaultWaitingTimeout() 
         );
         if ( uid == null ) {
@@ -184,21 +278,11 @@ extends DPA_DeviceObject implements OS {
         return getCallResult(uid, VoidType.class, getDefaultWaitingTimeout());
     }
     
-    private static final int USER_ADDR_LOWER_BOUND = 0x00;
-    private static final int USER_ADDR_UPPER_BOUND = 0xFFFF;
-    
-    private static int checkUserAddress(int userAddress) {
-        if ( (userAddress < USER_ADDR_LOWER_BOUND) || (userAddress > USER_ADDR_UPPER_BOUND) ) {
-            throw new IllegalArgumentException("User address out of bounds");
-        }
-        return userAddress;
-    }
-    
     @Override
     public VoidType setUSEC(int value) {
         checkUserAddress(value);
-        UUID uid = dispatchCall("7", new Object[] { getRequestHwProfile(), value }, 
-                getDefaultWaitingTimeout() 
+        UUID uid = dispatchCall(
+                "7", new Object[] { getRequestHwProfile(), value }, getDefaultWaitingTimeout() 
         );
         if ( uid == null ) {
             return null;
@@ -206,25 +290,11 @@ extends DPA_DeviceObject implements OS {
         return getCallResult(uid, VoidType.class, getDefaultWaitingTimeout());
     }
     
-    // MID key length
-    private static final int MID_KEY_LENGTH = 24; 
-    
-    private static void checkKey(short[] key) {
-        if ( key == null ) {
-            throw new IllegalArgumentException("Key cannot be null");
-        }
-        if ( key.length != MID_KEY_LENGTH ) {
-            throw new IllegalArgumentException(
-                    "Invalid key length. Expected: " + MID_KEY_LENGTH
-            );
-        }
-    }
-    
     @Override
     public VoidType setMID(short[] key) {
         checkKey(key);
-        UUID uid = dispatchCall("8", new Object[] { getRequestHwProfile(), key }, 
-                getDefaultWaitingTimeout() 
+        UUID uid = dispatchCall(
+                "8", new Object[] { getRequestHwProfile(), key }, getDefaultWaitingTimeout() 
         );
         if ( uid == null ) {
             return null;

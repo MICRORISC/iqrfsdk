@@ -84,31 +84,40 @@ extends DPA_DeviceObject implements IO {
         return IOStandardTransformer.getInstance().transform(methodId);
     }
     
+    
+    // ASYNCHRONOUS METHODS IMPLEMENTATIONS
+    
     @Override
     public UUID async_setDirection(IO_DirectionSettings[] directionSettings) {
-        return dispatchCall("1", new Object[] { getRequestHwProfile(), directionSettings } );
-    }
-    
-    @Override
-    public VoidType setDirection(IO_DirectionSettings[] directionSettings) {
-        UUID uid = dispatchCall("1", new Object[] { getRequestHwProfile(), directionSettings }, 
+        return dispatchCall(
+                "1", new Object[] { getRequestHwProfile(), directionSettings },
                 getDefaultWaitingTimeout() 
         );
-        if ( uid == null ) {
-            return null;
-        }
-        return getCallResult(uid, VoidType.class, getDefaultWaitingTimeout() );
     }
-    
     
     @Override
     public UUID async_setOutputState(IO_Command[] ioCommands) {
-        return dispatchCall("2", new Object[] { getRequestHwProfile(), ioCommands } );
+        return dispatchCall(
+                "2", new Object[] { getRequestHwProfile(), ioCommands },
+                getDefaultWaitingTimeout() 
+        );
     }
-
+    
     @Override
-    public VoidType setOutputState(IO_Command[] ioCommands) {
-        UUID uid = dispatchCall("2", new Object[] { getRequestHwProfile(), ioCommands }, 
+    public UUID async_get() {
+        return dispatchCall(
+                "3", new Object[] { getRequestHwProfile() }, getDefaultWaitingTimeout()  
+        );
+    }
+    
+    
+    
+    // SYNCHRONOUS WRAPPERS IMPLEMENTATIONS
+    
+    @Override
+    public VoidType setDirection(IO_DirectionSettings[] directionSettings) {
+        UUID uid = dispatchCall(
+                "1", new Object[] { getRequestHwProfile(), directionSettings }, 
                 getDefaultWaitingTimeout() 
         );
         if ( uid == null ) {
@@ -116,16 +125,24 @@ extends DPA_DeviceObject implements IO {
         }
         return getCallResult(uid, VoidType.class, getDefaultWaitingTimeout() );
     }
-
     
     @Override
-    public UUID async_get() {
-        return dispatchCall("3", new Object[] { getRequestHwProfile() } );
+    public VoidType setOutputState(IO_Command[] ioCommands) {
+        UUID uid = dispatchCall(
+                "2", new Object[] { getRequestHwProfile(), ioCommands }, 
+                getDefaultWaitingTimeout() 
+        );
+        if ( uid == null ) {
+            return null;
+        }
+        return getCallResult(uid, VoidType.class, getDefaultWaitingTimeout() );
     }
 
     @Override
     public short[] get() {
-        UUID uid = dispatchCall("3", new Object[] { getRequestHwProfile() }, getDefaultWaitingTimeout() );
+        UUID uid = dispatchCall(
+                "3", new Object[] { getRequestHwProfile() }, getDefaultWaitingTimeout() 
+        );
         if ( uid == null ) {
             return null;
         }

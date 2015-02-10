@@ -32,6 +32,29 @@ import java.util.UUID;
  */
 class SimpleGeneralMemory 
 extends DPA_DeviceObject implements GeneralMemory {
+    private static int checkAddress(int address) {
+        if ( !DataTypesChecker.isByteValue(address) ) {
+            throw new IllegalArgumentException("Address out of bounds.");
+        }
+        return address;
+    }
+    
+    private static int checkDataLenToRead(int dataLen) {
+        if ( !DataTypesChecker.isByteValue(dataLen) ) {
+            throw new IllegalArgumentException("Data length out of bounds.");
+        }
+        return dataLen;
+    }
+    
+    private static void checkDataToWrite(short[] dataToWrite) {
+        if ( dataToWrite == null ) {
+            throw new IllegalArgumentException("Data to write cannot be null.");
+        }
+        if ( dataToWrite.length < 1 ) {
+            throw new IllegalArgumentException("Data to write cannot be empty.");
+        }
+    }
+    
     
     public SimpleGeneralMemory(String networkId, String nodeId, ConnectorService connector, 
             CallRequestProcessingInfoContainer resultsContainer
@@ -81,29 +104,32 @@ extends DPA_DeviceObject implements GeneralMemory {
         return GeneralMemoryStandardTransformer.getInstance().transform(methodId);
     }
     
-    private static int checkAddress(int address) {
-        if (!DataTypesChecker.isByteValue(address)) {
-            throw new IllegalArgumentException("Address out of bounds.");
-        }
-        return address;
-    }
     
-    private static int checkDataLenToRead(int dataLen) {
-        if (!DataTypesChecker.isByteValue(dataLen)) {
-            throw new IllegalArgumentException("Data length out of bounds.");
-        }
-        return dataLen;
-    }
     
+    // ASYNCHRONOUS METHODS IMPLEMENTATIONS
     
     @Override
     public UUID async_read(int address, int length) {
         checkAddress(address);
         checkDataLenToRead(length);
         return dispatchCall(
-                "1", new Object[] { getRequestHwProfile(), address, length }
+                "1", new Object[] { getRequestHwProfile(), address, length },
+                getDefaultWaitingTimeout() 
         );
     }
+    
+    @Override
+    public UUID async_write(int address, short[] data) {
+        checkAddress(address);
+        checkDataToWrite(data);
+        return dispatchCall(
+                "2", new Object[] { getRequestHwProfile(), address, data },
+                getDefaultWaitingTimeout()
+        );
+    }
+    
+    
+    // SYNCHRONOUS WRAPPERS IMPLEMENTATIONS
     
     @Override
     public short[] read(int address, int length) {
@@ -117,24 +143,6 @@ extends DPA_DeviceObject implements GeneralMemory {
             return null;
         }
         return getCallResult(uid, short[].class, getDefaultWaitingTimeout());
-    }
-    
-    private static void checkDataToWrite(short[] dataToWrite) {
-        if ( dataToWrite == null ) {
-            throw new IllegalArgumentException("Data to write cannot be null.");
-        }
-        if ( dataToWrite.length < 1 ) {
-            throw new IllegalArgumentException("Data to write cannot be empty.");
-        }
-    }
-    
-    @Override
-    public UUID async_write(int address, short[] data) {
-        checkAddress(address);
-        checkDataToWrite(data);
-        return dispatchCall(
-                "2", new Object[] { getRequestHwProfile(), address, data }
-        );
     }
     
     @Override

@@ -43,12 +43,84 @@ import java.util.UUID;
 public final class SimpleCoordinator 
 extends DPA_DeviceObject implements Coordinator {
    
+    /** Network data length. */
+    public static final int NETWORK_DATA_LENGTH = 18;
+    
+    /** Network data length. */
+    public static final int MODULE_ID_LENGTH = 2;
+    
+    /** User data length. */
+    public static final int USER_DATA_LENGTH = 2;
+    
+    
+    private static int checkNodeAddress(int nodeAddress) {
+        if ( !DataTypesChecker.isByteValue(nodeAddress) ) {
+            throw new IllegalArgumentException("Node address out of bounds");
+        }
+        return nodeAddress;
+    }
+    
+    private static int checkBondingMask(int bondingMask) {
+        if ( !DataTypesChecker.isByteValue(bondingMask) ) {
+            throw new IllegalArgumentException("Bonding mask out of bounds");
+        }
+        return bondingMask;
+    }
+    
+    private static int checkControl(int control) {
+        if ( !DataTypesChecker.isByteValue(control) ) {
+            throw new IllegalArgumentException("Control out of bounds");
+        }
+        return control;
+    }
+    
+    private static int checkIndex(int index) {
+        if ( !DataTypesChecker.isByteValue(index) ) {
+            throw new IllegalArgumentException("Index out of bounds");
+        }
+        return index;
+    }
+    
+    private static void checkNetworkData(short[] networkData) {
+        if ( networkData == null ) {
+            throw new IllegalArgumentException("Network data cannot be null");
+        }
+        if ( networkData.length != NETWORK_DATA_LENGTH ) {
+            throw new IllegalArgumentException(
+                    "Invalid network data lentgh. Expected: " + NETWORK_DATA_LENGTH
+            );
+        }
+    }
+    
+    private static void checkModuleId(short[] moduleId) {
+        if ( moduleId == null ) {
+            throw new IllegalArgumentException("Module ID cannot be null");
+        }
+        if ( moduleId.length != MODULE_ID_LENGTH ) {
+            throw new IllegalArgumentException(
+                    "Invalid module ID. Expected: " + MODULE_ID_LENGTH
+            );
+        }
+    }
+    
+    private static void checkUserData(short[] usedData) {
+        if ( usedData == null ) {
+            throw new IllegalArgumentException("User data cannot be null");
+        }
+        if ( usedData.length != USER_DATA_LENGTH ) {
+            throw new IllegalArgumentException(
+                    "Invalid user data length. Expected: " + USER_DATA_LENGTH
+            );
+        }
+    }
+    
+    
+    
     public SimpleCoordinator(String networkId, String nodeId, ConnectorService connector, 
             CallRequestProcessingInfoContainer resultsContainer
     ) {
         super(networkId, nodeId, connector, resultsContainer);
     }
-    
     
     @Override
     public UUID call(Object methodId, Object[] args) {
@@ -206,9 +278,160 @@ extends DPA_DeviceObject implements Coordinator {
         return CoordinatorStandardTransformer.getInstance().transform(methodId);
     }
     
+    
+    
+    // ASYNCHRONOUS methods implementations
+    
+    @Override
+    public UUID async_getAddressingInfo() {
+        return dispatchCall(
+                "1", new Object[] { getRequestHwProfile() }, getDefaultWaitingTimeout()
+        );
+    }
+    
+    @Override
+    public UUID async_getDiscoveredNodes() {
+        return dispatchCall(
+                "2", new Object[] { getRequestHwProfile() }, getDefaultWaitingTimeout()
+        );
+    }
+    
+    @Override
+    public UUID async_getBondedNodes() {
+        return dispatchCall(
+                "3", new Object[] { getRequestHwProfile() }, getDefaultWaitingTimeout()
+        );
+    }
+    
+    @Override
+    public UUID async_clearAllBonds() {
+        return dispatchCall(
+                "4", new Object[] { getRequestHwProfile() }, getDefaultWaitingTimeout()
+        );
+    }
+    
+    @Override
+    public UUID async_bondNode(int address, int bondingMask) {
+        checkNodeAddress(address);
+        checkBondingMask(bondingMask);
+        return dispatchCall(
+                "5", new Object[] { getRequestHwProfile(), address, bondingMask },
+                getDefaultWaitingTimeout()
+        );
+    }
+    
+    @Override
+    public UUID async_removeBondedNode(int address) {
+        checkNodeAddress(address);
+        return dispatchCall(
+                "6", new Object[] { getRequestHwProfile(), address }, getDefaultWaitingTimeout()
+        );
+    }
+    
+    @Override
+    public UUID async_rebondNode(int address) {
+        checkNodeAddress(address);
+        return dispatchCall(
+                "7", new Object[] { getRequestHwProfile(), address }, getDefaultWaitingTimeout()
+        );
+    }
+    
+    @Override
+    public UUID async_runDiscovery(DiscoveryParams discoveryParams) {
+        return dispatchCall(
+            "8", new Object[] { getRequestHwProfile(), discoveryParams }, getDefaultWaitingTimeout() 
+        );
+    }
+    
+    @Override
+    public UUID async_setDPA_Param(DPA_Parameter dpaParam) {
+        return dispatchCall(
+            "9", new Object[] { getRequestHwProfile(), dpaParam }, getDefaultWaitingTimeout() 
+        );
+    }
+    
+    @Override
+    public UUID async_setHops(RoutingHops hops) {
+        return dispatchCall(
+                "10", new Object[] { getRequestHwProfile(), hops }, getDefaultWaitingTimeout() 
+        );
+    }
+    
+    @Override
+    public UUID async_discoveryData(int address) {
+        checkNodeAddress(address);
+        return dispatchCall(
+                "11", new Object[] { getRequestHwProfile(), address }, getDefaultWaitingTimeout() 
+        );
+    }
+    
+    @Override
+    public UUID async_backup(int index) {
+        checkIndex(index);
+        return dispatchCall(
+                "12", new Object[] { getRequestHwProfile(), index }, getDefaultWaitingTimeout() 
+        );
+    }
+    
+    @Override
+    public UUID async_restore(short[] networkData) {
+        checkNetworkData(networkData);
+        return dispatchCall(
+                "13", new Object[] { getRequestHwProfile(), networkData }, getDefaultWaitingTimeout()
+        );
+    }
+    
+    @Override
+    public UUID async_authorizeBond(int address, short[] moduleId) {
+        checkNodeAddress(address);
+        checkModuleId(moduleId);
+        return dispatchCall(
+                "14", new Object[] { getRequestHwProfile(), address, moduleId }, 
+                getDefaultWaitingTimeout()
+        );
+    }
+    
+    @Override
+    public UUID async_bridge(SubDPARequest subRequest) {
+        return dispatchCall("15", new Object[] { getRequestHwProfile(), subRequest }, 
+                getDefaultWaitingTimeout()
+        );
+    }
+    
+    @Override
+    public UUID async_enableRemoteBonding(int bondingMask, int control, short[] userData) {
+        checkBondingMask(bondingMask);
+        checkControl(control);
+        checkUserData(userData);
+        return dispatchCall(
+                "16", new Object[] { getRequestHwProfile(), bondingMask, control, userData}, 
+                getDefaultWaitingTimeout()
+        );
+    }
+    
+    @Override
+    public UUID async_readRemotelyBondedModuleId() {
+        return dispatchCall(
+                "17", new Object[] { getRequestHwProfile() }, getDefaultWaitingTimeout() 
+        );
+    }
+    
+    @Override
+    public UUID async_clearRemotelyBondedModuleId() {
+        return dispatchCall(
+                "18", new Object[] { getRequestHwProfile() }, getDefaultWaitingTimeout() 
+        );
+    }
+    
+    
+    
+    // SYNCHRONOUS WRAPPERS implementations
+    
     @Override
     public AddressingInfo getAddressingInfo() {
-        UUID uid = dispatchCall("1", new Object[] { getRequestHwProfile() }, getDefaultWaitingTimeout());
+        UUID uid = dispatchCall(
+                "1", new Object[] { getRequestHwProfile() }, getDefaultWaitingTimeout()
+        );
         if ( uid == null ) {
             return null;
         }
@@ -217,7 +440,9 @@ extends DPA_DeviceObject implements Coordinator {
     
     @Override
     public DiscoveredNodes getDiscoveredNodes() {
-        UUID uid = dispatchCall("2", new Object[] { getRequestHwProfile() }, getDefaultWaitingTimeout());
+        UUID uid = dispatchCall(
+                "2", new Object[] { getRequestHwProfile() }, getDefaultWaitingTimeout()
+        );
         if ( uid == null ) {
             return null;
         }
@@ -226,7 +451,9 @@ extends DPA_DeviceObject implements Coordinator {
     
     @Override
     public BondedNodes getBondedNodes() {
-        UUID uid = dispatchCall("3", new Object[] { getRequestHwProfile() }, getDefaultWaitingTimeout());
+        UUID uid = dispatchCall(
+                "3", new Object[] { getRequestHwProfile() }, getDefaultWaitingTimeout()
+        );
         if ( uid == null ) {
             return null;
         }
@@ -235,28 +462,15 @@ extends DPA_DeviceObject implements Coordinator {
     
     @Override
     public VoidType clearAllBonds() {
-        UUID uid = dispatchCall("4", new Object[] { getRequestHwProfile() }, getDefaultWaitingTimeout());
+        UUID uid = dispatchCall(
+                "4", new Object[] { getRequestHwProfile() }, getDefaultWaitingTimeout()
+        );
         if ( uid == null ) {
             return null;
         }
         return getCallResult(uid, VoidType.class, getDefaultWaitingTimeout());
     }
 
-    
-    private static int checkNodeAddress(int nodeAddress) {
-        if ( !DataTypesChecker.isByteValue(nodeAddress) ) {
-            throw new IllegalArgumentException("Node address out of bounds");
-        }
-        return nodeAddress;
-    }
-    
-    private static int checkBondingMask(int bondingMask) {
-        if ( !DataTypesChecker.isByteValue(bondingMask) ) {
-            throw new IllegalArgumentException("Bonding mask out of bounds");
-        }
-        return bondingMask;
-    }
-    
     @Override
     public BondedNode bondNode(int address, int bondingMask) {
         checkNodeAddress(address);
@@ -343,14 +557,6 @@ extends DPA_DeviceObject implements Coordinator {
         return getCallResult(uid, short[].class, getDefaultWaitingTimeout());
     }
     
-    
-    private static int checkIndex(int index) {
-        if ( !DataTypesChecker.isByteValue(index) ) {
-            throw new IllegalArgumentException("Index out of bounds");
-        }
-        return index;
-    }
-    
     @Override
     public short[] backup(int index) {
         checkIndex(index);
@@ -363,20 +569,6 @@ extends DPA_DeviceObject implements Coordinator {
         return getCallResult(uid, short[].class, getDefaultWaitingTimeout());
     }
     
-    /** Network data length. */
-    public static final int NETWORK_DATA_LENGTH = 18;
-    
-    private static void checkNetworkData(short[] networkData) {
-        if ( networkData == null ) {
-            throw new IllegalArgumentException("Network data cannot be null");
-        }
-        if ( networkData.length != NETWORK_DATA_LENGTH ) {
-            throw new IllegalArgumentException(
-                    "Invalid network data lentgh. Expected: " + NETWORK_DATA_LENGTH
-            );
-        }
-    }
-    
     @Override
     public VoidType restore(short[] networkData) {
         checkNetworkData(networkData);
@@ -387,21 +579,6 @@ extends DPA_DeviceObject implements Coordinator {
             return null;
         }
         return getCallResult(uid, VoidType.class, getDefaultWaitingTimeout());
-    }
-    
-    
-    /** Network data length. */
-    public static final int MODULE_ID_LENGTH = 2;
-    
-    private static void checkModuleId(short[] moduleId) {
-        if ( moduleId == null ) {
-            throw new IllegalArgumentException("Module ID cannot be null");
-        }
-        if ( moduleId.length != MODULE_ID_LENGTH ) {
-            throw new IllegalArgumentException(
-                    "Invalid module ID. Expected: " + MODULE_ID_LENGTH
-            );
-        }
     }
     
     @Override
@@ -429,28 +606,6 @@ extends DPA_DeviceObject implements Coordinator {
         return getCallResult(uid, short[].class, getDefaultWaitingTimeout());
     }
     
-    
-    private static int checkControl(int control) {
-        if ( !DataTypesChecker.isByteValue(control) ) {
-            throw new IllegalArgumentException("Control out of bounds");
-        }
-        return control;
-    }
-    
-    /** User data length. */
-    public static final int USER_DATA_LENGTH = 2;
-    
-    private static void checkUserData(short[] usedData) {
-        if ( usedData == null ) {
-            throw new IllegalArgumentException("User data cannot be null");
-        }
-        if ( usedData.length != USER_DATA_LENGTH ) {
-            throw new IllegalArgumentException(
-                    "Invalid user data length. Expected: " + USER_DATA_LENGTH
-            );
-        }
-    }
-    
     @Override
     public VoidType enableRemoteBonding(int bondingMask, int control, short[] userData) {
         checkBondingMask(bondingMask);
@@ -468,7 +623,9 @@ extends DPA_DeviceObject implements Coordinator {
     
     @Override
     public RemotelyBondedModuleId readRemotelyBondedModuleId() {
-        UUID uid = dispatchCall("17", new Object[] { getRequestHwProfile() }, getDefaultWaitingTimeout() );
+        UUID uid = dispatchCall(
+                "17", new Object[] { getRequestHwProfile() }, getDefaultWaitingTimeout() 
+        );
         if ( uid == null ) {
             return null;
         }
@@ -477,7 +634,9 @@ extends DPA_DeviceObject implements Coordinator {
     
     @Override
     public VoidType clearRemotelyBondedModuleId() {
-        UUID uid = dispatchCall("18", new Object[] { getRequestHwProfile() }, getDefaultWaitingTimeout() );
+        UUID uid = dispatchCall(
+                "18", new Object[] { getRequestHwProfile() }, getDefaultWaitingTimeout() 
+        );
         if ( uid == null ) {
             return null;
         }

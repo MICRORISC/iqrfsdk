@@ -79,11 +79,35 @@ extends DPA_DeviceObject implements GeneralLED {
         return GeneralLEDStandardTransformer.getInstance().transform(methodId);
     }
     
+    
+    
+    // ASYNCHRONOUS METHODS IMPLEMENTATIONS
+    
     @Override
     public UUID async_set(LED_State state) {
-        return dispatchCall("1", new Object[] { getRequestHwProfile(), state } );
+        return dispatchCall(
+                "1", new Object[] { getRequestHwProfile(), state }, getDefaultWaitingTimeout() 
+        );
     }
-
+    
+    @Override
+    public UUID async_get() {
+        return dispatchCall(
+                "2", new Object[] { getRequestHwProfile() }, getDefaultWaitingTimeout() 
+        );
+    }
+    
+    @Override
+    public UUID async_pulse() {
+        return dispatchCall(
+                "3", new Object[] { getRequestHwProfile() }, getDefaultWaitingTimeout() 
+        );
+    }
+    
+    
+    
+    // SYNCHRONOUS WRAPPERS IMPLEMENTATIONS
+    
     @Override
     public VoidType set(LED_State state) {
         UUID uid = dispatchCall("1", new Object[] { getRequestHwProfile(), state }, 
@@ -96,11 +120,6 @@ extends DPA_DeviceObject implements GeneralLED {
     }
 
     @Override
-    public UUID async_get() {
-        return dispatchCall("2", new Object[] { getRequestHwProfile() } );
-    }
-
-    @Override
     public LED_State get() {
         UUID uid = dispatchCall(
                 "2", new Object[] { getRequestHwProfile() }, getDefaultWaitingTimeout()
@@ -110,12 +129,7 @@ extends DPA_DeviceObject implements GeneralLED {
         }
         return getCallResult(uid, LED_State.class, getDefaultWaitingTimeout());
     }
-    
-    @Override
-    public UUID async_pulse() {
-        return dispatchCall("3", new Object[] { getRequestHwProfile() } );
-    }
-
+   
     @Override
     public VoidType pulse() {
         UUID uid = dispatchCall(

@@ -28,6 +28,10 @@ import java.util.UUID;
 /**
  * Device interface for getting information about peripherals from underlaying
  * network nodes.
+ * <p>
+ * IMPORTANT NOTE: <br>
+ * Every method returns {@code NULL}, if an error has occurred during processing
+ * of this method.
  * 
  * @author Michal Konopa
  */
@@ -43,20 +47,14 @@ extends DPA_StandardServices, GenericAsyncCallable, MethodIdTransformer {
         GET_MORE_PERIPHERALS_INFO
     }
     
+    
+    // ASYNCHRONOUS METHODS
+    
     /**
      * Sends method call request for peripheral enumeration available on this node.
      * @return unique identifier of sent request 
      */
     UUID async_getPeripheralEnumeration();
-    
-    /**
-     * Returns information about peripheral enumeration on this node.
-     * Synchronous wrapper for {@link #async_getPeripheralEnumeration() 
-     * async_getPeripheralEnumeration} method.
-     * @return information about peripheral enumeration <br>
-     *         {@code null} if an error has occurred during processing
-     */
-    PeripheralEnumeration getPeripheralEnumeration();
     
     /**
      * Sends method call requests for information about specified peripheral.
@@ -66,16 +64,6 @@ extends DPA_StandardServices, GenericAsyncCallable, MethodIdTransformer {
     UUID async_getPeripheralInfo(int peripheralNumber);
     
     /**
-     * Returns information about specified peripheral.
-     * Synchronous wrapper for {@link #async_getPeripheralInfo(int) 
-     * async_getPeripheralInfo} method.
-     * @param peripheralNumber number of peripheral, whose info is requested
-     * @return information about specified peripheral <br>
-     *         {@code null} if an error has occurred during processing
-     */
-    PeripheralInfo getPeripheralInfo(int peripheralNumber);
-    
-    /**
      * Sends method call requests for information about sequence of more 
      * peripherals, starting with specified peripheral number.
      * @param startPeripheralNumber starting peripheral's number
@@ -83,14 +71,30 @@ extends DPA_StandardServices, GenericAsyncCallable, MethodIdTransformer {
      */
     UUID async_getMorePeripheralsInfo(int startPeripheralNumber);
     
+    
+    
+    // SYNCHRONOUS WRAPPERS
+    
     /**
-     * Returns information about sequence of peripherals, starting with 
-     * specified peripheral number.
+     * Synchronous wrapper for {@link #async_getPeripheralEnumeration() 
+     * async_getPeripheralEnumeration} method.
+     * @return information about peripheral enumeration
+     */
+    PeripheralEnumeration getPeripheralEnumeration();
+    
+    /**
+     * Synchronous wrapper for {@link #async_getPeripheralInfo(int) 
+     * async_getPeripheralInfo} method.
+     * @param peripheralNumber number of peripheral, whose info is requested
+     * @return information about specified peripheral
+     */
+    PeripheralInfo getPeripheralInfo(int peripheralNumber);
+    
+    /**
      * Synchronous wrapper for {@link #async_getMorePeripheralsInfo(int) 
      * async_getMorePeripheralsInfo} method.
      * @param startPeripheralNumber starting peripheral's number
-     * @return information about peripherals <br>
-     *         {@code null} if an error has occurred during processing
+     * @return information about peripherals
      */
     PeripheralInfo[] getMorePeripheralsInfo(int startPeripheralNumber);
 }

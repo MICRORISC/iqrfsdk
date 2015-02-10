@@ -27,6 +27,10 @@ import java.util.UUID;
 
 /**
  * DPA Device Interface for general LED operations.
+ * <p>
+ * IMPORTANT NOTE: <br>
+ * Every method returns {@code NULL}, if an error has occurred during processing
+ * of this method.
  * 
  * @author Michal Konopa
  */
@@ -42,6 +46,9 @@ extends DPA_StandardServices, GenericAsyncCallable, MethodIdTransformer {
         PULSE
     }
     
+    
+    // ASYNCHRONOUS METHODS
+    
     /**
      * Sends method call request for setting the LED to specified state.
      * @param state state to set the LED into
@@ -50,29 +57,10 @@ extends DPA_StandardServices, GenericAsyncCallable, MethodIdTransformer {
     UUID async_set(LED_State state);
     
     /**
-     * Sets the LED to specifed state.
-     * Synchronous wrapper for {@link #async_set(com.microrisc.simply.iqrf.dpa.v210.types.LED_State) async_set} method.
-     * @param state to set the LED into
-     * @return {@code VoidType} object, if method call has processed allright <br>
-     *         {@code null} if an error has occured during processing
-     */
-    VoidType set(LED_State state);
-    
-    
-    /**
      * Sends method call request for getting actual state of the LED.  
      * @return unique identifier of sent request
      */
     UUID async_get();
-    
-    /**
-     * Gets actual state of the LED.
-     * Synchronous wrapper for {@link #async_get() async_get} method.
-     * @return actual state of LED <br>
-     *         {@code null}, if an error has occurred during processing
-     */
-    LED_State get();
-    
     
     /**
      * Sends method call request for generating one LED pulse.  
@@ -80,11 +68,28 @@ extends DPA_StandardServices, GenericAsyncCallable, MethodIdTransformer {
      */
     UUID async_pulse();
     
+    
+    
+    // SYNCHRONOUS WRAPPERS
+    
     /**
-     * Generates one LED pulse.
+     * Synchronous wrapper for {@link 
+     * #async_set(com.microrisc.simply.iqrf.dpa.v210.types.LED_State) async_set} 
+     * method.
+     * @param state to set the LED into
+     * @return {@code VoidType} object, if method call has processed allright
+     */
+    VoidType set(LED_State state);
+    
+    /**
+     * Synchronous wrapper for {@link #async_get() async_get} method.
+     * @return actual state of LED
+     */
+    LED_State get();
+    
+    /**
      * Synchronous wrapper for {@link #async_pulse() async_pulse} method.
-     * @return {@code VoidType} object, if method call has processed allright <br>
-     *         {@code null}, if an error has occured during processing
+     * @return {@code VoidType} object, if method call has processed allright
      */
     VoidType pulse();
 }

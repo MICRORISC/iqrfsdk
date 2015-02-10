@@ -21,9 +21,14 @@ import com.microrisc.simply.DeviceInterfaceMethodId;
 import com.microrisc.simply.di_services.GenericAsyncCallable;
 import com.microrisc.simply.di_services.MethodIdTransformer;
 import com.microrisc.simply.iqrf.dpa.v210.di_services.DPA_StandardServices;
+import java.util.UUID;
 
 /**
  * DPA SPI Device Interface.
+ * <p>
+ * IMPORTANT NOTE: <br>
+ * Every method returns {@code NULL}, if an error has occurred during processing
+ * of this method.
  * 
  * @author Michal Konopa
  */
@@ -37,15 +42,32 @@ extends DPA_StandardServices, GenericAsyncCallable, MethodIdTransformer {
         WRITE_AND_READ
     }
     
+    
+    // ASYNCHRONOUS METHODS
+    
     /**
-     * Reads and/or writes data to/from SPI interface.
+     * Sends method call request for reading and/or writing data to/from SPI interface.
+     * @param readTimeout specifies timeout in 10 ms unit to wait for data to 
+     *        be read from SPI after data is (optionally) written. <br>
+     *        {@code 0xff} specifies that no data should be read.
+     * @param data optional data to be written to the SPI
+     * @return unique identifier of sent request
+     */
+    UUID async_writeAndRead(int readTimeout, short[] data);
+    
+    
+    
+    // SYNCHRONOUS WRAPPERS
+    
+    /**
+     * Synchronous wrapper for {@link #async_writeAndRead(int, short[]) 
+     * async_writeAndRead} method.
      * @param readTimeout specifies timeout in 10 ms unit to wait for data to 
      *        be read from SPI after data is (optionally) written. <br>
      *        {@code 0xff} specifies that no data should be read.
      * @param data optional data to be written to the SPI
      * @return optional data read from SPI if the reading was requested and 
-     *         data is available. <br>
-     *        {@code null}, if an error has occurred during processing
+     *         data is available.
      */
     short[] writeAndRead(int readTimeout, short[] data);
 }

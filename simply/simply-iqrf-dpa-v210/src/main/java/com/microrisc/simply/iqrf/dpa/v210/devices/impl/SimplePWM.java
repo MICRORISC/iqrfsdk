@@ -65,6 +65,20 @@ extends DPA_DeviceObject implements PWM {
         return PWMStandardTransformer.getInstance().transform(methodId);
     }
     
+    
+    
+    // ASYNCHRONOUS METHODS IMPLEMENTATIONS
+    
+    @Override
+    public UUID async_set(PWM_Parameters param) {
+        return dispatchCall(
+                "1", new Object[] { getRequestHwProfile(), param }, getDefaultWaitingTimeout() 
+        );
+    }
+    
+    
+    // SYNCHRONOUS WRAPPERS IMPLEMENTATIONS
+    
     @Override
     public VoidType set(PWM_Parameters param) {
         UUID uid = dispatchCall(

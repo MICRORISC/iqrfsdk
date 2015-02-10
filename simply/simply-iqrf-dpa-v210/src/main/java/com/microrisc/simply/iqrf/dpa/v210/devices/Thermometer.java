@@ -26,6 +26,10 @@ import java.util.UUID;
 
 /**
  * DPA Thermometer Device Interface.
+ * <p>
+ * IMPORTANT NOTE: <br>
+ * Every method returns {@code NULL}, if an error has occurred during processing
+ * of this method.
  * 
  * @author Michal Konopa
  */
@@ -39,17 +43,23 @@ extends DPA_StandardServices, GenericAsyncCallable, MethodIdTransformer {
         GET
     }
     
+    
+    
+    // ASYNCHRONOUS METHODS
+    
     /**
      * Sends method call request for reading on-board thermometer sensor value. 
      * @return unique identifier of sent request
      */
     UUID async_get();
     
+    
+    
+    // SYNCHRONOUS WRAPPERS
+    
     /**
-     * Reads on-board thermometer sensor value.
      * Synchronous wrapper for {@link #async_get() async_get} method.
-     * @return actual state of Thermometer<br>
-     *         {@code null} if an error has occurred during processing
+     * @return actual state of Thermometer
      */
     Thermometer_values get();
 }

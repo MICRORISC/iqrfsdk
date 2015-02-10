@@ -34,6 +34,14 @@ import java.util.UUID;
 public final class SimplePeripheralInfoGetter 
 extends DPA_DeviceObject implements PeripheralInfoGetter {
     
+    private static int checkPeripheralId(int peripheralId) {
+        if ( !DataTypesChecker.isByteValue(peripheralId) ) {
+            throw new IllegalArgumentException("Peripheral ID out of bounds");
+        }
+        return peripheralId;
+    }
+    
+    
     public SimplePeripheralInfoGetter(String networkId, String nodeId, ConnectorService connector, 
             CallRequestProcessingInfoContainer resultsContainer
     ) {
@@ -81,12 +89,38 @@ extends DPA_DeviceObject implements PeripheralInfoGetter {
         return PeripheralInfoGetterStandardTransformer.getInstance().transform(methodId);
     }
     
+    
+    
+    // ASYNCHRONOUS METHODS IMPLEMENTATIONS
+    
     @Override
     public UUID async_getPeripheralEnumeration() {
         return dispatchCall(
                 "1", new Object[] { getRequestHwProfile() }, getDefaultWaitingTimeout() 
         );
     }
+    
+    @Override
+    public UUID async_getPeripheralInfo(int peripheralId) {
+        checkPeripheralId(peripheralId);
+        return dispatchCall(
+                "2", new Object[] { getRequestHwProfile(), peripheralId },
+                getDefaultWaitingTimeout()
+        );
+    }
+    
+    @Override
+    public UUID async_getMorePeripheralsInfo(int startPeripheralId) {
+        checkPeripheralId(startPeripheralId);
+        return dispatchCall(
+                "3", new Object[] { getRequestHwProfile(), startPeripheralId },
+                getDefaultWaitingTimeout()
+        );
+    }
+    
+    
+    
+    // SYNCHRONOUS WRAPPERS IMPLEMENTATIONS
     
     @Override
     public PeripheralEnumeration getPeripheralEnumeration() {
@@ -97,21 +131,6 @@ extends DPA_DeviceObject implements PeripheralInfoGetter {
             return null;
         }
         return getCallResult(uid, PeripheralEnumeration.class, getDefaultWaitingTimeout() );
-    }
-    
-    private static int checkPeripheralId(int peripheralId) {
-        if ( !DataTypesChecker.isByteValue(peripheralId) ) {
-            throw new IllegalArgumentException("Peripheral ID out of bounds");
-        }
-        return peripheralId;
-    }
-    
-    @Override
-    public UUID async_getPeripheralInfo(int peripheralId) {
-        checkPeripheralId(peripheralId);
-        return dispatchCall(
-                "2", new Object[] { getRequestHwProfile(), peripheralId } 
-        );
     }
     
     @Override
@@ -125,14 +144,6 @@ extends DPA_DeviceObject implements PeripheralInfoGetter {
             return null;
         }
         return getCallResult(uid, PeripheralInfo.class, getDefaultWaitingTimeout() );
-    }
-    
-    @Override
-    public UUID async_getMorePeripheralsInfo(int startPeripheralId) {
-        checkPeripheralId(startPeripheralId);
-        return dispatchCall(
-                "3", new Object[] { getRequestHwProfile(), startPeripheralId }
-        );
     }
     
     @Override

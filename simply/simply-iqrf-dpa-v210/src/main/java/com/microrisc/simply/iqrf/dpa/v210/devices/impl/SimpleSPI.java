@@ -32,6 +32,23 @@ import java.util.UUID;
 public final class SimpleSPI 
 extends DPA_DeviceObject implements SPI {
     
+    private static int checkReadTimeout(int readTimeout) {
+        if ( !DataTypesChecker.isByteValue(readTimeout) ) {
+            throw new IllegalArgumentException("Read timeout out of bounds.");
+        }
+        return readTimeout;
+    }
+    
+    private static void checkDataToWrite(short[] dataToWrite) {
+        if ( dataToWrite == null ) {
+            throw new IllegalArgumentException("Data to write cannot be null.");
+        }
+        if ( dataToWrite.length < 1 ) {
+            throw new IllegalArgumentException("Data to write cannot be empty.");
+        }
+    }
+    
+    
     public SimpleSPI(String networkId, String nodeId, ConnectorService connector, 
             CallRequestProcessingInfoContainer resultsContainer
     ) {
@@ -67,21 +84,23 @@ extends DPA_DeviceObject implements SPI {
         return SPIStandardTransformer.getInstance().transform(methodId);
     }
     
-    private static int checkReadTimeout(int readTimeout) {
-        if ( !DataTypesChecker.isByteValue(readTimeout) ) {
-            throw new IllegalArgumentException("Read timeout out of bounds.");
-        }
-        return readTimeout;
+    
+    
+    // ASYNCHRONOUS METHODS IMPLEMENTATIONS
+    
+    @Override
+    public UUID async_writeAndRead(int readTimeout, short[] data) {
+        checkReadTimeout(readTimeout);
+        checkDataToWrite(data);
+        return dispatchCall(
+                "2", new Object[] { getRequestHwProfile(), readTimeout, data }, 
+                getDefaultWaitingTimeout() 
+        );
     }
     
-    private static void checkDataToWrite(short[] dataToWrite) {
-        if ( dataToWrite == null ) {
-            throw new IllegalArgumentException("Data to write cannot be null.");
-        }
-        if ( dataToWrite.length < 1 ) {
-            throw new IllegalArgumentException("Data to write cannot be empty.");
-        }
-    }
+    
+    
+    // SYNCHRONOUS WRAPPERS IMPLEMENTATIONS
     
     @Override
     public short[] writeAndRead(int readTimeout, short[] data) {
