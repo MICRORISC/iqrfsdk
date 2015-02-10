@@ -34,6 +34,14 @@ import java.util.UUID;
 public final class SimpleFRC
 extends DPA_DeviceObject implements FRC {
     
+    private static FRC_Command checkCommand(FRC_Command frcCmd) {
+        if ( frcCmd == null ) {
+            throw new IllegalArgumentException("FRC command cannot be null."); 
+        }
+        return frcCmd;
+    }
+    
+    
     public SimpleFRC(String networkId, String nodeId, ConnectorService connector, 
             CallRequestProcessingInfoContainer resultsContainer
     ) {
@@ -75,12 +83,30 @@ extends DPA_DeviceObject implements FRC {
     }
     
     
-    private static FRC_Command checkCommand(FRC_Command frcCmd) {
-        if ( frcCmd == null ) {
-            throw new IllegalArgumentException("FRC command cannot be null."); 
-        }
-        return frcCmd;
+    // ASYNCHRONOUS METHODS IMPLEMENTATIONS
+    
+    /**
+     * @param frcCmd FRC command to send
+     * @throws IllegalArgumentException if user data of specified FRC command is {@code null} 
+     */
+    @Override
+    public UUID async_send(FRC_Command frcCmd) {
+        checkCommand(frcCmd);
+        return dispatchCall(
+                "1", new Object[] { getRequestHwProfile(), frcCmd }, getDefaultWaitingTimeout()
+        );
     }
+    
+    @Override
+    public UUID async_extraResult() {
+        return dispatchCall(
+                "2", new Object[] { getRequestHwProfile() }, getDefaultWaitingTimeout() 
+        );
+    }
+    
+    
+    
+    // SYNCHRONOUS WRAPPERS IMPLEMENTATIONS
     
     /**
      * @param frcCmd FRC command to send
@@ -107,20 +133,5 @@ extends DPA_DeviceObject implements FRC {
             return null;
         }
         return getCallResult(uid, short[].class, getDefaultWaitingTimeout());
-    }
-    
-    /**
-     * @param frcCmd FRC command to send
-     * @throws IllegalArgumentException if user data of specified FRC command is {@code null} 
-     */
-    @Override
-    public UUID async_send(FRC_Command frcCmd) {
-        checkCommand(frcCmd);
-        return dispatchCall("1", new Object[] { getRequestHwProfile(), frcCmd } );
-    }
-    
-    @Override
-    public UUID async_extraResult() {
-        return dispatchCall("2", new Object[] { getRequestHwProfile() } );
     }
 }

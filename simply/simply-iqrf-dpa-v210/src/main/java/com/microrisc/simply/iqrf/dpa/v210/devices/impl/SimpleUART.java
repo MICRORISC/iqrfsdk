@@ -34,6 +34,23 @@ import java.util.UUID;
 public final class SimpleUART
 extends DPA_DeviceObject implements UART {
     
+    private static int checkReadTimeout(int readTimeout) {
+        if ( !DataTypesChecker.isByteValue(readTimeout) ) {
+            throw new IllegalArgumentException("Read timeout out of bounds.");
+        }
+        return readTimeout;
+    }
+    
+    private static void checkDataToWrite(short[] dataToWrite) {
+        if ( dataToWrite == null ) {
+            throw new IllegalArgumentException("Data to write cannot be null.");
+        }
+        if ( dataToWrite.length < 1 ) {
+            throw new IllegalArgumentException("Data to write cannot be empty.");
+        }
+    }
+    
+    
     public SimpleUART(String networkId, String nodeId, ConnectorService connector, 
             CallRequestProcessingInfoContainer resultsContainer
     ) {
@@ -83,10 +100,42 @@ extends DPA_DeviceObject implements UART {
         return UARTStandardTransformer.getInstance().transform(methodId);
     }
     
+    
+    
+    // ASYNCHRONOUS METHODS IMPLEMENTATIONS
+    
+    @Override
+    public UUID async_open(BaudRate baudRate) {
+        return dispatchCall(
+                "1", new Object[] { getRequestHwProfile(), baudRate }, getDefaultWaitingTimeout() 
+        );
+    }
+    
+    @Override
+    public UUID async_close() {
+        return dispatchCall(
+                "2", new Object[] { getRequestHwProfile() }, getDefaultWaitingTimeout() 
+        );
+    }
+    
+    @Override
+    public UUID async_writeAndRead(int readTimeout, short[] data) {
+        checkReadTimeout(readTimeout);
+        checkDataToWrite(data);
+        return dispatchCall(
+                "3", new Object[] { getRequestHwProfile(), readTimeout, data }, 
+                getDefaultWaitingTimeout() 
+        );
+    }
+    
+    
+    
+    // SYNCHRONOUS WRAPPERS IMPLEMENTATIONS
+    
     @Override
     public VoidType open(BaudRate baudRate) {
-        UUID uid = dispatchCall("1", new Object[] { getRequestHwProfile(), baudRate }, 
-                getDefaultWaitingTimeout() 
+        UUID uid = dispatchCall(
+                "1", new Object[] { getRequestHwProfile(), baudRate }, getDefaultWaitingTimeout() 
         );
         if ( uid == null ) {
             return null;
@@ -103,22 +152,6 @@ extends DPA_DeviceObject implements UART {
             return null;
         }
         return getCallResult(uid, VoidType.class, getDefaultWaitingTimeout() );
-    }
-    
-    private static int checkReadTimeout(int readTimeout) {
-        if (!DataTypesChecker.isByteValue(readTimeout)) {
-            throw new IllegalArgumentException("Read timeout out of bounds.");
-        }
-        return readTimeout;
-    }
-    
-    private static void checkDataToWrite(short[] dataToWrite) {
-        if ( dataToWrite == null ) {
-            throw new IllegalArgumentException("Data to write cannot be null.");
-        }
-        if ( dataToWrite.length < 1 ) {
-            throw new IllegalArgumentException("Data to write cannot be empty.");
-        }
     }
     
     @Override

@@ -64,15 +64,25 @@ extends DPA_DeviceObject implements Thermometer {
         return ThermometerStandardTransformer.getInstance().transform(methodId);
     }
     
+    
+    
+    // ASYNCHRONOUS METHODS IMPLEMENTATIONS
+    
     @Override
     public UUID async_get() {
-        return dispatchCall("1", new Object[] { getRequestHwProfile() } );
+        return dispatchCall(
+                "1", new Object[] { getRequestHwProfile(), getDefaultWaitingTimeout() } 
+        );
     }
-
+    
+    
+    
+    // SYNCHRONOUS WRAPPERS IMPLEMENTATIONS
+    
     @Override
     public Thermometer_values get() {
         UUID uid = dispatchCall(
-                "1", new Object[] { getRequestHwProfile() } , getDefaultWaitingTimeout() 
+                "1", new Object[] { getRequestHwProfile() }, getDefaultWaitingTimeout() 
         );
         if ( uid == null ) {
             return null;

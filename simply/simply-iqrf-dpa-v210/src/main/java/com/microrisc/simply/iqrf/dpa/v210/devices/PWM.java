@@ -23,9 +23,14 @@ import com.microrisc.simply.di_services.MethodIdTransformer;
 import com.microrisc.simply.iqrf.dpa.v210.di_services.DPA_StandardServices;
 import com.microrisc.simply.iqrf.dpa.v210.types.PWM_Parameters;
 import com.microrisc.simply.iqrf.types.VoidType;
+import java.util.UUID;
 
 /**
  * DPA PWM Device Interface.
+ * <p>
+ * IMPORTANT NOTE: <br>
+ * Every method returns {@code NULL}, if an error has occurred during processing
+ * of this method.
  * 
  * @author Michal Konopa
  */
@@ -39,10 +44,26 @@ extends DPA_StandardServices, GenericAsyncCallable, MethodIdTransformer {
         SET
     }
     
+    
+    // ASYNCHRONOUS METHODS
+    
     /**
-     * Sets PWM parameters.
+     * Sends method call request for setting PWM parameters
      * @param param PWM to use for settting
-     * @return {@code null}, if an error has occurred during processing
+     * @return unique identifier of sent request
+     */
+    UUID async_set(PWM_Parameters param);
+    
+    
+    
+    // SYNCHRONOUS WRAPPERS
+    
+    /**
+     * Synchronous wrapper for {@link
+     * #async_set(com.microrisc.simply.iqrf.dpa.v210.types.PWM_Parameters)
+     * async_write} method.
+     * @param param PWM to use for settting
+     * @return {@code VoidType} object, if method call has processed allright
      */
     VoidType set(PWM_Parameters param);
 }

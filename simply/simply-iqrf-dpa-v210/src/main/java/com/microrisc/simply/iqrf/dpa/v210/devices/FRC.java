@@ -27,8 +27,10 @@ import java.util.UUID;
 
 /**
  * DPA FRC Device Interface.
- * All methods return {@code null} if an error has occurred during processing
- * of corresponding method call.
+ * <p>
+ * IMPORTANT NOTE: <br>
+ * Every method returns {@code NULL}, if an error has occurred during processing
+ * of this method.
  * 
  * @author Rostislav Spinar
  */
@@ -43,6 +45,9 @@ extends DPA_StandardServices, GenericAsyncCallable, MethodIdTransformer {
         EXTRA_RESULT
     }
     
+    
+    // ASYNCHRONOUS METHODS
+    
     /**
      * This command starts Fast Response Command (FRC) process supported by IQRF OS. 
      * It allows quickly and using only one command to collect same type of information 
@@ -53,16 +58,6 @@ extends DPA_StandardServices, GenericAsyncCallable, MethodIdTransformer {
     UUID async_send(FRC_Command frcCmd);
     
     /**
-     * This command starts Fast Response Command (FRC) process supported by IQRF OS. 
-     * Synchronous wrapper for 
-     * {@link #async_send(com.microrisc.simply.iqrf.dpa.v210.types.FRC_Command)  async_send} method.
-     * @param frcCmd FRC command to use
-     * @return FRC data collected from nodes
-     */
-    FRC_Data send(FRC_Command frcCmd);
-  
-    
-    /**
      * Reads remaining bytes of the FRC result, so the total number of bytes obtained 
      * by both commands will be total 64. It is recommended to call this command 
      * immediately after the FRC Send command to preserve previously collected FRC 
@@ -71,11 +66,20 @@ extends DPA_StandardServices, GenericAsyncCallable, MethodIdTransformer {
      */
     UUID async_extraResult();
     
+    
+    // SYNCHRONOUS WRAPPERS
+    
     /**
-     * Reads remaining bytes of the FRC result, so the total number of bytes obtained 
-     * by both commands will be total 64. 
-     * Synchronous wrapper for 
-     * {@link #async_extraResult() async_extraResult} method.
+     * Synchronous wrapper for {@link
+     * #async_send(com.microrisc.simply.iqrf.dpa.v210.types.FRC_Command)  async_send}
+     * method.
+     * @param frcCmd FRC command to use
+     * @return FRC data collected from nodes
+     */
+    FRC_Data send(FRC_Command frcCmd);
+  
+    /**
+     * Synchronous wrapper for {@link #async_extraResult() async_extraResult} method.
      * @return remaining bytes of the FRC result
      */
     short[] extraResult();

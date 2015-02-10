@@ -24,6 +24,7 @@ import com.microrisc.simply.iqrf.dpa.v210.di_services.DPA_StandardServices;
 import com.microrisc.simply.iqrf.dpa.v210.types.NodeStatusInfo;
 import com.microrisc.simply.iqrf.dpa.v210.types.RemotelyBondedModuleId;
 import com.microrisc.simply.iqrf.types.VoidType;
+import java.util.UUID;
 
 /**
  * DPA Node Device Interface.
@@ -51,24 +52,96 @@ extends DPA_StandardServices, GenericAsyncCallable, MethodIdTransformer {
         RESTORE
     }
     
+    // ASYNCHRONOUS METHODS
+    
     /**
-     * Returns IQMESH specific node information.
+     * Sends method call request for reading IQMESH specific node information.
+     * @return unique identifier of sent request
+     */
+    UUID async_read();
+    
+    /**
+     * Sends method call request for removing bond on node side.
+     * <p>
+     * The bond is marked as unbonded (removed from network) using removeBond() IQRF call. 
+     * Bonding state of the node at the coordinator side is not effected at all.
+     * @return unique identifier of sent request
+     */
+    UUID async_removeBond();
+    
+    /**
+     * Sends method call request for putting node into a mode, that provides 
+     * a remote bonding of maximum one new node.
+     * @param bondingMask see IQRF OS User's and Reference guides (remote bonding, 
+     *        function bondNewNodeRemote).
+     * @param control bit.0 enables remote bonding mode. If enabled then previously 
+     *        bonded node module ID is forgotten.
+     * @param userData optional data that can be used at Reset Custom DPA 
+     *        Handler event.
+     * @return unique identifier of sent request
+     */
+    UUID async_enableRemoteBonding(int bondingMask, int control, short[] userData);
+    
+    /**
+     * Sends method call request for reading module ID of the remotely bonded node.
+     * @return unique identifier of sent request
+     */
+    UUID async_readRemotelyBondedModuleId();
+    
+    /**
+     * Sends method call request for making node to forget module ID of the node
+     * that was previously remotely bonded.
+     * @return unique identifier of sent request
+     */
+    UUID async_clearRemotelyBondedModuleId();
+    
+    /**
+     * Sends method call request for removing bond address. The node stays in the 
+     * IQMESH network (it is not unbonded) but a temporary address 0xFE is 
+     * assigned to it.
+     * @return unique identifier of sent request
+     */
+    UUID async_removeBondAddress();
+    
+    /**
+     * Sends method call request for allowing to read node network info data 
+     * that can be then restored to another node in order to make a clone of 
+     * the original node.
+     * @param index index of the block of data
+     * @return unique identifier of sent request
+     */
+    UUID async_backup(int index);
+    
+    /**
+     * Sends method call request for allowing to write previously backed up node 
+     * network data to the same or another node device. To execute the full restore
+     * all data blocks (in any order) obtained via Backup commands must be written 
+     * to the device.
+     * @param networkData one block of the node network info data previously 
+     *                    obtained via Backup command.
+     * @return unique identifier of sent request
+     */
+    UUID async_restore(short[] networkData);
+    
+    
+    
+    // SYNCHRONOUS WRAPPERS
+    
+    /**
+     * Synchronous wrapper for {@link #async_read() async_read} method.
      * @return node's information
      */
     NodeStatusInfo read();
     
     /**
-     * Removes bond on node side.
-	 * <p>
-	 * The bond is marked as unbonded (removed from network) using 
-     * removeBond() IQRF call. Bonding state of the node at the coordinator side 
-     * is not effected at all.
+     * Synchronous wrapper for {@link #async_removeBond() async_removeBond} method.
      * @return {@code VoidType} object, if method call has processed allright
      */
     VoidType removeBond();
     
     /**
-     * Puts node into a mode, that provides a remote bonding of maximum one new node.
+     * Synchronous wrapper for {@link #async_enableRemoteBonding(int, int, short[]) 
+     * async_enableRemoteBonding} method
      * @param bondingMask see IQRF OS User's and Reference guides (remote bonding, 
      *        function bondNewNodeRemote).
      * @param control bit.0 enables remote bonding mode. If enabled then previously 
@@ -80,37 +153,35 @@ extends DPA_StandardServices, GenericAsyncCallable, MethodIdTransformer {
     VoidType enableRemoteBonding(int bondingMask, int control, short[] userData);
     
     /**
-     * Returns module ID of the remotely bonded node.
-     * @return module ID of the remotely bonded node. <br>
-     *         {@code null}, if an error occurrs during processing
+     * Synchronous wrapper for {@link 
+     * #async_readRemotelyBondedModuleId() async_readRemotelyBondedModuleId} method.
+     * @return module ID of the remotely bonded node
      */
     RemotelyBondedModuleId readRemotelyBondedModuleId();
     
     /**
-     * Makes node to forget module ID of the node that was previously remotely bonded.
+     * Synchronous wrapper for {@link 
+     * #async_clearRemotelyBondedModuleId()  async_clearRemotelyBondedModuleId} method.
      * @return {@code VoidType} object, if method call has processed allright
      */
     VoidType clearRemotelyBondedModuleId();
     
     /**
-     * The node stays in the IQMESH network (it is not unbonded) but a temporary 
-     * address 0xFE is assigned to it.
+     * Synchronous wrapper for {@link #async_removeBondAddress() async_removeBondAddress} 
+     * method.
      * @return {@code VoidType} object, if method call has processed allright
      */
     VoidType removeBondAddress();
     
     /**
-     * Allows reading node network info data that can be then restored 
-     * to another node in order to make a clone of the original node.
+     * Synchronous wrapper for {@link #async_backup(int) async_backup} method.
      * @param index index of the block of data
      * @return one block of the node network info data
      */
     short[] backup(int index);
     
     /**
-     * Allows writing previously backed up node network data to the same 
-     * or another node device. To execute the full restore all data blocks 
-     * (in any order) obtained via Backup commands must be written to the device.
+     * Synchronous wrapper for {@link #async_restore(short[]) async_restore} method.
      * @param networkData one block of the node network info data previously 
      *                    obtained via Backup command.
      * @return {@code VoidType} object, if method call has processed allright

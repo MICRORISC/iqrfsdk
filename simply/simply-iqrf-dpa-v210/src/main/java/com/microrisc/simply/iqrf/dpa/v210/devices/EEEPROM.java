@@ -26,6 +26,10 @@ import java.util.UUID;
 
 /**
  * DPA EEEPROM Device Interface.
+ * <p>
+ * IMPORTANT NOTE: <br>
+ * Every method returns {@code NULL}, if an error has occurred during processing
+ * of this method.
  * 
  * @author Michal Konopa
  */
@@ -40,6 +44,9 @@ extends DPA_StandardServices, GenericAsyncCallable, MethodIdTransformer {
         WRITE
     }
     
+    
+    // ASYNCHRONOUS METHODS
+    
     /**
      * Sends method call request for reading from peripheral.
      * @param blockNumber number of (zero based) block to read from
@@ -47,17 +54,6 @@ extends DPA_StandardServices, GenericAsyncCallable, MethodIdTransformer {
      * @return unique identifier of sent request
      */
     UUID async_read(int blockNumber, int length);
-    
-    /**
-     * Reads in data of specified length from specified block.
-     * Synchronous wrapper for {@link #async_read(int, int) async_read} method.
-     * @param blockNumber number of (zero based) block to read from
-     * @param length length of the data to read (in bytes), must be equal to the block size
-     * @return read data <br>
-     *         {@code null}, if an error has occurred during processing
-     */
-    short[] read(int blockNumber, int length);
-    
     
     /**
      * Sends method call request for writing to peripheral.
@@ -68,14 +64,24 @@ extends DPA_StandardServices, GenericAsyncCallable, MethodIdTransformer {
      */
     UUID async_write(int blockNumber, short[] data);
     
+    
+    
+    // SYNCHRONOUS WRAPPERS
+    
     /**
-     * Writes specified data to specified address.
+     * Synchronous wrapper for {@link #async_read(int, int) async_read} method.
+     * @param blockNumber number of (zero based) block to read from
+     * @param length length of the data to read (in bytes), must be equal to the block size
+     * @return read data
+     */
+    short[] read(int blockNumber, int length);
+    
+    /**
      * Synchronous wrapper for {@link #async_write(int, short[])  async_write} method.
      * @param blockNumber number of (zero based) block to write the data into
      * @param data actual data to be written to the memory, its length must be 
      *             equal to the block size
-     * @return {@code VoidType} object, if method call has processed allright <br>
-     *         {@code null}, if an error has occurred during processing
+     * @return {@code VoidType} object, if method call has processed allright
      */
     VoidType write(int blockNumber, short[] data);
 }

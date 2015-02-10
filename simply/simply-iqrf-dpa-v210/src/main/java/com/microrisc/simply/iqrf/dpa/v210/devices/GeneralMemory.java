@@ -26,6 +26,10 @@ import java.util.UUID;
 
 /**
  * DPA Device Interface for memory general operations.
+ * <p>
+ * IMPORTANT NOTE: <br>
+ * Every method returns {@code NULL}, if an error has occurred during processing
+ * of this method.
  * 
  * @author Michal Konopa
  */
@@ -40,6 +44,9 @@ extends DPA_StandardServices, GenericAsyncCallable, MethodIdTransformer {
         WRITE
     }
     
+    
+    // ASYNCHRONOUS METHODS
+    
     /**
      * Sends method call request for reading from peripheral.
      * @param address address to read data from
@@ -49,7 +56,17 @@ extends DPA_StandardServices, GenericAsyncCallable, MethodIdTransformer {
     UUID async_read(int address, int length);
     
     /**
-     * Reads data from memory.
+     * Sends method call request for writing data to peripheral.
+     * @param address address to write data to
+     * @param data actual data to be written to the memory
+     * @return unique identifier of sent request
+     */
+    UUID async_write(int address, short[] data);
+    
+    
+    // SYNCHRONOUS WRAPPERS
+    
+    /**
      * Synchronous wrapper for {@link #async_read(int, int) async_read} method.
      * @param address address to read data from
      * @param length length of the data in bytes
@@ -58,17 +75,7 @@ extends DPA_StandardServices, GenericAsyncCallable, MethodIdTransformer {
      */
     short[] read(int address, int length);
     
-    
     /**
-     * Sends method call request for writing data to peripheral.
-     * @param address address to write data to
-     * @param data actual data to be written to the memory
-     * @return unique identifier of sent request
-     */
-    UUID async_write(int address, short[] data);
-    
-    /**
-     * Writes data to memory.
      * Synchronous wrapper for {@link #async_write(int, short[]) async_write} method.
      * @param address address to write data to
      * @param data actual data to be written to the memory

@@ -23,11 +23,14 @@ import com.microrisc.simply.di_services.MethodIdTransformer;
 import com.microrisc.simply.iqrf.dpa.v210.di_services.DPA_StandardServices;
 import com.microrisc.simply.iqrf.dpa.v210.types.BaudRate;
 import com.microrisc.simply.iqrf.types.VoidType;
+import java.util.UUID;
 
 /**
  * DPA UART Device Interface.
- * All methods return {@code null} if an error has occurred during processing
- * of corresponding method call.
+ * <p>
+ * IMPORTANT NOTE: <br>
+ * Every method returns {@code NULL}, if an error has occurred during processing
+ * of this method.
  * 
  * @author Michal Konopa
  */
@@ -43,21 +46,53 @@ extends DPA_StandardServices, GenericAsyncCallable, MethodIdTransformer {
         WRITE_AND_READ
     }
     
+    
+    // ASYNCHRONOUS METHODS
+    
     /**
-     * Opens UART at specified baudrate and flushes internal read and write buffers.
+     * Sends method call request for opening UART at specified baudrate and 
+     * flushing internal read and write buffers.
+     * @param baudRate baudrate to use
+     * @return unique identifier of sent request
+     */
+    UUID async_open(BaudRate baudRate);
+    
+    /**
+     * Sends method call request for closing UART interface.
+     * @return unique identifier of sent request
+     */
+    UUID async_close();
+    
+    /**
+     * Sends method call request for reading and/or writing data to/from UART interface.
+     * @param readTimeout specifies timeout in 10 ms unit to wait for data to 
+     *        be read from UART after data is (optionally) written. <br>
+     *        {@code 0xff} specifies that no data should be read.
+     * @param data optional data to be written to the UART
+     * @return unique identifier of sent request
+     */
+    UUID async_writeAndRead(int readTimeout, short[] data);
+    
+    
+    
+    // SYNCHRONOUS WRAPPERS
+    
+    /**
+     * Synchronous wrapper for {@link 
+     * #async_open(com.microrisc.simply.iqrf.dpa.v210.types.BaudRate)  async_open} method.
      * @param baudRate baudrate to use
      * @return {@code VoidType} object, if method call has processed allright
      */
     VoidType open(BaudRate baudRate);
     
     /**
-     * Closes UART interface.
+     * Synchronous wrapper for {@link #async_close() async_close} method.
      * @return {@code VoidType} object, if method call has processed allright
      */
     VoidType close();
     
     /**
-     * Reads and/or writes data to/from UART interface.
+     * Synchronous wrapper for {@link #async_writeAndRead(int, short[]) async_writeAndRead} method.
      * @param readTimeout specifies timeout in 10 ms unit to wait for data to 
      *        be read from UART after data is (optionally) written. <br>
      *        {@code 0xff} specifies that no data should be read.

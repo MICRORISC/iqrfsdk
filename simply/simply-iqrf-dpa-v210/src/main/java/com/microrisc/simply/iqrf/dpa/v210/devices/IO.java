@@ -28,6 +28,10 @@ import java.util.UUID;
 
 /**
  * DPA Device Interface for general IO operations.
+ * <p>
+ * IMPORTANT NOTE: <br>
+ * Every method returns {@code NULL}, if an error has occurred during processing
+ * of this method.
  * 
  * @author Michal Konopa
  */
@@ -43,27 +47,18 @@ extends DPA_StandardServices, GenericAsyncCallable, MethodIdTransformer {
         GET
     }
     
+    
+    // ASYNCHRONOUS METHODS
+    
     /**
      * Sends method call request for setting the direction of the individual 
-     * IO pins of the individual ports.
+     * IO pins of the individual ports. Additionally, the same command can be 
+     * used to setup weak pull-ups at the pins where available. <br>
+     * See datasheet of the PIC MCU for a description of IO ports.
      * @param directionSettings direction settings
      * @return unique identifier of sent request
      */
     UUID async_setDirection(IO_DirectionSettings[] directionSettings);
-    
-    /**
-     * Sets the direction of the individual IO pins of the individual ports. 
-     * Additionally the same command can be used to setup weak pull-ups at 
-     * the pins where available. <br>
-     * See datasheet of the PIC MCU for a description of IO ports.
-     * Synchronous wrapper for {@link #async_setDirection(com.microrisc.simply.iqrf.dpa.v210.types.IO_DirectionSettings[])  
-     * async_setDirection} method.
-     * @param directionSettings direction settings
-     * @return {@code VoidType} object, if operation has processed correctly <br>
-     *         {@code null}, if an error has occurred during processing
-     */
-    VoidType setDirection(IO_DirectionSettings[] directionSettings);
-    
     
     /**
      * Sends method call request for setting the output state of the IO pins.
@@ -73,29 +68,37 @@ extends DPA_StandardServices, GenericAsyncCallable, MethodIdTransformer {
     UUID async_setOutputState(IO_Command[] ioCommands);
     
     /**
-     * Sets the output state of the IO pins.
-     * Synchronous wrapper for {@link #async_setOutputState(com.microrisc.simply.iqrf.dpa.v210.types.IO_Command[]) 
-     * async_setOutputState} method.
-     * @param ioCommands IO commands
-     * @return {@code VoidType} object, if operation has processed correctly <br>
-     *         {@code null} if an error has occurred during processing
-     */
-    VoidType setOutputState(IO_Command[] ioCommands);
-    
-    
-    /**
-     * Sends method call request for getting the input state of all supported 
+     * Sends method call request for reading the input state of all supported 
      * the MCU ports.
      * @return unique identifier of sent request
      */
     UUID async_get();
     
+    
+    
+    // SYNCHRONOUS WRAPPERS
+    
+    /** 
+     * Synchronous wrapper for {@link #async_setDirection(com.microrisc.simply.iqrf.dpa.v210.types.IO_DirectionSettings[])  
+     * async_setDirection} method.
+     * @param directionSettings direction settings
+     * @return {@code VoidType} object, if operation has processed correctly
+     */
+    VoidType setDirection(IO_DirectionSettings[] directionSettings);
+    
     /**
-     * Reads the input state of all supported the MCU ports.
+     * Synchronous wrapper for {@link 
+     * #async_setOutputState(com.microrisc.simply.iqrf.dpa.v210.types.IO_Command[]) 
+     * async_setOutputState} method.
+     * @param ioCommands IO commands
+     * @return {@code VoidType} object, if operation has processed correctly
+     */
+    VoidType setOutputState(IO_Command[] ioCommands);
+    
+    /**
      * Synchronous wrapper for {@link #async_get() async_get} method.
      * @return array of bytes representing state of port PORTA, PORTB, ..., 
-     *         ending with the last supported MCU port. <br>
-     *         {@code null}, if an error has occurred during processing
+     *         ending with the last supported MCU port
      */
     short[] get();
 }
