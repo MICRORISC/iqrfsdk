@@ -35,11 +35,17 @@ implements StandardServices
     /** Logger. */
     private static final Logger logger = LoggerFactory.getLogger(StandardServicesDeviceObject.class);
     
+    // multiplier for getting number of miliseconds from number of nanoseconds 
+    private static final double NANOSEC_TO_MILISEC = 1/1000000;
+    
+    
     /** Initial value of timeout to wait for result from DO method call. */
     public static final long INITIAL_WAITING_TIMEOUT = 10000;
     
     /** Timeout to wait for result from DO method call. */
     protected long waitingTimeout = INITIAL_WAITING_TIMEOUT;
+    
+    
     
     
     private static long checkWaitingTimeout(long waitingTimeout) {
@@ -126,11 +132,12 @@ implements StandardServices
         
         synchronized( results ) {
             while ( results.get(callId) == null ) {
-                long startTime, timeElapsed;
+                long startTime;
+                double timeElapsed;
                 try {
                     startTime = System.nanoTime();
                     results.wait( timeout );
-                    timeElapsed = System.nanoTime() - startTime;
+                    timeElapsed = (System.nanoTime() - startTime) * NANOSEC_TO_MILISEC;
                 } catch ( InterruptedException e ) {
                     logger.warn("{}Get call result - interrupted", logPrefix);
                     break;

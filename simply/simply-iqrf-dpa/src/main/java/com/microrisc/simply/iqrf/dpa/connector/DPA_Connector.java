@@ -65,6 +65,8 @@ implements
     /** Logger. */
     private static final Logger logger = LoggerFactory.getLogger(DPA_Connector.class);
     
+    // multiplier for getting number of miliseconds from number of nanoseconds 
+    private static final double NANOSEC_TO_MILISEC = 1/1000000;
     
     /**
      * Call request associated with information needed to process that call request.
@@ -243,6 +245,7 @@ implements
             logger.debug("responseArrivedForLastRequest - start: ");
             
             if ( msgFromProtoLayer.isEmpty() ) {
+                logger.debug("responseArrivedForLastRequest - no messages from protocol layer");
                 logger.debug("responseArrivedForLastRequest - end: false");
                 return false;
             }
@@ -253,6 +256,13 @@ implements
                 if ( response.getRequestId().equals(currProcRequestInfo.getRequestId()) ) {
                     logger.debug("responseArrivedForLastRequest - end: true");
                     return true;
+                } else {
+                    logger.debug(
+                        "responseArrivedForLastRequest - request IDs mismatch: "
+                        + "response ID={}, current request ID={}", 
+                            response.getRequestId(),
+                            currProcRequestInfo.getRequestId()
+                    );
                 }
             }
             
@@ -610,7 +620,7 @@ implements
                             } else {
                                 long startTime = System.nanoTime();
                                 syncMsgfromProtoLayer.wait( timeToWait );
-                                long timeElapsed = System.nanoTime() - startTime;
+                                double timeElapsed = (System.nanoTime() - startTime) * NANOSEC_TO_MILISEC;
 
                                 if ( timeElapsed >= timeToWait ) {
                                     break;
@@ -1054,7 +1064,7 @@ implements
                 } else {
                     logger.warn(
                         "Incomming asynchronous message is not of DPA_AsynchronousMessage "
-                        + "type. It will be discared", message
+                        + "type. It will be discarded", message
                     );
                 }
             } else {
