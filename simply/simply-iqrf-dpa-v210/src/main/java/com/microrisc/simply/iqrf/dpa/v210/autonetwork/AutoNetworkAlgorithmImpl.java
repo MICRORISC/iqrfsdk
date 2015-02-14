@@ -46,7 +46,6 @@ import com.microrisc.simply.iqrf.dpa.v210.types.RemotelyBondedModuleId;
 import com.microrisc.simply.iqrf.dpa.v210.types.RoutingHops;
 import com.microrisc.simply.iqrf.types.VoidType;
 import java.lang.reflect.Field;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -410,9 +409,26 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
     /** Bonded nodes. */
     private BondedNodes bondedNodes = null;
     
-    /** Dsicovered nodes. */
+    /** Discovered nodes. */
     private DiscoveredNodes discoveredNodes = null;
     
+    
+    
+    // prints specified bytes to hex string from most significant byte 
+    private String toHexaFromLastByteString(short[] bytes) {
+        StringBuilder sb = new StringBuilder();
+        sb.append('[');
+        for ( int byteId = bytes.length-1; byteId >= 0; byteId-- ) {
+            String hexString = Integer.toHexString(bytes[byteId]);
+            if ( hexString.length() < 2 ) {
+                sb.append('0');
+            }
+            sb.append(hexString);
+        }
+        sb.append(']');
+        
+        return sb.toString();
+    }
     
     // returns next free address
     private int nextFreeAddr(BondedNodes bondedNodes, int from ) throws Exception {
@@ -827,8 +843,8 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
             RemotelyBondedModuleId remoBondedModuleId = nodeIface.readRemotelyBondedModuleId();
             if ( remoBondedModuleId != null ) {
                 logger.info("Node {} prebonded MID={}, UserData={}", 
-                    nodeAddr, remoBondedModuleId.getModuleId(),
-                    remoBondedModuleId.getUserData()
+                    nodeAddr, toHexaFromLastByteString(remoBondedModuleId.getModuleId()),
+                    toHexaFromLastByteString(remoBondedModuleId.getUserData())
                 );
 
                 if ( !prebondedMIDs.contains(remoBondedModuleId) ) {
@@ -854,8 +870,8 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
         if ( remoBondedModuleId != null ) {
             logger.info(
                 "Coordinator prebonded MID={}, UserData={}", 
-                Arrays.toString(remoBondedModuleId.getModuleId()), 
-                Arrays.toString(remoBondedModuleId.getUserData())
+                toHexaFromLastByteString(remoBondedModuleId.getModuleId()), 
+                toHexaFromLastByteString(remoBondedModuleId.getUserData())
             );
             prebondedMIDs.add(remoBondedModuleId);
         } else {
@@ -879,13 +895,21 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
                 = sortFrcResult(prebondDisablingResult);
 
         // logging prebonding info on each node
+        StringBuilder sb = new StringBuilder();
         for ( Map.Entry<String, FRC_Prebonding.Result> dataEntry : sortedPrebondDisablingResult.entrySet()
         ) {
-            logger.info(
-                "Node: {}, bit 0: {}, bit 1: {}", 
-                dataEntry.getKey(), dataEntry.getValue().getBit0(), dataEntry.getValue().getBit1()
-            );
+            sb.append(dataEntry.getKey());
+            sb.append(": [");
+            sb.append(dataEntry.getValue().getBit0());
+            sb.append(", ");
+            sb.append(dataEntry.getValue().getBit1());
+            sb.append("]");
+            sb.append(", ");
         }
+        
+        sb.delete(sb.length()-2, sb.length());
+        
+        logger.info("{}", sb.toString());
         
         // getting prebonding nodes
         List<Integer> prebondingNodes = getPrebondingNodes(sortedPrebondDisablingResult);        
@@ -944,10 +968,11 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
                 
                 logger.info(
                     "Authorizing node {}, address={}, devices count={}, waiting to finish authorization...", 
-                    Arrays.toString(moduleId.getModuleId()), 
+                    toHexaFromLastByteString(moduleId.getModuleId()),
                     bondedNode.getBondedAddress(), 
                     bondedNode.getBondedNodesNum()
                 );
+                
                 
                 // waiting with the possibility of interruption
                 Thread.sleep( bondedNodes.getNodesNumber() * 40 + 150 );
@@ -1213,9 +1238,15 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
             }
             
             PeriodFormatter perFormatter = new PeriodFormatterBuilder()
+                    .printZeroAlways()
                     .appendHours()
+                    .appendSuffix(" hour", " hours")
+                    .appendSeparator(" ")
                     .appendMinutes()
+                    .appendSuffix(" minute", " minutes")
+                    .appendSeparator(" ")
                     .appendSeconds()
+                    .appendSuffix(" second", " seconds")
                     .toFormatter();
             logger.info(
                     "Round={}, Nodes={}, New nodes={}, Time={}", 
