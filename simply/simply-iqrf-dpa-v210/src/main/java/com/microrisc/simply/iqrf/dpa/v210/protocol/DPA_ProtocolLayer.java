@@ -32,7 +32,9 @@ import com.microrisc.simply.iqrf.dpa.broadcasting.BroadcastRequest;
 import com.microrisc.simply.iqrf.dpa.broadcasting.BroadcastResult;
 import com.microrisc.simply.iqrf.dpa.v210.DPA_ResponseCode;
 import com.microrisc.simply.iqrf.dpa.v210.devices.Coordinator;
+import com.microrisc.simply.iqrf.dpa.v210.devices.FRC;
 import com.microrisc.simply.iqrf.dpa.v210.di_services.method_id_transformers.CoordinatorStandardTransformer;
+import com.microrisc.simply.iqrf.dpa.v210.di_services.method_id_transformers.FRCStandardTransformer;
 import com.microrisc.simply.iqrf.dpa.v210.typeconvertors.DPA_ConfirmationConvertor;
 import com.microrisc.simply.iqrf.dpa.v210.types.DPA_Confirmation;
 import com.microrisc.simply.network.BaseNetworkData;
@@ -41,13 +43,13 @@ import com.microrisc.simply.protocol.CallRequestComparator;
 import com.microrisc.simply.protocol.MessageConvertor;
 import com.microrisc.simply.protocol.SimpleRequestToResponseMatcher;
 import com.microrisc.simply.typeconvertors.ValueConversionException;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
+import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -96,63 +98,79 @@ implements ProtocolStateMachineListener
     // whose response time is not inherently bounded, i.e. discovery
     private static class TimeUnlimitedRequestInfo {
         Class devIface;
-        String methodId;
+        Set<String> methodIds;
         
-        public TimeUnlimitedRequestInfo(Class devIface, String methodId) {
+        public TimeUnlimitedRequestInfo(Class devIface, Set<String> methodIds) {
             this.devIface = devIface;
-            this.methodId = methodId;
+            this.methodIds = methodIds;
         }
+    }
+    
+    // map of time unlimited requests
+    private static Map<Class, TimeUnlimitedRequestInfo> timeUnlimitedRequestsMap = new HashMap<>();
+    
+    // initialize set of time unlimited requests
+    private static void initTimeUnlimitedRequests() {
+        Set<String> coordUnlimitedOperations = new HashSet<>();
+        coordUnlimitedOperations.add(
+                CoordinatorStandardTransformer
+                .getInstance()
+                .transform(Coordinator.MethodID.RUN_DISCOVERY)
+        );
         
-        @Override
-        public boolean equals(Object o) {
-            if ( !(o instanceof TimeUnlimitedRequestInfo) ) {
-                return false;
-            }
-            
-            TimeUnlimitedRequestInfo requestInfo = (TimeUnlimitedRequestInfo)o;
-            return ( 
-                    requestInfo.devIface.equals(this.devIface) 
-                    && requestInfo.methodId.equals(this.methodId)  
-            );
-        }
-    }
-    
-    // set of time unlimited requests
-    private Set<TimeUnlimitedRequestInfo> timeUnlimitedRequests = new HashSet<>();
-    
-    // initialize set of time limited requests
-    private void initTimeUnlimitedRequests() {
-        timeUnlimitedRequests.add(
+        coordUnlimitedOperations.add(
+                CoordinatorStandardTransformer
+                .getInstance()
+                .transform(Coordinator.MethodID.BOND_NODE)
+        );
+        
+        timeUnlimitedRequestsMap.put(
+                Coordinator.class,
                 new TimeUnlimitedRequestInfo(
                         Coordinator.class,
-                        CoordinatorStandardTransformer
-                            .getInstance()
-                            .transform(Coordinator.MethodID.RUN_DISCOVERY)
+                        coordUnlimitedOperations
                 )
         );
-        timeUnlimitedRequests.add(
+        
+        Set<String> frcUnlimitedOperations = new HashSet<>();
+        frcUnlimitedOperations.add(
+                FRCStandardTransformer
+                .getInstance()
+                .transform(FRC.MethodID.SEND)
+        );
+        
+        frcUnlimitedOperations.add(
+                FRCStandardTransformer
+                .getInstance()
+                .transform(FRC.MethodID.EXTRA_RESULT)
+        );
+        
+        timeUnlimitedRequestsMap.put(
+                FRC.class,
                 new TimeUnlimitedRequestInfo(
-                        Coordinator.class,
-                        CoordinatorStandardTransformer
-                            .getInstance()
-                            .transform(Coordinator.MethodID.BOND_NODE)
+                        FRC.class,
+                        frcUnlimitedOperations
                 )
         );
     }
+    
+    // static initializer
+    static {
+        initTimeUnlimitedRequests();
+    }
+    
+    
     
     // indicates, wheather the specified request is time unlimited
     private static boolean isTimeUnlimitedRequest(CallRequest request) {
-        if ( request.getDeviceInterface() != Coordinator.class ) {
+        TimeUnlimitedRequestInfo unlimRequestInfo 
+                = timeUnlimitedRequestsMap.get(request.getDeviceInterface());
+        
+        if ( unlimRequestInfo == null ) {
             return false;
         }
         
-        // checking of transformed method ID
-        String discoMethodConvId = CoordinatorStandardTransformer
-                .getInstance()
-                .transform(Coordinator.MethodID.RUN_DISCOVERY
-        ); 
-        
-        return ( request.getMethodId().equals(discoMethodConvId) ); 
+        return unlimRequestInfo.methodIds.contains(request.getMethodId());        
     }
     
     // indicates, wheather a time unlimited request is in process
@@ -313,7 +331,7 @@ implements ProtocolStateMachineListener
                     listener.onGetMessage(message);
                 }
             } else {
-                logger.warn("Uknown type of the message={}, discarded", message);
+                logger.warn("Unknown type of the message={}, discarded", message);
                 logger.debug("processMessage - end");
             }
             return;
@@ -392,65 +410,26 @@ implements ProtocolStateMachineListener
         logger.debug("sendErrorMessage - end");
     }
     
-    /** List of broadcast requests, which was sent to network layer. */
-    private Queue<TimeRequest> sentBroadcastRequests = new ConcurrentLinkedQueue<>();
-    
-    /** Synchronization object for {@code sentBroadcastRequest} data structure. */
-    private final Object synchroSentBroadcastRequest = new Object();
-    
-    
-    /**
-     * Calling listener callback method to send broadcast responses.
-     */
-    private class BroadcastResponder extends Thread {
-        
-        @Override
-        public void run() {
-            while ( true ) {
-                if ( this.isInterrupted() ) {
-                    logger.info("Broadcast responder thread interrupted");
-                    return;
-                }
+    // processes specified broadcast confirmation
+    private void processBroadcastConfirmation(DPA_Confirmation confirmation) {
+        BroadcastRequest request = (BroadcastRequest) lastRequest.request;
+        BaseCallResponse response = new BaseCallResponse(
+                BroadcastResult.OK, 
+                null,
+                new SimpleMethodMessageSource( 
+                        new SimpleMessageSource(request.getNetworkId(), request.getNodeId()), 
+                        request.getDeviceInterface(), 
+                        request.getMethodId()
+                ),
+                null
+        );
+        response.setRequestId(request.getId());
 
-                TimeRequest tmRequest = null;
-                
-                synchronized ( synchroSentBroadcastRequest ) {
-                    while ( sentBroadcastRequests.isEmpty() ) {
-                        try {
-                            synchroSentBroadcastRequest.wait();
-                        } catch ( InterruptedException e ) {
-                            logger.warn("Broadcast responder thread interrupted while waiting", e);
-                            return;
-                        }
-                    }
-                    tmRequest = sentBroadcastRequests.poll(); 
-                }
-                
-                BroadcastRequest request = (BroadcastRequest) tmRequest.request;
-                BaseCallResponse response = new BaseCallResponse(
-                        BroadcastResult.OK, 
-                        null,
-                        new SimpleMethodMessageSource( 
-                                new SimpleMessageSource(request.getNetworkId(), request.getNodeId()), 
-                                request.getDeviceInterface(), 
-                                request.getMethodId()
-                        ),
-                        null
-                );
-                response.setRequestId(request.getId());
-                
-                synchronized ( synchroListener ) {
-                    listener.onGetMessage(response);
-                }
-            }
+        synchronized ( synchroListener ) {
+            listener.onGetMessage(response);
         }
     }
     
-    // broadcast responder thread
-    private Thread broadcastResponder = null;
-    
-    // timeout to wait for worker threads to join
-    private static final long JOIN_WAIT_TIMEOUT = 2000;
     
     /** 
      * Synchronization object for listener. 
@@ -458,39 +437,6 @@ implements ProtocolStateMachineListener
      * responder thread concurently.
      */
     private final Object synchroListener = new Object();
-    
-    /**
-     * Terminates broadcast responder thread.
-     */
-    private void terminateBroadcastResponderThread() {
-        logger.debug("terminateBroadcastResponderThread - start:");
-        
-        // termination signal to broadcast responder thread
-        broadcastResponder.interrupt();
-        
-        // indicates, wheather this thread is interrupted
-        boolean isInterrupted = false;
-        
-        try {
-            if ( broadcastResponder.isAlive( )) {
-                broadcastResponder.join(JOIN_WAIT_TIMEOUT);
-            }
-        } catch ( InterruptedException e ) {
-            isInterrupted = true;
-            logger.warn("broadcast responder terminating - thread interrupted");
-        }
-        
-        if ( !broadcastResponder.isAlive() ) {
-            logger.info("Broadcast responder stopped.");
-        }
-        
-        if ( isInterrupted ) {
-            Thread.currentThread().interrupt();
-        }
-        
-        logger.info("broadcast responding stopped.");
-        logger.debug("terminateBroadcastResponderThread - end");
-    }
     
     
     /**
@@ -502,7 +448,6 @@ implements ProtocolStateMachineListener
             MessageConvertor msgConvertor
     ) {
         super(networkLayerService, msgConvertor);
-        broadcastResponder = new BroadcastResponder();
         protoMachine = new ProtocolStateMachine();
         initTimeUnlimitedRequests();
     }
@@ -559,32 +504,33 @@ implements ProtocolStateMachineListener
         
         lastRequest = new TimeRequest(request, System.currentTimeMillis());
         
-        if ( request instanceof BroadcastRequest ) {
-            synchronized ( synchroSentBroadcastRequest ) {
-                networkLayerService.sendData( new BaseNetworkData(protoMsg, request.getNetworkId()) );
-                sentBroadcastRequests.add( lastRequest );
+        // must be performed altogether to eliminating the case, when 
+        // response comes to early
+        synchronized ( synchroSendOrReceive ) {
+            // maintenance of already sent requests
+            maintainSentRequest(request);
+            networkLayerService.sendData( new BaseNetworkData(protoMsg, request.getNetworkId()) );
+            
+            // broadcast requests are treated as NO TIME UNLIMITED
+            if ( request instanceof BroadcastRequest ) {
+                isTimeUnlimitedRequestInProcess = false;
                 protoMachine.newRequest(request);
-                synchroSentBroadcastRequest.notify();
-            }
-        } else {
-            // must be performed altogether to eliminating the case, when 
-            // response comes to early
-            synchronized ( synchroSendOrReceive ) {
-                // maintenance of already sent requests
-                maintainSentRequest(request);
-                networkLayerService.sendData( new BaseNetworkData(protoMsg, request.getNetworkId()) );
+            } else {
                 synchronized ( synchroSentRequest ) {
                     sentRequests.add( lastRequest );
-                }
-                if ( isTimeUnlimitedRequest(request) ) {
-                    isTimeUnlimitedRequestInProcess = true;
-                } else {
-                    isTimeUnlimitedRequestInProcess = false;
-                    protoMachine.newRequest(request);
-                }
+                    
+                    // TIME UNLIMITED requests go outside of Protocol State Machine
+                    // because the machine works with precise limited timeouts
+                    if ( isTimeUnlimitedRequest(request) ) {
+                        isTimeUnlimitedRequestInProcess = true;
+                    } else {
+                        isTimeUnlimitedRequestInProcess = false;
+                        protoMachine.newRequest(request);
+                    }
+                }    
             }
         }
-        
+      
         logger.debug("sendRequest - end");
     }
     
@@ -593,7 +539,6 @@ implements ProtocolStateMachineListener
         logger.debug("start - start:");
         
         super.start();
-        broadcastResponder.start();
         protoMachine.start();
         protoMachine.registerListener(this);
         
@@ -609,12 +554,6 @@ implements ProtocolStateMachineListener
         
         sentRequests.clear();
         sentRequests = null;
-        
-        terminateBroadcastResponderThread();
-        broadcastResponder = null;
-        
-        sentBroadcastRequests.clear();
-        sentBroadcastRequests = null;
         
         protoMachine.unregisterListener();
         protoMachine.destroy();
@@ -672,6 +611,10 @@ implements ProtocolStateMachineListener
                     } catch ( StateTimeoutedException ex ) {
                         logger.error("Confirmation reception too late. Waiting timeouted.");
                         return;
+                    }
+                    
+                    if ( lastRequest.request instanceof BroadcastRequest ) {
+                        processBroadcastConfirmation(confirmation);
                     }
                 }
             }
