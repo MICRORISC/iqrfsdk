@@ -875,7 +875,7 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
             );
             prebondedMIDs.add(remoBondedModuleId);
         } else {
-            logger.error("Unable to read prebonded MID from coordinator {}");
+            logger.error("Unable to read prebonded MID from coordinator");
         }
         
         if ( bondedNodes.getNodesNumber() == 0 ) {
