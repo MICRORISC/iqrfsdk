@@ -66,7 +66,7 @@ implements
     private static final Logger logger = LoggerFactory.getLogger(DPA_Connector.class);
     
     // multiplier for getting number of miliseconds from number of nanoseconds 
-    private static final double NANOSEC_TO_MILISEC = 1/1000000;
+    private static final double NANOSEC_TO_MILISEC = 1.0/1000000;
     
     /**
      * Call request associated with information needed to process that call request.

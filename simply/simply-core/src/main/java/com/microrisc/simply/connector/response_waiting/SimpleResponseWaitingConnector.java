@@ -48,8 +48,11 @@ import org.slf4j.LoggerFactory;
 public final class SimpleResponseWaitingConnector 
 extends AbstractConnector implements ResponseWaitingConnector {
     /** Logger. */
-    private static final Logger logger = 
-            LoggerFactory.getLogger(SimpleResponseWaitingConnector.class);
+    private static final Logger logger 
+            = LoggerFactory.getLogger(SimpleResponseWaitingConnector.class);
+    
+    // multiplier for getting number of miliseconds from number of nanoseconds 
+    private static final double NANOSEC_TO_MILISEC = 1.0/1000000;
     
     
     /**
@@ -509,7 +512,7 @@ extends AbstractConnector implements ResponseWaitingConnector {
                             } else {
                                 long startTime = System.nanoTime();
                                 syncMsgfromNetwork.wait( timeToWait );
-                                long timeElapsed = System.nanoTime() - startTime;
+                                double timeElapsed = (System.nanoTime() - startTime) * NANOSEC_TO_MILISEC;
 
                                 if ( timeElapsed >= timeToWait ) {
                                     break;

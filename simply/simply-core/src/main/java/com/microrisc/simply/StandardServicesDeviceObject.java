@@ -36,7 +36,7 @@ implements StandardServices
     private static final Logger logger = LoggerFactory.getLogger(StandardServicesDeviceObject.class);
     
     // multiplier for getting number of miliseconds from number of nanoseconds 
-    private static final double NANOSEC_TO_MILISEC = 1/1000000;
+    private static final double NANOSEC_TO_MILISEC = 1.0/1000000;
     
     
     /** Initial value of timeout to wait for result from DO method call. */
