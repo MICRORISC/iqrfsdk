@@ -49,7 +49,7 @@ public final class AutoNetworkDemo {
     // denotes, that maximal running time of the algorithm is potentially unlimited
     public static final int MAX_RUNNING_TIME_UNLIMITED = -1;
     
-    // maximal running time of the algorithm
+    // maximal running time of the algorithm [ in seconds ]
     private static long maxRunningTime = MAX_RUNNING_TIME_UNLIMITED;
     
     
@@ -118,7 +118,7 @@ public final class AutoNetworkDemo {
                     .isRequired(false)
                     .hasArg()
                     .withDescription(
-                            "Prebonding interval [in ms]\n"
+                            "Prebonding interval [in seconds]\n"
                             + "Default value: " + AutoNetworkAlgorithmImpl.PREBONDING_INTERVAL_DEFAULT
                     )
                     .create("prebondingInterval")
@@ -151,7 +151,7 @@ public final class AutoNetworkDemo {
                     .isRequired(false)
                     .hasArg()
                     .withDescription(
-                            "Temporary address timeout [in ms]\n"
+                            "Temporary address timeout [in seconds]\n"
                             + "Default value: " + AutoNetworkAlgorithmImpl.TEMPORARY_ADDRESS_TIMEOUT_DEFAULT
                     )
                     .create("temporaryAddressTimeout")
@@ -187,7 +187,7 @@ public final class AutoNetworkDemo {
                     .isRequired(false)
                     .hasArg()
                     .withDescription(
-                            "Maximal running time of the algorithm [in ms]."
+                            "Maximal running time of the algorithm [in seconds]."
                             + "Set the " + MAX_RUNNING_TIME_UNLIMITED + " value "
                             + "for not to limit the maximal running time.\n"
                             + "Default value: " + MAX_RUNNING_TIME_UNLIMITED 
@@ -386,45 +386,44 @@ public final class AutoNetworkDemo {
         // start the algorithm
         algo.start();
         
-        if ( maxRunningTime == MAX_RUNNING_TIME_UNLIMITED ) {
-            while ( !algo.isFinished() ) {
-                try {
-                    Thread.sleep(1000);
-                } catch ( InterruptedException ex ) {
-                    printMessageAndExit("Algorithm interrupted.");
-                }
-            }
-            State algState = ((AutoNetworkAlgorithmImpl)(algo)).getState();
-            switch ( algState ) {
-                case FINISHED_OK:
-                    System.out.println("Algorithm succesfully finished.");
-                    break;
-                case ERROR:
-                    System.out.println("Error occured during algorithm run.");
-                default:
-                    System.out.println("Algorithm finished with state: " + algState);
-            }
-        } else {
+        // total running time [in seconds]
+        long runTimeTotal = 0;
+        
+        while ( !algo.isFinished() ) {
             try {
-                Thread.sleep(maxRunningTime);
+                Thread.sleep(1000);
             } catch ( InterruptedException ex ) {
                 printMessageAndExit("Algorithm interrupted.");
             }
             
-            // is algorithm finished?
-            if ( algo.isFinished() ) {
-                System.out.println("Algorithm succesfully finished.");
-            } else {
-                // cancell the algorithm
-                // after cancellation is not possible to run the algorithm again
-                algo.cancel();
-                System.out.println("Algorithm cancelled.");
+            if ( maxRunningTime != MAX_RUNNING_TIME_UNLIMITED ) {
+                runTimeTotal += 1;
+                if ( runTimeTotal >= maxRunningTime ) {
+                    // is algorithm finished?
+                    if ( !algo.isFinished() ) {
+                        // cancell the algorithm
+                        // after cancellation is not possible to run the algorithm again
+                        algo.cancel();
+                        System.out.println("Algorithm cancelled.");
+                    }
+                }
             }
+        }
+        
+        State algState = ((AutoNetworkAlgorithmImpl)(algo)).getState();
+        switch ( algState ) {
+            case FINISHED_OK:
+                System.out.println("Algorithm succesfully finished.");
+                break;
+            case ERROR:
+                System.out.println("Error occured during algorithm run.");
+            default:
+                System.out.println("Algorithm finished with state: " + algState);
         }
         
         // view the result of the algorithm run
         Network resultNetwork = ((AutoNetworkAlgorithmImpl)algo).getResultNetwork();
-        System.out.println("Number of nodes in the network: " + resultNetwork.getNodesMap().size());
+        System.out.println("Number of nodes in the network: " + (resultNetwork.getNodesMap().size()-1));
         
         // end working with Simply
         simply.destroy();
