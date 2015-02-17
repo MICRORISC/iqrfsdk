@@ -64,10 +64,10 @@ public final class AutoNetwork {
         AutoNetworkAlgorithm algo 
                 = new AutoNetworkAlgorithmImpl.Builder(network1, simply.getBroadcastServices())
                     .discoveryTxPower(7)
-                    .prebondingInterval(10000)
+                    .prebondingInterval(10)
                     .authorizeRetries(1)
                     .discoveryRetries(1)
-                    .temporaryAddressTimeout(100000)
+                    .temporaryAddressTimeout(100)
                     .autoUseFrc(true)
                     .p2pPrebonderMethodIdTransformer(P2PPrebonderStandardTransformer.getInstance())
                     .numberOfNodesToBond(5)
@@ -77,7 +77,7 @@ public final class AutoNetwork {
         algo.start();
 
         // do some other work for some time ...
-        Thread.sleep(30000);
+        Thread.sleep(80000);
 
         // is algorithm finished?
         if ( algo.isFinished() ) {
