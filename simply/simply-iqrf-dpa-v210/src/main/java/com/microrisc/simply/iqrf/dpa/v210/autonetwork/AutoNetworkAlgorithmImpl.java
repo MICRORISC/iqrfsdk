@@ -21,6 +21,7 @@ import com.microrisc.simply.CallRequestProcessingState;
 import com.microrisc.simply.DeviceInterfaceMethodId;
 import com.microrisc.simply.Network;
 import com.microrisc.simply.di_services.MethodIdTransformer;
+import com.microrisc.simply.di_services.WaitingTimeoutService;
 import com.microrisc.simply.errors.CallRequestProcessingError;
 import com.microrisc.simply.iqrf.dpa.broadcasting.BroadcastResult;
 import com.microrisc.simply.iqrf.dpa.broadcasting.services.BroadcastServices;
@@ -50,6 +51,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -81,8 +83,8 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
     /** Default discovery TX. */
     public static final int DISCOVERY_TX_POWER_DEFAULT = 4;
     
-    /** Default prebonding interval [ in ms ]. */
-    public static final long PREBONDING_INTERVAL_DEFAULT = 60000;
+    /** Default prebonding interval [ in seconds ]. */
+    public static final long PREBONDING_INTERVAL_DEFAULT = 10;
     
     /** Default number of retries to authorize new bonded node. */
     public static final int AUTHORIZE_RETRIES_DEFAULT = 1;
@@ -90,8 +92,8 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
     /** Default number of retries to run the discovery process after one iteration of algorithm. */
     public static final int DISCOVERY_RETRIES_DEFAULT = 1;
     
-    /** Default timeout for node to hold temporary address [in ms]. */
-    public static final long TEMPORARY_ADDRESS_TIMEOUT_DEFAULT = 100000;
+    /** Default timeout for node to hold temporary address [in seconds]. */
+    public static final long TEMPORARY_ADDRESS_TIMEOUT_DEFAULT = 100;
     
     /** 
      * Default indicator, wheather to use FRC automatically in checking 
@@ -439,12 +441,12 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
                 from = 1;
             }
             
-            if ( origAddr == from ) {
-                throw new Exception( "NextFreeAddr: no free address" );
-            }
-            
             if ( !bondedNodes.isBonded(from) ) {
                 return from;
+            }
+            
+            if ( origAddr == from ) {
+                throw new Exception( "NextFreeAddr: no free address" );
             }
         }
     }
@@ -459,14 +461,14 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
             throw new Exception("Error while getting bonded nodes.");
         }
         
-        logger.info("Bonded nodes: {}", this.bondedNodes.bondedNodesListToString());
+        logger.info("Bonded nodes: {}", getGentleListOfNodes(this.bondedNodes.getList()));
         
         this.discoveredNodes = coordinator.getDiscoveredNodes();
         if ( discoveredNodes == null ) {
             throw new Exception("Error while getting discovered nodes.");
         }
         
-        logger.info("Discovered nodes: {}", this.discoveredNodes.discoveredNodesListToString());
+        logger.info("Discovered nodes: {}", getGentleListOfNodes(this.discoveredNodes.getList()));
         
         List<Integer> notDiscovered = new LinkedList<>();
         for ( int bondedNodeId : bondedNodes.getList() ) {
@@ -474,7 +476,7 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
                 notDiscovered.add(bondedNodeId);
             }
         }
-        logger.info("NOT discovered nodes: {}", StringUtils.join(notDiscovered, ','));
+        logger.info("NOT discovered nodes: {}", getGentleListOfNodes(notDiscovered));
         logger.debug("updateNodesInfo - end: ");
     }
     
@@ -856,6 +858,108 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
         }
     }
     
+    private String getGentleListOfNodes(List<Integer> nodesList) {
+        StringBuilder sb = new StringBuilder();
+        
+        sb.append("[");
+        sb.append(nodesList.size());
+        sb.append("] ");
+        
+        ListIterator<Integer> iter = nodesList.listIterator();
+        int prevNodeId = -1;
+        int intervalBegin = -1;
+        boolean inInterval = false;
+        
+        while ( iter.hasNext() ) {
+            if ( prevNodeId == -1 ) {
+                prevNodeId = iter.next();
+                if ( !iter.hasNext() ) {
+                    sb.append(prevNodeId);    
+                }
+                continue;
+            }
+            
+            int nodeId = iter.next();
+            
+            if ( (nodeId - prevNodeId) == 1 ) {
+                if ( !inInterval ) {
+                    intervalBegin = prevNodeId;
+                    inInterval = true;
+                    if ( !iter.hasNext() ) {
+                        sb.append('<');
+                        sb.append(intervalBegin);
+                        sb.append('-');
+                        sb.append(nodeId);
+                        sb.append('>');
+                    }
+                } else {
+                    if ( !iter.hasNext() ) {
+                        sb.append('<');
+                        sb.append(intervalBegin);
+                        sb.append('-');
+                        sb.append(nodeId);
+                        sb.append('>');
+                    }
+                }
+            } else {
+                if ( inInterval ) {
+                    sb.append('<');
+                    sb.append(intervalBegin);
+                    sb.append('-');
+                    sb.append(prevNodeId);
+                    sb.append('>');
+                    sb.append(", "); 
+                    inInterval = false;
+                } else {
+                    sb.append(prevNodeId);
+                    sb.append(", "); 
+                }
+                
+                if ( !iter.hasNext() ) {
+                    sb.append(nodeId);
+                }
+            }
+            
+            prevNodeId = nodeId;
+        }
+        
+        if ( sb.substring(sb.length()-2).equals(", ") ) {
+            sb.delete(sb.length()-2, sb.length());
+        }
+        
+        return sb.toString();
+    }
+    
+    private void logSortedPrebondDisablingResult(
+        SortedMap<String, FRC_Prebonding.Result> sortedPrebondDisablingResult ) 
+    {
+        StringBuilder sb = new StringBuilder();
+        List<Integer> bit0Nodes = new LinkedList<>(); 
+        List<Integer> bit1Nodes = new LinkedList<>(); 
+        
+        for ( Map.Entry<String, FRC_Prebonding.Result> dataEntry 
+                : sortedPrebondDisablingResult.entrySet()
+        ) {
+            if ( dataEntry.getValue().getBit0() == 1 ) {
+                bit0Nodes.add(Integer.valueOf(dataEntry.getKey()));
+            }
+            
+            if ( dataEntry.getValue().getBit1() == 1 ) {
+                bit1Nodes.add(Integer.valueOf(dataEntry.getKey()));
+            }
+        }
+        
+        sb.append("bit0: ");
+        sb.append(getGentleListOfNodes(bit0Nodes));
+        
+        sb.append('\n');
+        
+        sb.append("bit1: ");
+        sb.append(getGentleListOfNodes(bit1Nodes));
+        
+        logger.info("{}", sb.toString());
+    }
+    
     // returns the list of prebonded MIDs
     private List<RemotelyBondedModuleId> getPrebondedMIDs(
             Coordinator coordinator, com.microrisc.simply.Node coordNode
@@ -893,23 +997,8 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
         // sort the disabling result
         SortedMap<String, FRC_Prebonding.Result> sortedPrebondDisablingResult 
                 = sortFrcResult(prebondDisablingResult);
-
-        // logging prebonding info on each node
-        StringBuilder sb = new StringBuilder();
-        for ( Map.Entry<String, FRC_Prebonding.Result> dataEntry : sortedPrebondDisablingResult.entrySet()
-        ) {
-            sb.append(dataEntry.getKey());
-            sb.append(": [");
-            sb.append(dataEntry.getValue().getBit0());
-            sb.append(", ");
-            sb.append(dataEntry.getValue().getBit1());
-            sb.append("]");
-            sb.append(", ");
-        }
         
-        sb.delete(sb.length()-2, sb.length());
-        
-        logger.info("{}", sb.toString());
+        logSortedPrebondDisablingResult(sortedPrebondDisablingResult);
         
         // getting prebonding nodes
         List<Integer> prebondingNodes = getPrebondingNodes(sortedPrebondDisablingResult);        
@@ -919,7 +1008,7 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
             return prebondedMIDs;
         }
         
-        logger.info("Nodes provided prebonding: {}", StringUtils.join(prebondingNodes, ',')) ;
+        logger.info("Nodes provided prebonding: {}", getGentleListOfNodes(prebondingNodes)) ;
         
         // adding prebonded MIDs from prebonding nodes
         addPrebondedMIDsFromPrebondingNodes(prebondingNodes, prebondedMIDs);
@@ -1157,6 +1246,9 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
             logger.debug("runAlgorithm - end");
             return;
         }
+        
+        // IMPORTANT: SET DEFAULT TIMEOUT FOR GETTING RESULT TO 'UNLIMITED'
+        coordinator.setDefaultWaitingTimeout( WaitingTimeoutService.UNLIMITED_WAITING_TIMEOUT );
         
         OS coordOs = coordNode.getDeviceObject(OS.class);
         if ( coordOs == null ) {
