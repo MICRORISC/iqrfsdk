@@ -21,6 +21,7 @@ import com.microrisc.simply.ManageableObject;
 import com.microrisc.simply.SimplyException;
 import com.microrisc.simply.iqrf.dpa.broadcasting.BroadcastRequest;
 import com.microrisc.simply.iqrf.dpa.v210.types.DPA_Confirmation;
+import com.microrisc.simply.iqrf.RF_Mode;
 import java.util.Arrays;
 import org.slf4j.LoggerFactory;
 
@@ -33,7 +34,12 @@ import org.slf4j.LoggerFactory;
 final class ProtocolStateMachine implements ManageableObject {
     /** Logger. */
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(ProtocolStateMachine.class);
-
+    
+    
+    // currently used RF mode
+    private RF_Mode rfMode = RF_Mode.STD;
+    
+    
     /**
      * Events, which occur during DPA protocol running, 
      * e.g confirmation arrival, response arrival etc. 
@@ -141,8 +147,17 @@ final class ProtocolStateMachine implements ManageableObject {
     private volatile long baseTimeToWaitForResponse = BASE_TIME_TO_WAIT_FOR_RESPONSE_DEFAULT;
     
     
-    // counts timeslot length in 10 ms units
-    private static long countTimeslotLength(int responseDataLength) {
+    private static long countTimeslotLengthForSTD_Mode(int responseDataLength) {
+        if ( responseDataLength < 19 ) {
+            return 3;
+        }
+        if ( responseDataLength < 41 ) {
+            return 4;
+        }
+        return 5;
+    }
+    
+    private static long countTimeslotLengthForLP_Mode(int responseDataLength) {
         if ( responseDataLength < 19 ) {
             return 8;
         }
@@ -150,6 +165,18 @@ final class ProtocolStateMachine implements ManageableObject {
             return 9;
         }
         return 10;
+    }
+    
+    // counts timeslot length in 10 ms units
+    private static long countTimeslotLength(RF_Mode rfMode, int responseDataLength) {
+        switch ( rfMode ) {
+            case STD:
+                return countTimeslotLengthForSTD_Mode(responseDataLength);
+            case LP:
+                return countTimeslotLengthForLP_Mode(responseDataLength);
+            default:
+                throw new IllegalStateException("Unknown RF mode used: " + rfMode);
+        }
     }
     
     private long countWaitingTimeForConfirmation() {
@@ -167,7 +194,7 @@ final class ProtocolStateMachine implements ManageableObject {
     }
     
     private long countWaitingTimeAfterResponse() {
-        long actualRespTimeslotLength = countTimeslotLength(responseDataLength);
+        long actualRespTimeslotLength = countTimeslotLength(rfMode, responseDataLength);
         
         if ( countWithConfirmation ) {
             if ( confirmation == null ) {
@@ -178,7 +205,7 @@ final class ProtocolStateMachine implements ManageableObject {
             }
             return ( confirmation.getHops() + 1 ) * confirmation.getTimeslotLength() * 10
                 + ( confirmation.getHopsResponse() + 1 ) * actualRespTimeslotLength  * 10
-                - (System.currentTimeMillis() - responseRecvTime);
+                - (System.currentTimeMillis() - confirmRecvTime);
         }
         
         return ( actualRespTimeslotLength * 10 ) - (System.currentTimeMillis() - responseRecvTime);
@@ -530,11 +557,36 @@ final class ProtocolStateMachine implements ManageableObject {
         return time;
     }
     
+    private static RF_Mode checkRF_Mode(RF_Mode rfMode) {
+        if ( rfMode == null ) {
+            throw new IllegalArgumentException("RF mode must be defined.");
+        }
+        
+        if ( rfMode == RF_Mode.XLP ) {
+            throw new IllegalArgumentException("XLP mode is not currently supported.");
+        }
+        
+        return rfMode;
+    }
+    
     
     /**
      * Creates new object of Protocol Machine.
+     * RF mode will be set to STD.
      */
     public ProtocolStateMachine() {
+        waitingTimeCounter = new WaitingTimeCounter();
+        logger.info("Protocol machine successfully created.");
+    }
+    
+    /**
+     * Creates new object of Protocol Machine, which will use specified RF mode 
+     * for messages timing.
+     * @param rfMode RF mode to use for messages timing
+     * @throws IllegalArgumentException if {@code rfMode} is {@code null}
+     */
+    public ProtocolStateMachine(RF_Mode rfMode) {
+        this.rfMode = checkRF_Mode(rfMode);
         waitingTimeCounter = new WaitingTimeCounter();
         logger.info("Protocol machine successfully created.");
     }

@@ -26,6 +26,7 @@ import com.microrisc.simply.SimpleMethodMessageSource;
 import com.microrisc.simply.SimplyException;
 import com.microrisc.simply.asynchrony.BaseAsynchronousMessage;
 import com.microrisc.simply.errors.NetworkInternalError;
+import com.microrisc.simply.iqrf.RF_Mode;
 import com.microrisc.simply.iqrf.dpa.asynchrony.DPA_AsynchronousMessage;
 import com.microrisc.simply.iqrf.dpa.asynchrony.SimpleDPA_AsynchronousMessageSource;
 import com.microrisc.simply.iqrf.dpa.broadcasting.BroadcastRequest;
@@ -441,14 +442,32 @@ implements ProtocolStateMachineListener
     
     /**
      * Creates new protocol layer object with specified network layer to use.
+     * Used RF mode will be set to <b>STD</b>.
      * @param networkLayerService network layer service object to use
      * @param msgConvertor message convertor to use
      */
-    public DPA_ProtocolLayer( NetworkLayerService networkLayerService, 
+    public DPA_ProtocolLayer(
+            NetworkLayerService networkLayerService, 
             MessageConvertor msgConvertor
     ) {
         super(networkLayerService, msgConvertor);
         protoMachine = new ProtocolStateMachine();
+        initTimeUnlimitedRequests();
+    }
+    
+    /**
+     * Creates new protocol layer object with specified network layer to use.
+     * @param networkLayerService network layer service object to use
+     * @param msgConvertor message convertor to use
+     * @param rfMode RF mode to use
+     */
+    public DPA_ProtocolLayer(
+            NetworkLayerService networkLayerService, 
+            MessageConvertor msgConvertor,
+            RF_Mode rfMode
+    ) {
+        super(networkLayerService, msgConvertor);
+        protoMachine = new ProtocolStateMachine(rfMode);
         initTimeUnlimitedRequests();
     }
     
