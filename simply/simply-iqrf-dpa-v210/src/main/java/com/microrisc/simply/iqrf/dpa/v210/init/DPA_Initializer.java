@@ -254,11 +254,14 @@ extends
         long prevRespTimeout = respWaitConn.getResponseTimeout();
         respWaitConn.setResponseTimeout(discConfig.discoveryTimeout());
         
+        long prevDefaultWaitingTimeout = coord.getDefaultWaitingTimeout();
         coord.setDefaultWaitingTimeout(discConfig.discoveryTimeout() + 2000);
+        
         DiscoveryResult discResult = coord.runDiscovery(
                 new DiscoveryParams(discConfig.dicoveryTxPower(), 0)
         );
         
+        coord.setDefaultWaitingTimeout(prevDefaultWaitingTimeout);
         respWaitConn.setResponseTimeout(prevRespTimeout);
         return discResult;
     }
