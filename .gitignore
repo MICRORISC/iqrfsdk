@@ -61,3 +61,4 @@ simply/simply-network-serial-v2/versions/1.0.0/target/
 /libs/raspberry/spi/jlibrpi-spi-iqrf/target/
 /libs/raspberry/spi/jlibrpi-spi/target/
 /simply/AutoNetworkDemo/target/
+/libs/iqrf/cdc-iqrf/jlibcdc-examples/target/
