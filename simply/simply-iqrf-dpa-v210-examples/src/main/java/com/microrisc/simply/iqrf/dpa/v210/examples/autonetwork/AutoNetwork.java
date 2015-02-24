@@ -67,7 +67,7 @@ public final class AutoNetwork {
                     .prebondingInterval(10)
                     .authorizeRetries(1)
                     .discoveryRetries(1)
-                    .temporaryAddressTimeout(100)
+                    .temporaryAddressTimeout(10)
                     .autoUseFrc(true)
                     .p2pPrebonderMethodIdTransformer(P2PPrebonderStandardTransformer.getInstance())
                     .numberOfNodesToBond(5)

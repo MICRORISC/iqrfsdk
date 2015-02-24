@@ -83,8 +83,16 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
     /** Default discovery TX. */
     public static final int DISCOVERY_TX_POWER_DEFAULT = 4;
     
+    
+    /** Minimal prebonding interval [ in seconds ]. */
+    public static final int PREBONDING_INTERVAL_MIN = 0;
+    
+    /** Maximal prebonding interval [ in seconds ]. */
+    public static final int PREBONDING_INTERVAL_MAX = (0xFFFF-1) / 100;
+    
     /** Default prebonding interval [ in seconds ]. */
     public static final long PREBONDING_INTERVAL_DEFAULT = 10;
+    
     
     /** Default number of retries to authorize new bonded node. */
     public static final int AUTHORIZE_RETRIES_DEFAULT = 1;
@@ -92,8 +100,16 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
     /** Default number of retries to run the discovery process after one iteration of algorithm. */
     public static final int DISCOVERY_RETRIES_DEFAULT = 1;
     
-    /** Default timeout for node to hold temporary address [in seconds]. */
-    public static final long TEMPORARY_ADDRESS_TIMEOUT_DEFAULT = 100;
+    
+    /** Minimal timeout for node to hold temporary address [ in tens of seconds ]. */
+    public static final long TEMPORARY_ADDRESS_TIMEOUT_MIN = 0;
+    
+    /** Maximal timeout for node to hold temporary address [ in tens of seconds ]. */
+    public static final long TEMPORARY_ADDRESS_TIMEOUT_MAX = 0xFFFF-1;
+    
+    /** Default timeout for node to hold temporary address [in tens of seconds ]. */
+    public static final long TEMPORARY_ADDRESS_TIMEOUT_DEFAULT = 10;
+    
     
     /** 
      * Default indicator, wheather to use FRC automatically in checking 
@@ -167,12 +183,25 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
     }
     
     private static long checkTemporaryAddressTimeout(long temporaryAddressTimeout) {
-        if ( temporaryAddressTimeout < 0 ) {
+        if ( temporaryAddressTimeout < 0 || temporaryAddressTimeout >= 0xFFFF ) {
             throw new IllegalArgumentException(
-                "Temporary address timeout cannot be negative."
+                "Temporary address timeout must be within the interval of ["
+                + TEMPORARY_ADDRESS_TIMEOUT_MIN + ".." + TEMPORARY_ADDRESS_TIMEOUT_MAX
+                + "]. Got: " + temporaryAddressTimeout    
             );
         }
         return temporaryAddressTimeout;
+    }
+    
+    private static MethodIdTransformer checkP2PPrebonderMethodIdTransformer(
+            MethodIdTransformer p2pPrebonderMethodIdTransformer
+    ) {
+        if ( p2pPrebonderMethodIdTransformer == null ) {
+            throw new IllegalArgumentException(
+                    "P2P Prebonder Method ID transformer cannot be null"
+            );
+        }
+        return p2pPrebonderMethodIdTransformer;
     }
     
     private static int checkNumberOfNodesToBond(int numberOfNodesToBond) {
@@ -208,52 +237,108 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
         private MethodIdTransformer p2pPrebonderMethodIdTransformer = null;
         private int numberOfNodesToBond = NODES_NUMBER_TO_BOND_MAX;
         
-        
+        /**
+         * Creates the builder object.
+         * @param network reference to network to use, must be != {@code null}
+         * @param broadcastServices reference to broadcast services to use, must be != {@code null}
+         */
         public Builder(Network network, BroadcastServices broadcastServices) {
             this.network = network;
             this.broadcastServices = broadcastServices;
         }
         
+        /**
+         * Sets value of discovery TX power.
+         * @param val must be within the interval of 
+         *      [DISCOVERY_TX_POWER_MIN..DISCOVERY_TX_POWER_MAX]
+         * @return reference to this builder
+         */
         public Builder discoveryTxPower(int val) {
             this.discoveryTxPower = val;
             return this;
         }
         
+        /**
+         * Sets value of prebonding interval.
+         * @param val must be within the interval of 
+         *      [PREBONDING_INTERVAL_MIN..PREBONDING_INTERVAL_MAX]
+         * @return reference to this builder
+         */
         public Builder prebondingInterval(long val) {
             this.prebondingInterval = val;
             return this;
         }
         
+        /**
+         * Sets value of authorize retries.
+         * @param val must be nonnegative
+         * @return reference to this builder
+         */
         public Builder authorizeRetries(int val) {
             this.authorizeRetries = val;
             return this;
         }
         
+        /**
+         * Sets value of discovery retries.
+         * @param val must be nonnegative
+         * @return reference to this builder
+         */
         public Builder discoveryRetries(int val) {
             this.discoveryRetries = val;
             return this;
         }
         
+        /**
+         * Sets value of temporary address timeout.
+         * @param val must be within the interval of 
+         *      [TEMPORARY_ADDRESS_TIMEOUT_MIN..TEMPORARY_ADDRESS_TIMEOUT_MAX]
+         * @return reference to this builder
+         */
         public Builder temporaryAddressTimeout(long val) {
             this.temporaryAddressTimeout = val;
             return this;
         }
         
+        /**
+         * Sets if to autouse of FRC.
+         * @param val {@code true} if to use the autouse of FRC <br>
+         *            {@code false} if not to use
+         * @return reference to this builder
+         */
         public Builder autoUseFrc(boolean val) {
             this.autoUseFrc = val;
             return this;
         }
         
+        /**
+         * Sets value of P2P Prebonder method ID transformer.
+         * @param val must be != {@code null}
+         * @return reference to this builder
+         */
         public Builder p2pPrebonderMethodIdTransformer(MethodIdTransformer val) {
             this.p2pPrebonderMethodIdTransformer = val;
             return this;
         }
         
+        /**
+         * Sets number of nodes to bond.
+         * @param val must be either {@code NODES_NUMBER_TO_BOND_MAX} or 
+         *      within the interval of 
+         *      [0..DPA_ProtocolProperties.NADR_Properties.IQMESH_NODE_ADDRESS_MAX] 
+         * @return reference to this builder
+         */
         public Builder numberOfNodesToBond(int val) {
             this.numberOfNodesToBond = val;
             return this;
         }
         
+        /**
+         * Builds according to specified settings and returns object of the 
+         * Autonetwork algorithm. All settings are checked before the final object
+         * is built.
+         * @return object of the Autonetwork algorithm
+         */
         public AutoNetworkAlgorithmImpl build() {
             return new AutoNetworkAlgorithmImpl(this);
         }
@@ -386,7 +471,7 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
         boolean isInterrupted = false;
         
         try {
-            if ( algoThread.isAlive( )) {
+            if ( algoThread.isAlive() ) {
                 algoThread.join(JOIN_WAIT_TIMEOUT);
             }
         } catch ( InterruptedException e ) {
@@ -1083,18 +1168,21 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
     }
     
     // checks new nodes, removes the nonresponding ones
-    private void checkNewNodes(
+    // returns IDs of nodes, which are responding
+    private List<Integer> checkNewNodes(
             Coordinator coordinator, com.microrisc.simply.Node coordNode, List<Integer> newAddrs
     ) throws Exception {
         logger.debug("checkNewNodes - start: coordinator={}, coordNode={}, newAddrs={}",
                 coordinator, coordNode, StringUtils.join(newAddrs, ',')
         );
         
+        List<Integer> respondingNodes = new LinkedList<>();
+        
         FRC coordFrc = coordNode.getDeviceObject(FRC.class);
         if ( coordFrc == null ) {
             throw new Exception("FRC peripheral could not been found on coordinator");
         }
-
+        
         FRC_Data frcDataCheck = coordFrc.send( new FRC_Prebonding( new short[] { 0x01, 0x00 }) );
         for ( int newAddr : newAddrs ) {
             if ( ( ( frcDataCheck.getData()[0 + newAddr / 8] >> ( newAddr % 8 ) ) & 0x01 ) == 0x00 )
@@ -1104,10 +1192,13 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
                 if ( bondedNodesNum == null ) {
                     logger.error("Error while removing bond {}", newAddr);
                 }
+            } else {
+                respondingNodes.add(newAddr);
             }
         }
         
-        logger.debug("checkNewNodes - end:");
+        logger.debug("checkNewNodes - end: {}", getGentleListOfNodes(respondingNodes));
+        return respondingNodes;
     }
     
     // runs discovery
@@ -1247,6 +1338,9 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
             return;
         }
         
+        // storing previous value to be able to restore it later
+        long prevDefaultWaitingTimeout = coordinator.getDefaultWaitingTimeout();
+        
         // IMPORTANT: SET DEFAULT TIMEOUT FOR GETTING RESULT TO 'UNLIMITED'
         coordinator.setDefaultWaitingTimeout( WaitingTimeoutService.UNLIMITED_WAITING_TIMEOUT );
         
@@ -1266,6 +1360,7 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
             updateNodesInfo(coordinator);
         } catch ( Exception ex ) {
             setState(State.ERROR);
+            coordinator.setDefaultWaitingTimeout(prevDefaultWaitingTimeout);
             logger.error("Update nodes info error: {}", ex );
             logger.debug("runAlgorithm - end");
             return;
@@ -1274,6 +1369,7 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
         int origNodesCount = bondedNodes.getNodesNumber();
         if ( !checkUnbondedNodes() ) {
             setState(State.ERROR);
+            coordinator.setDefaultWaitingTimeout(prevDefaultWaitingTimeout);
             logger.debug("runAlgorithm - end");
             return;
         }
@@ -1282,6 +1378,7 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
         RoutingHops prevRoutingHops = coordinator.setHops( new RoutingHops(0xFF, 0xFF) );
         if ( prevRoutingHops == null ) {
             setState(State.ERROR);
+            coordinator.setDefaultWaitingTimeout(prevDefaultWaitingTimeout);
             logger.error("Error while setting hops");
             logger.debug("runAlgorithm - end");
         }
@@ -1292,6 +1389,7 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
         );
         if ( prevParam == null ) {
             setState(State.ERROR);
+            coordinator.setDefaultWaitingTimeout(prevDefaultWaitingTimeout);
             logger.error("Error while setting DPA parameter");
             logger.debug("runAlgorithm - end");
         }
@@ -1302,6 +1400,7 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
             p2pPrebondInfo = getP2PPrebondingInfo();
         } catch ( Exception ex ) {
             setState(State.ERROR);
+            coordinator.setDefaultWaitingTimeout(prevDefaultWaitingTimeout);
             logger.error("Error while getting info about P2P Sender peripheral: {}", ex );
             logger.debug("runAlgorithm - end");
         }
@@ -1324,6 +1423,7 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
         ) {
             if ( Thread.interrupted() ) {
                 setState(State.CANCELLED);
+                coordinator.setDefaultWaitingTimeout(prevDefaultWaitingTimeout);
                 logger.info("Algorithm interrupted");
                 logger.debug("runAlgorithm - end");
                 return;
@@ -1366,7 +1466,7 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
             
                 if ( autoUseFrc ) {
                     logger.info("Running FRC to check new nodes");
-                    checkNewNodes(coordinator, coordNode, newAddrs);
+                    newAddrs = checkNewNodes(coordinator, coordNode, newAddrs);
                 }
 
                 logger.info( "Running discovery ...");
@@ -1377,18 +1477,21 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
                 newBondedNodesCount += newAddrs.size();
             } catch ( InterruptedException e ) {
                 setState(State.CANCELLED);
+                coordinator.setDefaultWaitingTimeout(prevDefaultWaitingTimeout);
                 logger.warn("Algorithm cancelled");
                 logger.debug("runAlgorithm - end");
                 return;
             } catch ( Exception e ) {
                 setState(State.ERROR);
-                logger.error("Error while running algorithm: {}", e);
+                coordinator.setDefaultWaitingTimeout(prevDefaultWaitingTimeout);
+                logger.error("Error while running algorithm: ", e);
                 logger.debug("runAlgorithm - end");
                 return;
             }
             round++;
         }
         
+        coordinator.setDefaultWaitingTimeout(prevDefaultWaitingTimeout);
         setState(State.FINISHED_OK);
         logger.debug("runAlgorithm - end");
     }
@@ -1396,8 +1499,6 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
     
     /**
      * Creates new object of the network building algorithm.
-     * @param network network to start the algorithm with
-     * @throws IllegalArgumentException if {@code network} is {@code null}
      */
     private AutoNetworkAlgorithmImpl(Builder builder) {
         this.network = checkNetwork(builder.network);
@@ -1411,7 +1512,9 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
         this.discoveryRetries = checkDiscoveryRetries(builder.discoveryRetries);
         this.temporaryAddressTimeout = checkTemporaryAddressTimeout(builder.temporaryAddressTimeout);
         this.autoUseFrc = builder.autoUseFrc;
-        this.p2pPrebonderMethodIdTransformer = builder.p2pPrebonderMethodIdTransformer;
+        this.p2pPrebonderMethodIdTransformer = checkP2PPrebonderMethodIdTransformer(
+                builder.p2pPrebonderMethodIdTransformer
+        );
         this.numberOfNodesToBond = checkNumberOfNodesToBond(builder.numberOfNodesToBond);
         
         this.algoThread = new AlgoThread();

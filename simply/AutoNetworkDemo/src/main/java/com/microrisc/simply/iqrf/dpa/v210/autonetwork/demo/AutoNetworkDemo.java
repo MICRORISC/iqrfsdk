@@ -108,6 +108,11 @@ public final class AutoNetworkDemo {
                     .hasArg()
                     .withDescription(
                             "Discovery TX power\n"
+                            + "Allowed range of vales: ["
+                                    + AutoNetworkAlgorithmImpl.DISCOVERY_TX_POWER_MIN
+                                    + ".."
+                                    + AutoNetworkAlgorithmImpl.DISCOVERY_TX_POWER_MAX
+                                    + "]\n"
                             + "Default value: " + AutoNetworkAlgorithmImpl.DISCOVERY_TX_POWER_DEFAULT
                     )
                     .create("discoveryTxPower")
@@ -119,6 +124,11 @@ public final class AutoNetworkDemo {
                     .hasArg()
                     .withDescription(
                             "Prebonding interval [in seconds]\n"
+                            + "Allowed range of vales: ["
+                                    + AutoNetworkAlgorithmImpl.PREBONDING_INTERVAL_MIN
+                                    + ".."
+                                    + AutoNetworkAlgorithmImpl.PREBONDING_INTERVAL_MAX
+                                    + "]\n"
                             + "Default value: " + AutoNetworkAlgorithmImpl.PREBONDING_INTERVAL_DEFAULT
                     )
                     .create("prebondingInterval")
@@ -151,7 +161,12 @@ public final class AutoNetworkDemo {
                     .isRequired(false)
                     .hasArg()
                     .withDescription(
-                            "Temporary address timeout [in seconds]\n"
+                            "Temporary address timeout [in tens of seconds]\n"
+                            + "Allowed range of vales: ["
+                                    + AutoNetworkAlgorithmImpl.TEMPORARY_ADDRESS_TIMEOUT_MIN
+                                    + ".."
+                                    + AutoNetworkAlgorithmImpl.TEMPORARY_ADDRESS_TIMEOUT_MAX
+                                    + "]\n"
                             + "Default value: " + AutoNetworkAlgorithmImpl.TEMPORARY_ADDRESS_TIMEOUT_DEFAULT
                     )
                     .create("temporaryAddressTimeout")
