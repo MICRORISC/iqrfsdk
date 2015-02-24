@@ -98,8 +98,7 @@ extends AbstractInitObjectsFactory<
         String factoryClassName = configuration.getString("protocolLayer.protocolMapping.factory.class");
         Class factoryClass = Class.forName(factoryClassName);
         java.lang.reflect.Constructor constructor = factoryClass.getConstructor();
-        ProtocolMappingFactory protoFactory = 
-                (ProtocolMappingFactory)constructor.newInstance(); 
+        ProtocolMappingFactory protoFactory = (ProtocolMappingFactory)constructor.newInstance(); 
         return protoFactory.createProtocolMapping();
     }
     
@@ -138,8 +137,8 @@ extends AbstractInitObjectsFactory<
     ) throws Exception {
         String protoClassName = configuration.getString("protocolLayer.class");
         Class protoClass = Class.forName(protoClassName);
-        java.lang.reflect.Constructor constructor = 
-                protoClass.getConstructor(NetworkLayerService.class, MessageConvertor.class);
+        java.lang.reflect.Constructor constructor 
+                = protoClass.getConstructor(NetworkLayerService.class, MessageConvertor.class);
         return (ProtocolLayer)constructor.newInstance(networkLayerService, msgConvertor);
     }
     
