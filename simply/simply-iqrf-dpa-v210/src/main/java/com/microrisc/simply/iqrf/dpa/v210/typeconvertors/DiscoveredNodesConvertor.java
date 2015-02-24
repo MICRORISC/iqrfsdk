@@ -71,7 +71,7 @@ public final class DiscoveredNodesConvertor extends PrimitiveConvertor {
         
         // maximal bonded node number
         final int MAX_BONDED_NODE_NUMBER = 0xEF; 
-        final int MAX_BYTES_USED = MAX_BONDED_NODE_NUMBER / 8;
+        final int MAX_BYTES_USED = (int)Math.ceil(MAX_BONDED_NODE_NUMBER / 8.0);
         
         List<Integer> discoveredNodesList = new LinkedList<>();
         
