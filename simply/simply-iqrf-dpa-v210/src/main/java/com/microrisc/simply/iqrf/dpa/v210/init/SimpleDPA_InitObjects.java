@@ -51,8 +51,8 @@ implements DPA_InitObjects<InitConfigSettings<Configuration, Map<String, Configu
             InitConfigSettings<Configuration, Map<String, Configuration>> configSettings,
             PeripheralToDevIfaceMapper peripheralToDevIfaceMapper
     ) {
-        this.simpleInitObjects = new SimpleInitObjects(connectionStack, 
-            implClassMapper, configSettings
+        this.simpleInitObjects = new SimpleInitObjects(
+                connectionStack, implClassMapper, configSettings
         );
         this.peripheralToDevIfaceMapper = peripheralToDevIfaceMapper;
     }

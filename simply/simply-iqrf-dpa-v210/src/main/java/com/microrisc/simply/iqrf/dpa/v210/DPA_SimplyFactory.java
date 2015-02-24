@@ -123,8 +123,8 @@ public final class DPA_SimplyFactory {
         
         try {
             Configuration configuration = ConfigurationReader.fromFile(configFile);
-            SimpleDPA_InitObjects initObjects = 
-                    (new DPA_InitObjectsFactory()).getInitObjects(configuration);
+            SimpleDPA_InitObjects initObjects 
+                    = (new DPA_InitObjectsFactory()).getInitObjects(configuration);
             NodeFactory.init(initObjects);
             networkMap = new DPA_Initializer().initialize(initObjects);
             connStack = initObjects.getConnectionStack();

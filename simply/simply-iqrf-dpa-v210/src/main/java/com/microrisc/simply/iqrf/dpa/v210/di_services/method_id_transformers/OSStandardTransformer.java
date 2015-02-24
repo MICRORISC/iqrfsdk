@@ -30,8 +30,7 @@ public final class OSStandardTransformer implements MethodIdTransformer {
     /**
      * Mapping of method IDs to theirs string representations.
      */
-    private static final Map<OS.MethodID, String> methodIdsMap = 
-            new EnumMap<OS.MethodID, String>(OS.MethodID.class);
+    private static final Map<OS.MethodID, String> methodIdsMap = new EnumMap<>(OS.MethodID.class);
     
     private static void initMethodIdsMap() {
         methodIdsMap.put(OS.MethodID.READ, "1");
