@@ -1,3 +1,19 @@
+/* 
+ * Copyright 2015 MICRORISC s.r.o.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 /*
 Example for SPI communication ARDUINO <> IQRF module
 Arduino = SPI master
@@ -57,6 +73,7 @@ byte IQRF_SPI_TxBuf[IQRF_SPI_BUFFER_SIZE];
 byte IQRF_SPI_RxBuf[IQRF_SPI_BUFFER_SIZE];
 byte IQRF_SPI_Busy, iq_DLEN, iq_PTYPE, iq_spistat, IQRF_SPI_Task_Message;
 byte tmp_cnt, iq_pac_len, Check_Status_Timer;
+
 // pins used for the connection with the module
 // the other you need are controlled by the SPI library):
 const int chipSelectPin = 10;
@@ -68,7 +85,7 @@ void setup()
   // start the SPI library:
   SPI.begin();
   IQRF_SPI_Init();
-  Serial.println( "IQRF SPI demo ver. 1.0" );
+  Serial.println( "IQRF SPI demo ver. 1.1" );
 }
 
 void loop()
@@ -83,6 +100,7 @@ void loop()
     iq_DLEN++;                                 // increment length
     if ( readData == '\n' )                    // end of message
     {
+      iq_DLEN--; iq_DLEN--;
       if ( ( iq_spistat == TR_STAT_COM_MODE || iq_spistat == TR_STAT_SLOW_MODE ) && IQRF_SPI_Busy == IQRF_NOT_BUSY )
       {                                           // TR module is in communication mode and the SPI is not busy
         iq_PTYPE = ( iq_DLEN | 0x80 );      // PTYPE set bit7 - write to bufferCOM of TR module
@@ -109,8 +127,8 @@ void loop()
 
       case IQRF_SPI_DATA_READY:           // received packet is in IQRF_SPI_RxBuf
           for ( byte i = 0; i < iq_DLEN; i++ )
-            Serial.write( IQRF_SPI_RxBuf[i + 2] );
-          Serial.println( "\n" );
+          Serial.write( IQRF_SPI_RxBuf[i + 2] );
+          Serial.print( "\n" );
           break;
       }
       IQRF_SPI_Task_Message = 0;
@@ -331,7 +349,8 @@ void IQRF_SPI_Task( void )
       if ( ( iq_spistat & 0xC0 ) == 0x40 )
       {                                   // data ready in bufferCOM of TR module
         Clear_IQRF_SPI_TxBuf();
-        iq_DLEN = iq_spistat & 0x3F;    // clear bit 7,6 - rest is length
+        iq_DLEN = iq_spistat & 0x3F;      // clear bit 7,6 - rest is length
+		if ( iq_spistat == 0x40 ) iq_DLEN = 64;
         iq_PTYPE = iq_DLEN;
         IQRF_SPI_TxBuf[0] = TR_CMD_WR_RD;
         IQRF_SPI_TxBuf[1] = iq_PTYPE;
