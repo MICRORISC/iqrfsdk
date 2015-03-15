@@ -70,3 +70,9 @@ simply/simply-network-serial-v2/versions/1.0.0/target/
 /libs/iqrf/cdc-iqrf/c++/cdclib-example/dist/
 /libs/iqrf/cdc-iqrf/c++/cdclib/build/
 /libs/iqrf/cdc-iqrf/c++/cdclib/dist/
+/libs/raspberry/c/io/rpi-io/build/
+/libs/raspberry/c/io/rpi-io/dist/
+/libs/raspberry/c/io/rpi-io-examples/build/
+/libs/raspberry/c/spi/rpi-spi-iqrf/dist/
+/libs/raspberry/c/spi/rpi-spi-iqrf/build/
+/libs/raspberry/c/spi/rpi-spi-iqrf-examples/build/
