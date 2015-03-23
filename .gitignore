@@ -76,3 +76,4 @@ simply/simply-network-serial-v2/versions/1.0.0/target/
 /libs/raspberry/c/spi/rpi-spi-iqrf/dist/
 /libs/raspberry/c/spi/rpi-spi-iqrf/build/
 /libs/raspberry/c/spi/rpi-spi-iqrf-examples/build/
+/libs/iqrf/cdc-uart/hdlc-framing-v2/target/
