@@ -36,48 +36,40 @@ void printErrorAndExit(
     exit(retValue);
 }
 
-int main() {
+int main(void) {
     int cycle = 0;
     int value = 0;
     int operResult = 0;
+
     struct timespec sleepValue = {0, 0};
     sleepValue.tv_nsec = INTERVAL_MS;
 
-    printf("LED usage example\n");
+    printf("LED usage example \n");
 
     // enable access to IOs
     operResult = rpi_io_init();
     if (operResult != BASE_TYPES_OPER_OK) {
-        printf("Initialization failed: %s", rpi_io_getLastError()->descr);
-        return operResult;
+        printErrorAndExit("Initialization failed: %s", rpi_io_getLastError(), operResult);
     }
 
-    // enable PWR for TR
-    operResult = rpi_io_set(RPIIO_PORT_RST, RPIIO_DIR_OUTPUT);
-    if (operResult != BASE_TYPES_OPER_OK) {
-        printErrorAndExit("Setting RST port failed", rpi_io_getLastError(), operResult);
-    }
-
-    operResult = rpi_io_write(RPIIO_PORT_RST, RPIIO_PORTLEVEL_LOW);
-    if (operResult != BASE_TYPES_OPER_OK) {
-        printErrorAndExit("Writing to RST port failed", rpi_io_getLastError(), operResult);
-    }
-
-    operResult = rpi_io_set(RPIIO_PORT_LED, RPIIO_DIR_OUTPUT);
+    // set pin output
+    operResult = rpi_io_set(RPIIO_PIN_LED, RPIIO_DIR_OUTPUT);
     if (operResult != BASE_TYPES_OPER_OK) {
         printErrorAndExit("Setting LED port failed", rpi_io_getLastError(), operResult);
     }
 
     do {
         value ^= 1;
-        operResult = rpi_io_write(RPIIO_PORT_LED, value);
+        operResult = rpi_io_write(RPIIO_PIN_LED, value);
         if (operResult != BASE_TYPES_OPER_OK) {
             printf("Cycle: %d", cycle);
             printErrorAndExit("Writing to LED port failed", rpi_io_getLastError(), operResult);
         }
         nanosleep(&sleepValue, NULL);
-    } while (++cycle < 10);
+    } while (cycle++ <= 10);
 
+    // finish the library
     rpi_io_destroy();
+
     return 0;
 }

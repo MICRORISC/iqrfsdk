@@ -76,3 +76,9 @@ simply/simply-network-serial-v2/versions/1.0.0/target/
 /libs/raspberry/c/spi/rpi-spi-iqrf/dist/
 /libs/raspberry/c/spi/rpi-spi-iqrf/build/
 /libs/raspberry/c/spi/rpi-spi-iqrf-examples/build/
+/libs/gemalto/spi/jlibgem/nbproject/private/
+/libs/gemalto/spi/jlibgem-examples/nbproject/private/
+/libs/gemalto/spi/jlibgem/build/
+/libs/gemalto/spi/jlibgem/dist/
+/libs/gemalto/spi/jlibgem-examples/build/
+/libs/gemalto/spi/jlibgem-examples/dist/

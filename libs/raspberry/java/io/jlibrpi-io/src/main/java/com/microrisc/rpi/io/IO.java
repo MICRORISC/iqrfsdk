@@ -44,23 +44,23 @@ public interface IO {
     }
           
     /**
-     * Available ports, numbering according to revision 2.
+     * Available pins, numbering according to revision 2.
      */
-    static enum Port {
+    static enum Pin {
         GPIO2   (2),
         GPIO3   (3),
         GPIO4   (4),
         GPIO5   (5),
         GPIO6   (6),
-        CE1     (7),
+        BUTTON  (7),
         CE0     (8),
         MISO    (9),
         MOSI    (10),
         SCLK    (11),
         GPIO12  (12),
         GPIO13  (13),
-        GPIO14  (14),
-        GPIO15  (15),
+        TXD     (14),
+        RXD     (15),
         GPIO16  (16),
         GPIO17  (17),
         GPIO18  (18),
@@ -69,23 +69,23 @@ public interface IO {
         GPIO21  (21),
         LED     (22),
         RESET   (23),
-        GPIO24  (24),
-        GPIO25  (25),
+        IO1     (24),
+        IO2     (25),
         GPIO26  (26),
         GPIO27  (27);
         
-        private final int portNumber;
+        private final int pinNumber;
         
-        private Port(int portNumber) {
-            this.portNumber = portNumber;
+        private Pin(int pinNumber) {
+            this.pinNumber = pinNumber;
         }
         
         /**
-         * Returns integer value of this port.
-         * @return integer value of this port.
+         * Returns integer value of this pin.
+         * @return integer value of this pin.
          */
         public int getIntValue() {
-            return portNumber;
+            return pinNumber;
         }
     }
     
@@ -112,30 +112,30 @@ public interface IO {
     }
     
     /**
-     * Setup direction of IO port.
-     * @param port number of port to setup
+     * Setup direction of IO pin.
+     * @param pin number of pin to setup
      * @param direction input or output
      */
-    void set(IO.Port port, IO.Direction direction) throws IOException;
+    void set(IO.Pin pin, IO.Direction direction) throws IOException;
     
     /**
-     * Writes specified data to specified port.
-     * @param port number of port, which the data to write to
-     * @param value value to write to the port
+     * Writes specified data to specified pin.
+     * @param pin number of pin, which the data to write to
+     * @param value value to write to the pin
      */
-    void write(IO.Port port, IO.Level value) throws IOException;
+    void write(IO.Pin pin, IO.Level value) throws IOException;
     
     /**
-     * Reads data from specified port.
-     * @param port number of port to read data from
-     * @return data read from port
+     * Reads data from specified pin.
+     * @param pin number of pin to read data from
+     * @return data read from pin
      */
-    int read(IO.Port port) throws IOException;
+    int read(IO.Pin port) throws IOException;
     
     /**
      * Resets TR module in RPI HW reduction.
      */
-    void resetTR() throws IOException;
+    void resetTr() throws IOException;
     
     /**
      * Terminates usage of this library and frees up used resources.

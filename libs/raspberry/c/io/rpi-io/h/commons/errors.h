@@ -64,5 +64,4 @@ extern void errors_setError(
         int isSystemErrorCode, int addErrnoString
         );
 
-
 #endif // __ERRORS_H_

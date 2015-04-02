@@ -31,25 +31,30 @@ public class Button {
         System.out.println("Button example");
         
         IO io = null;
+        int ioResult = 0;
         
         try {
             io = new SimpleIO();
-        
-            // power on TR module
-            io.set(IO.Port.RESET, IO.Direction.OUTPUT);
-            io.write(IO.Port.RESET, IO.Level.LOW);
 
-            // SW button trigger test
-            io.set(IO.Port.CE0, IO.Direction.OUTPUT);
-            io.write(IO.Port.CE0, IO.Level.HIGH);
+            // set pins state
+            io.set(IO.Pin.BUTTON, IO.Direction.INPUT);
+            io.set(IO.Pin.LED, IO.Direction.OUTPUT);
         
-            Thread.sleep(500);
-        
-            // falling edge - trigger
-            io.write(IO.Port.CE0, IO.Level.LOW);
-
-            System.out.println("CE0 as INPUT to test HW button");
-            io.set(IO.Port.CE0, IO.Direction.INPUT);
+            //10s loop for button testing
+            for (int i = 0; i < 1000; i++) {
+                ioResult = io.read(IO.Pin.BUTTON);
+                
+                // button pressed
+                if(ioResult == 0) {
+                    io.write(IO.Pin.LED, IO.Level.HIGH);
+                }
+                // button released
+                else {
+                    io.write(IO.Pin.LED, IO.Level.LOW);
+                }
+                            
+                Thread.sleep(10);
+            }
         } catch (IOException e) {
             System.err.println("Error while working with IO: " + e);
         } finally {

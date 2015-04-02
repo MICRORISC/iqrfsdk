@@ -55,7 +55,7 @@
                     <target>1.7</target>
                     <encoding>${project.build.sourceEncoding}</encoding>
                 </configuration>
-            </plugin>
+            </plugin>       
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
@@ -65,7 +65,7 @@
                         <manifestFile>src/conf/MANIFEST.MF</manifestFile>
                     </archive>
                 </configuration>
-            </plugin>
+            </plugin>          
 	    <plugin>
             	<groupId>org.apache.maven.plugins</groupId>
             	<artifactId>maven-javadoc-plugin</artifactId>
@@ -93,7 +93,7 @@
                         </configuration>
                     </execution>
             	</executions>
-            </plugin>
+            </plugin>        
 	    <plugin>
   		<groupId>org.apache.maven.plugins</groupId>
   		<artifactId>maven-source-plugin</artifactId>
@@ -115,6 +115,34 @@
                     <encoding>${project.build.sourceEncoding}</encoding>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId> 
+                <artifactId>maven-surefire-plugin</artifactId> 
+                <version>2.18.1</version>
+                <configuration>
+                    <forkMode>once</forkMode>
+                    <workingDirectory>src</workingDirectory>
+                    <argLine>-Djava.library.path=${basedir}/test/resources/natives/x64 -Dlogback.configurationFile=${basedir}/test/config/logback.xml</argLine>
+                </configuration> 
+            </plugin>
+            
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>2.12.4</version>
+                <executions>
+                    <execution>
+                        <id>integration-tests</id>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                        <configuration>
+                            <skipTests>${skip.integration.tests}</skipTests>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>           
         </plugins>
     </build>
     

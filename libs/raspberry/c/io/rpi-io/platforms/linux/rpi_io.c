@@ -39,7 +39,7 @@ static int libIsInitialized = 0;
 #define BLOCK_SIZE (4*1024)
 
 #define NANO_SECOND_MULTIPLIER  1000000  // 1 millisecond = 1,000,000 Nanoseconds
-static const long INTERVAL_MS = 500 * NANO_SECOND_MULTIPLIER;
+static const long INTERVAL_MS = 50 * NANO_SECOND_MULTIPLIER;
 
 
 static void *gpio_map;
@@ -62,35 +62,45 @@ static volatile unsigned *gpio;
 static errors_OperError* lastError = NULL;
 
 
-// checks specified port if it is valid
-
-static int checkPort(uint8_t port) {
-    switch (port) {
-        case RPIIO_PORT_GPIO2:
-        case RPIIO_PORT_GPIO3:
-        case RPIIO_PORT_GPIO4:
-        case RPIIO_PORT_CE1:
-        case RPIIO_PORT_CE0:
-        case RPIIO_PORT_GPIO14:
-        case RPIIO_PORT_GPIO15:
-        case RPIIO_PORT_GPIO17:
-        case RPIIO_PORT_GPIO18:
-        case RPIIO_PORT_LED:
-        case RPIIO_PORT_RST:
-        case RPIIO_PORT_GPIO24:
-        case RPIIO_PORT_GPIO25:
-        case RPIIO_PORT_GPIO27:
+// checks specified pin if it is valid
+static int checkPin(uint8_t pin) {
+    switch (pin) {
+        case RPIIO_PIN_GPIO2:
+        case RPIIO_PIN_GPIO3:
+        case RPIIO_PIN_GPIO4:
+        case RPIIO_PIN_GPIO5:
+        case RPIIO_PIN_GPIO6:
+        case RPIIO_PIN_BUTTON:
+        case RPIIO_PIN_CE0:
+        case RPIIO_PIN_MISO:
+        case RPIIO_PIN_MOSI:
+        case RPIIO_PIN_SCLK:
+        case RPIIO_PIN_GPIO12:
+        case RPIIO_PIN_GPIO13:
+        case RPIIO_PIN_TXD:
+        case RPIIO_PIN_RXD:
+        case RPIIO_PIN_GPIO16:
+        case RPIIO_PIN_GPIO17:
+        case RPIIO_PIN_GPIO18:
+        case RPIIO_PIN_GPIO19:
+        case RPIIO_PIN_GPIO20:
+        case RPIIO_PIN_GPIO21:
+        case RPIIO_PIN_LED:
+        case RPIIO_PIN_RESET:
+        case RPIIO_PIN_IO1:
+        case RPIIO_PIN_IO2:
+        case RPIIO_PIN_GPIO26:
+        case RPIIO_PIN_GPIO27:
             return BASE_TYPES_OPER_OK;
         default:
             errors_setError(
-                    &lastError, "Unknown port", BASE_TYPES_OPER_ERROR, 0, 1
+                    &lastError, "Unknown pin", BASE_TYPES_OPER_ERROR, 0, 1
                     );
             return BASE_TYPES_OPER_ERROR;
     }
 }
 
 // checks specified direction if it is valid
-
 static int checkDirection(rpi_io_Direction direction) {
     if ((direction != RPIIO_DIR_INPUT) && (direction != RPIIO_DIR_OUTPUT)) {
         errors_setError(
@@ -102,11 +112,10 @@ static int checkDirection(rpi_io_Direction direction) {
 }
 
 // checks specified value if it is valid
-
-static int checkValue(rpi_io_PortLevel value) {
-    if ((value != RPIIO_PORTLEVEL_LOW) && (value != RPIIO_PORTLEVEL_HIGH)) {
+static int checkValue(rpi_io_PinLevel value) {
+    if ((value != RPIIO_PINLEVEL_LOW) && (value != RPIIO_PINLEVEL_HIGH)) {
         errors_setError(
-                &lastError, "Unknown port level value", BASE_TYPES_OPER_ERROR, 0, 1
+                &lastError, "Unknown pin level value", BASE_TYPES_OPER_ERROR, 0, 1
                 );
         return BASE_TYPES_OPER_ERROR;
     }
@@ -168,13 +177,13 @@ int rpi_io_init() {
 
 /*
  * Configures and sets IO direction.
- * @param @c port port number
+ * @param @c pin pin number
  * @param @c direction @c INPUT or @c OUTPUT
  * @return @c BASE_TYPES_OPER_OK if setting has been successful
- * @return @c BASE_TYPES_OPER_ERROR if @c port or @c direction has had invalid values
+ * @return @c BASE_TYPES_OPER_ERROR if @c pin or @c direction has had invalid values
  */
-int rpi_io_set(uint8_t port, rpi_io_Direction direction) {
-    int portRes = BASE_TYPES_OPER_ERROR;
+int rpi_io_set(uint8_t pin, rpi_io_Direction direction) {
+    int pinRes = BASE_TYPES_OPER_ERROR;
     int dirRes = BASE_TYPES_OPER_ERROR;
 
     if (libIsInitialized == 0) {
@@ -184,8 +193,8 @@ int rpi_io_set(uint8_t port, rpi_io_Direction direction) {
         return BASE_TYPES_LIB_NOT_INITIALIZED;
     }
 
-    portRes = checkPort(port);
-    if (portRes < 0) {
+    pinRes = checkPin(pin);
+    if (pinRes < 0) {
         return BASE_TYPES_OPER_ERROR;
     }
 
@@ -195,24 +204,25 @@ int rpi_io_set(uint8_t port, rpi_io_Direction direction) {
     }
 
     if (direction == RPIIO_DIR_INPUT) {
-        INP_GPIO(port);
+        INP_GPIO(pin);
+	return BASE_TYPES_OPER_OK;
     }
 
     // must use INP_GPIO before we can use OUT_GPIO
-    INP_GPIO(port);
-    OUT_GPIO(port);
+    INP_GPIO(pin);
+    OUT_GPIO(pin);
     return BASE_TYPES_OPER_OK;
 }
 
 /*
  * IO interfaces to setup, write and read IOs
- * @param @c port port number
- * @param @c value port value HIGH, LOW
+ * @param @c pin pin number
+ * @param @c value pin value HIGH, LOW
  * @return @c BASE_TYPES_OPER_OK if writing has been successful
- * @return @c BASE_TYPES_OPER_ERROR if @c port or @c value has had invalid values
+ * @return @c BASE_TYPES_OPER_ERROR if @c pin or @c value has had invalid values
  */
-int rpi_io_write(uint8_t port, rpi_io_PortLevel value) {
-    int portRes = BASE_TYPES_OPER_ERROR;
+int rpi_io_write(uint8_t pin, rpi_io_PinLevel value) {
+    int pinRes = BASE_TYPES_OPER_ERROR;
     int valueRes = BASE_TYPES_OPER_ERROR;
 
     if (libIsInitialized == 0) {
@@ -222,8 +232,8 @@ int rpi_io_write(uint8_t port, rpi_io_PortLevel value) {
         return BASE_TYPES_LIB_NOT_INITIALIZED;
     }
 
-    portRes = checkPort(port);
-    if (portRes < 0) {
+    pinRes = checkPin(pin);
+    if (pinRes < 0) {
         return BASE_TYPES_OPER_ERROR;
     }
 
@@ -233,12 +243,12 @@ int rpi_io_write(uint8_t port, rpi_io_PortLevel value) {
     }
 
     switch (value) {
-        case RPIIO_PORTLEVEL_LOW:
-            GPIO_CLR = 1 << port;
+        case RPIIO_PINLEVEL_LOW:
+            GPIO_CLR = 1 << pin;
             break;
 
-        case RPIIO_PORTLEVEL_HIGH:
-            GPIO_SET = 1 << port;
+        case RPIIO_PINLEVEL_HIGH:
+            GPIO_SET = 1 << pin;
             break;
 
         default:
@@ -248,13 +258,13 @@ int rpi_io_write(uint8_t port, rpi_io_PortLevel value) {
 }
 
 /*
- * Reads data from specified port.
- * @param @c port port number
+ * Reads data from specified pin.
+ * @param @c pin pin number
  * @return IO logical level
- * @return @c BASE_TYPES_OPER_ERROR if @c port has had invalid value
+ * @return @c BASE_TYPES_OPER_ERROR if @c pin has had invalid value
  */
-int rpi_io_read(uint8_t port) {
-    int portRes = BASE_TYPES_OPER_ERROR;
+int rpi_io_read(uint8_t pin) {
+    int pinRes = BASE_TYPES_OPER_ERROR;
 
     if (libIsInitialized == 0) {
         errors_setError(
@@ -263,12 +273,12 @@ int rpi_io_read(uint8_t port) {
         return BASE_TYPES_LIB_NOT_INITIALIZED;
     }
 
-    portRes = checkPort(port);
-    if (portRes < 0) {
+    pinRes = checkPin(pin);
+    if (pinRes < 0) {
         return BASE_TYPES_OPER_ERROR;
     }
 
-    if (GPIO_READ(port)) {
+    if (GPIO_READ(pin)) {
         return 1;
     }
     return 0;
@@ -277,7 +287,7 @@ int rpi_io_read(uint8_t port) {
 /*
  * Resets TR module.
  */
-int rpi_io_resetTR(void) {
+int rpi_io_resetTr(void) {
     int ioRes = 0;
 
     struct timespec sleepValue = {0, 0};
@@ -291,26 +301,21 @@ int rpi_io_resetTR(void) {
     }
 
     // switch off the power
-    ioRes = rpi_io_set(RPIIO_PORT_CE0, RPIIO_DIR_INPUT);
+    ioRes = rpi_io_set(RPIIO_PIN_RESET, RPIIO_DIR_OUTPUT);
     if (ioRes == BASE_TYPES_OPER_ERROR) {
         return BASE_TYPES_OPER_ERROR;
     }
 
-    ioRes = rpi_io_set(RPIIO_PORT_RST, RPIIO_DIR_OUTPUT);
+    ioRes = rpi_io_write(RPIIO_PIN_RESET, RPIIO_PINLEVEL_LOW);
     if (ioRes == BASE_TYPES_OPER_ERROR) {
         return BASE_TYPES_OPER_ERROR;
     }
 
-    ioRes = rpi_io_write(RPIIO_PORT_RST, RPIIO_PORTLEVEL_HIGH);
-    if (ioRes == BASE_TYPES_OPER_ERROR) {
-        return BASE_TYPES_OPER_ERROR;
-    }
-
-    // sleep for 500ms
+    // sleep for 50ms
     nanosleep(&sleepValue, NULL);
 
     // switch on the power
-    ioRes = rpi_io_write(RPIIO_PORT_RST, RPIIO_PORTLEVEL_LOW);
+    ioRes = rpi_io_write(RPIIO_PIN_RESET, RPIIO_PINLEVEL_HIGH);
     if (ioRes == BASE_TYPES_OPER_ERROR) {
         return BASE_TYPES_OPER_ERROR;
     }

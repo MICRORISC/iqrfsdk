@@ -435,7 +435,7 @@ int rpi_spi_iqrf_init(const char* dev) {
     }
 
     //enable CE0 for TR communication
-    ioResult = rpi_io_set(RPIIO_PORT_CE0, RPIIO_DIR_OUTPUT);
+    ioResult = rpi_io_set(RPIIO_PIN_CE0, RPIIO_DIR_OUTPUT);
     if (ioResult < 0) {
         errors_setError(
                 &lastError, "rpi_spi_iqrf_init: CEO output setting error",
@@ -444,7 +444,7 @@ int rpi_spi_iqrf_init(const char* dev) {
         return ioResult;
     }
 
-    ioResult = rpi_io_write(RPIIO_PORT_CE0, RPIIO_PORTLEVEL_LOW);
+    ioResult = rpi_io_write(RPIIO_PIN_CE0, RPIIO_PINLEVEL_LOW);
     if (ioResult < 0) {
         errors_setError(
                 &lastError, "rpi_spi_iqrf_init: CEO writing error",
@@ -454,7 +454,7 @@ int rpi_spi_iqrf_init(const char* dev) {
     }
 
     // enable PWR for TR communication
-    ioResult = rpi_io_set(RPIIO_PORT_RST, RPIIO_DIR_OUTPUT);
+    ioResult = rpi_io_set(RPIIO_PIN_RESET, RPIIO_DIR_OUTPUT);
     if (ioResult < 0) {
         errors_setError(
                 &lastError, "rpi_spi_iqrf_init: RST output setting error",
@@ -463,7 +463,7 @@ int rpi_spi_iqrf_init(const char* dev) {
         return ioResult;
     }
 
-    ioResult = rpi_io_write(RPIIO_PORT_RST, RPIIO_PORTLEVEL_LOW);
+    ioResult = rpi_io_write(RPIIO_PIN_RESET, RPIIO_PINLEVEL_HIGH);
     if (ioResult < 0) {
         errors_setError(
                 &lastError, "rpi_spi_iqrf_init: RST writing error",
@@ -717,6 +717,8 @@ int rpi_spi_iqrf_read(void* readBuffer, unsigned int dataLen) {
         free(receiveBuffer);
         return BASE_TYPES_OPER_ERROR;
     }
+
+    //printf("Data: %s \n", receiveBuffer);
 
     // verify CRCS
     if (!verifyCRCS(ptype, receiveBuffer + 2, dataLen, receiveBuffer[dataLen + 2])) {

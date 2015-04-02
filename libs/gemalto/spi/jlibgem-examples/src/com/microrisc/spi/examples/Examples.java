@@ -79,7 +79,7 @@ public class Examples extends MIDlet {
         SPI_Status spiStatus = null;
         for ( int checkId = 0; checkId < maxAttemptsNum; checkId++ ) {
             spiStatus = spiMaster.getSlaveStatus();
-            if ( spiStatus == null ) {
+            if ( spiStatus != null ) {
                 if ( spiStatus.isDataReady() ) {
                     break;
                 };

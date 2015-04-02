@@ -14,7 +14,6 @@
                    projectFiles="true">
       <itemPath>io_example_button.c</itemPath>
       <itemPath>io_example_led.c</itemPath>
-      <itemPath>io_example_read.c</itemPath>
       <itemPath>io_example_reset.c</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"
@@ -63,8 +62,6 @@
       </item>
       <item path="io_example_led.c" ex="false" tool="0" flavor2="0">
       </item>
-      <item path="io_example_read.c" ex="false" tool="0" flavor2="0">
-      </item>
       <item path="io_example_reset.c" ex="false" tool="0" flavor2="0">
       </item>
     </conf>
@@ -105,8 +102,6 @@
       <item path="io_example_button.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="io_example_led.c" ex="false" tool="0" flavor2="0">
-      </item>
-      <item path="io_example_read.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="io_example_reset.c" ex="false" tool="0" flavor2="0">
       </item>

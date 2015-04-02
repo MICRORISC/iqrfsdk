@@ -34,13 +34,9 @@ public class Led {
         
         try {
             io = new SimpleIO();
-      
-            // power on TR module
-            io.set(IO.Port.RESET, IO.Direction.OUTPUT);
-            io.write(IO.Port.RESET, IO.Level.LOW);
 
             // activate LED
-            io.set(IO.Port.LED, IO.Direction.OUTPUT);
+            io.set(IO.Pin.LED, IO.Direction.OUTPUT);
 
             final int MAX_CYCLES = 10;
             int cycle = 0;
@@ -48,7 +44,7 @@ public class Led {
             
             do {            
                 level = ( level == IO.Level.LOW )? IO.Level.HIGH : IO.Level.LOW;
-                io.write(IO.Port.LED, level);
+                io.write(IO.Pin.LED, level);
                 Thread.sleep(500);
             } while ( ++cycle < MAX_CYCLES );
         } catch (IOException e) {

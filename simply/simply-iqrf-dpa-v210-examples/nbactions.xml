@@ -43,4 +43,18 @@
                 <exec.executable>java</exec.executable>
             </properties>
         </action>
+        <action>
+            <actionName>test.single</actionName>
+            <packagings>
+                <packaging>*</packaging>
+            </packagings>
+            <goals>
+                <goal>test-compile</goal>
+                <goal>surefire:test</goal>
+            </goals>
+            <properties>
+                <test>${packageClassName}</test>
+                <exec.args>-Djava.library.path=src/main/resources/natives/x64 -Dlogback.configurationFile=config/logback.xml -classpath %classpath</exec.args>
+            </properties>
+        </action>
     </actions>

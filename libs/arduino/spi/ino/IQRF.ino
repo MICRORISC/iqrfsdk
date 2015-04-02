@@ -76,7 +76,7 @@ byte tmp_cnt, iq_pac_len, Check_Status_Timer;
 
 // pins used for the connection with the module
 // the other you need are controlled by the SPI library):
-const int chipSelectPin = 10;
+const int chipSelectPin = 8;
 
 void setup()
 {
@@ -103,7 +103,7 @@ void loop()
       iq_DLEN--; iq_DLEN--;
       if ( ( iq_spistat == TR_STAT_COM_MODE || iq_spistat == TR_STAT_SLOW_MODE ) && IQRF_SPI_Busy == IQRF_NOT_BUSY )
       {                                           // TR module is in communication mode and the SPI is not busy
-        iq_PTYPE = ( iq_DLEN | 0x80 );      // PTYPE set bit7 - write to bufferCOM of TR module
+        iq_PTYPE = ( iq_DLEN | 0x80 );         // PTYPE set bit7 - write to bufferCOM of TR module
         IQRF_SPI_TxBuf[0] = TR_CMD_WR_RD;
         IQRF_SPI_TxBuf[1] = iq_PTYPE;
         Start_IQRF_SPI();                   // activates IQRF_SPI_Task to send packet
@@ -350,7 +350,7 @@ void IQRF_SPI_Task( void )
       {                                   // data ready in bufferCOM of TR module
         Clear_IQRF_SPI_TxBuf();
         iq_DLEN = iq_spistat & 0x3F;      // clear bit 7,6 - rest is length
-		if ( iq_spistat == 0x40 ) iq_DLEN = 64;
+	if ( iq_spistat == 0x40 ) iq_DLEN = 64;
         iq_PTYPE = iq_DLEN;
         IQRF_SPI_TxBuf[0] = TR_CMD_WR_RD;
         IQRF_SPI_TxBuf[1] = iq_PTYPE;

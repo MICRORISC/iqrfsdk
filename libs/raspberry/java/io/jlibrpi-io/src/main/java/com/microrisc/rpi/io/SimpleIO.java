@@ -24,10 +24,10 @@ package com.microrisc.rpi.io;
 public final class SimpleIO implements IO {
     // native methods
     private native void stub_init();
-    private native void stub_set(int port, int direction);
-    private native void stub_write(int port, int value);
-    private native int stub_read(int port);
-    private native void stub_resetTR();
+    private native void stub_set(int pin, int direction);
+    private native void stub_write(int pin, int value);
+    private native int stub_read(int pin);
+    private native void stub_resetTr();
     private native void stub_destroy();
     
     
@@ -42,20 +42,20 @@ public final class SimpleIO implements IO {
         stub_init();
     }
     
-    public void set(IO.Port port, IO.Direction direction) throws IOException {
-        stub_set(port.getIntValue(), direction.getIntValue());
+    public void set(IO.Pin pin, IO.Direction direction) throws IOException {
+        stub_set(pin.getIntValue(), direction.getIntValue());
     }
 
-    public void write(IO.Port port, IO.Level value) throws IOException {
-        stub_write(port.getIntValue(), value.getIntValue());
+    public void write(IO.Pin pin, IO.Level value) throws IOException {
+        stub_write(pin.getIntValue(), value.getIntValue());
     }
 
-    public int read(IO.Port port) throws IOException {
-        return stub_read(port.getIntValue());
+    public int read(IO.Pin pin) throws IOException {
+        return stub_read(pin.getIntValue());
     }
     
-    public void resetTR() throws IOException {
-        stub_resetTR();
+    public void resetTr() throws IOException {
+        stub_resetTr();
     }
     
     public void destroy() {

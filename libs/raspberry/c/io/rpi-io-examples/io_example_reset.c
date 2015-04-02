@@ -21,26 +21,37 @@
 #include <linux/types.h>
 #include <rpi/rpi_io.h>
 
-int main() {
-    int8_t operResult = 0;
+/*
+ * Prints specified user message and specified error description, cleans up the
+ * Rpi_io library, and exits the program with specified return value
+ */
+void printErrorAndExit(
+        const char* userMessage, errors_OperError* error, int retValue
+        ) {
+    printf("%s: %s", userMessage, error->descr);
+    rpi_io_destroy();
+    exit(retValue);
+}
+
+int main(void) {
+    int operResult = 0;
 
     printf("IQRF module reset example \n");
 
     // enable access to IOs
     operResult = rpi_io_init();
     if (operResult != BASE_TYPES_OPER_OK) {
-        printf("Initialization failed: %s", rpi_io_getLastError()->descr);
-        return operResult;
+        printErrorAndExit("Initialization failed: %s", rpi_io_getLastError(), operResult);
     }
 
-    operResult = rpi_io_resetTR();
+    // reset tr module
+    operResult = rpi_io_resetTr();
     if (operResult != BASE_TYPES_OPER_OK) {
-        printf("Reseting TR module failed: %s", rpi_io_getLastError()->descr);
-        rpi_io_destroy();
-        return operResult;
+        printErrorAndExit("Reseting TR module failed: %s", rpi_io_getLastError(), operResult);
     }
 
-    printf("IQRF module reset done. \n");
+    // finish the library
     rpi_io_destroy();
+
     return 0;
 }

@@ -21,46 +21,24 @@ import com.microrisc.rpi.io.IOException;
 import com.microrisc.rpi.io.SimpleIO;
 
 /**
- * Read example.
+ * Reseting example.
  * 
  * @author Rostislav Spinar
  */
-public class Read {
- 
-    public static void main(String[] args) throws InterruptedException {
-        System.out.println("Reading IO example");
+public class ResetTr {
+    
+    public static void main(String[] args) {
+        System.out.println("Reseting TR module example");
         
         IO io = null;
         
         try {
             io = new SimpleIO();
-      
-            // disable power on TR module
-            io.set(IO.Port.RESET, IO.Direction.OUTPUT);
-            io.write(IO.Port.RESET, IO.Level.HIGH);
-
-            // read IO
-            int value = io.read(IO.Port.RESET);
-        
-            if ( value != 0 ) {
-                io.set(IO.Port.LED, IO.Direction.OUTPUT);
-                io.write(IO.Port.LED, IO.Level.HIGH);
-            }
-
-            Thread.sleep(100);
-        
-            // enable power on TR module
-            io.write(IO.Port.RESET, IO.Level.LOW);
-
-            // read IO again
-            value = io.read(IO.Port.RESET);
-
-            if ( value == 0 ) {
-                io.set(IO.Port.LED, IO.Direction.OUTPUT);
-                io.write(IO.Port.LED, IO.Level.LOW);
-            }
+            
+            io.resetTr();   
+            System.out.println("TR module has been restarted.");
         } catch (IOException e) {
-            System.err.println("Error while working with IO: " + e);
+            System.err.println("Error while reseting module: " + e);
         } finally {
             // termination and resource free up
             if ( io != null ) {

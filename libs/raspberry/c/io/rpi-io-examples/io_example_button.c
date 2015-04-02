@@ -22,7 +22,7 @@
 #include <rpi/rpi_io.h>
 
 #define NANO_SECOND_MULTIPLIER  1000000  // 1 millisecond = 1,000,000 Nanoseconds
-const long INTERVAL_MS = 100 * NANO_SECOND_MULTIPLIER;
+const long INTERVAL_MS = 10 * NANO_SECOND_MULTIPLIER;
 
 /*
  * Prints specified user message and specified error description, cleans up the
@@ -36,13 +36,14 @@ void printErrorAndExit(
     exit(retValue);
 }
 
-int main() {
-    int value = 0;
+int main(void) {
     int operResult = 0;
+    int i = 0;
+
     struct timespec sleepValue = {0, 0};
     sleepValue.tv_nsec = INTERVAL_MS;
 
-    printf("CE0 usage example\n");
+    printf("Button usage example \n");
 
     // enable access to IOs
     operResult = rpi_io_init();
@@ -51,45 +52,45 @@ int main() {
         return operResult;
     }
 
-    // enable PWR for TR
-    operResult = rpi_io_set(RPIIO_PORT_RST, RPIIO_DIR_OUTPUT);
+    // set pin output
+    operResult = rpi_io_set(RPIIO_PIN_LED, RPIIO_DIR_OUTPUT);
     if (operResult != BASE_TYPES_OPER_OK) {
-        printErrorAndExit("Setting RST port failed", rpi_io_getLastError(), operResult);
+        printErrorAndExit("Setting LED port failed", rpi_io_getLastError(), operResult);
     }
 
-    operResult = rpi_io_write(RPIIO_PORT_RST, RPIIO_PORTLEVEL_LOW);
+    // set pin input
+    operResult = rpi_io_set(RPIIO_PIN_BUTTON, RPIIO_DIR_INPUT);
     if (operResult != BASE_TYPES_OPER_OK) {
-        printErrorAndExit("Writing to RST port failed", rpi_io_getLastError(), operResult);
+        printErrorAndExit("Setting BUTTON port failed", rpi_io_getLastError(), operResult);
     }
 
-    // SW button trigger test
-    value ^= 1;
-    operResult = rpi_io_set(RPIIO_PORT_CE0, RPIIO_DIR_OUTPUT);
-    if (operResult != BASE_TYPES_OPER_OK) {
-        printErrorAndExit("Setting CE0 port failed", rpi_io_getLastError(), operResult);
+    // 10s loop for button testing
+    for (i = 0; i < 1000; i++) {
+        // read pin value
+        operResult = rpi_io_read(RPIIO_PIN_BUTTON);
+        if (operResult < 0) {
+            printErrorAndExit("Reading BUTTON pin failed", rpi_io_getLastError(), operResult);
+        }
+
+        // if BUTTON pressed
+        if (operResult == RPIIO_PINLEVEL_LOW) {
+            operResult = rpi_io_write(RPIIO_PIN_LED, RPIIO_PINLEVEL_HIGH);
+            if (operResult != BASE_TYPES_OPER_OK) {
+                printErrorAndExit("Writing to LED port failed", rpi_io_getLastError(), operResult);
+            }
+        } else {
+            operResult = rpi_io_write(RPIIO_PIN_LED, RPIIO_PINLEVEL_LOW);
+            if (operResult != BASE_TYPES_OPER_OK) {
+                printErrorAndExit("Writing to LED port failed", rpi_io_getLastError(), operResult);
+            }
+        }
+
+        // sleep for 10ms
+        nanosleep(&sleepValue, NULL);
     }
 
-    operResult = rpi_io_write(RPIIO_PORT_CE0, value);
-    if (operResult != BASE_TYPES_OPER_OK) {
-        printErrorAndExit("Writing to CE0 port failed", rpi_io_getLastError(), operResult);
-    }
-
-    // sleep for 500ms
-    nanosleep(&sleepValue, NULL);
-
-    // falling edge - trigger
-    value ^= 1;
-    operResult = rpi_io_write(RPIIO_PORT_CE0, value);
-    if (operResult != BASE_TYPES_OPER_OK) {
-        printErrorAndExit("Writing to CE0 port failed", rpi_io_getLastError(), operResult);
-    }
-
-    printf("CE0 as INPUT to test HW button\n");
-    operResult = rpi_io_set(RPIIO_PORT_CE0, RPIIO_DIR_INPUT);
-    if (operResult != BASE_TYPES_OPER_OK) {
-        printErrorAndExit("Setting CE0 port as input failed", rpi_io_getLastError(), operResult);
-    }
-
+    // finish the library
     rpi_io_destroy();
+
     return 0;
 }
