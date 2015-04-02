@@ -82,3 +82,5 @@ simply/simply-network-serial-v2/versions/1.0.0/target/
 /libs/gemalto/spi/jlibgem/dist/
 /libs/gemalto/spi/jlibgem-examples/build/
 /libs/gemalto/spi/jlibgem-examples/dist/
+/libs/iqrf/cdc-uart/hdlc-framing-v2/target/
+
