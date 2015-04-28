@@ -70,6 +70,7 @@
                 <configuration> 
                     <outputDirectory>${project.build.directory}/javadoc</outputDirectory>
                     <reportOutputDirectory>${project.reporting.outputDirectory}/javadoc</reportOutputDirectory>
+                    <additionalparam>-Xdoclint:none</additionalparam>
             	</configuration>
             	<executions>
                     <execution>
