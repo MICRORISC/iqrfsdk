@@ -13,7 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.microrisc.universalfrc;
+
+package  com.microrisc.simply.iqrf.dpa.v220.examples.standard_peripherals.frc;
 
 import com.microrisc.simply.CallRequestProcessingState;
 import com.microrisc.simply.Network;
@@ -21,9 +22,10 @@ import com.microrisc.simply.Node;
 import com.microrisc.simply.Simply;
 import com.microrisc.simply.SimplyException;
 import com.microrisc.simply.errors.CallRequestProcessingError;
-import com.microrisc.simply.iqrf.dpa.v210.DPA_SimplyFactory;
-import com.microrisc.simply.iqrf.dpa.v210.devices.FRC;
-import com.microrisc.simply.iqrf.dpa.v210.types.FRC_Data;
+import com.microrisc.simply.iqrf.dpa.v220.DPA_SimplyFactory;
+import com.microrisc.simply.iqrf.dpa.v220.devices.FRC;
+import com.microrisc.simply.iqrf.dpa.v220.types.FRC_Data;
+import com.microrisc.simply.iqrf.dpa.v220.types.FRC_UniversalWithBits;
 import java.io.File;
 import java.util.Map;
 
@@ -35,7 +37,7 @@ import java.util.Map;
  * @author Rostislav Spinar
  * @author Martin Strouhal
  */
-public class FRC_UniversalBitsExample {
+public class SendBitsUniversal {
 
    // reference to Simply
    private static Simply simply = null;

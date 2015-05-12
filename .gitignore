@@ -84,3 +84,10 @@ simply/simply-network-serial-v2/versions/1.0.0/target/
 /libs/gemalto/spi/jlibgem-examples/dist/
 /libs/iqrf/cdc-uart/hdlc-framing-v2/target/
 
+/libs/raspberry/java/io/jlibrpi-io/target/
+/libs/raspberry/java/spi/jlibrpi-spi/target/
+/libs/raspberry/java/spi/jlibrpi-spi-iqrf/target/
+/libs/raspberry/java/spi/jlibrpi-spi-iqrf-examples/target/
+/libs/raspberry/java/io/jlibrpi-io-examples/target/
+/simply/simply-iqrf-dpa-v220/target/
+/simply/simply-iqrf-dpa-v220-examples/target/
