@@ -37,7 +37,7 @@ import java.util.Map;
  * @author Rostislav Spinar
  * @author Martin Strouhal
  */
-public class SendBitsUniversal {
+public class SendAndExtraResultUniversalBits {
 
    // reference to Simply
    private static Simply simply = null;
