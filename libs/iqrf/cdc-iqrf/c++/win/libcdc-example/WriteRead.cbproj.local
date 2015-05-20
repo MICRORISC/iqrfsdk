@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>1899.12.30 00:00:00.000.500,=D:\Prace\microrisc\CDC\CDCLibrary\BuilderXE2\cdc_bin\CDCLib.lib</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.095,=C:\Users\E520\Desktop\IQRFSDK-210\cLibCDC-150630\libs\x86\libcdc-1.0.0-win32.lib</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.966,C:\Users\E520\Desktop\IQRFSDK-210\cLibCDC-150630\examples\make\libcdc-examples-1.0.0-win\writeread\WriteRead.cpp=C:\Users\E520\Desktop\IQRFSDK-210\cLibCDC-150630\examples\make\libcdc-examples-1.0.0-win\writeread\SendReceive.cpp</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.531,=D:\Prace\microrisc\CDC\CDCLibrary\BuilderXE2\build_output\CDCLib.lib</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.606,=C:\Users\E520\Desktop\IQRFSDK-210\cLibCDC-150630\libs\x86\libcdc-1.0.0-win.lib</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.312,C:\Documents and Settings\fantomas\Dokumenty\RAD Studio\Projects\Project1.cbproj=D:\Prace\microrisc\CDC\CDCLibrary\BuilderXE2\CDCLib_E3\CDCLib_E3.cbproj</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.152,=C:\Users\E520\Desktop\IQRFSDK-210\cLibCDC-150630\libs\x64\libcdc-1.0.0-win.a</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.500,C:\Documents and Settings\fantomas\Dokumenty\RAD Studio\Projects\File1.cpp=D:\Prace\microrisc\CDC\CDCLibrary\BuilderXE2\CDCLib_E3\SendReceive.cpp</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.567,C:\Users\E520\Desktop\IQRFSDK-210\cLibCDC-150630\examples\make\libcdc-examples-1.0.0-win\writeread\WriteRead.cbproj=C:\Users\E520\Desktop\IQRFSDK-210\cLibCDC-150630\examples\make\libcdc-examples-1.0.0-win\writeread\CDCLib_E3.cbproj</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.500,=C:\Documents and Settings\fantomas\Dokumenty\RAD Studio\Projects\File1.cpp</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.241,=C:\Users\E520\Desktop\IQRFSDK-210\cLibCDC-150630\libs\x64\libcdc-1.0.0-win64.a</Transaction>
+    <Transaction>2015.05.20 22:10:02.306,=C:\Users\E520\Desktop\SDK\GITHUB\iqrfsdk\libs\iqrf\cdc-iqrf\c++\win\cdclib-example\libs\libcdc-1.0.0-win32.lib</Transaction>
+    <Transaction>2015.05.20 22:10:13.401,=C:\Users\E520\Desktop\SDK\GITHUB\iqrfsdk\libs\iqrf\cdc-iqrf\c++\win\cdclib-example\libs\libcdc-1.0.0-win64.a</Transaction>
+  </Transactions>
+</BorlandProject>

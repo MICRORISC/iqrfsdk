@@ -10,19 +10,19 @@
 
 <connectionTypes>
 
+<!--
     <connectionType>
         <name>COM</name>
         <implClass>com.microrisc.simply.network.comport.SimpleCOMPortConnectionInfo</implClass>
         <note>Some note here.</note>
     </connectionType>
+-->
 
-<!--
     <connectionType>
         <name>UDP</name>
         <implClass>com.microrisc.simply.network.udp.SimpleUDPConnectionInfo</implClass>
         <note>Some note here.</note>
     </connectionType>
--->
 
 <!-- 
     <connectionType>

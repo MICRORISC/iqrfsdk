@@ -35,9 +35,13 @@
 			<!-- <peripherals>0, 2, 3, 4, 5, 6, 7, 9, 10, 13, 32</peripherals> -->
                         <peripherals>0, 2, 3, 4, 5, 6, 7, 9, 10, 13</peripherals>
                     </node>
+                    <node id="1">
+			<!-- <peripherals>0, 2, 3, 4, 5, 6, 7, 9, 10, 13, 32</peripherals> -->
+                        <peripherals>0, 1, 2, 3, 4, 5, 6, 7, 9, 10, 13</peripherals>
+                    </node>
 		</nodes>
                
-		<nodesInterval min="1" max="5">
+		<nodesInterval min="2" max="2">
                     <peripherals>1, 2, 3, 4, 5, 6, 7, 9, 10, 13</peripherals>
 		</nodesInterval>
                 
