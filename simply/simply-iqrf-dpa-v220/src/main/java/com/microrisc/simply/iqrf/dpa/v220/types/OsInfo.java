@@ -21,7 +21,7 @@ import java.util.Arrays;
 /**
  * Encapsulates information about used OS of IQMesh network.
  * 
- * @author Michal Konopa
+ * @author Michal Konopa, Rostislav Spinar
  */
 public final class OsInfo {
     
@@ -41,6 +41,27 @@ public final class OsInfo {
         }
     }
     
+    /** TR Type. */
+    public static enum TR_Type {
+        DCTR_52D      (0),
+        DCTR_58D_RJ   (1),
+        DCTR_72D      (2),
+        DCTR_53D      (3),
+        DCTR_54D      (8),
+        DCTR_55D      (9),
+        DCTR_56D      (10),
+        DCTR_76D      (11);
+        
+        private final int value;
+        
+        private TR_Type(int typeValue) {
+            this.value = typeValue;
+        }
+        
+        public int getValue() {
+            return value;
+        }
+    }
     
     /** Module ID */
     private final short[] moduleId;
@@ -50,6 +71,9 @@ public final class OsInfo {
     
     /** MCU type */
     private final MCU_Type mcuType;
+    
+    /** TR type */
+    private final TR_Type trType;
     
     /** OS build */
     private final short[] osBuild;
@@ -69,17 +93,20 @@ public final class OsInfo {
      * @param moduleId module ID
      * @param osVersion OS version
      * @param mcuType MCU type
+     * @param trType  TR type
      * @param osBuild OS build
      * @param rssi Rssi
      * @param supplyVoltage supply voltage
      * @param flags flags
      */
     public OsInfo(short[] moduleId, int osVersion, MCU_Type mcuType, 
-            short[] osBuild, int rssi, int supplyVoltage, int flags
+            TR_Type trType, short[] osBuild, int rssi, int supplyVoltage, 
+            int flags
     ) {
         this.moduleId = moduleId;
         this.osVersion = osVersion;
         this.mcuType = mcuType;
+        this.trType = trType;
         this.osBuild = osBuild;
         this.rssi = rssi;
         this.supplyVoltage = supplyVoltage;
@@ -108,6 +135,14 @@ public final class OsInfo {
      */
     public MCU_Type getMcuType() {
         return mcuType;
+    }
+    
+    /**
+     * Returns TR type. See moduleInfo() at IQRF OS Reference Guide.
+     * @return TR type
+     */
+    public TR_Type getTrType() {
+        return trType;
     }
 
     /**
@@ -149,6 +184,7 @@ public final class OsInfo {
         strBuilder.append(this.getClass().getSimpleName() + " { " + NEW_LINE);
         strBuilder.append(" Module ID: " + Arrays.toString(moduleId) + NEW_LINE);
         strBuilder.append(" OS version: " + osVersion + NEW_LINE);
+        strBuilder.append(" TR type: " + trType + NEW_LINE);
         strBuilder.append(" MCU type: " + mcuType + NEW_LINE);
         strBuilder.append(" OS build: " + Arrays.toString(osBuild) + NEW_LINE);
         strBuilder.append(" RSSI: " + rssi + NEW_LINE);
@@ -198,6 +234,10 @@ public final class OsInfo {
         return mcuType.toString();
     }
     
+    public String getPrettyFormatedTrType() {
+        return trType.toString();
+    }
+    
     /**
      * Returns pretty formated string information. 
      * @return pretty formated string information.
@@ -208,6 +248,7 @@ public final class OsInfo {
         
         strBuilder.append("Module ID: " + getPrettyFormatedModuleId() + NEW_LINE);
         strBuilder.append("OS version: " + getPrettyFormatedOsVersion() + NEW_LINE);
+        strBuilder.append("TR type: " + getPrettyFormatedTrType() + NEW_LINE);
         strBuilder.append("MCU type: " + getPrettyFormatedMCUType() + NEW_LINE);
         strBuilder.append("RSSI: " + rssi + NEW_LINE);
         strBuilder.append("Supply voltage: " + supplyVoltage + NEW_LINE);

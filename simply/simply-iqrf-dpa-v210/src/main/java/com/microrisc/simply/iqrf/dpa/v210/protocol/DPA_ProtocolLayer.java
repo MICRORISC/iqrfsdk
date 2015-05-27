@@ -322,7 +322,7 @@ implements ProtocolStateMachineListener
      * @param message message to process
      * @paeram msgPacket message source protocol packet
      */
-    private void processMessage(AbstractMessage message, short[] msgPacket) {
+    private void processMessage(AbstractMessage message) {
         logger.debug("processMessage - start: message={}", message);
         
         if ( !(message instanceof BaseCallResponse) ) {
@@ -337,34 +337,9 @@ implements ProtocolStateMachineListener
             }
             return;
         }
-        
-        BaseCallResponse response = ( BaseCallResponse) message;
-        boolean causeRequestFound = false;
-        
-        synchronized ( synchroSentRequest ) {
-            TimeRequest causeRequest = getCauseRequest(response);
-            if ( causeRequest != null ) {
-                response.setRequestId(causeRequest.request.getId());
-                sentRequests.remove(causeRequest);
-                causeRequestFound = true;
-            } 
-        }
-        
-        if ( causeRequestFound ) {
+        else { 
             synchronized ( synchroListener ) {
                 listener.onGetMessage(message);
-            }
-        } else {
-            logger.info("No cause request found, message={} handled as asynchronous", message); 
-            BaseAsynchronousMessage asyncMsg = new DPA_AsynchronousMessage(
-                    response.getMainData(), response.getAdditionalData(), 
-                    new SimpleDPA_AsynchronousMessageSource(
-                            response.getMessageSource(), 
-                            DPA_ProtocolProperties.getPeripheralNumber(msgPacket)
-                    )
-            );
-            synchronized ( synchroListener ) {
-                listener.onGetMessage(asyncMsg);
             }
         }
         
@@ -651,12 +626,34 @@ implements ProtocolStateMachineListener
             return;
         }
         
-        // messages, which are NOT base call responses - typically asynchronous messages - 
-        // must be processed out of the Protocol State Machine
-        if ( !(message instanceof BaseCallResponse) ) {
-            processMessage(message, networkData.getData());
-            logger.debug("onGetData - end");
-            return;
+        // is async message or not?
+        synchronized ( synchroSentRequest ) {
+            BaseCallResponse response = (BaseCallResponse)message;
+            TimeRequest causeRequest = getCauseRequest(response);
+            
+            // is NOT async
+            if ( causeRequest != null ) {
+                response.setRequestId(causeRequest.request.getId());
+                sentRequests.remove(causeRequest);
+            }
+            // is async
+            else {
+                logger.info("No cause request found, message={} handled as asynchronous", message); 
+                
+                BaseAsynchronousMessage asyncMsg = new DPA_AsynchronousMessage(
+                    message.getMainData(), message.getAdditionalData(), 
+                    new SimpleDPA_AsynchronousMessageSource(
+                            message.getMessageSource(), 
+                            DPA_ProtocolProperties.getPeripheralNumber(networkData.getData())
+                    )
+                );
+                
+                // messages, which are NOT base call responses - typically asynchronous messages - 
+                // must be processed out of the Protocol State Machine
+                processMessage(asyncMsg);
+                logger.debug("onGetData - end");
+                return;
+            }
         }
         
         synchronized ( synchroSendOrReceive ) {
@@ -675,7 +672,7 @@ implements ProtocolStateMachineListener
             }
             
             // processing the message incomming from network
-            processMessage(message, networkData.getData());
+            processMessage(message);
         }
         
         logger.debug("onGetData - end");

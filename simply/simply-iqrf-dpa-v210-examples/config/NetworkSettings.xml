@@ -10,15 +10,14 @@
 
 <networkSettings>
 
-<!--
     <network>
 		<id>1</id>
 		<type>COM</type>
-		<port>COM5</port>
+		<port>COM6</port>
 		<note>Some note here.</note>
     </network>
--->
 
+<!--
     <network>
 		<id>1</id>
 		<type>UDP</type>
@@ -26,6 +25,7 @@
                 <port>55300</port>
 		<note>Some note here.</note>
     </network>
+-->
 
 <!--
     <network>

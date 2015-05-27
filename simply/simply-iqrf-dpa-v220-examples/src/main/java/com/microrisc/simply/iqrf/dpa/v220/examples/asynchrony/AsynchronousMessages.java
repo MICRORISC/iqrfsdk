@@ -20,15 +20,17 @@ import com.microrisc.simply.SimplyException;
 import com.microrisc.simply.asynchrony.AsynchronousMessagesListener;
 import com.microrisc.simply.asynchrony.AsynchronousMessagingManager;
 import com.microrisc.simply.iqrf.dpa.DPA_Simply;
+import com.microrisc.simply.iqrf.dpa.v220.DPA_SimplyFactory;
 import com.microrisc.simply.iqrf.dpa.asynchrony.DPA_AsynchronousMessage;
 import com.microrisc.simply.iqrf.dpa.asynchrony.DPA_AsynchronousMessageProperties;
-import com.microrisc.simply.iqrf.dpa.v220.DPA_SimplyFactory;
+import com.microrisc.simply.iqrf.dpa.v220.types.OsInfo;
 import java.io.File;
 
 /**
  * Example of using asynchronous messaging.
+ * Example has been tested with CustomDpaHandler-Coordinator-PullNodes.hex.
  * 
- * @author Michal Konopa
+ * @author Michal Konopa, Rostislav Spinar
  */
 public class AsynchronousMessages 
 implements AsynchronousMessagesListener<DPA_AsynchronousMessage> 
@@ -63,7 +65,7 @@ implements AsynchronousMessagesListener<DPA_AsynchronousMessage>
         asyncManager.registerAsyncMsgListener(msgListener);
         
         // sleep for some time to show the processing of incomming asynchronous messages 
-        Thread.sleep(20000);
+        Thread.sleep(30000);
         
         // after end of work with asynchronous messages, unrergister the listener
         asyncManager.unregisterAsyncMsgListener(msgListener);
@@ -75,12 +77,20 @@ implements AsynchronousMessagesListener<DPA_AsynchronousMessage>
     @Override
     public void onAsynchronousMessage(DPA_AsynchronousMessage message) {
         System.out.println("New asynchronous message: ");
+        
+        System.out.println("Message source: "
+            + "network ID= " + message.getMessageSource().getNetworkId()
+            + ", node ID= " + message.getMessageSource().getNodeId()
+            + ", peripheral number= " + message.getMessageSource().getPeripheralNumber()
+        );
+        
         System.out.println("Main data: " + message.getMainData());
         System.out.println("Additional data: " + message.getAdditionalData());
-        System.out.println("Message source: "
-                + "network ID= " + message.getMessageSource().getNetworkId() 
-                + ", node ID= " + message.getMessageSource().getNodeId()
-                + ", peripheral number= " + message.getMessageSource().getPeripheralNumber()
-        );
+        System.out.println();
+        
+        // getting specific type once we know what message comes
+        //OsInfo osi = (OsInfo)message.getMainData();
+        //System.out.println("Pretty format: " + osi.toPrettyFormatedString());
+        //System.out.println();
     }
 }
