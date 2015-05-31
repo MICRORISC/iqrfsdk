@@ -1,6 +1,6 @@
-package com.microrisc.simply.iqrf.dpa.v220.types;
+package com.microrisc.simply.iqrf.dpa.v210.types;
 
-import com.microrisc.simply.iqrf.dpa.v220.typeconvertors.DPA_RequestConvertor;
+import com.microrisc.simply.iqrf.dpa.v210.typeconvertors.DPA_RequestConvertor;
 import com.microrisc.simply.typeconvertors.ValueConversionException;
 import java.util.HashMap;
 import java.util.Map;
@@ -12,13 +12,13 @@ import java.util.Map.Entry;
  *
  * @author Martin Strouhal
  */
-public final class FRC_UniversalWithBits extends AbstractFRC_Command {
+public final class FRC_UniversalWithBytes extends AbstractFRC_Command {
 
    private final int id;
    public static final int FRC_DATA_LENGTH = 64;
 
    /**
-    * Creates new object of {@code FRC_UniversalWithBits} with specified ID of
+    * Creates new object of {@code FRC_UniversalWithBytes} with specified ID of
     * command and default user data. See the
     * {@link AbstractFRC_Command#AbstractFRC_Command() AbstractFRC_Command}
     * constructor.
@@ -27,13 +27,13 @@ public final class FRC_UniversalWithBits extends AbstractFRC_Command {
     *
     * @throws IllegalArgumentException if is FRC ID incorrect
     */
-   public FRC_UniversalWithBits(int frc_id) {
+   public FRC_UniversalWithBytes(int frc_id) {
       super();
       this.id = checkID(frc_id);
    }
 
    /**
-    * Creates new object of {@code FRC_UniversalWithBits} with specified ID of
+    * Creates new object of {@code FRC_UniversalWithBytes} with specified ID of
     * command and specified user data.
     *
     * @param frc_id ID of FRC command, it should be in range 0 - 255
@@ -41,13 +41,13 @@ public final class FRC_UniversalWithBits extends AbstractFRC_Command {
     * @throws IllegalArgumentException if is FRC ID incorrect or if userData are
     * incorrect {@link AbstractFRC_Command#AbstractFRC_Command(short[]) (more)}
     */
-   public FRC_UniversalWithBits(int frc_id, short[] userData) {
+   public FRC_UniversalWithBytes(int frc_id, short[] userData) {
       super(userData);
       this.id = checkID(frc_id);
    }
 
    /**
-    * Creates new object of {@code FRC_UniversalWithBits} with specified user
+    * Creates new object of {@code FRC_UniversalWithBytes} with specified user
     * data and FRC id.
     *
     * @param dpaRequest DPA request to take as a user data
@@ -56,7 +56,7 @@ public final class FRC_UniversalWithBits extends AbstractFRC_Command {
     * of specified DPA request into the series of bytes of user data or if is
     * FRC ID incorrect
     */
-   public FRC_UniversalWithBits(DPA_Request dpaRequest, int id) {
+   public FRC_UniversalWithBytes(DPA_Request dpaRequest, int id) {
       super();
       try {
          this.userData = DPA_RequestConvertor.getInstance().toProtoValue(
@@ -85,46 +85,20 @@ public final class FRC_UniversalWithBits extends AbstractFRC_Command {
       }
    }
 
-   /**
-    * Provides acces to parsed FRC data comming from IQRF.
-    */
-   public static interface Result extends FRC_CollectedBits {
-
-      /**
-       * Return all bits merged into one byte.
-       *
-       * @return all bits in 1 byte
-       */
-      byte getBitsInByte();
+   public static interface Result extends FRC_CollectedBytes {
    }
 
-   /** Parsed FRC data comming from IQRF. */
    public static class ResultImpl implements Result {
 
-      private final byte bit0;
-      private final byte bit1;
-      
-      public ResultImpl(byte bit0, byte bit1) {
-         this.bit0 = bit0;
-         this.bit1 = bit1;
+      private final short byteValue;
+
+      public ResultImpl(short byteValue) {
+         this.byteValue = byteValue;
       }
 
       @Override
-      public byte getBit0() {
-         return bit0;
-      }
-
-      @Override
-      public byte getBit1() {
-         return bit1;
-      }
-
-      @Override
-      public byte getBitsInByte() {
-         byte resultByte = bit1;
-         resultByte <<= 1;
-         resultByte += bit0;
-         return resultByte;
+      public short getByte() {
+         return byteValue;
       }
    }
 
@@ -138,19 +112,20 @@ public final class FRC_UniversalWithBits extends AbstractFRC_Command {
     * format
     * @throws Exception if parsing failed
     */
-   public static Map<String, FRC_UniversalWithBits.Result> parse(
+   public static Map<String, FRC_UniversalWithBytes.Result> parse(
            short[] frcData) throws Exception {
       checkFrcData(frcData);
 
-      Map<String, ResultImpl> resultImplMap = null;
+      Map<String, FRC_UniversalWithBytes.ResultImpl> resultImplMap = null;
       try {
-         resultImplMap = FRC_ResultParser.parseAsCollectedBits(frcData, ResultImpl.class);
+         resultImplMap = FRC_ResultParser.parseAsCollectedBytes(frcData,
+                 FRC_UniversalWithBytes.ResultImpl.class);
       } catch (Exception ex) {
          throw new Exception("Parsing failed: " + ex);
       }
 
-      Map<String, FRC_UniversalWithBits.Result> resultMap = new HashMap<>();
-      for (Map.Entry<String, ResultImpl> resImplEntry : resultImplMap.entrySet()) {
+      Map<String, FRC_UniversalWithBytes.Result> resultMap = new HashMap<>();
+      for (Map.Entry<String, FRC_UniversalWithBytes.ResultImpl> resImplEntry : resultImplMap.entrySet()) {
          resultMap.put(resImplEntry.getKey(), resImplEntry.getValue());
       }
       return resultMap;
@@ -158,8 +133,7 @@ public final class FRC_UniversalWithBits extends AbstractFRC_Command {
 
    /**
     * Parses specified FRC data comming from IQRF into easiest map in this case
-    * - Map<String, Byte>. For info about merging bits see {@link Result#getBitsInByte()
-    * } which is used in this case.
+    * - Map<String, Short>.
     *
     * @param frcData FRC data to parse
     * @return map of results for each node. Identifiers of nodes are used as a
@@ -168,18 +142,18 @@ public final class FRC_UniversalWithBits extends AbstractFRC_Command {
     * format
     * @throws Exception if parsing failed
     */
-   public static Map<String, Byte> parseIntoByte(
+   public static Map<String, Short> parseIntoShort(
            short[] frcData) throws Exception {
       checkFrcData(frcData);
 
-      Map<String, FRC_UniversalWithBits.Result> resultImplMap = parse(frcData);
-      Map<String, Byte> resultEasyMap = new HashMap<>();
+      Map<String, FRC_UniversalWithBytes.Result> resultImplMap = parse(frcData);
+      Map<String, Short> resultEasyMap = new HashMap<>();
 
-      for (Entry<String, FRC_UniversalWithBits.Result> e : resultImplMap.entrySet()) {
+      for (Entry<String, FRC_UniversalWithBytes.Result> e : resultImplMap.entrySet()) {
          String key = e.getKey();
-         FRC_UniversalWithBits.Result value = e.getValue();
+         FRC_UniversalWithBytes.Result value = e.getValue();
 
-         resultEasyMap.put(key, value.getBitsInByte());
+         resultEasyMap.put(key, value.getByte());
       }
 
       return resultEasyMap;

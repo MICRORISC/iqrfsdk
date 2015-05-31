@@ -1,10 +1,6 @@
-package com.microrisc.universalfrc;
+package com.microrisc.simply.iqrf.dpa.v220.types;
 
-import com.microrisc.simply.iqrf.dpa.v210.typeconvertors.DPA_RequestConvertor;
-import com.microrisc.simply.iqrf.dpa.v210.types.AbstractFRC_Command;
-import com.microrisc.simply.iqrf.dpa.v210.types.DPA_Request;
-import com.microrisc.simply.iqrf.dpa.v210.types.FRC_CollectedBytes;
-import com.microrisc.simply.iqrf.dpa.v210.types.FRC_ResultParser;
+import com.microrisc.simply.iqrf.dpa.v220.typeconvertors.DPA_RequestConvertor;
 import com.microrisc.simply.typeconvertors.ValueConversionException;
 import java.util.HashMap;
 import java.util.Map;
