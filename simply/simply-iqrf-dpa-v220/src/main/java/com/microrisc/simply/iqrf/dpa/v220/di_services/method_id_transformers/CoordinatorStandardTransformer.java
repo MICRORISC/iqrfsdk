@@ -48,7 +48,6 @@ public final class CoordinatorStandardTransformer implements MethodIdTransformer
         methodIdsMap.put(Coordinator.MethodID.BACKUP, "12");
         methodIdsMap.put(Coordinator.MethodID.RESTORE, "13");
         methodIdsMap.put(Coordinator.MethodID.AUTHORIZE_BOND, "14");
-        methodIdsMap.put(Coordinator.MethodID.BRIDGE, "15");
         methodIdsMap.put(Coordinator.MethodID.ENABLE_REMOTE_BONDING, "16");
         methodIdsMap.put(Coordinator.MethodID.READ_REMOTELY_BONDED_MODULE_ID, "17");
         methodIdsMap.put(Coordinator.MethodID.CLEAR_REMOTELY_BONDED_MODULE_ID, "18");

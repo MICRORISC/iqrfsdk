@@ -21,6 +21,7 @@
 #include "stdint.h"
 #include "stdio.h"
 #include "string.h"
+#include "stdlib.h"
 // bsp modules required
 #include "board.h"
 #include "uart0.h"
@@ -34,7 +35,14 @@
 
 #define BSP_TIMER_PERIOD     32 	// 32@32kHz = 1ms
 #define USER_TIMER_PERIOD	 1000	// 1000@1ms = 1s
-static const uint8_t stringToSend[]       = "Hello, World!\r\n";
+
+static const uint8_t requestToSend[]       		= "Req: ";
+static const uint8_t confirmationToSend[]       = "Con: ";
+static const uint8_t responseToSend[]       	= "Res: ";
+static const uint8_t endingToSend[] 			= "\r\n\n";
+
+#define CONFIRMATION				1
+#define RESPONSE					2
 
 #define NO_WAITING					0
 #define CONFIRMATION_WAITING		1
@@ -61,8 +69,16 @@ typedef struct {
    volatile	uint16_t dpaTimeoutCnt;
    uint16_t	dpaStep;
    T_DPA_PACKET myDpaRequest;
+   char *ptrRequest;
+   uint8_t debugRequest;
+   T_DPA_PACKET myDpaAnswer;
+   char *ptrAnswer;
+   uint8_t debugAnswer;
+   uint8_t debugActive;
+   char debugString[128];
    volatile uint16_t swTimer;
    volatile uint8_t swTimerAck;
+   volatile uint8_t ticks;
    DPA_RQ cmds;
 } app_vars_t;
 
@@ -86,7 +102,7 @@ void MyDebugMessages(void);
 
 //dpa driver timing
 void cb_compare(void);
-//dpa interface 115200
+//dpa interface 9600
 void cb_uart0TxDone(void);
 void cb_uart0RxCb(void);
 //usb interface 115200
@@ -121,11 +137,18 @@ int mote_main(void) {
 
 	for (;;) {
 
-		// every 1s
+		// dpa msgs
 		if(app_vars.swTimerAck == TRUE) {
 			MyDpaLibRequests();					// function for sending DPA requests - UART0
-			MyDebugMessages();					// function for printing DEBUG messages - UART1
 			app_vars.swTimerAck = FALSE;
+		}
+
+		// debug msgs
+		if(!app_vars.debugActive) {				// only if there no debug processing already on
+			if(app_vars.debugRequest == TRUE || \
+					(app_vars.debugAnswer == CONFIRMATION) || (app_vars.debugAnswer == RESPONSE))  {
+				MyDebugMessages();				// function for printing DEBUG messages - UART1
+			}
 		}
 
 		DPA_LibraryDriver();					// DPA library handler
@@ -146,14 +169,21 @@ void MyDpaLibRequests(void) {
 		return;
 	}
 
+	// 100ms before sending another request
+	app_vars.ticks = 100;
+	while(app_vars.ticks)
+		;
+
 	switch(app_vars.cmds) {
 
 		case GLED_PULSE:
 			DpaLedG(COORDINATOR, CMD_LED_PULSE);
+			app_vars.debugRequest = TRUE;
 		break;
 
 		case RLED_PULSE:
 			DpaLedR(NODE1, CMD_LED_PULSE);
+			app_vars.debugRequest = TRUE;
 		break;
 
 		default:
@@ -183,6 +213,10 @@ void MyDpaAnswerHandler(T_DPA_PACKET *dpaAnswerPkt) {
 					== STATUS_CONFIRMATION) {
 		app_vars.dpaStep = RESPONSE_WAITING;
 		app_vars.dpaTimeoutCnt = DPA_GetEstimatedTimeout();
+
+		memcpy(&app_vars.myDpaAnswer, dpaAnswerPkt, sizeof(app_vars.myDpaAnswer));
+		app_vars.debugAnswer = CONFIRMATION;
+
 		return;
 	}
 
@@ -192,10 +226,11 @@ void MyDpaAnswerHandler(T_DPA_PACKET *dpaAnswerPkt) {
 		app_vars.dpaTimeoutCnt = 0;
 
 		// ANY USER CODE FOR DPA RESPONSE PROCESSING
+		memcpy(&app_vars.myDpaAnswer, dpaAnswerPkt, sizeof(app_vars.myDpaAnswer));
+		app_vars.debugAnswer = RESPONSE;
+
 		app_vars.cmds++;
 		app_vars.cmds %= 2;
-
-		//TODO: add some delay before sending another request to the network
 
 		return;
 	}
@@ -217,8 +252,6 @@ void MyDpaLibTimeoutHandler(void) {
 	// ANY USER CODE FOR OPERATION TIMEOUT HANDLING
 	app_vars.cmds++;
 	app_vars.cmds %= 2;
-
-	//TODO: add some delay before sending another request to the network
 }
 //=============================================================================
 
@@ -282,12 +315,92 @@ void MySwTimerTimeoutHandler(void) {
  *
  **/
 void MyDebugMessages(void) {
+		uint8_t i = 0;
+
+		//number of bytes from extension block
+		uint8_t len = 10;
+
 		app_vars.uart1Done = 0;
 		app_vars.uart1_lastTxByteIndex = 0;
-		uart1_writeByte(stringToSend[app_vars.uart1_lastTxByteIndex]);
+		memset(&app_vars.debugString,0,sizeof(app_vars.debugString));
 
+		if (app_vars.debugRequest) {
+			// message type
+			memcpy(app_vars.debugString, requestToSend, sizeof(requestToSend));
+
+			// message data
+			sprintf(app_vars.debugString + sizeof(requestToSend), "%x    %x    %x    %x    ", app_vars.myDpaRequest.NAdr \
+																				    		, app_vars.myDpaRequest.PNum \
+																				    		, app_vars.myDpaRequest.PCmd \
+																				    		, app_vars.myDpaRequest.HwProfile);
+
+			app_vars.ptrRequest = (char*)&app_vars.myDpaRequest.Extension.Plain.Data;
+			//first 5 elemets from extension
+			for(i=0; i<len; i++) {
+				sprintf(app_vars.debugString + sizeof(requestToSend) + 4*5 + (i*5), "%x    ", *app_vars.ptrRequest);
+				app_vars.ptrRequest++;
+			}
+
+			// message ending
+			memcpy(app_vars.debugString + sizeof(requestToSend) + 4*5 + len*5, endingToSend, sizeof(endingToSend));
+
+			app_vars.ptrRequest = (char*)&app_vars.debugString;
+			uart1_writeByte(*app_vars.ptrRequest);
+		}
+		else if(app_vars.debugAnswer == CONFIRMATION) {
+			// message type
+			memcpy(app_vars.debugString, confirmationToSend, sizeof(confirmationToSend));
+
+			// message header
+			sprintf(app_vars.debugString + sizeof(confirmationToSend), "%x    %x    %x    %x    ", app_vars.myDpaAnswer.NAdr \
+																					 	 	 	 , app_vars.myDpaAnswer.PNum \
+																					 	 	 	 , app_vars.myDpaAnswer.PCmd \
+																					 	 	 	 , app_vars.myDpaAnswer.HwProfile);
+
+			// message data
+			sprintf(app_vars.debugString + sizeof(confirmationToSend) + 4*5, "%x    %x    %x    %x    %x    ", app_vars.myDpaAnswer.Extension.Confirmation.StatusConfirmation \
+																					   	   	       	    	 , app_vars.myDpaAnswer.Extension.Confirmation.DpaValue \
+																					   	   	       	    	 , app_vars.myDpaAnswer.Extension.Confirmation.Hops \
+																					   	   	       	    	 , app_vars.myDpaAnswer.Extension.Confirmation.TimeSlotLength \
+																					   	   	       	    	 , app_vars.myDpaAnswer.Extension.Confirmation.HopsResponse);
+
+			// message ending
+			memcpy(app_vars.debugString + sizeof(confirmationToSend) + 4*5 + 5*5, endingToSend, sizeof(endingToSend));
+		}
+		else if (app_vars.debugAnswer == RESPONSE) {
+			// message type
+			memcpy(app_vars.debugString, responseToSend, sizeof(responseToSend));
+
+			// message header
+			sprintf(app_vars.debugString + sizeof(responseToSend), "%x    %x    %x    %x    ", app_vars.myDpaAnswer.NAdr \
+																						 	 , app_vars.myDpaAnswer.PNum \
+																						 	 , app_vars.myDpaAnswer.PCmd \
+																						 	 , app_vars.myDpaAnswer.HwProfile);
+
+			// message data
+			sprintf(app_vars.debugString + sizeof(responseToSend) + 4*5, "%x    %x    ", app_vars.myDpaAnswer.Extension.Response.ResponseCode \
+																	           	   	   , app_vars.myDpaAnswer.Extension.Response.DpaValue );
+
+			app_vars.ptrAnswer = (char*)&app_vars.myDpaAnswer.Extension.Response.Data;
+			//first 5 elemets from extension
+			for(i=0; i<len; i++) {
+				sprintf(app_vars.debugString + sizeof(responseToSend) + 6*5 + (i*5), "%x    ", *app_vars.ptrAnswer);
+				app_vars.ptrAnswer++;
+			}
+
+			// message ending
+			memcpy(app_vars.debugString + sizeof(responseToSend) + 6*5 + len*5, endingToSend, sizeof(endingToSend));
+		}
+
+		app_vars.ptrAnswer = (char*)&app_vars.debugString;
+		uart1_writeByte(*app_vars.ptrAnswer);
+
+		app_vars.debugActive = TRUE;
+
+		/*
 		while(!app_vars.uart1Done)
 			;
+		*/
 }
 //=============================================================================
 
@@ -335,6 +448,10 @@ void cb_compare(void) {
 		}
 	}
 
+	if(app_vars.ticks) {													// delay timer
+		--app_vars.ticks;
+	}
+
 	// schedule again
 	bsp_timer_scheduleIn(BSP_TIMER_PERIOD);
 }
@@ -379,10 +496,28 @@ void cb_uart0RxCb(void) {
  **/
 void cb_uart1TxDone(void) {
 	app_vars.uart1_lastTxByteIndex++;
-	if(app_vars.uart1_lastTxByteIndex<sizeof(stringToSend)) {
-		uart1_writeByte(stringToSend[app_vars.uart1_lastTxByteIndex]);
-	} else {
-		app_vars.uart1Done = 1;
+
+	if(app_vars.debugRequest) {
+		app_vars.ptrRequest++;
+
+		if(app_vars.uart1_lastTxByteIndex < sizeof(app_vars.debugString)) {
+			uart1_writeByte(*app_vars.ptrRequest);
+		} else {
+			app_vars.debugRequest = FALSE;
+			app_vars.debugActive = FALSE;
+			//app_vars.uart1Done = 1;
+		}
+	}
+	else if (app_vars.debugAnswer) {
+		app_vars.ptrAnswer++;
+
+		if(app_vars.uart1_lastTxByteIndex < sizeof(app_vars.debugString)) {
+			uart1_writeByte(*app_vars.ptrAnswer);
+		} else {
+			app_vars.debugAnswer = FALSE;
+			app_vars.debugActive = FALSE;
+			//app_vars.uart1Done = 1;
+		}
 	}
 }
 //=============================================================================
@@ -397,3 +532,4 @@ void cb_uart1TxDone(void) {
 void cb_uart1RxCb(void) {
 }
 //=============================================================================
+

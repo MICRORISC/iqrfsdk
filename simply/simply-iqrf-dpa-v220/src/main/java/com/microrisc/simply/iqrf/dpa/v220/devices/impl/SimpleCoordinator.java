@@ -31,7 +31,6 @@ import com.microrisc.simply.iqrf.dpa.v220.types.DiscoveryParams;
 import com.microrisc.simply.iqrf.dpa.v220.types.DiscoveryResult;
 import com.microrisc.simply.iqrf.dpa.v220.types.RemotelyBondedModuleId;
 import com.microrisc.simply.iqrf.dpa.v220.types.RoutingHops;
-import com.microrisc.simply.iqrf.dpa.v220.types.SubDPARequest;
 import com.microrisc.simply.iqrf.types.VoidType;
 import java.util.UUID;
 
@@ -237,13 +236,6 @@ extends DPA_DeviceObject implements Coordinator {
                         new Object[] { getRequestHwProfile(), args[0], args[1] }, 
                         getDefaultWaitingTimeout()
                 );
-            case BRIDGE:
-                MethodArgumentsChecker.checkArgumentTypes(args, new Class[] { SubDPARequest.class } );
-                return dispatchCall(
-                        methodIdStr, 
-                        new Object[] { getRequestHwProfile(), args[0] }, 
-                        getDefaultWaitingTimeout()
-                );
             case ENABLE_REMOTE_BONDING:
                 MethodArgumentsChecker.checkArgumentTypes(args, new Class[] { Integer.class, Integer.class, short[].class } );
                 checkBondingMask((Integer)args[0]);
@@ -387,13 +379,6 @@ extends DPA_DeviceObject implements Coordinator {
         checkModuleId(moduleId);
         return dispatchCall(
                 "14", new Object[] { getRequestHwProfile(), address, moduleId }, 
-                getDefaultWaitingTimeout()
-        );
-    }
-    
-    @Override
-    public UUID async_bridge(SubDPARequest subRequest) {
-        return dispatchCall("15", new Object[] { getRequestHwProfile(), subRequest }, 
                 getDefaultWaitingTimeout()
         );
     }
@@ -593,17 +578,6 @@ extends DPA_DeviceObject implements Coordinator {
             return null;
         }
         return getCallResult(uid, BondedNode.class, getDefaultWaitingTimeout());
-    }
-    
-    @Override
-    public short[] bridge(SubDPARequest subRequest) {
-        UUID uid = dispatchCall("15", new Object[] { getRequestHwProfile(), subRequest }, 
-                getDefaultWaitingTimeout()
-        );
-        if ( uid == null ) {
-            return null;
-        }
-        return getCallResult(uid, short[].class, getDefaultWaitingTimeout());
     }
     
     @Override

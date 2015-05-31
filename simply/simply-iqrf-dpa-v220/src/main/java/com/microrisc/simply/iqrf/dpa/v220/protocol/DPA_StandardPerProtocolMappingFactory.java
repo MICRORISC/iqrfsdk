@@ -56,7 +56,6 @@ import com.microrisc.simply.iqrf.dpa.v220.typeconvertors.PeripheralInfoConvertor
 import com.microrisc.simply.iqrf.dpa.v220.typeconvertors.RemotelyBondedModuleIdConvertor;
 import com.microrisc.simply.iqrf.dpa.v220.typeconvertors.RoutingHopsConvertor;
 import com.microrisc.simply.iqrf.dpa.v220.typeconvertors.SleepInfoConvertor;
-import com.microrisc.simply.iqrf.dpa.v220.typeconvertors.SubDPARequestConvertor;
 import com.microrisc.simply.iqrf.dpa.v220.typeconvertors.ThermometerValueConvertor;
 import com.microrisc.simply.iqrf.typeconvertors.ArrayUns8Convertor;
 import com.microrisc.simply.iqrf.typeconvertors.IntToUns8Convertor;
@@ -316,17 +315,6 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
         return new MethodToPacketMapping(constMapping, argMapping);
     }
     
-    static private MethodToPacketMapping createBridgeMapping() {
-        List<ConstValueToPacketMapping> constMapping = new LinkedList<>();
-        constMapping.add( new ConstValueToPacketMapping(3, new short[] { 0x0E } ));
-        
-        List<ValueToPacketMapping> argMapping = new LinkedList<>();
-        argMapping.add( new ValueToPacketMapping(4, Uns16Convertor.getInstance()));
-        argMapping.add( new ValueToPacketMapping(6, SubDPARequestConvertor.getInstance() ));
-        
-        return new MethodToPacketMapping(constMapping, argMapping);
-    }
-    
     static private MethodToPacketMapping createEnableRemoteBondingCMapping() {
         List<ConstValueToPacketMapping> constMapping = new LinkedList<>();
         constMapping.add( new ConstValueToPacketMapping(3, new short[] { 0x11 } ));
@@ -379,7 +367,6 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
         methodMappings.put("12", createBackupMapping());
         methodMappings.put("13", createRestoreMapping());
         methodMappings.put("14", createAuthorizeBondMapping());
-        methodMappings.put("15", createBridgeMapping());
         methodMappings.put("16", createEnableRemoteBondingCMapping());
         methodMappings.put("17", createReadRemotelyBondedModuleIdCMapping());
         methodMappings.put("18", createClearRemotelyBondedModuleIdCMapping());

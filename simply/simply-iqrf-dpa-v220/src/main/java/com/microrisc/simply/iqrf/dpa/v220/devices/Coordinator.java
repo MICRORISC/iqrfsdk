@@ -30,7 +30,6 @@ import com.microrisc.simply.iqrf.dpa.v220.types.DiscoveryParams;
 import com.microrisc.simply.iqrf.dpa.v220.types.DiscoveryResult;
 import com.microrisc.simply.iqrf.dpa.v220.types.RemotelyBondedModuleId;
 import com.microrisc.simply.iqrf.dpa.v220.types.RoutingHops;
-import com.microrisc.simply.iqrf.dpa.v220.types.SubDPARequest;
 import com.microrisc.simply.iqrf.types.VoidType;
 import java.util.UUID;
 
@@ -65,7 +64,6 @@ extends DPA_StandardServices, GenericAsyncCallable, MethodIdTransformer {
         BACKUP,
         RESTORE,
         AUTHORIZE_BOND,
-        BRIDGE,
         ENABLE_REMOTE_BONDING,
         READ_REMOTELY_BONDED_MODULE_ID,
         CLEAR_REMOTELY_BONDED_MODULE_ID
@@ -197,14 +195,6 @@ extends DPA_StandardServices, GenericAsyncCallable, MethodIdTransformer {
      * @return unique identifier of sent request
      */
     UUID async_authorizeBond(int address, short[] moduleId);
-    
-    /**
-     * Sends method call request for sending and reception of DPA requests 
-     * and responses to and from the nested networks, respectively.
-     * @param subRequest full DPA request for nested network
-     * @return unique identifier of sent request
-     */
-    UUID async_bridge(SubDPARequest subRequest);
     
     /**
      * Sends method call request for putting node into a mode, that provides 
@@ -363,15 +353,6 @@ extends DPA_StandardServices, GenericAsyncCallable, MethodIdTransformer {
      * @return information about bonded node
      */
     BondedNode authorizeBond(int address, short[] moduleId);
-    
-   /**
-    * Synchronous wrapper for {@link 
-    * #async_bridge(com.microrisc.simply.iqrf.dpa.v220.types.SubDPARequest) async_bridge}
-    * method.
-    * @param subRequest full DPA request for nested network
-    * @return Short[] full response from nested network
-    */
-    short[] bridge(SubDPARequest subRequest);
     
     /**
      * Synchronous wrapper for {@link #async_enableRemoteBonding(int, int, short[]) 

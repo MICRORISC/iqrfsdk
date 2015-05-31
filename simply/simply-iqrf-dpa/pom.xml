@@ -44,6 +44,19 @@
             <version>1.0.1-SNAPSHOT</version>
         </dependency>
     </dependencies>
+    
+    <profiles>
+        <profile>
+            <id>doclint-java8-disable</id>
+            <activation>
+                <jdk>[1.8,)</jdk>
+            </activation>
+            <properties>
+                <javadoc.opts>-Xdoclint:none</javadoc.opts>
+            </properties>
+        </profile>
+    </profiles>
+    
     <build>
         <plugins>
             <plugin>
@@ -73,7 +86,7 @@
                	<configuration>
                        <outputDirectory>${project.build.directory}/javadoc</outputDirectory>
                        <reportOutputDirectory>${project.reporting.outputDirectory}/javadoc</reportOutputDirectory>
-                       <additionalparam>-Xdoclint:none</additionalparam>
+                       <additionalparam>${javadoc.opts}</additionalparam>
                	</configuration>
                	<executions>
                     <execution>

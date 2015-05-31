@@ -58,24 +58,33 @@ public final class OsInfoConvertor extends PrimitiveConvertor {
     static private final int MODULE_ID_POS = 0;
     static private final int MODULE_ID_LENGTH = 4;
     static private final int OS_VERSION_POS = 4;
-    static private final int MCU_TYPE_POS = 5;
+    static private final int MCUTR_TYPE_POS = 5;
     static private final int OS_BUILD_POS = 6;
     static private final int OS_BUILD_LENGTH = 2;
     static private final int RSSI_POS = 8;
     static private final int SUPPLY_VOLTAGE_POS = 9;
     static private final int FLAGS_POS = 10;
     
-    
-    
     private OsInfo.MCU_Type getMCU_Type(short packetValue) 
             throws ValueConversionException 
     {
         for (OsInfo.MCU_Type mcuType : OsInfo.MCU_Type.values()) {
-            if (packetValue == mcuType.getValue()) {
+            if ((packetValue & 0x07) == mcuType.getValue()) {
                 return mcuType;
             }
         }
         throw new ValueConversionException("Uknown value of MCU type: " + packetValue);
+    }
+    
+    private OsInfo.TR_Type getTR_Type(short packetValue)
+            throws ValueConversionException 
+    {
+        for (OsInfo.TR_Type trType : OsInfo.TR_Type.values()) {
+            if (((packetValue & 0xF0) >> 4) == trType.getValue()) {
+                return trType;
+            }
+        }
+        throw new ValueConversionException("Uknown value of TR type: " + ((packetValue & 0xF0) >> 4));
     }
     
     /**
@@ -95,7 +104,8 @@ public final class OsInfoConvertor extends PrimitiveConvertor {
         System.arraycopy(protoValue, MODULE_ID_POS, moduleId, 0, MODULE_ID_LENGTH);
         
         short osVersion = protoValue[OS_VERSION_POS];
-        OsInfo.MCU_Type mcuType = getMCU_Type(protoValue[MCU_TYPE_POS]);
+        OsInfo.TR_Type trType = getTR_Type(protoValue[MCUTR_TYPE_POS]);
+        OsInfo.MCU_Type mcuType = getMCU_Type(protoValue[MCUTR_TYPE_POS]);
         
         short[] osBuild = new short[OS_BUILD_LENGTH];
         System.arraycopy(protoValue, OS_BUILD_POS, osBuild, 0, OS_BUILD_LENGTH);
@@ -105,7 +115,7 @@ public final class OsInfoConvertor extends PrimitiveConvertor {
         
         int flags = protoValue[FLAGS_POS];
         
-        OsInfo osInfo = new OsInfo(moduleId, osVersion, mcuType, osBuild, rssi, 
+        OsInfo osInfo = new OsInfo(moduleId, osVersion, mcuType, trType, osBuild, rssi, 
                 supplyVoltage, flags
         );
         
