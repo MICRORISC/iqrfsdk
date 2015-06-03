@@ -18,42 +18,41 @@
  * ======== Standard MSP430 includes ========
  */
 
-#include "stdint.h"
 #include "stdio.h"
-#include "string.h"
-#include "stdlib.h"
+
 // bsp modules required
 #include "board.h"
 #include "uart0.h"
 #include "uart1.h"
 #include "bsp_timer.h"
 #include "leds.h"
+
 // dpa framework
 #include "dpa_library.h"
 
 //=========================== defines =========================================
 
-#define BSP_TIMER_PERIOD     32 	// 32@32kHz = 1ms
-#define USER_TIMER_PERIOD	 1000	// 1000@1ms = 1s
+#define BSP_TIMER_PERIOD     	32 	// 32@32kHz = 1ms
+#define USER_TIMER_PERIOD	1000	// 1000@1ms = 1s
 
-static const uint8_t requestToSend[]       		= "Req: ";
+static const uint8_t requestToSend[]       	= "Req: ";
 static const uint8_t confirmationToSend[]       = "Con: ";
 static const uint8_t responseToSend[]       	= "Res: ";
-static const uint8_t endingToSend[] 			= "\r\n\n";
+static const uint8_t endingToSend[] 		= "\r\n\n";
 
 #define CONFIRMATION				1
-#define RESPONSE					2
+#define RESPONSE				2
 
-#define NO_WAITING					0
-#define CONFIRMATION_WAITING		1
+#define NO_WAITING				0
+#define CONFIRMATION_WAITING			1
 #define RESPONSE_WAITING			2
 
-#define COORDINATOR					0
-#define NODE1						1
-#define NODE2						2
-#define NODE3						3
-#define NODE4						4
-#define NODE5						5
+#define COORDINATOR				0
+#define NODE1					1
+#define NODE2					2
+#define NODE3					3
+#define NODE4					4
+#define NODE5					5
 
 //=========================== variables =======================================
 

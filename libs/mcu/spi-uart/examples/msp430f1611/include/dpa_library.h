@@ -29,13 +29,13 @@
 
 //#define __SPI_INTERFACE__				// select for comunication via SPI
 #define __UART_INTERFACE__				// select for comunication via UART
-// #define __DPA_LIB_VER_2_0x			// select for DPA ver.2.00 or ver.2.01
+// #define __DPA_LIB_VER_2_0x				// select for DPA ver.2.00 or ver.2.01
 
-#define	DPA_MAX_DATA_LENGTH		64
+#define	DPA_MAX_DATA_LENGTH	 64
 
 // library status
-#define  DPA_READY				0x00	 // DPA support library ready
-#define  DPA_BUSY				0x01	 // DPA request processing
+#define  DPA_READY		 0x00	 		// DPA support library ready
+#define  DPA_BUSY		 0x01	 		// DPA request processing
 
 //Peripheral numbers 
 #define  PNUM_COORDINATOR        0x00 
@@ -58,19 +58,19 @@
 #define  PNUM_ERROR_FLAG         0xFE 
 
 //Response Code 
-#define  STATUS_NO_ERROR         0   // No error 
-#define  ERROR_FAIL              1   // General fail 
-#define  ERROR_PCMD              2   // Incorrect PCmd 
-#define  ERROR_PNUM              3   // Incorrect PNum or PCmd 
-#define  ERROR_ADDR              4   // Incorrect Address 
-#define  ERROR_DATA_LEN          5   // Incorrect Data length 
-#define  ERROR_DATA              6   // Incorrect Data 
-#define  ERROR_HWPROFILE         7   // Incorrect HW Profile type used 
-#define  ERROR_NADR              8   // Incorrect NAdr 
-#define  ERROR_IFACE_CUSTOM_HANDLER   9  // Data from interface consumed by Custom DPA Handler 
+#define  STATUS_NO_ERROR         0   			// No error 
+#define  ERROR_FAIL              1   			// General fail 
+#define  ERROR_PCMD              2   			// Incorrect PCmd 
+#define  ERROR_PNUM              3   			// Incorrect PNum or PCmd 
+#define  ERROR_ADDR              4   			// Incorrect Address 
+#define  ERROR_DATA_LEN          5   			// Incorrect Data length 
+#define  ERROR_DATA              6   			// Incorrect Data 
+#define  ERROR_HWPROFILE         7   			// Incorrect HW Profile type used 
+#define  ERROR_NADR              8   			// Incorrect NAdr 
+#define  ERROR_IFACE_CUSTOM_HANDLER   	9  		// Data from interface consumed by Custom DPA Handler 
 
 #ifndef __DPA_LIB_VER_2_0x
-#define  ERROR_MISSING_CUSTOM_DPA_HANDLER 	10  // Custom DPA Handler is missing
+#define  ERROR_MISSING_CUSTOM_DPA_HANDLER 	10  	// Custom DPA Handler is missing
 #endif
 
 #define  STATUS_CONFIRMATION     0xFF    // Error code used to mark confirmation 

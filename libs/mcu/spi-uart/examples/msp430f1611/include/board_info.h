@@ -11,11 +11,12 @@ to this board.
 #ifndef __BOARD_INFO_H
 #define __BOARD_INFO_H
 
-#include "stdint.h"
-#include "msp430f1611.h"
-#include "string.h"
-
 //=========================== define ==========================================
+
+#include <msp430f1611.h>
+
+#include "stdint.h"
+#include "string.h"
 
 //===== interrupt state
 
