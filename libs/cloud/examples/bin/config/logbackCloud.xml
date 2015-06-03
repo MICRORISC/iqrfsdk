@@ -1,0 +1,83 @@
+<configuration>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <!-- encoders are assigned the type ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{40}:%msg%n</pattern>
+        </encoder>
+    </appender>
+	
+
+    
+    <appender name="FILE-Cloud" class="ch.qos.logback.core.FileAppender">
+        <file>Cloud.log</file>
+        <append>false</append>
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{40}: %msg%n</pattern>
+        </encoder>
+    </appender>
+                 
+		
+    <!--Cloud-->
+   
+    <logger name="com.microrisc.cloud.iqrf.message.Block.java" level="INHERITED">
+        <appender-ref ref="FILE-Cloud" />
+    </logger>
+
+    <logger name="com.microrisc.cloud.iqrf.message.HexData.java" level="INHERITED">
+        <appender-ref ref="FILE-Cloud" />
+    </logger>
+
+    <logger name="com.microrisc.cloud.iqrf.message.IQRFData.java" level="INHERITED">
+        <appender-ref ref="FILE-Cloud" />
+    </logger>
+
+    <logger name="com.microrisc.cloud.iqrf.message.Load.java" level="INHERITED">
+        <appender-ref ref="FILE-Cloud" />
+    </logger>
+
+    <logger name="com.microrisc.cloud.iqrf.message.Packet.java" level="INHERITED">
+        <appender-ref ref="FILE-Cloud" />
+    </logger>
+
+    <logger name="com.microrisc.cloud.iqrf.message.Trailer.java" level="INHERITED">
+        <appender-ref ref="FILE-Cloud" />
+    </logger>
+
+    <logger name="com.microrisc.cloud.iqrf.sending.SimpleSender.java" level="INHERITED">
+        <appender-ref ref="FILE-Cloud" />
+    </logger>
+
+    <logger name="com.microrisc.cloud.iqrf.utils.CRCFiller.java" level="INHERITED">
+        <appender-ref ref="FILE-Cloud" />
+    </logger>
+
+    <logger name="com.microrisc.cloud.iqrf.utils.CryptManager.java" level="INHERITED">
+        <appender-ref ref="FILE-Cloud" />
+    </logger>
+
+    <logger name="com.microrisc.cloud.iqrf.utils.PacketParser.java" level="INHERITED">
+        <appender-ref ref="FILE-Cloud" />
+    </logger>
+
+    <logger name="com.microrisc.cloud.iqrf.utils.SimpleGWDataCollector.java" level="INHERITED">
+        <appender-ref ref="FILE-Cloud" />
+    </logger>
+
+    <logger name="com.microrisc.cloud.iqrf.CDCAnswerListener.java" level="INHERITED">
+        <appender-ref ref="FILE-Cloud" />
+    </logger>
+
+    <logger name="com.microrisc.cloud.iqrf.LogAnswerPacketListener.java" level="INHERITED">
+        <appender-ref ref="FILE-Cloud" />
+    </logger>
+
+    <logger name="com.microrisc.cloud.iqrf.SimpleCloud.java" level="INHERITED">
+        <appender-ref ref="FILE-Cloud" />
+    </logger>
+    
+    <!-- root -->
+    <root level="debug">
+        <!-- appender-ref ref="STDOUT" / -->
+    </root>
+</configuration>
