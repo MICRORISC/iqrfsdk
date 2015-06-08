@@ -29,25 +29,23 @@ import java.util.Arrays;
  */
 public class GeneralCloudExample {
 
-    private Cloud cloud;
+    private static Cloud cloud;
 
     public static void main(String[] args) {
-        GeneralCloudExample instance = new GeneralCloudExample();
-
         // create reference for cloud control
-        instance.cloud = new SimpleCloud();
+        cloud = new SimpleCloud();
 
         //example with registering Gw
-        instance.registerGw();
+        registerGw();
 
         //example with uploading data
-        instance.uploadData();
+        uploadData();
 
         //example with downloading data
-        instance.downloadData();
+        downloadData();
     }
 
-    private void registerGw() {
+    private static void registerGw() {
         //user AES key for crypting communication
         short[] userAESKey = new short[]{0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0xa, 0xb, 0xc, 0xd, 0xe, 0xf, 0x10};
         //create setting of time on the user gateway
@@ -60,7 +58,7 @@ public class GeneralCloudExample {
         System.out.println(response.getProcessingInfo());       
     }
 
-    private void uploadData() {
+    private static void uploadData() {
         //prepare data which will be written on cloud server
         byte[] bytesData = "Data to upload on IQRF cloud.".getBytes();
         short[] dataToUpload = new short[bytesData.length];
@@ -75,7 +73,7 @@ public class GeneralCloudExample {
         }
     }
 
-    private void downloadData() {
+    private static void downloadData() {
         //download data from server
         CloudResponse downloadResponse = cloud.dataDownload();
 

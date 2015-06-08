@@ -28,23 +28,21 @@ import java.util.Arrays;
 public class DataProcessing {
 
     //reference for cloud control
-    private Cloud cloud;
+    private static Cloud cloud;
 
     public static void main(String[] args) {
-        //instance of main
-        DataProcessing processor = new DataProcessing();
         // create reference for cloud control
-        processor.cloud = new SimpleCloud();
+        cloud = new SimpleCloud();
 
         //register Gw
-        processor.registerGw();
+        registerGw();
 
         int poolingTime = 2000;//in miliseconds
 
         //repeating of sending requests for new data
         while (true) {
             //sending download request
-            CloudResponse downloadResponse = processor.cloud.dataDownload();
+            CloudResponse downloadResponse = cloud.dataDownload();
             
 
             //check if data download was succesful
@@ -79,7 +77,7 @@ public class DataProcessing {
         }
     }
 
-    private void registerGw() {
+    private static void registerGw() {
         //user AES key for crypting communication betwen user and gateway
         short[] userAESKey = new short[]{0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0xa, 0xb, 0xc, 0xd, 0xe, 0xf, 0x10};
         //create setting of time on the user gateway

@@ -25,6 +25,7 @@ import com.microrisc.cloud.iqrf.SimpleCloud;
 import com.microrisc.cloud.iqrf.message.CloudResponse;
 import com.microrisc.cloud.iqrf.utils.CloudException;
 import java.util.Arrays;
+import java.util.logging.Level;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
