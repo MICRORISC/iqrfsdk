@@ -12,6 +12,8 @@
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 
+libs/clouds/cloud-iqrf-examples/target
+
 libs/iqrf/cdc-uart/jssc-examples/versions/1.0.0/target/
 libs/iqrf/cdc-uart/hdlc-framing-v1/versions/1.0.0/target/
 libs/iqrf/cdc-uart/hdlc-framing-v2/versions/1.0.0/target/
