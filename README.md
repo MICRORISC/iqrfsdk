@@ -18,6 +18,12 @@ arduino/spi
 IQRF SPI driver for Arduino UNO
 
 
+clouds
+------
+
+IQRF Cloud connector with examples
+
+
 gemalto/spi
 -----------
 
