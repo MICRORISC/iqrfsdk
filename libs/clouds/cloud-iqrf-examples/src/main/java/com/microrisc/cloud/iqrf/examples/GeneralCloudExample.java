@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.microrisc.cloud.iqrf.example;
+package com.microrisc.cloud.iqrf.examples;
 
 import com.microrisc.cloud.iqrf.Cloud;
 import com.microrisc.cloud.iqrf.SimpleCloud;
