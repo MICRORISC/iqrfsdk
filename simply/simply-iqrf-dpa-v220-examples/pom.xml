@@ -17,21 +17,6 @@
             <version>2.0.0-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>com.microrisc.simply.network.serial</groupId>
-            <artifactId>simply-network-serial-v2</artifactId>
-            <version>1.0.1-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>com.microrisc.simply.network.spi</groupId>
-            <artifactId>simply-network-spi</artifactId>
-            <version>1.0.1-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>com.microrisc.simply.network.udp</groupId>
-            <artifactId>simply-network-udp</artifactId>
-            <version>1.0.1-SNAPSHOT</version>
-        </dependency>
-        <dependency>
             <groupId>com.microrisc.simply.network.usbcdc</groupId>
             <artifactId>simply-network-usbcdc</artifactId>
             <version>1.0.2-SNAPSHOT</version>

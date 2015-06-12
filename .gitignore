@@ -91,3 +91,11 @@ simply/simply-network-serial-v2/versions/1.0.0/target/
 /libs/raspberry/java/io/jlibrpi-io-examples/target/
 /simply/simply-iqrf-dpa-v220/target/
 /simply/simply-iqrf-dpa-v220-examples/target/
+/simply/simply-iqrf-dpa-v220-examples/nb-configuration.xml
+/simply/simply-core/nb-configuration.xml
+/simply/simply-iqrf-dpa-v210/nb-configuration.xml
+/simply/simply-iqrf-dpa-v210-examples/nb-configuration.xml
+/simply/simply-iqrf-dpa-v220/nb-configuration.xml
+/simply/simply-asynchrony/nb-configuration.xml
+/simply/simply-iqrf/nb-configuration.xml
+/simply/simply-iqrf-dpa/nb-configuration.xml
