@@ -16,6 +16,7 @@
 
 package com.microrisc.simply.iqrf.dpa.v220.types;
 
+import com.microrisc.simply.Node;
 import com.microrisc.simply.iqrf.dpa.v220.typeconvertors.DPA_RequestConvertor;
 import com.microrisc.simply.typeconvertors.ValueConversionException;
 import java.util.HashMap;
@@ -110,6 +111,33 @@ public final class FRC_AcknowledgedBroadcastBytes extends AbstractFRC_Command {
      * constructor.
      */
     public FRC_AcknowledgedBroadcastBytes() {
+    }
+
+    /**
+     * Creates new object of {@code FRC_AcknowledgedBroadcastBytes} with
+     * specified user data.
+     *
+     * @param userData user data
+     * @param selectedNodes node on which will be command processed
+     * @throws IllegalArgumentException if {@code userData} or
+     * {@code selectedNodes} is invalid. See the
+     * {@link AbstractFRC_Command#AbstractFRC_Command(short[], Node[]) AbstractFRC_Command}
+     * constructor.
+     */
+    public FRC_AcknowledgedBroadcastBytes(short[] userData, Node[] selectedNodes) {
+        super(userData, selectedNodes);
+    }
+
+    /**
+     * Creates new object of {@code FRC_AcknowledgedBroadcastBytes} with default
+     * user data. See the
+     * {@link AbstractFRC_Command#AbstractFRC_Command() AbstractFRC_Command}
+     * constructor.
+     *
+     * @param selectedNodes node on which will be command processed
+     */
+    public FRC_AcknowledgedBroadcastBytes(Node[] selectedNodes) {
+        super(selectedNodes);
     }
     
     @Override

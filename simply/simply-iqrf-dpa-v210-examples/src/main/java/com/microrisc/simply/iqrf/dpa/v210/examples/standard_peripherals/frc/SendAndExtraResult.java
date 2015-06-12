@@ -125,11 +125,11 @@ public class SendAndExtraResult {
         if ( frc == null ) {
             printMessageAndExit("FRC doesn't exist or is not enabled");
         }
-        
+                       
         //FRC_Data frcData = frc.send( new FRC_Temperature( new short[] { 0, 0, 0, 0, 0 } ));
         //FRC_Data frcData = frc.send( new FRC_AcknowledgedBroadcastBits( new short[] { 0x05, 0x06, 0x03, 0xFF, 0xFF } ));
         FRC_Data frcData = frc.send( new FRC_AcknowledgedBroadcastBits( new DPA_Request(LEDR.class, LEDR.MethodID.PULSE, null, 0xFFFF) ));
-        
+            
         if ( frcData == null ) {
             processNullResult(frc, "Sending FRC command failed", 
                     "Sending FRC command hasn't been processed yet"
@@ -168,5 +168,5 @@ public class SendAndExtraResult {
         
         // end working with Simply
         simply.destroy();
-    }
+    }    
 }

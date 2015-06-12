@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.microrisc.simply;
 
 import java.util.HashMap;
@@ -23,22 +22,23 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Base class encapsulating connected networks.
- * 
+ *
  * @author Michal Konopa
  */
 public class BaseNetwork implements Network {
+
     /** Logger. */
     private static final Logger logger = LoggerFactory.getLogger(BaseNetwork.class);
-    
+
     /** ID of this network. */
     protected String id;
-    
+
     /** Nodes map. */
     protected Map<String, Node> nodesMap;
-    
-    
+
     /**
      * Creates new network.
+     *
      * @param id ID of the network
      * @param nodesMap mapping of identifiers of nodes to that nodes objects
      */
@@ -46,31 +46,40 @@ public class BaseNetwork implements Network {
         this.id = id;
         this.nodesMap = nodesMap;
     }
-    
+
     @Override
     public String getId() {
         return id;
     }
-    
+
     @Override
     public Node getNode(String nodeId) {
         return nodesMap.get(nodeId);
     }
-    
+
     @Override
     public Map<String, Node> getNodesMap() {
         return new HashMap<>(nodesMap);
     }
-    
+
+    @Override
+    public com.microrisc.simply.Node[] getSpecifiedNodes(String[] nodeIds) {
+        com.microrisc.simply.Node[] nodes = new com.microrisc.simply.Node[nodeIds.length];
+        for (int i = 0; i < nodeIds.length; i++) {
+            nodes[i] = getNode(nodeIds[i]);
+        }
+        return nodes;
+    }
+
     /**
      * Clears map of nodes.
      */
     public void destroy() {
         logger.debug("destroy - start: ");
-        
+
         nodesMap.clear();
         logger.info("Destroyed");
-        
+
         logger.debug("destroy - end");
     }
 }

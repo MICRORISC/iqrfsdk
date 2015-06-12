@@ -371,6 +371,15 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
             return new HashMap<>(nodesMap);
         }
         
+        @Override
+        public com.microrisc.simply.Node[] getSpecifiedNodes(String[] nodeIds){
+            com.microrisc.simply.Node[] nodes = new com.microrisc.simply.Node[nodeIds.length];
+            for(int i = 0; i < nodeIds.length; i++){
+                nodes[i] = getNode(nodeIds[i]);
+            }
+            return nodes;
+        }
+        
         public void addNode(com.microrisc.simply.Node node) {
             nodesMap.put(node.getId(), node);
         }

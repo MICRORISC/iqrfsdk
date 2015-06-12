@@ -22,7 +22,7 @@ import java.util.EnumMap;
 import java.util.Map;
 
 /**
-    * Standard method ID transformer for FRC. 
+ * Standard method ID transformer for FRC. 
  * 
  * @author Michal Konopa
  */
@@ -36,6 +36,7 @@ public final class FRCStandardTransformer implements MethodIdTransformer {
     private static void initMethodIdsMap() {
         methodIdsMap.put(FRC.MethodID.SEND, "1");
         methodIdsMap.put(FRC.MethodID.EXTRA_RESULT, "2");
+        methodIdsMap.put(FRC.MethodID.SEND_SELECTIVE, "3");
     }
     
     static  {

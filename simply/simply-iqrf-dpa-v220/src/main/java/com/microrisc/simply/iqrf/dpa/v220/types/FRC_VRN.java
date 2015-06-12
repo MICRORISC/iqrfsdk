@@ -16,6 +16,7 @@
 
 package com.microrisc.simply.iqrf.dpa.v220.types;
 
+import com.microrisc.simply.Node;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -90,6 +91,32 @@ public final class FRC_VRN extends AbstractFRC_Command  {
      */
     public FRC_VRN() {
     }
+
+        /**
+     * Creates new object of {@code FRC_VRN} with specified user data.
+     *
+     * @param userData user data
+     * @param selectedNodes node on which will be command processed
+     * @throws IllegalArgumentException if {@code userData} or
+     * {@code selectedNodes} is invalid. See the
+     * {@link AbstractFRC_Command#AbstractFRC_Command(short[], Node[]) AbstractFRC_Command}
+     * constructor.
+     */
+    public FRC_VRN(short[] userData, Node[] selectedNodes) {
+        super(userData, selectedNodes);
+    }
+
+    /**
+     * Creates new object of {@code FRC_VRN} with default user data. See the
+     * {@link AbstractFRC_Command#AbstractFRC_Command() AbstractFRC_Command}
+     * constructor.
+     *
+     * @param selectedNodes node on which will be command processed
+     */
+    public FRC_VRN(Node[] selectedNodes) {
+        super(selectedNodes);        
+    }
+
     
     @Override
     public int getId() {

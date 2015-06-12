@@ -16,6 +16,7 @@
 
 package com.microrisc.simply.iqrf.dpa.v220.types;
 
+import com.microrisc.simply.Node;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -96,6 +97,31 @@ public final class FRC_Temperature extends AbstractFRC_Command {
      * constructor.
      */
     public FRC_Temperature() {
+    }
+             
+    /**
+     * Creates new object of {@code FRC_Temperature} with specified user data.
+     *
+     * @param userData user data
+     * @param selectedNodes node on which will be command processed
+     * @throws IllegalArgumentException if {@code userData} or
+     * {@code selectedNodes} is invalid. See the
+     * {@link AbstractFRC_Command#AbstractFRC_Command(short[], Node[]) AbstractFRC_Command}
+     * constructor.
+     */
+    public FRC_Temperature(short[] userData, Node[] selectedNodes) {
+        super(userData, selectedNodes);
+    }
+
+    /**
+     * Creates new object of {@code FRC_Temperature} with default user data. See the
+     * {@link AbstractFRC_Command#AbstractFRC_Command() AbstractFRC_Command}
+     * constructor.
+     *
+     * @param selectedNodes node on which will be command processed
+     */
+    public FRC_Temperature(Node[] selectedNodes) {
+        super(selectedNodes);        
     }
     
     @Override

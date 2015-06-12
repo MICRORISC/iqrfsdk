@@ -13,25 +13,40 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.microrisc.simply.iqrf.dpa.v220.types;
+
+import com.microrisc.simply.Node;
+
 
 /**
  * FRC commands common functionality.
- * 
+ *
  * @author Michal Konopa
  */
 public interface FRC_Command {
+
     /**
      * Returns ID of command. Specifies data to be collected.
+     *
      * @return ID of FRC command
      */
     int getId();
-    
+
     /**
-     * User data that are available at IQRF OS array variable DataOutBeforeResponseFRC 
-     * at FRC Value event. The length is from 2 to 30 bytes.
+     * User data that are available at IQRF OS array variable
+     * DataOutBeforeResponseFRC at FRC Value event. The length is from 2 to 30
+     * bytes.
+     *
      * @return user data
      */
     short[] getUserData();
+
+    /**
+     * Selected node specify on which nodes will be FRC processed.
+     * Implementation should solve case in which is command sending as selected
+     * without selected nodes, because command was created as normal command.
+     *
+     * @return selected nodes
+     */
+    Node[] getSelectedNodes();
 }

@@ -1,5 +1,6 @@
 package com.microrisc.simply.iqrf.dpa.v220.types;
 
+import com.microrisc.simply.Node;
 import com.microrisc.simply.iqrf.dpa.v220.typeconvertors.DPA_RequestConvertor;
 import com.microrisc.simply.typeconvertors.ValueConversionException;
 import java.util.HashMap;
@@ -68,6 +69,37 @@ public final class FRC_UniversalWithBits extends AbstractFRC_Command {
       this.id = checkID(id);
    }
 
+    /**
+     * Creates new object of {@code FRC_UniversalWithBits} with specified user
+     * data.
+     *
+     * @param userData user data
+     * @param selectedNodes node on which will be command processed
+     * @param frcId ID of FRC command, it should be in range 0 - 255
+     * @throws IllegalArgumentException if {@code userData} or
+     * {@code selectedNodes} is invalid. See the
+     * {@link AbstractFRC_Command#AbstractFRC_Command(short[], Node[]) AbstractFRC_Command}
+     * constructor.
+     */
+    public FRC_UniversalWithBits(int frcId, short[] userData, Node[] selectedNodes) {
+        super(userData, selectedNodes);
+        this.id = checkID(frcId);
+    }
+
+    /**
+     * Creates new object of {@code FRC_UniversalWithBits} with default user
+     * data. See the
+     * {@link AbstractFRC_Command#AbstractFRC_Command() AbstractFRC_Command}
+     * constructor.
+     *
+     * @param selectedNodes node on which will be command processed
+     * @param frcId ID of FRC command, it should be in range 0 - 255
+     */
+    public FRC_UniversalWithBits(int frcId, Node[] selectedNodes) {
+        super(selectedNodes);
+        this.id = checkID(frcId);
+    }
+   
    private DPA_Request checkDpaRequest(DPA_Request dpaRequest) {
       if (dpaRequest == null) {
          throw new IllegalArgumentException("DPA request cannot be null");
