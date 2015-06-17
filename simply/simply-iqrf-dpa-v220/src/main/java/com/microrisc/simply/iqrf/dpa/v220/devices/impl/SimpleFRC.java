@@ -22,7 +22,9 @@ import com.microrisc.simply.iqrf.dpa.v220.DPA_DeviceObject;
 import com.microrisc.simply.iqrf.dpa.v220.devices.FRC;
 import com.microrisc.simply.iqrf.dpa.v220.di_services.method_id_transformers.FRCStandardTransformer;
 import com.microrisc.simply.iqrf.dpa.v220.types.FRC_Command;
+import com.microrisc.simply.iqrf.dpa.v220.types.FRC_Configuration;
 import com.microrisc.simply.iqrf.dpa.v220.types.FRC_Data;
+import com.microrisc.simply.iqrf.types.VoidType;
 import java.util.UUID;
 
 /**
@@ -40,6 +42,12 @@ public final class SimpleFRC
         return frcCmd;
     }
     
+    private static FRC_Configuration checkTime(FRC_Configuration config){
+        if(config == null){
+            throw new IllegalArgumentException("FRC_Configuration cannot be null.");
+        }
+        return config;
+    }
     
     public SimpleFRC(String networkId, String nodeId, ConnectorService connector,
             CallRequestProcessingInfoContainer resultsContainer
@@ -76,6 +84,11 @@ public final class SimpleFRC
                 return dispatchCall(methodIdStr,
                         new Object[] { getRequestHwProfile(), (FRC_Command) args[0]}, 
                         getDefaultWaitingTimeout()
+                );
+            case SET_FRC_PARAMS:
+                MethodArgumentsChecker.checkArgumentTypes(args, new Class[]{FRC_Configuration.class});
+                return dispatchCall(methodIdStr, new Object[] { getRequestHwProfile(), 
+                        (int) args[0]}, getDefaultWaitingTimeout()
                 );
             default:
                 throw new IllegalArgumentException("Unsupported command: " + methodId);
@@ -160,5 +173,17 @@ public final class SimpleFRC
             return null;
         }
         return getCallResult(uid, FRC_Data.class, getDefaultWaitingTimeout());
+    }
+    
+    @Override
+    public VoidType setFRCParams(FRC_Configuration config){
+        checkTime(config);
+        UUID uid = dispatchCall("4", new Object[]{getRequestHwProfile(), config},
+                getDefaultWaitingTimeout()
+        );
+        if (uid == null) {
+            return null;
+        }
+        return getCallResult(uid, VoidType.class, getDefaultWaitingTimeout());
     }
 }

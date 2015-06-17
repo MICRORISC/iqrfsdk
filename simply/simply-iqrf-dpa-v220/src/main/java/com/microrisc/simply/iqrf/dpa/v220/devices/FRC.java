@@ -21,7 +21,9 @@ import com.microrisc.simply.di_services.GenericAsyncCallable;
 import com.microrisc.simply.di_services.MethodIdTransformer;
 import com.microrisc.simply.iqrf.dpa.v220.di_services.DPA_StandardServices;
 import com.microrisc.simply.iqrf.dpa.v220.types.FRC_Command;
+import com.microrisc.simply.iqrf.dpa.v220.types.FRC_Configuration;
 import com.microrisc.simply.iqrf.dpa.v220.types.FRC_Data;
+import com.microrisc.simply.iqrf.types.VoidType;
 import java.util.UUID;
 
 /**
@@ -44,7 +46,8 @@ public interface FRC
 
         SEND,
         EXTRA_RESULT,
-        SEND_SELECTIVE
+        SEND_SELECTIVE,
+        SET_FRC_PARAMS
     }
 
     // ASYNCHRONOUS METHODS
@@ -107,4 +110,11 @@ public interface FRC
      * @return FRC data collected from nodes
      */
     FRC_Data sendSelective(FRC_Command frcCmd);
+    
+    /**
+     * Sets global FRC parameters specified in {@link FRC_Configuration}.
+     * @param config data to configuration
+     * @return {@code VoidType} object, if method call has processed allright
+     */
+    VoidType setFRCParams(FRC_Configuration config);
 }
