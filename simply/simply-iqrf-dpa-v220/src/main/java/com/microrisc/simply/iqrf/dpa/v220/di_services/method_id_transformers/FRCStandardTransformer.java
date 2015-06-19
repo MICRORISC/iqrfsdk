@@ -37,6 +37,7 @@ public final class FRCStandardTransformer implements MethodIdTransformer {
         methodIdsMap.put(FRC.MethodID.SEND, "1");
         methodIdsMap.put(FRC.MethodID.EXTRA_RESULT, "2");
         methodIdsMap.put(FRC.MethodID.SEND_SELECTIVE, "3");
+        methodIdsMap.put(FRC.MethodID.SET_FRC_PARAMS, "4");
     }
     
     static  {

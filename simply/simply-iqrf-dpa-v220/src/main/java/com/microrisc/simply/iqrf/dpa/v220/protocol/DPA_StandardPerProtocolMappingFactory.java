@@ -44,6 +44,7 @@ import com.microrisc.simply.iqrf.dpa.v220.typeconvertors.DiscoveredNodesConverto
 import com.microrisc.simply.iqrf.dpa.v220.typeconvertors.DiscoveryParamsConvertor;
 import com.microrisc.simply.iqrf.dpa.v220.typeconvertors.DiscoveryResultConvertor;
 import com.microrisc.simply.iqrf.dpa.v220.typeconvertors.FRC_CommandConvertor;
+import com.microrisc.simply.iqrf.dpa.v220.typeconvertors.FRC_ConfigurationConvertor;
 import com.microrisc.simply.iqrf.dpa.v220.typeconvertors.FRC_DataConvertor;
 import com.microrisc.simply.iqrf.dpa.v220.typeconvertors.FRC_SelectCommandConvertor;
 import com.microrisc.simply.iqrf.dpa.v220.typeconvertors.HWP_ConfigurationConvertor;
@@ -943,6 +944,17 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
         return new MethodToPacketMapping(constMapping, argMapping);
     }
 
+    static private MethodToPacketMapping createSetFRCParamsMapping(){
+        List<ConstValueToPacketMapping> constMapping = new LinkedList<>();
+        constMapping.add(new ConstValueToPacketMapping(3, new short[]{0x03}));
+
+        List<ValueToPacketMapping> argMapping = new LinkedList<>();
+        argMapping.add(new ValueToPacketMapping(4, Uns16Convertor.getInstance()));
+        argMapping.add(new ValueToPacketMapping(6, FRC_ConfigurationConvertor.getInstance()));
+
+        return new MethodToPacketMapping(constMapping, argMapping);
+    }
+    
     static private InterfaceToPacketMapping createRequestFRCMapping() {
         List<ConstValueToPacketMapping> constMappings = new LinkedList<>();
         constMappings.add(new ConstValueToPacketMapping(2, new short[]{0x0D}));
@@ -952,6 +964,7 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
         methodMappings.put("1", createFRCSendMapping());
         methodMappings.put("2", createExtraResultMapping());
         methodMappings.put("3", createSendSelectiveMapping());
+        methodMappings.put("4", createSetFRCParamsMapping());
 
         return new InterfaceToPacketMapping(constMappings, methodMappings);
     }
@@ -1790,7 +1803,7 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
         return new PacketToMethodMapping("2", packetValues, resultMapping);
     }
 
-        static private PacketToMethodMapping createResponseFRCSendSelective() {
+    static private PacketToMethodMapping createResponseFRCSendSelective() {
         List<PacketPositionValues> packetValues = new LinkedList<>();
         packetValues.add(new PacketPositionValues(3, (short) 0x82));
 
@@ -1800,6 +1813,16 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
         return new PacketToMethodMapping("3", packetValues, resultMapping);
     }
     
+    static private PacketToMethodMapping createResponseSetFRCParams(){
+        List<PacketPositionValues> packetValues = new LinkedList<>();
+        packetValues.add(new PacketPositionValues(3, (short) 0x83));
+
+        PacketToValueMapping resultMapping = new PacketToValueMapping(
+                8, 0, VoidTypeConvertor.getInstance()
+        );
+        return new PacketToMethodMapping("4", packetValues, resultMapping);
+    }    
+        
     static private PacketToInterfaceMapping createResponseFRCMapping() {
         List<PacketPositionValues> packetValues = new LinkedList<>();
         packetValues.add(new PacketPositionValues(2, (short) 0x0D));
@@ -1809,6 +1832,8 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
         methodMappings.put("1", createResponseFRCSend());
         methodMappings.put("2", createResponseExtraResult());
         methodMappings.put("3", createResponseFRCSendSelective());
+        methodMappings.put("4", createResponseSetFRCParams());
+        
         return new PacketToInterfaceMapping(FRC.class, packetValues, methodMappings);
     }
 
