@@ -24,6 +24,7 @@ import com.microrisc.simply.iqrf.dpa.broadcasting.BroadcastResult;
 import com.microrisc.simply.iqrf.dpa.broadcasting.services.BroadcastServices;
 import com.microrisc.simply.iqrf.dpa.v220.devices.LEDG;
 import com.microrisc.simply.iqrf.dpa.v220.devices.LEDR;
+import com.microrisc.simply.iqrf.dpa.v220.devices.OS;
 import com.microrisc.simply.iqrf.dpa.v220.types.LED_State;
 import java.io.File;
 import java.util.UUID;
@@ -62,31 +63,61 @@ public class Broadcast {
         
         // getting access to broadcast services
         BroadcastServices broadcast = simply.getBroadcastServices();
+        
+        // demonstrate how the broadcast can be used 
+        // timing is handled by the simply 
+        for (int i = 0; i < 10; i++) {
+            // send broadcast
+            UUID requestIdReset = broadcast.sendRequest(
+                    network1.getId(),
+                    OS.class,
+                    OS.MethodID.READ,
+                    new Object[]{}
+            );
+
+            // check if the broadcast was sent
+            if (requestIdReset == null) {
+                printMessageAndExit("Error while sending request for reseting nodes");
+            }
+        }
+            
+        // allow time for the packets to be sent to the network
+        System.out.println("Sending broadcasts ...");
+        Thread.sleep(5000);
+
+        // led test
         LED_State lStateOn = LED_State.ON;
         LED_State lStateOff = LED_State.OFF;
         
         for (int i = 0; i < 10; i++) {
-            UUID requestId1 = broadcast.sendRequest( network1.getId(), LEDR.class, 
-                    LEDG.MethodID.SET, new Object[] { lStateOn } 
+            UUID requestId1 = broadcast.sendRequest( 
+                    network1.getId(), 
+                    LEDR.class, 
+                    LEDG.MethodID.SET, 
+                    new Object[] { lStateOn } 
             );
             
-            Thread.sleep(1000);
+            Thread.sleep(500);
     
-            UUID requestId2 = broadcast.sendRequest( network1.getId(), LEDR.class, 
-                    LEDG.MethodID.SET, new Object[] { lStateOff } 
+            UUID requestId2 = broadcast.sendRequest( 
+                    network1.getId(), 
+                    LEDR.class, 
+                    LEDG.MethodID.SET, 
+                    new Object[] { lStateOff } 
             );
             
-            Thread.sleep(1000);
+            Thread.sleep(500);
             
-            // getting broadcast result in max. 5000 ms timeout
-            BroadcastResult broadcastResult1 = broadcast.getBroadcastResult(requestId1, 5000);
-            BroadcastResult broadcastResult2 = broadcast.getBroadcastResult(requestId2, 5000);
+            // based on received confirmation
+            // getting broadcast result in max. 1000 ms timeout
+            BroadcastResult broadcastResult1 = broadcast.getBroadcastResult(requestId1, 1000);
+            BroadcastResult broadcastResult2 = broadcast.getBroadcastResult(requestId2, 1000);
             
             if ( broadcastResult1 == BroadcastResult.OK  &&  broadcastResult2 == BroadcastResult.OK ) {
-                System.out.println("Broadcast cycle performed OK.");
+                System.out.println("Broadcast led cycle performed OK.");
             } else {
-                System.out.println("Broadcast cycle performed with error.");
-            }            
+                System.out.println("Broadcast led cycle performed with error, check log.");
+            }
         }
         
         // end working with Simply

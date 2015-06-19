@@ -101,3 +101,16 @@ simply/simply-network-serial-v2/versions/1.0.0/target/
 /simply/simply-asynchrony/nb-configuration.xml
 /simply/simply-iqrf/nb-configuration.xml
 /simply/simply-iqrf-dpa/nb-configuration.xml
+/libs/iqrf/cdc-iqrf/java/jlibcdc-examples/nb-configuration.xml
+/libs/iqrf/cdc-iqrf/java/jlibcdc/nb-configuration.xml
+/libs/iqrf/cdc-uart/hdlc-framing-v2/nb-configuration.xml
+/libs/raspberry/java/io/jlibrpi-io-examples/nb-configuration.xml
+/libs/raspberry/java/io/jlibrpi-io/nb-configuration.xml
+/libs/raspberry/java/spi/jlibrpi-spi-iqrf-examples/nb-configuration.xml
+/libs/raspberry/java/spi/jlibrpi-spi-iqrf/nb-configuration.xml
+/libs/raspberry/java/spi/jlibrpi-spi/nb-configuration.xml
+/simply/simply-network-serial-v2/nb-configuration.xml
+/simply/simply-network-spi/nb-configuration.xml
+/simply/simply-network-udp/nb-configuration.xml
+/simply/simply-network-usbcdc/nb-configuration.xml
+
