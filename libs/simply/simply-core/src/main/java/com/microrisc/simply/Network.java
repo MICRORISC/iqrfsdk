@@ -21,7 +21,9 @@ import java.util.Map;
  * Main interface fot access to connected network functionality.
  *
  * @author Michal Konopa
+ * @author Martin Strouhal
  */
+// June 2015 - Martin - added getNodes()
 public interface Network {
 
     /**
@@ -32,11 +34,11 @@ public interface Network {
     String getId();
 
     /**
-     * Returns SimpleNode object bounded to specfied identifier.
+     * Returns Node object bounded to specfied identifier.
      *
-     * @param nodeId identifier of SimpleNode object to return
-     * @return SimpleNode object bounded to specified identifier <br>
-     * {@code null}, if SimpleNode object with specified identifier hasn't been
+     * @param nodeId identifier of Node object to return
+     * @return Node object bounded to specified identifier <br>
+     * {@code null}, if Node object with specified identifier hasn't been
      * found
      */
     Node getNode(String nodeId);
@@ -49,12 +51,12 @@ public interface Network {
     Map<String, Node> getNodesMap();
 
     /**
-     * Returns array of SimpleNode objects bounded to specified identifiers.
+     * Returns array of Node objects bounded to specified identifiers.
      *
-     * @param nodeIds identifiers of SimpleNode objects to return
-     * @return array of SimpleNode objects bounded to speicifed identifiers <br>
-     * {@code null} for all SimpleNode objects which with specified indetifiers hasn't
+     * @param nodeIds identifiers of Node objects to return
+     * @return array of Node objects bounded to speicifed identifiers <br>
+     * {@code null} for all Node objects which with specified indetifiers hasn't
      * been found
      */
-    Node[] getSpecifiedNodes(String[] nodeIds);
+    Node[] getNodes(String[] nodeIds);
 }

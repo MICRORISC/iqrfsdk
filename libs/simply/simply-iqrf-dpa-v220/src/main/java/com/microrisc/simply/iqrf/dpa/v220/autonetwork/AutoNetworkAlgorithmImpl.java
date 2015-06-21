@@ -47,7 +47,6 @@ import com.microrisc.simply.iqrf.dpa.v220.types.RemotelyBondedModuleId;
 import com.microrisc.simply.iqrf.dpa.v220.types.RoutingHops;
 import com.microrisc.simply.iqrf.types.VoidType;
 import java.lang.reflect.Field;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -69,7 +68,9 @@ import org.slf4j.LoggerFactory;
  * Implementation of {@link AutoNetworkAlgorithm} interface.
  * 
  * @author Michal Konopa
+ * @author Martin Strouhal
  */
+// June 2015 - Martin - implemented getNodes()
 public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
     /** Logger. */
     private static final Logger logger = LoggerFactory.getLogger(AutoNetworkAlgorithmImpl.class);
@@ -109,7 +110,7 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
     public static final long TEMPORARY_ADDRESS_TIMEOUT_MAX = 0xFFFF-1;
     
     /** Default timeout for node to hold temporary address [in tens of seconds ]. */
-    public static final long TEMPORARY_ADDRESS_TIMEOUT_DEFAULT = 60;
+    public static final long TEMPORARY_ADDRESS_TIMEOUT_DEFAULT = 10;
     
     
     /** 
@@ -373,7 +374,7 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
         }
         
         @Override
-        public com.microrisc.simply.Node[] getSpecifiedNodes(String[] nodeIds){
+        public com.microrisc.simply.Node[] getNodes(String[] nodeIds){
             com.microrisc.simply.Node[] nodes = new com.microrisc.simply.Node[nodeIds.length];
             for(int i = 0; i < nodeIds.length; i++){
                 nodes[i] = getNode(nodeIds[i]);
@@ -708,7 +709,7 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
         }
         
         // 100 ms unit
-        int wTimeout = (int)( ( (long)temporaryAddressTimeout * 1000 ) / 100 );
+        int wTimeout = (int)( ( (long)temporaryAddressTimeout * 1000 ) / 10 );
         int waitBonding = bondedNodes.getNodesNumber() * 1;
 
         // how long to wait for prebonding [ in seconds ]
@@ -938,45 +939,14 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
             }
 
             RemotelyBondedModuleId remoBondedModuleId = nodeIface.readRemotelyBondedModuleId();
-            
-            // getting lowest 2 bytes of module ID
-            short[] lowest2bytes = new short[2];
-            System.arraycopy(remoBondedModuleId.getModuleId(), 0, lowest2bytes, 0, 2);
-            
-            if (remoBondedModuleId != null) {
-                logger.info("Node {} prebonded MID={}, UserData={}",
-                        nodeAddr, toHexaFromLastByteString(remoBondedModuleId.getModuleId()),
-                        toHexaFromLastByteString(remoBondedModuleId.getUserData())
+            if ( remoBondedModuleId != null ) {
+                logger.info("Node {} prebonded MID={}, UserData={}", 
+                    nodeAddr, toHexaFromLastByteString(remoBondedModuleId.getModuleId()),
+                    toHexaFromLastByteString(remoBondedModuleId.getUserData())
                 );
 
-                if (!prebondedMIDs.contains(remoBondedModuleId)) {
-
-                    boolean duplicate = false;
-
-                    // check all modules in the list
-                    for (RemotelyBondedModuleId moduleId : prebondedMIDs) {
-
-                        // getting lowest 2 bytes of module ID
-                        short[] lowest2bytesfromlist = new short[2];
-                        System.arraycopy(moduleId.getModuleId(), 0, lowest2bytesfromlist, 0, 2);
-
-                        // double check that there are no modules with same ID (2 lowest bytes)
-                        boolean result = Arrays.equals(lowest2bytesfromlist, lowest2bytes);
-
-                        if (result) {
-                            // if the lowest 2 bytes are same then remove even the module which is in the list already
-                            duplicate = true;
-                            prebondedMIDs.remove(moduleId);
-                            logger.info("Prebonded MID={} removed from the list, same 2B of MID.", toHexaFromLastByteString(moduleId.getModuleId()));
-                        }
-                    }
-
-                    // add module only with unique ID (2B) otherwise they would get same address during authorization
-                    if (!duplicate) {
-                        // adding module into list for authorization
-                        prebondedMIDs.add(remoBondedModuleId);
-                        logger.info("Prebonded MID={} added to the list.", toHexaFromLastByteString(remoBondedModuleId.getModuleId()));
-                    }
+                if ( !prebondedMIDs.contains(remoBondedModuleId) ) {
+                    prebondedMIDs.add(remoBondedModuleId);
                 }
             } else {
                 logger.error("Unable to read prebonded MID from node {}", nodeAddr);

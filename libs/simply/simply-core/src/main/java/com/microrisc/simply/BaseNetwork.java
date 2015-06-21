@@ -24,7 +24,9 @@ import org.slf4j.LoggerFactory;
  * Base class encapsulating connected networks.
  *
  * @author Michal Konopa
+ * @author Martin Strouhal
  */
+// June 2015 - Martin - implemented getNodes()
 public class BaseNetwork implements Network {
 
     /** Logger. */
@@ -63,7 +65,7 @@ public class BaseNetwork implements Network {
     }
 
     @Override
-    public com.microrisc.simply.Node[] getSpecifiedNodes(String[] nodeIds) {
+    public com.microrisc.simply.Node[] getNodes(String[] nodeIds) {
         com.microrisc.simply.Node[] nodes = new com.microrisc.simply.Node[nodeIds.length];
         for (int i = 0; i < nodeIds.length; i++) {
             nodes[i] = getNode(nodeIds[i]);
