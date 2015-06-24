@@ -120,7 +120,7 @@ public class SendSelective {
         }
 
         //choose nodes on which will be FRC executed
-        Node[] selectedNodes = network1.getSpecifiedNodes(new String[]{"1", "2"});
+        Node[] selectedNodes = network1.getNodes(new String[]{"1", "2"});
 
         //send selective FRC
         FRC_Data frcData = frc.sendSelective(new FRC_Temperature(selectedNodes));
