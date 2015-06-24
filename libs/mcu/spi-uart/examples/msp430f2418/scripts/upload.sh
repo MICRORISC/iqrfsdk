@@ -19,6 +19,4 @@
 # ./scripts/upload.sh ../dpa_test.hex
 
 #./msp430-bsl-linux --telosb -c /dev/ttyUSB0 -r -e -p $1
-cd scripts
 ./lnode-bsl --invert-sda --invert-scl -c /dev/ttyUSB0 -r -e -I -p $1
-cd ..

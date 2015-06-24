@@ -13,6 +13,7 @@ SRC = dpa_main.c \
       $(LIBDPA)/drivers/bsp_timer.c \
       $(LIBDPA)/drivers/uart0.c \
       $(LIBDPA)/drivers/uart1.c \
+      $(LIBDPA)/drivers/spi.c \
       $(LIBDPA)/lib/dpa_library.c 
 
 OBJECTS = $(SRC:.c=.o)

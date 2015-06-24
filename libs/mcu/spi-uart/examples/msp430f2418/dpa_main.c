@@ -23,7 +23,8 @@
 // bsp modules required
 #include "board.h"
 #include "uart0.h"
-#include "uart1.h"
+//#include "uart1.h"
+#include "spi.h"
 #include "bsp_timer.h"
 #include "leds.h"
 
@@ -62,9 +63,14 @@ typedef enum {
 }DPA_RQ;
 
 typedef struct {
+   // uart
    volatile uint8_t uart0Done;
    uint8_t uart0_lastTxByteIndex;
-   volatile uint8_t uart1Done;
+   //volatile uint8_t uart1Done;
+   // spi
+   uint8_t txbuf[1];
+   uint8_t rxbuf[1];
+   // dpa
    volatile	uint16_t dpaTimeoutCnt;
    uint16_t	dpaStep;
    T_DPA_PACKET myDpaRequest;
@@ -72,9 +78,11 @@ typedef struct {
    uint8_t debugRequest;
    T_DPA_PACKET myDpaAnswer;
    char *ptrAnswer;
+   //debug
    uint8_t debugAnswer;
    uint8_t debugActive;
    char debugString[128];
+   //timer
    volatile uint16_t swTimer;
    volatile uint8_t swTimerAck;
    volatile uint8_t ticks;
@@ -107,8 +115,8 @@ void cb_uart0TxDone(void);
 void cb_uart0RxCb(void);
 
 //dpa interface 115200
-void cb_uart1TxDone(void);
-void cb_uart1RxCb(void);
+//void cb_uart1TxDone(void);
+//void cb_uart1RxCb(void);
 
 //=========================== main ============================================
 
@@ -126,8 +134,8 @@ int mote_main(void) {
 	uart0_enableInterrupts();
 
 	// setup UART1
-	uart1_setCallbacks(cb_uart1TxDone,cb_uart1RxCb);
-	uart1_enableInterrupts();
+	//uart1_setCallbacks(cb_uart1TxDone,cb_uart1RxCb);
+	//uart1_enableInterrupts();
 
 	// setup BSP timer
 	bsp_timer_set_callback(cb_compare);
@@ -140,7 +148,27 @@ int mote_main(void) {
 
 		// dpa msgs
 		if(app_vars.swTimerAck == TRUE) {
-			MyDpaLibRequests();				// function for sending DPA requests - UART1
+/*
+			// to test basic spi communication
+			leds_red_toggle();
+
+			app_vars.txbuf[0] = 0x00;
+
+			spi_txrx(
+         			app_vars.txbuf,
+         			sizeof(app_vars.txbuf),
+         			SPI_BUFFER,
+         			app_vars.rxbuf,
+         			sizeof(app_vars.rxbuf),
+         			SPI_FIRST,
+         			SPI_LAST
+      			);
+
+			if(app_vars.rxbuf[0] == 0x80)
+				leds_green_toggle();
+*/
+
+			MyDpaLibRequests();				// function for sending DPA requests - SPI/UART1
 			app_vars.swTimerAck = FALSE;
 		}
 
@@ -184,6 +212,7 @@ void MyDpaLibRequests(void) {
 
 		case RLED_PULSE:
 			DpaLedR(NODE1, CMD_LED_PULSE);
+			//DpaLedR(COORDINATOR, CMD_LED_PULSE);
 			app_vars.debugRequest = TRUE;
 		break;
 
@@ -412,6 +441,7 @@ void MyDebugMessages(void) {
  * @return 	none
  *
  **/
+/*
 void DPA_SendUartByte(UINT8 Tx_Byte) {
 	app_vars.uart1Done = 0;
 
@@ -420,6 +450,32 @@ void DPA_SendUartByte(UINT8 Tx_Byte) {
 
 	while (!app_vars.uart1Done)
 		;
+}
+*/
+//=============================================================================
+
+/**
+ * Send DPA byte over SPI
+ *
+ * @param       Tx_Byte to send
+ * @return      Received Rx_Byte
+ *
+ **/
+uint8_t DPA_SendSpiByte(UINT8 Tx_Byte) {
+
+	app_vars.txbuf[0] = Tx_Byte;
+
+	spi_txrx(
+         	app_vars.txbuf,
+         	sizeof(app_vars.txbuf),
+         	SPI_BUFFER,
+         	app_vars.rxbuf,
+         	sizeof(app_vars.rxbuf),
+         	SPI_FIRST,
+         	SPI_LAST
+      	);
+
+	return app_vars.rxbuf[0];
 }
 //=============================================================================
 
@@ -511,9 +567,11 @@ void cb_uart0RxCb(void) {
  * @return 	none
  *
  **/
+/*
 void cb_uart1TxDone(void) {
 	app_vars.uart1Done = 1;
 }
+*/
 //=============================================================================
 
 /**
@@ -523,6 +581,7 @@ void cb_uart1TxDone(void) {
  * @return 	none
  *
  **/
+/*
 void cb_uart1RxCb(void) {
    uint8_t byte;
 
@@ -532,4 +591,6 @@ void cb_uart1RxCb(void) {
    // load that byte to dpa library
    DPA_ReceiveUartByte(byte);
 }
+*/
 //=============================================================================
+

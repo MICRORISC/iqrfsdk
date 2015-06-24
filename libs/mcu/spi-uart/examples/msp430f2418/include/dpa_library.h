@@ -27,9 +27,9 @@
 #define UINT16 unsigned int
 #define NULL	0
 
-//#define __SPI_INTERFACE__				// select for comunication via SPI
-#define __UART_INTERFACE__				// select for comunication via UART
-// #define __DPA_LIB_VER_2_0x				// select for DPA ver.2.00 or ver.2.01
+#define __SPI_INTERFACE__				// select for comunication via SPI
+//#define __UART_INTERFACE__				// select for comunication via UART
+//#define __DPA_LIB_VER_2_0x				// select for DPA ver.2.00 or ver.2.01
 
 #define	DPA_MAX_DATA_LENGTH	 64
 

@@ -11,6 +11,7 @@
 #include "leds.h"
 #include "uart0.h"
 #include "uart1.h"
+#include "spi.h"
 #include "bsp_timer.h"
 #include "debugpins.h"
 
@@ -34,21 +35,31 @@ void board_init() {
    // disable watchdog timer
    WDTCTL  = WDTPW + WDTHOLD;
 
-   //BCSCTL1  = CALBC1_1MHZ;    // Set DCO to 1MHz
-   //DCOCTL   = CALDCO_1MHZ;
-   //BCSCTL3 |= LFXT1S_2;       // Set LFXT1 to the VLO @12kHz
+   BCSCTL2 = SELM_0 | DIVM_0 | DIVS_0;
 
    // setup clock speed
    if ( CALBC1_8MHZ != 0xFF ) {
+
+     __delay_cycles(5000);
+
      DCOCTL   = 0x00;
      BCSCTL1  = CALBC1_8MHZ;    // Set DCO to 8MHz
      DCOCTL   = CALDCO_8MHZ;
+
    }
    else { 			// Start using reasonable values at 8 Mhz
+
+    __delay_cycles(5000);
+
      DCOCTL   = 0x00;
      BCSCTL1  = 0x8D;
+     //BCSCTL1  = 0x0D;
      DCOCTL   = 0x88;
+     //DCOCTL   = 0x9A;
    }
+
+   //BCSCTL1 |= XT2OFF | DIVA_0;
+   //BCSCTL3 = XT2S_0 | LFXT1S_0 | XCAP_1;
 
 #ifdef ISR_BUTTON
    //p2.6 button
@@ -63,6 +74,7 @@ void board_init() {
    leds_init();
    uart0_init();
    uart1_init();
+   spi_init();
    bsp_timer_init();
 
    // enable interrupts
@@ -74,7 +86,7 @@ void board_sleep() {
 }
 
 void board_reset() {
-   WDTCTL = (WDTPW+0x1200) + WDTHOLD; 			 // writing a wrong watchdog password to causes handler to reset
+   WDTCTL = (WDTPW+0x1200) + WDTHOLD; 	      // writing a wrong watchdog password to causes handler to reset
 }
 
 //=========================== private =========================================
@@ -113,6 +125,11 @@ ISR(USCIAB1TX) {
 
 ISR(USCIAB1RX) {
    debugpins_isr_set();
+   if ( (UC1IFG & UCB1RXIFG) && (UC1IE & UCB1RXIE) ){
+   	if(spi_isr()==KICK_SCHEDULER) {
+	   __bic_SR_register_on_exit(CPUOFF);
+	}
+   }
    if ( (UC1IFG & UCA1RXIFG) && (UC1IE & UCA1RXIE) ){
       if (uart1_rx_isr()==KICK_SCHEDULER) {       // UART1: RX
          __bic_SR_register_on_exit(CPUOFF);
