@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<actions>
+        <action>
+            <actionName>run</actionName>
+            <packagings>
+                <packaging>jar</packaging>
+            </packagings>
+            <goals>
+                <goal>process-classes</goal>
+                <goal>org.codehaus.mojo:exec-maven-plugin:1.2.1:exec</goal>
+            </goals>
+            <properties>
+                <exec.args>-Djava.library.path=src/main/resources/natives/x64 -Dorg.slf4j.simpleLogger.defaultLogLevel=debug -Djava.library.path=src/main/resources/natives/x64 -Dlogback.configurationFile=config/logbackCloud.xml -classpath %classpath com.microrisc.cloud.demo_test.TestMain</exec.args>
+                <exec.executable>java</exec.executable>
+            </properties>
+        </action>
+        <action>
+            <actionName>run.single.main</actionName>
+            <packagings>
+                <packaging>*</packaging>
+            </packagings>
+            <goals>
+                <goal>process-classes</goal>
+                <goal>org.codehaus.mojo:exec-maven-plugin:1.2.1:exec</goal>
+            </goals>
+            <properties>
+                <exec.args>-Dorg.slf4j.simpleLogger.defaultLogLevel=debug -Djava.library.path=src/main/resources/natives/x64 -Dlogback.configurationFile=config/logbackCloud.xml  -classpath %classpath ${packageClassName}</exec.args>
+                <exec.executable>java</exec.executable>
+                <exec.classpathScope>${classPathScope}</exec.classpathScope>
+            </properties>
+        </action>
+        <action>
+            <actionName>debug</actionName>
+            <packagings>
+                <packaging>jar</packaging>
+            </packagings>
+            <goals>
+                <goal>process-classes</goal>
+                <goal>org.codehaus.mojo:exec-maven-plugin:1.2.1:exec</goal>
+            </goals>
+            <properties>
+                <exec.args>-Xdebug -Xrunjdwp:transport=dt_socket,server=n,address=${jpda.address} -Djava.library.path=src/main/resources/natives/x64 -Dorg.slf4j.simpleLogger.defaultLogLevel=debug -Djava.library.path=src/main/resources/natives/x64 -Dlogback.configurationFile=config/logbackCloud.xml -classpath %classpath com.microrisc.cloud.demo_test.TestMain</exec.args>
+                <exec.executable>java</exec.executable>
+                <jpda.listen>true</jpda.listen>
+            </properties>
+        </action>
+        <action>
+            <actionName>debug.single.main</actionName>
+            <packagings>
+                <packaging>*</packaging>
+            </packagings>
+            <goals>
+                <goal>process-classes</goal>
+                <goal>org.codehaus.mojo:exec-maven-plugin:1.2.1:exec</goal>
+            </goals>
+            <properties>
+                <exec.args>-Dorg.slf4j.simpleLogger.defaultLogLevel=debug -Djava.library.path=src/main/resources/natives/x64 -Dlogback.configurationFile=config/logbackCloud.xml -Xdebug -Xrunjdwp:transport=dt_socket,server=n,address=${jpda.address} -classpath %classpath ${packageClassName}</exec.args>
+                <exec.executable>java</exec.executable>
+                <exec.classpathScope>${classPathScope}</exec.classpathScope>
+                <jpda.listen>true</jpda.listen>
+            </properties>
+        </action>
+        <action>
+            <actionName>profile</actionName>
+            <packagings>
+                <packaging>jar</packaging>
+            </packagings>
+            <goals>
+                <goal>process-classes</goal>
+                <goal>org.codehaus.mojo:exec-maven-plugin:1.2.1:exec</goal>
+            </goals>
+            <properties>
+                <exec.args>-Djava.library.path=src/main/resources/natives/x64 -Dorg.slf4j.simpleLogger.defaultLogLevel=debug -Djava.library.path=src/main/resources/natives/x64 -Dlogback.configurationFile=config/logbackCloud.xml -classpath %classpath com.microrisc.cloud.demo_test.TestMain</exec.args>
+                <exec.executable>java</exec.executable>
+            </properties>
+        </action>
+        <action>
+            <actionName>CUSTOM-Generate sources</actionName>
+            <displayName>Generate sources</displayName>
+            <goals>
+                <goal>generate-sources</goal>
+                <goal>source:jar</goal>
+            </goals>
+        </action>
+    </actions>

@@ -30,8 +30,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * This example shows how send commands from IQRF Cloud into IQRF network
- * directly. Example using generic detection of commands and their types.
+ * This example shows how to send commands from IQRF Cloud into IQRF network
+ * directly. Example is using generic detection of commands and their types.
  *
  * @author Martin Strouhal
  */
@@ -46,13 +46,13 @@ public class GenericCommunication implements J_AsyncMsgListener {
     /** Instance of used CDC. */
     private final J_CDCImpl myCDC;
 
-    //flags about packet
+    // flags about packet
     private short addr1, addr2, periph, cmdVal;
 
     // response flag
     private boolean responseReceived;
     
-    //pooling time
+    // pooling time
     private final int POOLING_TIME = 10000;
 
     @Override
@@ -61,7 +61,7 @@ public class GenericCommunication implements J_AsyncMsgListener {
         final short[] CONFIRMATION_HEADER = {addr1, addr2, periph, cmdVal, 0xFF, 0xFF};
         final short[] RESPONSE_HEADER = {addr1, addr2, periph, (short) (cmdVal + 0x80), 0x00, 0x00};
 
-        //data null?
+        // data null?
         if (data == null || data.length == 0) {
             logger.info("No data received\n");
             return;
@@ -86,11 +86,8 @@ public class GenericCommunication implements J_AsyncMsgListener {
             cloud.dataUpload(data);
         }        
 
-        if (responseReceived) {
-            //send data to cloud
-            //cloud.dataUpload(data);
-
-            //send data to cloud in ASCII
+        if (responseReceived) {            
+            // sending data to cloud in ASCII
             byte[] asciiByte = Arrays.toString(data).getBytes();
             short[] asciiData = new short[asciiByte.length];
             for (int i = 0; i < asciiByte.length; i++) {
@@ -133,7 +130,7 @@ public class GenericCommunication implements J_AsyncMsgListener {
         // register to receiving asynchronous messages
         example.myCDC.registerAsyncListener(example);       
 
-        //repeatly read request from cloud and their processing by CDC
+        // repeatly reading request from cloud and their processing by CDC
         while (true) {
             example.responseReceived = false;
             CloudResponse cloudResponse = example.cloud.dataDownload();
@@ -148,7 +145,7 @@ public class GenericCommunication implements J_AsyncMsgListener {
                 continue;
             }
 
-            //read request from cloud
+            // reading request from cloud
             short[] request = cloudResponse.getData();
             if (request.length < 4) {
                 System.out.println("Request cannot be smaller than 4.");
@@ -160,7 +157,7 @@ public class GenericCommunication implements J_AsyncMsgListener {
             example.cmdVal = request[3];
 
             boolean succesfulCDC = example.sendCDC(request);
-            //if sending of packet to IQRF network was unsuccessful, continue with next packet
+            // if sending of packet to IQRF network was unsuccessful, continue with next packet
             if (!succesfulCDC) {
                 System.out.println("Send packet to IQRF via CDC was unsuccessful. Next packet will be processed.");
                 continue;
@@ -175,7 +172,7 @@ public class GenericCommunication implements J_AsyncMsgListener {
                 break;
             }
 
-            //wait some time, until CDC proccess response or send timeout left packet
+            // wait some time, until CDC proccess response or send timeout left packet
             int FOR_MAX = 10;
             for (int i = 0; i < FOR_MAX; i++) {
                 if (!example.responseReceived) {
@@ -195,7 +192,7 @@ public class GenericCommunication implements J_AsyncMsgListener {
                 }
             }
 
-            //sleep if isn't any packet on cloud
+            // sleep if isn't any packet on cloud
             if (cloudResponse.getParameter(CloudResponse.PARAMETER_COUNT_NON_PICKED_PACKETS) == 0) {
                 example.sleep();
             }

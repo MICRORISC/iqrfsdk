@@ -27,8 +27,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Listener which is processing all async messages incoming from IQRF network.
- * Listener offers choosing which events will be send to IQRF Cloud.
+ * Example shows how to easily upload temperature reading to the cloud server.
+ * To access IQRF network jLibCDC library is used.
  *
  * @author Martin Strouhal
  */
@@ -55,7 +55,7 @@ public class TemperatureLogging implements J_AsyncMsgListener {
         final short[] CONFIRMATION_HEADER = {0x00, 0x00, 0x0A, 0x00, 0xFF, 0xFF};
         final short[] RESPONSE_HEADER = {0x00, 0x00, 0x0A, 0x80, 0x00, 0x00};
 
-        //data null?
+        // data null?
         if (data == null || data.length == 0) {
             logger.info("No data received\n");
             return;
@@ -85,7 +85,7 @@ public class TemperatureLogging implements J_AsyncMsgListener {
         }
         System.out.println();
 
-        // parse data to get temperature
+        // parsing data to get temperature
         if (responseReceived) {
             short value = data[INT_VALUE_POS];
 
@@ -95,16 +95,16 @@ public class TemperatureLogging implements J_AsyncMsgListener {
 
             logger.info("Temperature = " + value + "." + fractialPart + " C");
 
-            //convert text to ASCII values
+            // converting text to ASCII values
             byte[] stringDataAsBytes = ("Temperature = " + value + "." + fractialPart + " C").getBytes();
 
-            //retype bytes to short
+            // retyping bytes to short
             short[] dataToUpload = new short[stringDataAsBytes.length];            
             for (int i = 0; i < dataToUpload.length; i++) {
                 dataToUpload[i] = (short)stringDataAsBytes[i];
             }            
 
-            //send data to cloud
+            // sending data to cloud
             cloud.dataUpload(dataToUpload);
         }
     }
@@ -132,7 +132,7 @@ public class TemperatureLogging implements J_AsyncMsgListener {
             return;
         }
 
-        //create instance of Cloud
+        // creates instance of Cloud
         Cloud cloud = new SimpleCloud();
 
         // listener of asynchronous messages with Cloud reference in param

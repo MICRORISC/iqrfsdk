@@ -15,44 +15,48 @@
  */
 package com.microrisc.cloud.iqrf.examples;
 
-import com.microrisc.cloud.iqrf.*;
+import com.microrisc.cloud.iqrf.Cloud;
+import com.microrisc.cloud.iqrf.SimpleCloud;
 import com.microrisc.cloud.iqrf.message.CloudResponse;
-import com.microrisc.cloud.iqrf.message.TimeSettings;
 import java.util.Arrays;
 
 /**
- * Example how processing a big count of data effectively with cloud library.
+ * This class shows how to register Gateway on IQRF cloud server and example of
+ * writing and reading data from IQRF cloud server.
  *
  * @author Martin Strouhal
  */
-public class DataProcessing {
+public class CloudExample {
 
-    //reference for cloud control
     private static Cloud cloud;
 
     public static void main(String[] args) {
-        // create reference for cloud control
+        // creates reference for cloud control
         cloud = new SimpleCloud();
 
-        //register Gw
+        // example with registering Gw
         registerGw();
 
-        int poolingTime = 2000;//in miliseconds
+        // example with uploading data
+        uploadData();
 
-        //repeating of sending requests for new data
+                         
+        int poolingTime = 2000;// in miliseconds
+
+        // repeating sending of requests for new data
         while (true) {
-            //sending download request
+            // sending download request
             CloudResponse downloadResponse = cloud.dataDownload();
             
 
-            //check if data download was succesful
+            // checking if data download was succesful
             int dataCount = 0;
             switch (downloadResponse.getErrorType()) {
                 case BAD_INTERNET_CONNECTION:
                     System.out.println("Error: bad internet connection. Check if PC connected to network.");
                     break;
-                case INACCESSIBLE_CRYPT_KEY:
-                    System.out.println("From config file couldn't load crypting key.");
+                case INACCESSIBLE_CONFIG_DATA:
+                    System.out.println("From config file couldn't load any data.");
                     break;
                 case GENERAL_CLOUD_ERROR:
                     System.out.println("Some error in cloud library has occured.");
@@ -61,33 +65,45 @@ public class DataProcessing {
                     System.out.println("Invalid CRC");
                     break;
                 case WITHOUT_ERROR:
+                    //printing data
                     System.out.println("data: " + Arrays.toString(downloadResponse.getData()));
-                    //detect how much packets is on cloud
+                    // detecting how much packets is remaining on cloud
                     dataCount = downloadResponse.getParameter(CloudResponse.PARAMETER_COUNT_NON_PICKED_PACKETS);
             }           
 
-            //sleep if isn't any packet on cloud
+            // sleeping if isn't any packet on cloud
             if (dataCount == 0) {
                 try {
                     Thread.sleep(poolingTime);
                 } catch (InterruptedException ex) {
                     System.out.println("Some error has been occured. " + ex);
                 }
-            }
-        }
+            }               
+        }               
     }
 
     private static void registerGw() {
-        //user AES key for crypting communication betwen user and gateway
-        short[] userAESKey = new short[]{0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0xa, 0xb, 0xc, 0xd, 0xe, 0xf, 0x10};
-        //create setting of time on the user gateway
-        TimeSettings settings = new TimeSettings(TimeSettings.TimeZone.UTC_plus_1, true);
+        // sending register packet to cloud
+        CloudResponse response = cloud.registerGw();
 
-        //send register packet to cloud
-        CloudResponse response = cloud.registerGw(userAESKey, settings);
-
-        //print info about register processing
-        System.out.println(response.getProcessingInfo());
+        // printing info about register processing
+        System.out.println(response.getProcessingInfo());       
     }
 
+    private static void uploadData() {
+        // preparing data which will be written on cloud server
+        byte[] bytesData = "Data to upload on IQRF cloud.".getBytes();
+        short[] dataToUpload = new short[bytesData.length];
+        for (int i = 0; i < bytesData.length; i++) {
+            dataToUpload[i] = bytesData[i];
+        }
+
+        // sending data on cloud server
+        CloudResponse uploadResponse = cloud.dataUpload(dataToUpload);
+
+        // printing result of upload operation
+        if (uploadResponse.hasError()) {
+            System.out.println(uploadResponse.getProcessingInfo());
+        }
+    }
 }
