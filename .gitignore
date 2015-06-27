@@ -115,3 +115,4 @@ libs/simply/simply-network-udp/nb-configuration.xml
 libs/simply/simply-network-usbcdc/nb-configuration.xml
 demos/autonetwork/java/nb-configuration.xml
 
+/demos/autonetwork/java/target/

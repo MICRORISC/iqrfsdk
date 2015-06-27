@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package com.microrisc.simply.iqrf.dpa.v210.autonetwork.demo.def;
+package com.microrisc.simply.iqrf.dpa.v220.autonetwork.demo.def;
 
 import com.microrisc.simply.iqrf.dpa.protocol.PeripheralToDevIfaceMapper;
 import com.microrisc.simply.iqrf.dpa.protocol.PeripheralToDevIfaceMapperFactory;
-import com.microrisc.simply.iqrf.dpa.v210.autonetwork.P2PPrebonder;
+import com.microrisc.simply.iqrf.dpa.v220.autonetwork.P2PPrebonder;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;

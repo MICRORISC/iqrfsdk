@@ -11,99 +11,99 @@
 <implMappings>
     <!-- standard peripheral -->
     <implMapping>
-        <interface>com.microrisc.simply.iqrf.dpa.v210.devices.PeripheralInfoGetter</interface>
-        <implClass>com.microrisc.simply.iqrf.dpa.v210.devices.impl.SimplePeripheralInfoGetter</implClass>
+        <interface>com.microrisc.simply.iqrf.dpa.v220.devices.PeripheralInfoGetter</interface>
+        <implClass>com.microrisc.simply.iqrf.dpa.v220.devices.impl.SimplePeripheralInfoGetter</implClass>
         <note>Some note here.</note>
     </implMapping>
 	
     <implMapping>
-        <interface>com.microrisc.simply.iqrf.dpa.v210.devices.Coordinator</interface>
-	<implClass>com.microrisc.simply.iqrf.dpa.v210.devices.impl.SimpleCoordinator</implClass>
+        <interface>com.microrisc.simply.iqrf.dpa.v220.devices.Coordinator</interface>
+	<implClass>com.microrisc.simply.iqrf.dpa.v220.devices.impl.SimpleCoordinator</implClass>
         <note></note>
     </implMapping>
 	
     <implMapping>
-        <interface>com.microrisc.simply.iqrf.dpa.v210.devices.Node</interface>
-	<implClass>com.microrisc.simply.iqrf.dpa.v210.devices.impl.SimpleNode</implClass>
+        <interface>com.microrisc.simply.iqrf.dpa.v220.devices.Node</interface>
+	<implClass>com.microrisc.simply.iqrf.dpa.v220.devices.impl.SimpleNode</implClass>
         <note></note>
     </implMapping>
 	
     <implMapping>
-        <interface>com.microrisc.simply.iqrf.dpa.v210.devices.OS</interface>
-	<implClass>com.microrisc.simply.iqrf.dpa.v210.devices.impl.SimpleOS</implClass>
+        <interface>com.microrisc.simply.iqrf.dpa.v220.devices.OS</interface>
+	<implClass>com.microrisc.simply.iqrf.dpa.v220.devices.impl.SimpleOS</implClass>
         <note></note>
     </implMapping>
 	
     <implMapping>
-        <interface>com.microrisc.simply.iqrf.dpa.v210.devices.LEDR</interface>
-	<implClass>com.microrisc.simply.iqrf.dpa.v210.devices.impl.SimpleLEDR</implClass>
+        <interface>com.microrisc.simply.iqrf.dpa.v220.devices.LEDR</interface>
+	<implClass>com.microrisc.simply.iqrf.dpa.v220.devices.impl.SimpleLEDR</implClass>
         <note></note>
     </implMapping>
 	
     <implMapping>
-        <interface>com.microrisc.simply.iqrf.dpa.v210.devices.LEDG</interface>
-	<implClass>com.microrisc.simply.iqrf.dpa.v210.devices.impl.SimpleLEDG</implClass>
+        <interface>com.microrisc.simply.iqrf.dpa.v220.devices.LEDG</interface>
+	<implClass>com.microrisc.simply.iqrf.dpa.v220.devices.impl.SimpleLEDG</implClass>
         <note></note>
     </implMapping>
 	
     <implMapping>
-        <interface>com.microrisc.simply.iqrf.dpa.v210.devices.IO</interface>
-	<implClass>com.microrisc.simply.iqrf.dpa.v210.devices.impl.SimpleIO</implClass>
+        <interface>com.microrisc.simply.iqrf.dpa.v220.devices.IO</interface>
+	<implClass>com.microrisc.simply.iqrf.dpa.v220.devices.impl.SimpleIO</implClass>
         <note></note>
     </implMapping>
 	
     <implMapping>
-        <interface>com.microrisc.simply.iqrf.dpa.v210.devices.EEPROM</interface>
-	<implClass>com.microrisc.simply.iqrf.dpa.v210.devices.impl.SimpleEEPROM</implClass>
+        <interface>com.microrisc.simply.iqrf.dpa.v220.devices.EEPROM</interface>
+	<implClass>com.microrisc.simply.iqrf.dpa.v220.devices.impl.SimpleEEPROM</implClass>
         <note></note>
     </implMapping>
 	
     <implMapping>
-        <interface>com.microrisc.simply.iqrf.dpa.v210.devices.EEEPROM</interface>
-	<implClass>com.microrisc.simply.iqrf.dpa.v210.devices.impl.SimpleEEEPROM</implClass>
+        <interface>com.microrisc.simply.iqrf.dpa.v220.devices.EEEPROM</interface>
+	<implClass>com.microrisc.simply.iqrf.dpa.v220.devices.impl.SimpleEEEPROM</implClass>
         <note></note>
     </implMapping>
 	
     <implMapping>
-        <interface>com.microrisc.simply.iqrf.dpa.v210.devices.RAM</interface>
-	<implClass>com.microrisc.simply.iqrf.dpa.v210.devices.impl.SimpleRAM</implClass>
+        <interface>com.microrisc.simply.iqrf.dpa.v220.devices.RAM</interface>
+	<implClass>com.microrisc.simply.iqrf.dpa.v220.devices.impl.SimpleRAM</implClass>
         <note></note>
     </implMapping>
 	
     <implMapping>
-        <interface>com.microrisc.simply.iqrf.dpa.v210.devices.SPI</interface>
-	<implClass>com.microrisc.simply.iqrf.dpa.v210.devices.impl.SimpleSPI</implClass>
+        <interface>com.microrisc.simply.iqrf.dpa.v220.devices.SPI</interface>
+	<implClass>com.microrisc.simply.iqrf.dpa.v220.devices.impl.SimpleSPI</implClass>
         <note></note>
     </implMapping>
 	
     <implMapping>
-        <interface>com.microrisc.simply.iqrf.dpa.v210.devices.Thermometer</interface>
-	<implClass>com.microrisc.simply.iqrf.dpa.v210.devices.impl.SimpleThermometer</implClass>
+        <interface>com.microrisc.simply.iqrf.dpa.v220.devices.Thermometer</interface>
+	<implClass>com.microrisc.simply.iqrf.dpa.v220.devices.impl.SimpleThermometer</implClass>
         <note></note>
     </implMapping>
 	
     <implMapping>
-        <interface>com.microrisc.simply.iqrf.dpa.v210.devices.PWM</interface>
-	<implClass>com.microrisc.simply.iqrf.dpa.v210.devices.impl.SimplePWM</implClass>
+        <interface>com.microrisc.simply.iqrf.dpa.v220.devices.PWM</interface>
+	<implClass>com.microrisc.simply.iqrf.dpa.v220.devices.impl.SimplePWM</implClass>
         <note></note>
     </implMapping>
 	
     <implMapping>
-        <interface>com.microrisc.simply.iqrf.dpa.v210.devices.UART</interface>
-	<implClass>com.microrisc.simply.iqrf.dpa.v210.devices.impl.SimpleUART</implClass>
+        <interface>com.microrisc.simply.iqrf.dpa.v220.devices.UART</interface>
+	<implClass>com.microrisc.simply.iqrf.dpa.v220.devices.impl.SimpleUART</implClass>
         <note></note>
     </implMapping>
     
     <implMapping>
-	<interface>com.microrisc.simply.iqrf.dpa.v210.devices.FRC</interface>
-	<implClass>com.microrisc.simply.iqrf.dpa.v210.devices.impl.SimpleFRC</implClass>
+	<interface>com.microrisc.simply.iqrf.dpa.v220.devices.FRC</interface>
+	<implClass>com.microrisc.simply.iqrf.dpa.v220.devices.impl.SimpleFRC</implClass>
 	<note></note>
     </implMapping>
 
     <!-- user peripheral -->
     <implMapping>
-	<interface>com.microrisc.simply.iqrf.dpa.v210.autonetwork.P2PPrebonder</interface>
-	<implClass>com.microrisc.simply.iqrf.dpa.v210.autonetwork.SimpleP2PPrebonder</implClass>
+	<interface>com.microrisc.simply.iqrf.dpa.v220.autonetwork.P2PPrebonder</interface>
+	<implClass>com.microrisc.simply.iqrf.dpa.v220.autonetwork.SimpleP2PPrebonder</implClass>
 	<note></note>
     </implMapping>
             

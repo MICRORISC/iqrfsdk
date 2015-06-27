@@ -152,178 +152,178 @@
 
 
 
-    <!-- iqrf.dpa.v210 package -->
+    <!-- iqrf.dpa.v220 package -->
 
-    <logger name="com.microrisc.simply.iqrf.dpa.v210.DPA_DeviceObject" level="INHERITED">
+    <logger name="com.microrisc.simply.iqrf.dpa.v220.DPA_DeviceObject" level="INHERITED">
             <appender-ref ref="FILE" />
     </logger>
 
     <!-- iqrf.dpa.broadcasting package -->
-    <logger name="com.microrisc.simply.iqrf.dpa.v210.broadcasting.BroadcastServicesDefaultImpl" level="INHERITED">
+    <logger name="com.microrisc.simply.iqrf.dpa.v220.broadcasting.BroadcastServicesDefaultImpl" level="INHERITED">
             <appender-ref ref="FILE" />
     </logger>
 
     <!-- iqrf.dpa.init package -->
-    <logger name="com.microrisc.simply.iqrf.dpa.v210.init.DPA_Initializer" level="INHERITED">
+    <logger name="com.microrisc.simply.iqrf.dpa.v220.init.DPA_Initializer" level="INHERITED">
             <appender-ref ref="FILE" />
     </logger>
 	
-	<logger name="com.microrisc.simply.iqrf.dpa.v210.init.NodeFactory" level="INHERITED">
+	<logger name="com.microrisc.simply.iqrf.dpa.v220.init.NodeFactory" level="INHERITED">
             <appender-ref ref="FILE" />
     </logger>
     
 
     <!-- iqrf.dpa.protocol package -->
-    <logger name="com.microrisc.simply.iqrf.dpa.v210.protocol.DPA_MessageConvertor" level="INHERITED">
+    <logger name="com.microrisc.simply.iqrf.dpa.v220.protocol.DPA_MessageConvertor" level="INHERITED">
             <appender-ref ref="FILE" />
     </logger>
 
-    <logger name="com.microrisc.simply.iqrf.dpa.v210.protocol.DPA_ProtocolLayer" level="INHERITED">
+    <logger name="com.microrisc.simply.iqrf.dpa.v220.protocol.DPA_ProtocolLayer" level="INHERITED">
             <appender-ref ref="FILE" />
     </logger>
 
-    <logger name="com.microrisc.simply.iqrf.dpa.v210.protocol.DPA_ProtocolProperties" level="INHERITED">
+    <logger name="com.microrisc.simply.iqrf.dpa.v220.protocol.DPA_ProtocolProperties" level="INHERITED">
             <appender-ref ref="FILE" />
     </logger>
     
-    <logger name="com.microrisc.simply.iqrf.dpa.v210.protocol.ProtocolStateMachine" level="INHERITED">
+    <logger name="com.microrisc.simply.iqrf.dpa.v220.protocol.ProtocolStateMachine" level="INHERITED">
             <appender-ref ref="FILE" />
     </logger>
     
     
-    <!-- iqrf.dpa.v210.autonetwork package -->
-    <logger name="com.microrisc.simply.iqrf.dpa.v210.autonetwork.AutoNetworkAlgorithmImpl" level="INHERITED">
+    <!-- iqrf.dpa.v220.autonetwork package -->
+    <logger name="com.microrisc.simply.iqrf.dpa.v220.autonetwork.AutoNetworkAlgorithmImpl" level="INHERITED">
             <appender-ref ref="FILE" />
             <appender-ref ref="AUTONETWORK_ALGO_STDOUT" />
     </logger>
     
-    <!-- iqrf.dpa.v210.types package -->
-    <logger name="com.microrisc.simply.iqrf.dpa.v210.types.FRC_ResultParser" level="INHERITED">
+    <!-- iqrf.dpa.v220.types package -->
+    <logger name="com.microrisc.simply.iqrf.dpa.v220.types.FRC_ResultParser" level="INHERITED">
             <appender-ref ref="FILE" />
     </logger>
     
-    <!-- iqrf.dpa.v210.typeconvertors package -->
-    <logger name="com.microrisc.simply.iqrf.dpa.v210.typeconvertors.AddressingInfoConvertor" level="INHERITED">
+    <!-- iqrf.dpa.v220.typeconvertors package -->
+    <logger name="com.microrisc.simply.iqrf.dpa.v220.typeconvertors.AddressingInfoConvertor" level="INHERITED">
             <appender-ref ref="FILE" />
     </logger>
 
-    <logger name="com.microrisc.simply.iqrf.dpa.v210.typeconvertors.ArrayIO_CommandConvertor" level="INHERITED">
+    <logger name="com.microrisc.simply.iqrf.dpa.v220.typeconvertors.ArrayIO_CommandConvertor" level="INHERITED">
             <appender-ref ref="FILE" />
     </logger>
 
-    <logger name="com.microrisc.simply.iqrf.dpa.v210.typeconvertors.ArrayIO_DirectionSettingsConvertor" level="INHERITED">
+    <logger name="com.microrisc.simply.iqrf.dpa.v220.typeconvertors.ArrayIO_DirectionSettingsConvertor" level="INHERITED">
             <appender-ref ref="FILE" />
     </logger>
 
-    <logger name="com.microrisc.simply.iqrf.dpa.v210.typeconvertors.ArrayPeripheralInfoConvertor" level="INHERITED">
+    <logger name="com.microrisc.simply.iqrf.dpa.v220.typeconvertors.ArrayPeripheralInfoConvertor" level="INHERITED">
             <appender-ref ref="FILE" />
     </logger>
 
-    <logger name="com.microrisc.simply.iqrf.dpa.v210.typeconvertors.BatchCommandConvertor" level="INHERITED">
+    <logger name="com.microrisc.simply.iqrf.dpa.v220.typeconvertors.BatchCommandConvertor" level="INHERITED">
             <appender-ref ref="FILE" />
     </logger>
 
-    <logger name="com.microrisc.simply.iqrf.dpa.v210.typeconvertors.BaudRateConvertor" level="INHERITED">
+    <logger name="com.microrisc.simply.iqrf.dpa.v220.typeconvertors.BaudRateConvertor" level="INHERITED">
             <appender-ref ref="FILE" />
     </logger>
 
-    <logger name="com.microrisc.simply.iqrf.dpa.v210.typeconvertors.BondedDeviceConvertor" level="INHERITED">
+    <logger name="com.microrisc.simply.iqrf.dpa.v220.typeconvertors.BondedDeviceConvertor" level="INHERITED">
             <appender-ref ref="FILE" />
     </logger>
 
-    <logger name="com.microrisc.simply.iqrf.dpa.v210.typeconvertors.BondedNodesConvertor" level="INHERITED">
+    <logger name="com.microrisc.simply.iqrf.dpa.v220.typeconvertors.BondedNodesConvertor" level="INHERITED">
             <appender-ref ref="FILE" />
     </logger>
 
-    <logger name="com.microrisc.simply.iqrf.dpa.v210.typeconvertors.DPA_AdditionalInfoConvertor" level="INHERITED">
+    <logger name="com.microrisc.simply.iqrf.dpa.v220.typeconvertors.DPA_AdditionalInfoConvertor" level="INHERITED">
             <appender-ref ref="FILE" />
     </logger>
 
-    <logger name="com.microrisc.simply.iqrf.dpa.v210.typeconvertors.DPA_ParameterConvertor" level="INHERITED">
+    <logger name="com.microrisc.simply.iqrf.dpa.v220.typeconvertors.DPA_ParameterConvertor" level="INHERITED">
             <appender-ref ref="FILE" />
     </logger>
 
-    <logger name="com.microrisc.simply.iqrf.dpa.v210.typeconvertors.DiscoveredNodesConvertor" level="INHERITED">
+    <logger name="com.microrisc.simply.iqrf.dpa.v220.typeconvertors.DiscoveredNodesConvertor" level="INHERITED">
             <appender-ref ref="FILE" />
     </logger>
 
-    <logger name="com.microrisc.simply.iqrf.dpa.v210.typeconvertors.DiscoveryParamsConvertor" level="INHERITED">
+    <logger name="com.microrisc.simply.iqrf.dpa.v220.typeconvertors.DiscoveryParamsConvertor" level="INHERITED">
             <appender-ref ref="FILE" />
     </logger>
 
-    <logger name="com.microrisc.simply.iqrf.dpa.v210.typeconvertors.DiscoveryResultConvertor" level="INHERITED">
+    <logger name="com.microrisc.simply.iqrf.dpa.v220.typeconvertors.DiscoveryResultConvertor" level="INHERITED">
             <appender-ref ref="FILE" />
     </logger>
 	    
-    <logger name="com.microrisc.simply.iqrf.dpa.v210.typeconvertors.FRC_CommandConvertor" level="INHERITED">
+    <logger name="com.microrisc.simply.iqrf.dpa.v220.typeconvertors.FRC_CommandConvertor" level="INHERITED">
             <appender-ref ref="FILE" />
     </logger>
         
-    <logger name="com.microrisc.simply.iqrf.dpa.v210.typeconvertors.FRC_DataConvertor" level="INHERITED">
+    <logger name="com.microrisc.simply.iqrf.dpa.v220.typeconvertors.FRC_DataConvertor" level="INHERITED">
             <appender-ref ref="FILE" />
     </logger>
     
-    <logger name="com.microrisc.simply.iqrf.dpa.v210.typeconvertors.HWP_ConfigurationConvertor" level="INHERITED">
+    <logger name="com.microrisc.simply.iqrf.dpa.v220.typeconvertors.HWP_ConfigurationConvertor" level="INHERITED">
             <appender-ref ref="FILE" />
     </logger>
 
-    <logger name="com.microrisc.simply.iqrf.dpa.v210.typeconvertors.IO_CommandConvertor" level="INHERITED">
+    <logger name="com.microrisc.simply.iqrf.dpa.v220.typeconvertors.IO_CommandConvertor" level="INHERITED">
             <appender-ref ref="FILE" />
     </logger>
 
-    <logger name="com.microrisc.simply.iqrf.dpa.v210.typeconvertors.IO_DirectionSettingsConvertor" level="INHERITED">
+    <logger name="com.microrisc.simply.iqrf.dpa.v220.typeconvertors.IO_DirectionSettingsConvertor" level="INHERITED">
             <appender-ref ref="FILE" />
     </logger>
 	
-    <logger name="com.microrisc.simply.iqrf.dpa.v210.typeconvertors.IO_StateConvertor" level="INHERITED">
+    <logger name="com.microrisc.simply.iqrf.dpa.v220.typeconvertors.IO_StateConvertor" level="INHERITED">
             <appender-ref ref="FILE" />
     </logger>
 
-    <logger name="com.microrisc.simply.iqrf.dpa.v210.typeconvertors.IntegerFastQueryListConvertor" level="INHERITED">
+    <logger name="com.microrisc.simply.iqrf.dpa.v220.typeconvertors.IntegerFastQueryListConvertor" level="INHERITED">
             <appender-ref ref="FILE" />
     </logger>
 
-    <logger name="com.microrisc.simply.iqrf.dpa.v210.typeconvertors.LED_StateConvertor" level="INHERITED">
+    <logger name="com.microrisc.simply.iqrf.dpa.v220.typeconvertors.LED_StateConvertor" level="INHERITED">
             <appender-ref ref="FILE" />
     </logger>
 	
-    <logger name="com.microrisc.simply.iqrf.dpa.v210.typeconvertors.NodeStatusInfoConvertor" level="INHERITED">
+    <logger name="com.microrisc.simply.iqrf.dpa.v220.typeconvertors.NodeStatusInfoConvertor" level="INHERITED">
             <appender-ref ref="FILE" />
     </logger>
 
-    <logger name="com.microrisc.simply.iqrf.dpa.v210.typeconvertors.OsInfoConvertor" level="INHERITED">
+    <logger name="com.microrisc.simply.iqrf.dpa.v220.typeconvertors.OsInfoConvertor" level="INHERITED">
             <appender-ref ref="FILE" />
     </logger>
 
-    <logger name="com.microrisc.simply.iqrf.dpa.v210.typeconvertors.PWM_ParametersConvertor" level="INHERITED">
+    <logger name="com.microrisc.simply.iqrf.dpa.v220.typeconvertors.PWM_ParametersConvertor" level="INHERITED">
             <appender-ref ref="FILE" />
     </logger>
 
-    <logger name="com.microrisc.simply.iqrf.dpa.v210.typeconvertors.PeripheralEnumerationConvertor" level="INHERITED">
+    <logger name="com.microrisc.simply.iqrf.dpa.v220.typeconvertors.PeripheralEnumerationConvertor" level="INHERITED">
             <appender-ref ref="FILE" />
     </logger>
 
-    <logger name="com.microrisc.simply.iqrf.dpa.v210.typeconvertors.PeripheralInfoConvertor" level="INHERITED">
+    <logger name="com.microrisc.simply.iqrf.dpa.v220.typeconvertors.PeripheralInfoConvertor" level="INHERITED">
             <appender-ref ref="FILE" />
     </logger>
 
-    <logger name="com.microrisc.simply.iqrf.dpa.v210.typeconvertors.RemotelyBondedModuleIdConvertor" level="INHERITED">
+    <logger name="com.microrisc.simply.iqrf.dpa.v220.typeconvertors.RemotelyBondedModuleIdConvertor" level="INHERITED">
             <appender-ref ref="FILE" />
     </logger>
 
-    <logger name="com.microrisc.simply.iqrf.dpa.v210.typeconvertors.RoutingHopsConvertor" level="INHERITED">
+    <logger name="com.microrisc.simply.iqrf.dpa.v220.typeconvertors.RoutingHopsConvertor" level="INHERITED">
             <appender-ref ref="FILE" />
     </logger>
 
-    <logger name="com.microrisc.simply.iqrf.dpa.v210.typeconvertors.SleepInfoConvertor" level="INHERITED">
+    <logger name="com.microrisc.simply.iqrf.dpa.v220.typeconvertors.SleepInfoConvertor" level="INHERITED">
             <appender-ref ref="FILE" />
     </logger>
 	
-    <logger name="com.microrisc.simply.iqrf.dpa.v210.typeconvertors.SubDPARequestConvertor" level="INHERITED">
+    <logger name="com.microrisc.simply.iqrf.dpa.v220.typeconvertors.SubDPARequestConvertor" level="INHERITED">
             <appender-ref ref="FILE" />
     </logger>
         
-	<logger name="com.microrisc.simply.iqrf.dpa.v210.typeconvertors.ThermometerValueConvertor" level="INHERITED">
+	<logger name="com.microrisc.simply.iqrf.dpa.v220.typeconvertors.ThermometerValueConvertor" level="INHERITED">
 		<appender-ref ref="FILE" />
     </logger>
         
@@ -358,6 +358,7 @@
 
     <!-- root -->
     <root level="debug">
-        <!-- appender-ref ref="STDOUT" / -->
+        <!-- appender-ref ref="STDOUT" /-->
     </root>
 </configuration>
+
