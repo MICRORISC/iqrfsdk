@@ -561,6 +561,16 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
         return new MethodToPacketMapping(constMapping, argMapping);
     }
 
+    static private MethodToPacketMapping createRestartMapping() {
+        List<ConstValueToPacketMapping> constMapping = new LinkedList<>();
+        constMapping.add(new ConstValueToPacketMapping(3, new short[]{0x08}));
+
+        List<ValueToPacketMapping> argMapping = new LinkedList<>();
+        argMapping.add(new ValueToPacketMapping(4, Uns16Convertor.getInstance()));
+
+        return new MethodToPacketMapping(constMapping, argMapping);
+    }
+    
     static private InterfaceToPacketMapping createRequestOsMapping() {
         List<ConstValueToPacketMapping> constMappings = new LinkedList<>();
         constMappings.add(new ConstValueToPacketMapping(2, new short[]{2}));
@@ -575,10 +585,11 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
         methodMappings.put("6", createBatchMapping());
         methodMappings.put("7", createSetUSEC_UserMapping());
         methodMappings.put("8", createSetMIDMapping());
+        methodMappings.put("9", createRestartMapping());
 
         return new InterfaceToPacketMapping(constMappings, methodMappings);
     }
-
+    
     // EEPROM interface
     static private MethodToPacketMapping createEEPROMReadMapping() {
         List<ConstValueToPacketMapping> constMapping = new LinkedList<>();
@@ -1452,6 +1463,16 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
         return new PacketToMethodMapping("8", packetValues, resultMapping);
     }
 
+    static private PacketToMethodMapping createResponseRestart() {
+        List<PacketPositionValues> packetValues = new LinkedList<>();
+        packetValues.add(new PacketPositionValues(3, (short) 0x88));
+
+        PacketToValueMapping resultMapping = new PacketToValueMapping(
+                8, 0, VoidTypeConvertor.getInstance()
+        );
+        return new PacketToMethodMapping("9", packetValues, resultMapping);
+    }
+    
     static private PacketToInterfaceMapping createResponseOsMapping() {
         List<PacketPositionValues> packetValues = new LinkedList<>();
         packetValues.add(new PacketPositionValues(2, (short) 2));
@@ -1466,6 +1487,7 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
         methodMappings.put("6", createResponseBatch());
         methodMappings.put("7", createResponseSetUSEC());
         methodMappings.put("8", createResponseSetMID());
+        methodMappings.put("9", createResponseRestart());
 
         return new PacketToInterfaceMapping(OS.class, packetValues, methodMappings);
     }

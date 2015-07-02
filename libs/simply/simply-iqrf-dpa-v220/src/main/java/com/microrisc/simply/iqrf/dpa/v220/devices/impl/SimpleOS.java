@@ -33,7 +33,9 @@ import java.util.UUID;
  * Simple {@code OS} implementation.
  * 
  * @author Michal Konopa
+ * @author Martin Strouhal
  */
+//JUNE-2015 - implemented restart
 public final class SimpleOS 
 extends DPA_DeviceObject implements OS {
     
@@ -134,6 +136,13 @@ extends DPA_DeviceObject implements OS {
                         new Object[] { getRequestHwProfile(), (short[]) args[0] }, 
                         getDefaultWaitingTimeout()
                 );
+            case RESTART:
+                MethodArgumentsChecker.checkArgumentTypes(args, new Class[] { } );
+                return dispatchCall(
+                        methodIdStr,
+                        new Object[] { getRequestHwProfile() }, 
+                        getDefaultWaitingTimeout()
+                );                
             default:
                 throw new IllegalArgumentException("Unsupported command: " + methodId);
         }
@@ -206,7 +215,13 @@ extends DPA_DeviceObject implements OS {
                 "8", new Object[] { getRequestHwProfile(), key }, getDefaultWaitingTimeout() 
         );
     }
-    
+
+    @Override
+    public UUID async_restart(){        
+        return dispatchCall(
+                "9", new Object[] { getRequestHwProfile() }, getDefaultWaitingTimeout() 
+        );
+    }
     
     
     // SYNCHRONOUS WRAPPERS IMPLEMENTATIONS
@@ -295,6 +310,17 @@ extends DPA_DeviceObject implements OS {
         checkKey(key);
         UUID uid = dispatchCall(
                 "8", new Object[] { getRequestHwProfile(), key }, getDefaultWaitingTimeout() 
+        );
+        if ( uid == null ) {
+            return null;
+        }
+        return getCallResult(uid, VoidType.class, getDefaultWaitingTimeout());
+    }
+    
+    @Override
+    public VoidType restart(){
+        UUID uid = dispatchCall(
+                "9", new Object[] { getRequestHwProfile() }, getDefaultWaitingTimeout() 
         );
         if ( uid == null ) {
             return null;
