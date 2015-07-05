@@ -41,8 +41,9 @@ import java.util.TreeMap;
  * 
  * @author Michal Konopa
  * @author Rostislav Spinar
+ * @author Martin Strouhal
  */
-public class SendAndExtraResult {
+public class SendMemoryRead {
     // reference to Simply
     private static Simply simply = null;
     

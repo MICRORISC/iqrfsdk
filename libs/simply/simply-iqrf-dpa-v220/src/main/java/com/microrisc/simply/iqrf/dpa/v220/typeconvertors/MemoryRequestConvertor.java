@@ -15,7 +15,6 @@
  */
 package com.microrisc.simply.iqrf.dpa.v220.typeconvertors;
 
-import com.microrisc.simply.Network;
 import com.microrisc.simply.Node;
 import com.microrisc.simply.iqrf.dpa.v220.types.FRC_Command;
 import com.microrisc.simply.typeconvertors.AbstractConvertor;
@@ -27,23 +26,23 @@ import org.slf4j.LoggerFactory;
  * Provides functionality for converting between Java {@code FRC_Command} type
  * and IQRF DPA protocol bytes.
  *
- * @author Rostislav Spinar
+ * @author Martin Strouhal
  */
-public final class FRC_SelectCommandConvertor extends AbstractConvertor {
+public final class MemoryRequestConvertor extends AbstractConvertor {
 
     /** Logger. */
-    private static final Logger logger = LoggerFactory.getLogger(FRC_SelectCommandConvertor.class);
+    private static final Logger logger = LoggerFactory.getLogger(MemoryRequestConvertor.class);
 
-    private FRC_SelectCommandConvertor() {
+    private MemoryRequestConvertor() {
     }
 
     /** Singleton. */
-    private static final FRC_SelectCommandConvertor instance = new FRC_SelectCommandConvertor();
+    private static final MemoryRequestConvertor instance = new MemoryRequestConvertor();
 
     /**
      * @return {@code FRC_CommandConvertor} instance
      */
-    static public FRC_SelectCommandConvertor getInstance() {
+    static public MemoryRequestConvertor getInstance() {
         return instance;
     }
 
