@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 MICRORISC s.r.o..
+ * Copyright 2014 MICRORISC s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,11 @@ import com.microrisc.simply.SimplyException;
 import com.microrisc.simply.iqrf.dpa.broadcasting.BroadcastRequest;
 import com.microrisc.simply.iqrf.dpa.v220.types.DPA_Confirmation;
 import com.microrisc.simply.iqrf.RF_Mode;
+import com.microrisc.simply.iqrf.dpa.v220.init.DeterminetedNetworkConfig;
+import com.microrisc.simply.iqrf.dpa.v220.types.OsInfo.TR_Type;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -30,7 +34,10 @@ import org.slf4j.LoggerFactory;
  * DPA protocol's message exchange. 
  * 
  * @author Michal Konopa
+ * @author Martin Strouhal
  */
+//JULY-2015 - fixed timeslots for new modules (TR7x)
+//JUNE-2015 - improved determing and using RF mode
 final class ProtocolStateMachine implements ManageableObject {
     /** Logger. */
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(ProtocolStateMachine.class);
@@ -38,7 +45,12 @@ final class ProtocolStateMachine implements ManageableObject {
     
     // currently used RF mode
     private RF_Mode rfMode = RF_Mode.STD;
+
+    //currently used TR type series
+    private TR_Type.TR_TypeSeries trTypeSeries = TR_Type.TR_TypeSeries.UNKNOWN;
     
+    //map of configuration for specific networks
+    private Map<String, DeterminetedNetworkConfig> networkConfigMap;
     
     /**
      * Events, which occur during DPA protocol running, 
@@ -147,33 +159,61 @@ final class ProtocolStateMachine implements ManageableObject {
     private volatile long baseTimeToWaitForResponse = BASE_TIME_TO_WAIT_FOR_RESPONSE_DEFAULT;
     
     
-    private static long countTimeslotLengthForSTD_Mode(int responseDataLength) {
-        if ( responseDataLength < 19 ) {
-            return 3;
+    private static long countTimeslotLengthForSTD_Mode(
+            TR_Type.TR_TypeSeries trSeries, int responseDataLength) {
+        if(trSeries == TR_Type.TR_TypeSeries.TR72x){
+            if(responseDataLength < 20){
+                return 3;
+            }
+            if(responseDataLength < 43){
+                return 4;
+            }
+            return 5;
+        } else {                
+            //for TR52x series and unknown series
+            if(responseDataLength < 12){
+                return 3;
+            }
+            if(responseDataLength < 33){
+                return 4;
+            }
+            if(responseDataLength < 54){
+                return 5;
+            }
+            return 6;            
         }
-        if ( responseDataLength < 41 ) {
-            return 4;
-        }
-        return 5;
     }
     
-    private static long countTimeslotLengthForLP_Mode(int responseDataLength) {
-        if ( responseDataLength < 19 ) {
-            return 8;
+    private static long countTimeslotLengthForLP_Mode(
+            TR_Type.TR_TypeSeries trSeries, int responseDataLength) {
+        if(trSeries == TR_Type.TR_TypeSeries.TR72x){            
+            if(responseDataLength < 13){
+                return 8;
+            }
+            if(responseDataLength < 36){
+                return 9;
+            }
+            return 10;            
+        }else{    
+            //for TR52x series and unknown series
+            if(responseDataLength < 14){
+                return 8;
+            }
+            if(responseDataLength < 36){
+                return 9;
+            }
+            return 10;
         }
-        if ( responseDataLength < 41 ) {
-            return 9;
-        }
-        return 10;
     }
     
     // counts timeslot length in 10 ms units
-    private static long countTimeslotLength(RF_Mode rfMode, int responseDataLength) {
+    private static long countTimeslotLength(TR_Type.TR_TypeSeries trSer, 
+            RF_Mode rfMode, int responseDataLength) {
         switch ( rfMode ) {
             case STD:
-                return countTimeslotLengthForSTD_Mode(responseDataLength);
+                return countTimeslotLengthForSTD_Mode(trSer, responseDataLength);
             case LP:
-                return countTimeslotLengthForLP_Mode(responseDataLength);
+                return countTimeslotLengthForLP_Mode(trSer, responseDataLength);
             default:
                 throw new IllegalStateException("Unknown RF mode used: " + rfMode);
         }
@@ -194,8 +234,9 @@ final class ProtocolStateMachine implements ManageableObject {
     }
     
     private long countWaitingTimeAfterResponse() {
-        long actualRespTimeslotLength = countTimeslotLength(rfMode, responseDataLength);
-        
+        long actualRespTimeslotLength = countTimeslotLength(trTypeSeries, 
+                rfMode, responseDataLength);                              
+               
         if ( countWithConfirmation ) {
             if ( confirmation == null ) {
                 throw new IllegalStateException(
@@ -557,19 +598,6 @@ final class ProtocolStateMachine implements ManageableObject {
         return time;
     }
     
-    private static RF_Mode checkRF_Mode(RF_Mode rfMode) {
-        if ( rfMode == null ) {
-            throw new IllegalArgumentException("RF mode must be defined.");
-        }
-        
-        if ( rfMode == RF_Mode.XLP ) {
-            throw new IllegalArgumentException("XLP mode is not currently supported.");
-        }
-        
-        return rfMode;
-    }
-    
-    
     /**
      * Creates new object of Protocol Machine.
      * RF mode will be set to STD.
@@ -577,18 +605,7 @@ final class ProtocolStateMachine implements ManageableObject {
     public ProtocolStateMachine() {
         waitingTimeCounter = new WaitingTimeCounter();
         logger.info("Protocol machine successfully created.");
-    }
-    
-    /**
-     * Creates new object of Protocol Machine, which will use specified RF mode 
-     * for messages timing.
-     * @param rfMode RF mode to use for messages timing
-     * @throws IllegalArgumentException if {@code rfMode} is {@code null}
-     */
-    public ProtocolStateMachine(RF_Mode rfMode) {
-        this.rfMode = checkRF_Mode(rfMode);
-        waitingTimeCounter = new WaitingTimeCounter();
-        logger.info("Protocol machine successfully created.");
+        this.networkConfigMap = new HashMap<>();
     }
     
     /**
@@ -664,6 +681,17 @@ final class ProtocolStateMachine implements ManageableObject {
         
         logger.info("Listener unregistered.");
         logger.debug("unregisterListener - end");
+    }
+    
+    /**
+     * Add configuration to protocol state machine, which was determinted while 
+     * init and is depending on specific network.
+     * 
+     * @param network network name
+     * @param config determineted network configuration
+     */
+    public void addNetworkConfig(String network, DeterminetedNetworkConfig config){
+        networkConfigMap.put(network, config);
     }
     
     /**

@@ -61,6 +61,40 @@ public final class OsInfo {
         public int getValue() {
             return value;
         }
+
+        public TR_TypeSeries getSeries(){
+            switch(this){
+                case DCTR_52D:
+                case DCTR_53D:
+                case DCTR_54D:
+                case DCTR_55D:
+                case DCTR_56D:
+                case DCTR_58D_RJ:
+                    return TR_TypeSeries.TR52x;
+                case DCTR_72D:
+                case DCTR_76D:
+                    return TR_TypeSeries.TR72x;
+                default:
+                    return TR_TypeSeries.UNKNOWN;
+            }
+        }
+        
+        /**
+         * TR_TypeSeries
+         */
+        public static enum TR_TypeSeries{
+            UNKNOWN(0), TR52x(1), TR72x(2), ;
+            
+            private final int value;
+            
+            private TR_TypeSeries(int typeValue){
+                this.value = typeValue;
+            }
+            
+            public int getValue(){
+                return value;
+            }
+        }
     }
     
     /** Module ID */
