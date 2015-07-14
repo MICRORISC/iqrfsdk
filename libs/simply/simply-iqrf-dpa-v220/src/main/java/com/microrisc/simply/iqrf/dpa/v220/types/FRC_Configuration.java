@@ -27,23 +27,52 @@ public class FRC_Configuration {
      * value.
      */
     public enum FRC_RESPONSE_TIME {
-
+                
         /** Time 40ms. */
-        TIME_40_MS,
+        TIME_40_MS(40),
         /** Time 320ms. */
-        TIME_320_MS,
+        TIME_320_MS(320),
         /** Time 640ms. */
-        TIME_640_MS,
+        TIME_640_MS(640),
         /** Time 1280ms. */
-        TIME_1280_MS,
+        TIME_1280_MS(1280),
         /** Time 2560ms. */
-        TIME_2560_MS,
+        TIME_2560_MS(2560),
         /** Time 5120ms. */
-        TIME_5120_MS,
+        TIME_5120_MS(5120),
         /** Time 10240ms. */
-        TIME_10240_MS,
+        TIME_10240_MS(10240),
         /** Time 20480ms. */
-        TIME_20480_MS;
+        TIME_20480_MS(20480);
+
+        private int responseTime;
+        
+        private FRC_RESPONSE_TIME(int time){
+            this.responseTime = time;
+        }
+        
+        public int getRepsonseTimeInInt(){
+            return responseTime;
+        }
+        
+        /**
+         * Returns {@link FRC_RESPONSE_TIME} for time specified in parameters in
+         * miliseconds. If isn't possible find correct time, the biggest time is
+         * returned.
+         *
+         * @param timeInMS repsonse time in miliseconds
+         * @return {@link FRC_RESPONSE_TIME}
+         */
+        public static FRC_RESPONSE_TIME getResponseTimeFor(int timeInMS) {
+            FRC_RESPONSE_TIME times[] = FRC_RESPONSE_TIME.values();
+            for (FRC_RESPONSE_TIME time : times) {
+                if(time.getRepsonseTimeInInt() == timeInMS){
+                    return time;
+                }
+            }
+            // if any time wasn't found
+            return TIME_20480_MS;
+        }                
     }
 
     private final FRC_RESPONSE_TIME responseTime;

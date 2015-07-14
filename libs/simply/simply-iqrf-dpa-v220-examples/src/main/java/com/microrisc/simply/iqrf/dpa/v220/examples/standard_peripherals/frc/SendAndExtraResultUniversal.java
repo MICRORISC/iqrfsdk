@@ -1,5 +1,5 @@
-/*
- * Copyright 2015 Martin Strouhal.
+/* 
+ * Copyright 2015 MICRORISC s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,8 @@ import com.microrisc.simply.errors.CallRequestProcessingError;
 import com.microrisc.simply.iqrf.dpa.v220.DPA_SimplyFactory;
 import com.microrisc.simply.iqrf.dpa.v220.devices.FRC;
 import com.microrisc.simply.iqrf.dpa.v220.types.FRC_Data;
-import com.microrisc.simply.iqrf.dpa.v220.types.FRC_Temperature;
+import com.microrisc.simply.iqrf.dpa.v220.types.FRC_UniversalWithBits;
+import com.microrisc.simply.iqrf.dpa.v220.types.FRC_UniversalWithBytes;
 import java.io.File;
 import java.util.Comparator;
 import java.util.Map;
@@ -32,12 +33,16 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 
 /**
+ * Example of using FRC peripheral - send command and getting extra result with
+ * FRC Universal command.
  *
+ * @author Michal Konopa
+ * @author Rostislav Spinar
  * @author Martin Strouhal
  */
-public class SendSelective {
-// reference to Simply
+public class SendAndExtraResultUniversal {
 
+    // reference to Simply
     private static Simply simply = null;
 
     // prints out specified error description, destroys the Simply and exits
@@ -47,25 +52,6 @@ public class SendSelective {
             simply.destroy();
         }
         System.exit(1);
-    }
-
-    // processes NULL result
-    private static void processNullResult(FRC frc, String errorMsg, String notProcMsg) {
-        CallRequestProcessingState procState = frc.getCallRequestProcessingStateOfLastCall();
-        if (procState == CallRequestProcessingState.ERROR) {
-            CallRequestProcessingError error = frc.getCallRequestProcessingErrorOfLastCall();
-            printMessageAndExit(errorMsg + ": " + error);
-        } else {
-            printMessageAndExit(notProcMsg + ": " + procState);
-        }
-    }
-
-    // puts together both parts of incomming FRC data
-    private static short[] getCompleteFrcData(short[] firstPart, short[] extraData) {
-        short[] completeData = new short[firstPart.length + extraData.length];
-        System.arraycopy(firstPart, 0, completeData, 0, firstPart.length);
-        System.arraycopy(extraData, 0, completeData, firstPart.length, extraData.length);
-        return completeData;
     }
 
     private static class NodeIdComparator implements Comparator<String> {
@@ -82,18 +68,34 @@ public class SendSelective {
     private static final NodeIdComparator nodeIdComparator = new NodeIdComparator();
 
     // sorting specified results according to node ID in ascendent manner
-    private static SortedMap<String, FRC_Temperature.Result> sortResult(
-            Map<String, FRC_Temperature.Result> result
+     private static SortedMap<String, FRC_UniversalWithBytes.Result> sortResult(
+    // private static SortedMap<String, FRC_UniversalWithBits.Result> sortResult(
+            // Map<String, FRC_UniversalWithBits.Result> result
+               Map<String, FRC_UniversalWithBytes.Result> result
     ) {
-        TreeMap<String, FRC_Temperature.Result> sortedResult = new TreeMap<>(nodeIdComparator);
+        // TreeMap<String, FRC_UniversalWithBits.Result> sortedResult = new TreeMap<>(nodeIdComparator);
+        TreeMap<String, FRC_UniversalWithBytes.Result> sortedResult = new TreeMap<>(nodeIdComparator);
         sortedResult.putAll(result);
         return sortedResult;
+    }
+
+    // processes NULL result
+    private static void processNullResult(FRC frc, String errorMsg,
+            String notProcMsg) {
+        CallRequestProcessingState procState = frc.getCallRequestProcessingStateOfLastCall();
+        if (procState == CallRequestProcessingState.ERROR) {
+            CallRequestProcessingError error = frc.getCallRequestProcessingErrorOfLastCall();
+            printMessageAndExit(errorMsg + ": " + error);
+        } else {
+            printMessageAndExit(notProcMsg + ": " + procState);
+        }
     }
 
     public static void main(String[] args) {
         // creating Simply instance
         try {
-            simply = DPA_SimplyFactory.getSimply("config" + File.separator + "Simply.properties");
+            simply = DPA_SimplyFactory.getSimply(
+                    "config" + File.separator + "Simply.properties");
         } catch (SimplyException ex) {
             printMessageAndExit("Error while creating Simply: " + ex.getMessage());
         }
@@ -116,50 +118,54 @@ public class SendSelective {
             printMessageAndExit("FRC doesn't exist or is not enabled");
         }
 
-        // choose nodes on which will be FRC executed
-        Node[] selectedNodes = network1.getNodes(new String[]{"1", "2", "4"});
+        // creating a new universal FRC command with specified ID
+        // FRC_UniversalWithBits frcCmd = new FRC_UniversalWithBits(0x01); // 0x01 - UART or SPI data available
+        FRC_UniversalWithBytes frcCmd = new FRC_UniversalWithBytes(0x80); // 0x80 - FRC temperature
 
-        // choose all even nodes
-        //Map<String, Node> allNodes = network1.getNodesMap();        
-        //Node[] selectedNodes = new Node[allNodes.size()/2];
-        //for (int i = 0; i < allNodes.size(); i+=2) {
-        //    selectedNodes[i/2] = allNodes.get(Integer.toString(i));
-        //}
-        
-        //send selective FRC
-        FRC_Data frcData = frc.sendSelective(new FRC_Temperature(selectedNodes));
-
-        if (frcData == null) {
+        // sending FRC command and getting data
+        FRC_Data data = frc.send(frcCmd);
+        if (data == null) {
             processNullResult(frc, "Sending FRC command failed",
                     "Sending FRC command hasn't been processed yet"
             );
         }
 
-        short[] frcExtraData = frc.extraResult();
-        if (frcExtraData == null) {
+        // getting extra FRC result
+        short[] extra = frc.extraResult();
+        if (extra == null) {
             processNullResult(frc, "Setting FRC extra result failed",
                     "Setting FRC extra result hasn't been processed yet"
             );
         }
 
-        //parse FRC result
-        Map<String, FRC_Temperature.Result> result = null;
+        // merging data and extra result
+        short[] allData = new short[64];
+        System.arraycopy(data.getData(), 0, allData, 0, data.getData().length);
+        System.arraycopy(extra, 0, allData, data.getData().length, extra.length);
+
+        // parsing of all data
+        // Map<String, FRC_UniversalWithBits.Result> resultMap = null;
+        Map<String, FRC_UniversalWithBytes.Result> resultMap = null;
         try {
-            result = FRC_Temperature.parse(getCompleteFrcData(frcData.getData(), frcExtraData));
+            resultMap = frcCmd.parse(allData);
         } catch (Exception ex) {
-            printMessageAndExit("Parsing result data failed: " + ex);
+            printMessageAndExit("Parsing of FRC result failed: " + ex);
         }
 
         // sort the results
-        SortedMap<String, FRC_Temperature.Result> sortedResult = sortResult(result);
-      
+        // SortedMap<String, FRC_UniversalWithBits.Result> sortedResult = sortResult(resultMap);
+        SortedMap<String, FRC_UniversalWithBytes.Result> sortedResult = sortResult(resultMap);
+
         // printing temperature on each node
-        for (Map.Entry<String, FRC_Temperature.Result> dataEntry : sortedResult.entrySet()) {
+        // for (Map.Entry<String, FRC_UniversalWithBits.Result> dataEntry : sortedResult.entrySet()) {
+        for (Map.Entry<String, FRC_UniversalWithBytes.Result> dataEntry : sortedResult.entrySet()) {
             System.out.println("Node: " + dataEntry.getKey()
-                    + ", temperature: " + dataEntry.getValue().getTemperature());
+                // + ", Bit0: " + dataEntry.getValue().getBit0() 
+                // + ", Bit1: " + dataEntry.getValue().getBit1());
+                   + ", Byte: " + dataEntry.getValue().getByte());
         }
 
-        // end working with Simply
         simply.destroy();
     }
+
 }

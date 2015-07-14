@@ -23,8 +23,11 @@ import com.microrisc.simply.SimplyException;
 import com.microrisc.simply.errors.CallRequestProcessingError;
 import com.microrisc.simply.iqrf.dpa.v220.DPA_SimplyFactory;
 import com.microrisc.simply.iqrf.dpa.v220.devices.FRC;
+import com.microrisc.simply.iqrf.dpa.v220.types.FRC_Configuration;
 import com.microrisc.simply.iqrf.dpa.v220.types.FRC_Data;
-import com.microrisc.simply.iqrf.dpa.v220.types.FRC_UniversalWith2Bytes;
+import com.microrisc.simply.iqrf.dpa.v220.types.FRC_ResponseTime;
+import com.microrisc.simply.iqrf.dpa.v220.types.FRC_Temperature_18B20Idle;
+import com.microrisc.simply.iqrf.types.VoidType;
 import java.io.File;
 import java.util.Comparator;
 import java.util.Map;
@@ -32,12 +35,13 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 
 /**
- * Example of 2 byte FRC with Universal predefined FRC cmd. FRC custom handler
- * for this example is need.
+ * This example shows, how to find out response time on FRC_Temperature Dallas
+ * command, how to set maximal repsonse time in FRC configuration and finally,
+ * shows sending FRC command to get temperature from all nodes over FRC.
  *
  * @author Martin Strouhal
  */
-public class SendAndExtraResult2Byte {
+public class SendAndExtraResultDallas18B20 {
 
     // reference to Simply
     private static Simply simply = null;
@@ -84,10 +88,10 @@ public class SendAndExtraResult2Byte {
     private static final NodeIdComparator nodeIdComparator = new NodeIdComparator();
 
     // sorting specified results according to node ID in ascendent manner
-    private static SortedMap<String, FRC_UniversalWith2Bytes.Result> sortResult(
-            Map<String, FRC_UniversalWith2Bytes.Result> result
+    private static SortedMap<String, FRC_Temperature_18B20Idle.Result> sortResult(
+            Map<String, FRC_Temperature_18B20Idle.Result> result
     ) {
-        TreeMap<String, FRC_UniversalWith2Bytes.Result> sortedResult = new TreeMap<>(nodeIdComparator);
+        TreeMap<String, FRC_Temperature_18B20Idle.Result> sortedResult = new TreeMap<>(nodeIdComparator);
         sortedResult.putAll(result);
         return sortedResult;
     }
@@ -118,8 +122,62 @@ public class SendAndExtraResult2Byte {
             printMessageAndExit("FRC doesn't exist or is not enabled");
         }
 
-        // sending 2 byte frc cmd
-        FRC_Data frcData = frc.send(new FRC_UniversalWith2Bytes(0xF0));
+        // determining FRC configuration and getting configuration from first node with Dallas
+        FRC_Configuration config = sendFRCResponseTime(frc);
+
+        // sending of determined FRC configuration
+        VoidType paramsResult = frc.setFRCParams(config);
+        if (paramsResult == null) {
+            processNullResult(frc, "Setting FRC params failed",
+                    "Setting FRC params hasn't been processed yet"
+            );
+        }
+
+        // getting temperature and its printing
+        sendFRCTemperature(frc);
+
+        // end working with Simply
+        simply.destroy();
+    }
+
+    private static FRC_Configuration sendFRCResponseTime(FRC frc) {
+        // sending frc cmd for find response time, 0xC0 is ID of dallas temperature FRC
+        FRC_Data frcData = frc.send(new FRC_ResponseTime(0xC0));
+
+        if (frcData == null) {
+            processNullResult(frc, "Sending FRC command failed",
+                    "Sending FRC command hasn't been processed yet"
+            );
+        }
+
+        // getting extra result
+        short[] frcExtraData = frc.extraResult();
+        if (frcExtraData == null) {
+            processNullResult(frc, "Setting FRC extra result failed",
+                    "Setting FRC extra result hasn't been processed yet"
+            );
+        }
+
+        // save result to map
+        Map<String, FRC_ResponseTime.Result> result = null;
+        try {
+            result = FRC_ResponseTime.parse(
+                    getCompleteFrcData(frcData.getData(), frcExtraData)
+            );
+        } catch (Exception ex) {
+            printMessageAndExit("Parsing result data failed: " + ex);
+        }
+
+        // node with Dallas
+        FRC_ResponseTime.Result timeResult = result.get("1");
+
+        // return configuration with response time
+        return timeResult.getResponseTimeAsConfiguration();
+    }
+
+    private static void sendFRCTemperature(FRC frc) {
+        // sending frc cmd
+        FRC_Data frcData = frc.send(new FRC_Temperature_18B20Idle());
 
         if (frcData == null) {
             processNullResult(frc, "Sending FRC command failed",
@@ -134,9 +192,9 @@ public class SendAndExtraResult2Byte {
             );
         }
 
-        Map<String, FRC_UniversalWith2Bytes.Result> result = null;
+        Map<String, FRC_Temperature_18B20Idle.Result> result = null;
         try {
-            result = FRC_UniversalWith2Bytes.parse(
+            result = FRC_Temperature_18B20Idle.parse(
                     getCompleteFrcData(frcData.getData(), frcExtraData)
             );
         } catch (Exception ex) {
@@ -144,16 +202,12 @@ public class SendAndExtraResult2Byte {
         }
 
         // sort the results
-        SortedMap<String, FRC_UniversalWith2Bytes.Result> sortedResult = sortResult(result);
+        SortedMap<String, FRC_Temperature_18B20Idle.Result> sortedResult = sortResult(result);
 
         // printing temperature on each node
-        for (Map.Entry<String, FRC_UniversalWith2Bytes.Result> dataEntry : sortedResult.entrySet()) {
+        for (Map.Entry<String, FRC_Temperature_18B20Idle.Result> dataEntry : sortedResult.entrySet()) {
             System.out.println("Node: " + dataEntry.getKey()
-                    + ", Byte0: " + dataEntry.getValue().getByte0()
-                    + ", Byte1: " + dataEntry.getValue().getByte1());
+                    + ", temperature: " + dataEntry.getValue().getFormattedTemperature());
         }
-
-        // end working with Simply
-        simply.destroy();
     }
 }

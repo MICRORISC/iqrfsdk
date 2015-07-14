@@ -56,4 +56,9 @@ public class SimpleDeterminetedNetworkConfig implements DeterminetedNetworkConfi
     public RF_Mode getRFMode() {
         return rfMode;
     }    
+
+    @Override
+    public String toString() {
+        return "SimpleDeterminetedNetworkConfig{" + "trSeries=" + trSeries + ", rfMode=" + rfMode + '}';
+    }
 }

@@ -17,104 +17,65 @@ package com.microrisc.simply.iqrf.dpa.v220.typeconvertors;
 
 import com.microrisc.simply.Node;
 import com.microrisc.simply.iqrf.dpa.v220.types.FRC_Command;
+import com.microrisc.simply.iqrf.dpa.v220.types.MemoryRequest;
 import com.microrisc.simply.typeconvertors.AbstractConvertor;
 import com.microrisc.simply.typeconvertors.ValueConversionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Provides functionality for converting between Java {@code FRC_Command} type
+ * Provides functionality for converting between Java {@code MemoryRequest} type
  * and IQRF DPA protocol bytes.
  *
  * @author Martin Strouhal
  */
 public final class MemoryRequestConvertor extends AbstractConvertor {
 
-    /** Logger. */
+    /**
+     * Logger.
+     */
     private static final Logger logger = LoggerFactory.getLogger(MemoryRequestConvertor.class);
 
     private MemoryRequestConvertor() {
     }
 
-    /** Singleton. */
+    /**
+     * Singleton.
+     */
     private static final MemoryRequestConvertor instance = new MemoryRequestConvertor();
 
     /**
-     * @return {@code FRC_CommandConvertor} instance
+     * @return {@code MemoryRequestConvertor} instance
      */
     static public MemoryRequestConvertor getInstance() {
         return instance;
-    }
+    }    
 
     @Override
     public short[] toProtoValue(Object value) throws ValueConversionException {
         logger.debug("toProtoValue - start: value={}", value);
 
-        if (!(value instanceof FRC_Command)) {
-            throw new ValueConversionException("Value to convert is not of FRC_Command type.");
+        if (!(value instanceof MemoryRequest)) {
+            throw new ValueConversionException("Value to convert is not of MemoryRequest type.");
         }
 
-        FRC_Command frcCmd = (FRC_Command) value;
+        MemoryRequest request = (MemoryRequest) value;
+        short[] protoValue = new short[5 + request.getLength()];
 
-        short[] selectedNodes = getConvertedSelectedNodes(frcCmd);
+        int address = request.getMemoryAddress();
+        protoValue[1] = (short) (address & 0xFF);
+        address >>= 2;
+        protoValue[0] = (short) (address & 0xFF);
+        protoValue[2] = (short) request.getPnum();
+        protoValue[3] = (short) request.getPcmd();
+        protoValue[4] = (short) request.getLength();
 
-        short[] protoValue = new short[1 + frcCmd.getUserData().length + selectedNodes.length];
-        protoValue[0] = (short) frcCmd.getId();
-
-        System.arraycopy(selectedNodes, 0, protoValue, 1, selectedNodes.length);
-
-        System.arraycopy(frcCmd.getUserData(), 0, protoValue,
-                1 + selectedNodes.length, frcCmd.getUserData().length);
+        System.arraycopy(request.getData(), 0, protoValue, 5, request.getLength());
 
         logger.debug("toProtoValue - end: {}", protoValue);
         return protoValue;
     }
 
-    /**
-     * Convert selected nodes in speicified FRC command to proto value.
-     *
-     * @param cmd frc command with selected nodes
-     * @return proto value of selected nodes
-     * @throws ValueConversionException if frc command doesn't contain any
-     * selected nodes
-     */
-    private short[] getConvertedSelectedNodes(FRC_Command cmd) throws ValueConversionException {
-        Node[] nodes = cmd.getSelectedNodes();
-
-        if (nodes == null) {
-            throw new ValueConversionException("FRC command to convert doesn't contain selected nodes.");
-        }
-
-        //converts Nodes array into array of true / false
-        int actualNodeIndex = 0;
-        boolean[] truthMap = new boolean[239];
-        for (int i = 0; i < truthMap.length; i++) {
-            int id = Integer.parseInt(nodes[actualNodeIndex].getId());
-            //check if id of node is same as index [of node] in truth map
-            if (id == i) {
-                //set in truth map, that this node is selected and increment pointer on actual exploring node
-                truthMap[i] = true;
-                actualNodeIndex++;
-                if (actualNodeIndex >= nodes.length) {
-                    break;
-                }
-            }
-        }
-        
-        //create proto value form true and false values
-        short[] protoValue = new short[30];
-
-        for (int i = 0; i < 30; i++) {
-            StringBuilder build = new StringBuilder();
-            for (int j = i != 29 ? 7 : 6; j >= 0; j--) {
-                int mapIndex = (i * 8) + j;
-                build.append(truthMap[mapIndex] ? "1" : "0");
-            }
-            protoValue[i] = Byte.parseByte(build.toString(), 2);
-        }
-        return protoValue;
-    }
-    
     /**
      * Currently not supported. Throws {@code UnsupportedOperationException }.
      *

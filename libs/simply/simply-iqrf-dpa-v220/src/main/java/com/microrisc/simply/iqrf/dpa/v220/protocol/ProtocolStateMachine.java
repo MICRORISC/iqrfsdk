@@ -193,7 +193,7 @@ final class ProtocolStateMachine implements ManageableObject {
             if(responseDataLength < 36){
                 return 9;
             }
-            return 10;            
+            return 10;
         }else{    
             //for TR52x series and unknown series
             if(responseDataLength < 14){
@@ -687,11 +687,14 @@ final class ProtocolStateMachine implements ManageableObject {
      * Add configuration to protocol state machine, which was determinted while 
      * init and is depending on specific network.
      * 
-     * @param network network name
+     * @param networkId network name
      * @param config determineted network configuration
      */
-    public void addNetworkConfig(String network, DeterminetedNetworkConfig config){
-        networkConfigMap.put(network, config);
+    public void addNetworkConfig(String networkId, DeterminetedNetworkConfig config){
+        logger.debug("addNetworkConfig - start: networkId={}, config={}", 
+                networkId, config);
+        networkConfigMap.put(networkId, config);
+        logger.debug("addNetworkConfig - end");
     }
     
     /**

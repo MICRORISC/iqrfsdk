@@ -16,33 +16,47 @@
 package com.microrisc.simply.iqrf.dpa.v220.types;
 
 import com.microrisc.simply.Node;
-import com.microrisc.simply.iqrf.dpa.v220.typeconvertors.MemoryRequestConvertor;
-import com.microrisc.simply.typeconvertors.ValueConversionException;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * FRC_MemoryRead provides collecting bytes. Resulting byte is read from the
- * specified memory address after provided DPA Request is executed. This allows
- * getting one byte from any memory location (RAM, EEPROM and EEEPROM
- * peripherals, Flash, MCU register, etc.). <br>
- * As the returned byte cannot equal to 0 there is also Memory read plus 1 FRC
- * command available. <br>
- * Batch request is not allowed to be a DPA request being executed.
+ * FRC_ResponseTime command.<br>
+ * FRC_ResponseTime is used to find out FRC response time of the specified user
+ * FRC command. View more in DPA documentation.
  *
  * @author Martin Strouhal
  */
-public final class FRC_MemoryRead extends AbstractFRC_Command {
+public final class FRC_ResponseTime extends AbstractFRC_Command {
 
-    private static final int id = 0x82;
-   
+    private static final int id = 0x84;
+
     /**
      * Provides acces to parsed FRC data comming from IQRF.
      */
     public static interface Result extends FRC_CollectedBytes {
-        
-        public short getMemoryValue();
-        
+
+        /**
+         * Returns response time from device as integer value. The returned time
+         * value equals to the value of the corresponding
+         * _FRC_RESPONSE_TIME_??_MS constant.
+         *
+         * @return response time
+         */
+        byte getResponseTimeInInt();
+
+        /**
+         * Returns response time as {@link FRC_Configuration.FRC_RESPONSE_TIME}.
+         *
+         * @return {@link FRC_Configuration.FRC_RESPONSE_TIME}
+         */
+        FRC_Configuration.FRC_RESPONSE_TIME getResponseTime();
+
+        /**
+         * Returns response time encapsulated in {@link FRC_Configuration}
+         *
+         * @return {@link FRC_Configuration
+         */
+        FRC_Configuration getResponseTimeAsConfiguration();
     }
 
     /** Parsed FRC data comming from IQRF. */
@@ -58,10 +72,20 @@ public final class FRC_MemoryRead extends AbstractFRC_Command {
         public short getByte() {
             return byteValue;
         }
-        
+
         @Override
-        public short getMemoryValue(){
-            return byteValue;
+        public byte getResponseTimeInInt() {
+            return (byte) byteValue;
+        }
+
+        @Override
+        public FRC_Configuration.FRC_RESPONSE_TIME getResponseTime() {
+            return FRC_Configuration.FRC_RESPONSE_TIME.getResponseTimeFor(getResponseTimeInInt());
+        }
+
+        @Override
+        public FRC_Configuration getResponseTimeAsConfiguration() {
+            return new FRC_Configuration(getResponseTime());
         }
     }
 
@@ -78,49 +102,46 @@ public final class FRC_MemoryRead extends AbstractFRC_Command {
         return frcData;
     }
 
-    private static MemoryRequest checkMemoryRequest(MemoryRequest memoryRequest) {
-        if (memoryRequest == null) {
-            throw new IllegalArgumentException("Memory request cannot be null");
-        }
-        return memoryRequest;
-    }
-
     /**
-     * Creates new object of {@code FRC_MemoryRead} with specified user data.
+     * Creates new object of {@code FRC_ResponseTime} with specified ID of user
+     * FRC command for which will be found response time.
      *
-     * @param memoryRequest memory request to take as a user data
-     * @throws IllegalArgumentException if an error has occured during
-     * conversion of specified memory request into the series of bytes of user data
+     * @param frcId of FRC user command for which will be found response time
+     * @throws IllegalArgumentException if {@code frcId} is invalid.
      */
-    public FRC_MemoryRead(MemoryRequest memoryRequest) {
-        try {
-            this.userData = MemoryRequestConvertor.getInstance().toProtoValue(checkMemoryRequest(memoryRequest));
-        } catch (ValueConversionException e) {
-            throw new IllegalArgumentException("Conversion of memory request failed: " + e);
-        }
+    public FRC_ResponseTime(int frcId) {
+        super(new short[]{(short) frcId, (short) 0});
+        checkFrcId(frcId);
     }
 
     /**
-     * Creates new object of {@code FRC_MemoryRead}. See the
-     * {@link AbstractFRC_Command#AbstractFRC_Command() AbstractFRC_Command}
-     * constructor.
+     * Creates new object of {@code FRC_ResponseTime} with selected nodes and
+     * specified ID of user FRC command for which will be found response time.
      *
-     * @param memoryRequest memory request to take as a user data
+     * @param frcId of FRC user command for which will be found response time
      * @param selectedNodes node on which will be command processed
-     * @throws IllegalArgumentException if an error has occured during
-     * conversion of specified memory request into the series of bytes of user
-     * data
+     * @throws IllegalArgumentException if {@code frcId} is invalid or
+     * {@code selectedNodes} is invalid. See the
+     * {@link AbstractFRC_Command#AbstractFRC_Command(short[], Node[]) AbstractFRC_Command}
+     * constructor.
      */
-    public FRC_MemoryRead(MemoryRequest memoryRequest, Node[] selectedNodes) {
-        super(selectedNodes);
-        try {
-            this.userData = MemoryRequestConvertor.getInstance().toProtoValue(checkMemoryRequest(memoryRequest));
-        } catch (ValueConversionException e) {
-            throw new IllegalArgumentException("Conversion of memory request failed: " + e);
-        }
-                
+    public FRC_ResponseTime(int frcId, Node[] selectedNodes) {
+        short[] frcIdUserData = new short[]{checkFrcId(frcId), (short) 0};
+        new FRC_ResponseTime(frcIdUserData, selectedNodes);
     }
-    
+
+    //create instance from super abstract class
+    private FRC_ResponseTime(short[] frcIdUserData, Node[] selectedNodes) {
+        super(frcIdUserData, selectedNodes);
+    }
+
+    private short checkFrcId(int frcId) {
+        if (frcId < 0 || frcId > 0xFF) {
+            throw new IllegalArgumentException("FRC ID must be in interval 0 - 255");
+        }
+        return (short) frcId;
+    }
+
     @Override
     public int getId() {
         return id;
