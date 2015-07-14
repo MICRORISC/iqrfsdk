@@ -20,6 +20,7 @@ import com.microrisc.rpi.spi.SPI_Exception;
 import com.microrisc.rpi.spi.iqrf.SPI_Master;
 import com.microrisc.rpi.spi.iqrf.SPI_Status;
 import com.microrisc.rpi.spi.iqrf.SimpleSPI_Master;
+import java.util.Arrays;
 
 /**
  * Examples of simple usage of SPI. 
@@ -28,6 +29,9 @@ import com.microrisc.rpi.spi.iqrf.SimpleSPI_Master;
  * @author Rostislav Spinar
  */
 public class WriteRead {
+    
+    // response flag
+    private static boolean responseReceived = false;
     
     // try to wait for communication ready state in specified timeout
     private static SPI_Status tryToWaitForReadyState(SPI_Master spiMaster, long timeout) 
@@ -88,6 +92,57 @@ public class WriteRead {
         System.out.println();
     }
     
+    private static void printTemperature(short[] data) {
+        // positions of fields
+        final int INT_VALUE_POS = 8;
+        final int FULL_VALUE_POS = 9;
+        final int FULL_VALUE_LENGTH = 2;
+        
+        // for DPA request read temperature
+        final short[] CONFIRMATION_HEADER = { 0x01, 0x00, 0x0A, 0x00 };
+        final short[] RESPONSE_HEADER = { 0x01, 0x00, 0x0A, 0x80 };
+        
+        // no data
+        if (data == null || data.length == 0) {
+            System.out.println("No data received\n");
+            return;
+        }
+        
+        // data length
+        System.out.println("data length: " + data.length);
+        
+        // header of data
+        short[] dataHeader = Arrays.copyOfRange(data, 0, 4);
+        
+        if (Arrays.equals(dataHeader, CONFIRMATION_HEADER)) {
+            System.out.print("confirmation received: ");
+        } else if (Arrays.equals(dataHeader, RESPONSE_HEADER)) {
+            System.out.print("response received: ");
+            responseReceived = true;
+        } else {
+            System.out.print("unknown type of message received: ");
+        }
+        
+        // display raw data
+        for (short sh : data) {
+            System.out.print(Integer.toHexString(sh) + " ");
+        }
+        System.out.println();
+        
+        // parse data to get temperature
+        if (responseReceived) {
+            short value = data[INT_VALUE_POS];
+            
+            short[] fullTemperatureValue = new short[FULL_VALUE_LENGTH];
+            System.arraycopy(data, FULL_VALUE_POS, fullTemperatureValue, 0, FULL_VALUE_LENGTH);
+            byte fractialPart = (byte)(fullTemperatureValue[0] & 0x0F);
+        
+            System.out.println("Temperature = " + value + "." + fractialPart + " C");
+        }
+        
+        System.out.println();
+    }
+    
     
     public static void main(String[] args) throws InterruptedException {
         final int MAX_CYCLES = 10;
@@ -135,26 +190,37 @@ public class WriteRead {
         }
         
         for ( int cycle = 0; cycle < cycles; cycle++ ) {
-            System.out.println("Sending LEDR pulse.");
+            System.out.println("Sending Temperature request.");
             
             try {
-                spiMaster.sendData( new short[] { 0x01, 0x00, 0x06, 0x03, 0xFF, 0xFF } );
-
+                //spiMaster.sendData( new short[] { 0x01, 0x00, 0x06, 0x03, 0xFF, 0xFF } );
+                short[] temperatureRequest = { 0x01, 0x00, 0x0A, 0x00, 0xFF, 0xFF };
+                spiMaster.sendData( temperatureRequest );
+                
                 SPI_Status spiStatus = spiMaster.getSlaveStatus();
                 System.out.println("SPI status after sending:" + Integer.toHexString(spiStatus.getValue()));
 
+                short[] dataRead = {};
                 System.out.println("Reading data: ");
-                spiStatus = tryToWaitForDataReadyState(spiMaster, 1000);
+                
+                while (responseReceived == false) {
+                    spiStatus = tryToWaitForDataReadyState(spiMaster, 1000);
 
-                // if SPI not data ready in 1000 ms, end 
-                if ( !spiStatus.isDataReady() ) {
-                    System.out.println("Try to wait for data ready state failed.");
-                    break;
+                    // if SPI not data ready in 1000 ms, end 
+                    if (!spiStatus.isDataReady()) {
+                        System.out.println("Try to wait for data ready state failed.");
+                        break;
+                    }
+
+                    dataRead = spiMaster.readData(getDataLen(spiStatus));
+                    
+                    //printData(dataRead);
+                    printTemperature(dataRead);
                 }
-
-                short[] dataRead = spiMaster.readData(getDataLen(spiStatus));
-                printData(dataRead);
-
+                
+                // ready for next cycle
+                responseReceived = false;
+                
                 // getting slave status
                 spiStatus = spiMaster.getSlaveStatus();
                 System.out.println("SPI status after reading:" + Integer.toHexString(spiStatus.getValue()));

@@ -33,8 +33,8 @@ public class WriteRead implements J_AsyncMsgListener {
         final int FULL_VALUE_LENGTH = 2;
         
         // for DPA request read temperature
-        final short[] CONFIRMATION_HEADER = { 0x01, 0x00, 0x0A, 0x00, 0xFF, 0xFF };
-        final short[] RESPONSE_HEADER = { 0x01, 0x00, 0x0A, 0x80, 0x00, 0x00 };
+        final short[] CONFIRMATION_HEADER = { 0x01, 0x00, 0x0A, 0x00 };
+        final short[] RESPONSE_HEADER = { 0x01, 0x00, 0x0A, 0x80 };
         
         // no data
         if (data == null || data.length == 0) {
@@ -49,7 +49,7 @@ public class WriteRead implements J_AsyncMsgListener {
         boolean responseReceived = false;
         
         // header of data
-        short[] dataHeader = Arrays.copyOfRange(data, 0, 6);
+        short[] dataHeader = Arrays.copyOfRange(data, 0, 4);
         
         if (Arrays.equals(dataHeader, CONFIRMATION_HEADER)) {
             System.out.print("confirmation received: ");
