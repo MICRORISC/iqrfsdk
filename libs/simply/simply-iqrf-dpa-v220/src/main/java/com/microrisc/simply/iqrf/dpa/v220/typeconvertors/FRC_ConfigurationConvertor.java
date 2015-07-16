@@ -88,6 +88,6 @@ public class FRC_ConfigurationConvertor extends AbstractConvertor {
 
     @Override
     public Object toObject(short[] protoValue) throws ValueConversionException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Currently not supported");
     }
 }

@@ -15,7 +15,6 @@
  */
 package com.microrisc.simply.iqrf.dpa.v220.typeconvertors;
 
-import com.microrisc.simply.Network;
 import com.microrisc.simply.Node;
 import com.microrisc.simply.iqrf.dpa.v220.types.FRC_Command;
 import com.microrisc.simply.typeconvertors.AbstractConvertor;

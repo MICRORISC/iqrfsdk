@@ -27,6 +27,8 @@ import com.microrisc.simply.iqrf.dpa.v220.examples.user_peripherals.mydallas.def
 import java.io.File;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *  Example getting of temperature from MyDallas18B20
@@ -82,31 +84,31 @@ public class MyDallasExample {
             printMessageAndExit("Network 1 doesn't exist");
         }
 
-        //getting devices
+        // getting devices
         Map<String, MyDallas18B20> dallas18B20 = getDallas18B20S(network1, new String[]{"1", "2"});
         if ( dallas18B20 == null ) {
             printMessageAndExit("Error when Dallas18B20 was getting from node.");
         }
 
-        //get device on which we know temperature
+        // get device on which we know temperature
         MyDallas18B20 dallas = dallas18B20.get("1");
 
-        //get result - temperature from sensor
-        short result = dallas.get();
+        // get result - temperature from sensor
+        float result = dallas.get();
         
-        if ( result == Short.MAX_VALUE ) {
+        if ( result == Float.MAX_VALUE ) {
             CallRequestProcessingState procState = dallas.getCallRequestProcessingStateOfLastCall();
             if (procState == CallRequestProcessingState.ERROR) {
                 CallRequestProcessingError error = dallas.getCallRequestProcessingErrorOfLastCall();
                 printMessageAndExit("Getting temperature failed: " + error);
             } else {
                 printMessageAndExit(
-                        "Getting temperature hasn't been processed yet: " + procState);
+                       "Getting temperature hasn't been processed yet: " + procState);
             }
         } else {
             System.out.println("Temperature is " + result);
         }
-
+           
         simply.destroy();
     }
 }

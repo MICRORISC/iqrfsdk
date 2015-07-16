@@ -117,8 +117,7 @@ public final class FRC_MemoryRead extends AbstractFRC_Command {
             this.userData = MemoryRequestConvertor.getInstance().toProtoValue(checkMemoryRequest(memoryRequest));
         } catch (ValueConversionException e) {
             throw new IllegalArgumentException("Conversion of memory request failed: " + e);
-        }
-                
+        }                
     }
     
     @Override

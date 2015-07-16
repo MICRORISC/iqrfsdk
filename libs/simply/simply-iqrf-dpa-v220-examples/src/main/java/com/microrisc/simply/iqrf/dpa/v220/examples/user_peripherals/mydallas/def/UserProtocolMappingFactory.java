@@ -135,7 +135,7 @@ public class UserProtocolMappingFactory implements ProtocolMappingFactory {
         List<PacketPositionValues> packetValues = new LinkedList<>();
         packetValues.add(new PacketPositionValues(3, (short) 0x80));
 
-        PacketToValueMapping resultMapping = new PacketToValueMapping(8, Uns16Convertor.getInstance());
+        PacketToValueMapping resultMapping = new PacketToValueMapping(8, DallasTemperatureConvertor.getInstance());
         return new PacketToMethodMapping("0", packetValues, resultMapping);
     }
     
