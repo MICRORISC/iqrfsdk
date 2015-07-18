@@ -103,7 +103,9 @@ public interface FRC
 
     /**
      * Synchronous wraper for
-     * {@link #async_sendSelective(com.microrisc.simply.iqrf.dpa.v220.types.FRC_Command) asnyc_sendSelective}
+     * {@link #async_sendSelective(com.microrisc.simply.iqrf.dpa.v220.types.FRC_Command) asnyc_sendSelective}. <br>
+     * NOTE: Returned results are sorted one by one and nodes numbers are not 
+     * coresponding with real numbers.
      *
      * @param frcCmd FRC command to use with correctly select nodes
      *

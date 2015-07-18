@@ -42,7 +42,7 @@ extends DPA_StandardServices, GenericAsyncCallable, MethodIdTransformer {
      * Gets actual temperature.
      *
      * @return actual temperature <br> 
-     *         {@code Short.MAX_VALUE} if an error has occurred during processing
+     *         {@code Float.MAX_VALUE} if an error has occurred during processing
      */
-    short get();
+    float get();
 }

@@ -84,16 +84,16 @@ extends DPA_DeviceObject implements MyDallas18B20 {
     }
 
     @Override
-    public short get() {
+    public float get() {
         UUID uid = dispatchCall(
                 "0", new Object[]{getRequestHwProfile()}, getDefaultWaitingTimeout()
         );
         if ( uid == null ) {
-            return Short.MAX_VALUE;
+            return Float.MAX_VALUE;
         }
-        Short result = getCallResult(uid, short.class, getDefaultWaitingTimeout());
+        Float result = getCallResult(uid, float.class, getDefaultWaitingTimeout());
         if ( result == null ) {
-            return Short.MAX_VALUE;
+            return Float.MAX_VALUE;
         }
         return result;
     }
