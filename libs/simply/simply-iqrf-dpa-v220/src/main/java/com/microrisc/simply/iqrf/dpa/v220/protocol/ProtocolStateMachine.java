@@ -162,10 +162,10 @@ final class ProtocolStateMachine implements ManageableObject {
     private static long countTimeslotLengthForSTD_Mode(
             TR_Type.TR_TypeSeries trSeries, int responseDataLength) {
         if(trSeries == TR_Type.TR_TypeSeries.TR72x){
-            if(responseDataLength < 23){
+            if(responseDataLength < 19){
                 return 3;
             }
-            if(responseDataLength < 45){
+            if(responseDataLength < 42){
                 return 4;
             }
             return 5;
@@ -174,10 +174,10 @@ final class ProtocolStateMachine implements ManageableObject {
             if(responseDataLength < 12){
                 return 3;
             }
-            if(responseDataLength < 32){
+            if(responseDataLength < 33){
                 return 4;
             }
-            if(responseDataLength < 53){
+            if(responseDataLength < 54){
                 return 5;
             }
             return 6;            
@@ -187,10 +187,10 @@ final class ProtocolStateMachine implements ManageableObject {
     private static long countTimeslotLengthForLP_Mode(
             TR_Type.TR_TypeSeries trSeries, int responseDataLength) {
         if(trSeries == TR_Type.TR_TypeSeries.TR72x){            
-            if(responseDataLength < 13){
+            if(responseDataLength < 9){
                 return 8;
             }
-            if(responseDataLength < 35){
+            if(responseDataLength < 32){
                 return 9;
             }
             return 10;
@@ -199,7 +199,7 @@ final class ProtocolStateMachine implements ManageableObject {
             if(responseDataLength < 14){
                 return 8;
             }
-            if(responseDataLength < 35){
+            if(responseDataLength < 36){
                 return 9;
             }
             return 10;

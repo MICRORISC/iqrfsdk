@@ -105,13 +105,7 @@
         <interface>com.microrisc.simply.iqrf.dpa.v220.autonetwork.P2PPrebonder</interface>
         <implClass>com.microrisc.simply.iqrf.dpa.v220.autonetwork.SimpleP2PPrebonder</implClass>
         <note></note>
-    </implMapping>
-    
-    <implMapping>
-        <interface>com.microrisc.simply.iqrf.dpa.v220.examples.user_peripherals.myled.def.MyLED</interface>
-        <implClass>com.microrisc.simply.iqrf.dpa.v220.examples.user_peripherals.myled.def.SimpleMyLED</implClass>
-        <note></note>
-    </implMapping>
+    </implMapping>    
     
     <implMapping>
         <interface>com.microrisc.simply.iqrf.dpa.v220.examples.user_peripherals.myadc.def.MyADC</interface>
