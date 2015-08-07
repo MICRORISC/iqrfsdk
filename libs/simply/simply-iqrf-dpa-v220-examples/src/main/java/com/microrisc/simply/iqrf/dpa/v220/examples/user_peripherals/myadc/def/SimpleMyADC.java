@@ -40,6 +40,7 @@ extends DPA_DeviceObject implements MyADC {
 
     private static void initMethodIdsMap() {
         methodIdsMap.put(MyADC.MethodID.GET, "0");
+        methodIdsMap.put(MyADC.MethodID.GET2, "1");
     }
 
     static {
@@ -68,6 +69,13 @@ extends DPA_DeviceObject implements MyADC {
                         new Object[] { getRequestHwProfile() },
                         getDefaultWaitingTimeout()
                 );
+            case GET2:
+                MethodArgumentsChecker.checkArgumentTypes(args, new Class[] { } );
+                return dispatchCall(
+                        methodIdStr, 
+                        new Object[] { getRequestHwProfile() },
+                        getDefaultWaitingTimeout()
+                );
             default:
                 throw new IllegalArgumentException("Unsupported command: " + methodId);
         }
@@ -87,6 +95,22 @@ extends DPA_DeviceObject implements MyADC {
     public int get() {
         UUID uid = dispatchCall(
                 "0", new Object[]{ getRequestHwProfile() }, getDefaultWaitingTimeout()
+        );
+        if ( uid == null ) {
+            return Integer.MAX_VALUE;
+        }
+        
+        Integer result = getCallResult(uid, int.class, getDefaultWaitingTimeout());
+        if ( result == null ) {
+            return Integer.MAX_VALUE;
+        }
+        return result;
+    }
+    
+    @Override
+    public int get2() {
+        UUID uid = dispatchCall(
+                "1", new Object[]{ getRequestHwProfile() }, getDefaultWaitingTimeout()
         );
         if ( uid == null ) {
             return Integer.MAX_VALUE;

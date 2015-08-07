@@ -83,6 +83,7 @@ public class MyADCExample {
         // get ADC "1"
         MyADC adc1 = adcDevices.get("1");
         
+        System.out.println("Example of Get method.");
         // get result
         int result = adc1.get();
         
@@ -98,6 +99,24 @@ public class MyADCExample {
             System.out.println("ADC value is " + result);
         }
 
+        
+        System.out.println("Example of Get2 method.");
+        // get2 result
+        int result2 = adc1.get2();
+        
+        if ( result2 == Integer.MAX_VALUE ) {
+            CallRequestProcessingState procState = adc1.getCallRequestProcessingStateOfLastCall();
+            if (procState == CallRequestProcessingState.ERROR) {
+                CallRequestProcessingError error = adc1.getCallRequestProcessingErrorOfLastCall();
+                printMessageAndExit("Getting ADC value failed: " + error);
+            } else {
+                printMessageAndExit("Getting ADC value hasn't been processed yet: " + procState);
+            }
+        } else {
+            System.out.println("ADC value is " + result2);
+        }
+
+        
         simply.destroy();
     }
 }

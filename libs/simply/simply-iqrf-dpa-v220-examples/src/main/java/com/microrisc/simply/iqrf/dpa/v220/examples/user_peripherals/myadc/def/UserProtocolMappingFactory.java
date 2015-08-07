@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.microrisc.simply.iqrf.dpa.v220.examples.user_peripherals.myadc.def;
 
 import com.microrisc.simply.iqrf.dpa.v220.typeconvertors.DPA_AdditionalInfoConvertor;
@@ -41,6 +40,11 @@ import java.util.Map;
 
 /**
  * Factory for protocol mapping of my periperals.
+ * <br>
+ * Warning note: This interface designed for CustomDpaHandler-UserPeripheral-ADC
+ * has unsual style of using. One interface hasn't got few commands, but 2 id of
+ * periheral for getting infomartion. This situation is fixed by switching
+ * position of constants values.
  *
  * @author Michal Konopa
  * @author Martin Strouhal
@@ -52,7 +56,6 @@ public class UserProtocolMappingFactory implements ProtocolMappingFactory {
      */
     private ProtocolMapping protocolMapping = null;
 
-    
     // REQUEST MAPPING
     // returns currently empty list of mappings
     static private List<ConstValueToPacketMapping> createRequestConstMappings() {
@@ -74,11 +77,12 @@ public class UserProtocolMappingFactory implements ProtocolMappingFactory {
         mappings.add(nodeMapping);
         return mappings;
     }
-    
+
     // ADC interface
     static private MethodToPacketMapping createGetValueMapping() {
         List<ConstValueToPacketMapping> constMapping = new LinkedList<>();
-        constMapping.add(new ConstValueToPacketMapping(3, new short[]{0x00}));
+        // Warning note: See class doc
+        constMapping.add(new ConstValueToPacketMapping(2, new short[]{0x20}));
 
         List<ValueToPacketMapping> argMapping = new LinkedList<>();
         argMapping.add(new ValueToPacketMapping(4, Uns16Convertor.getInstance()));
@@ -86,13 +90,26 @@ public class UserProtocolMappingFactory implements ProtocolMappingFactory {
         return new MethodToPacketMapping(constMapping, argMapping);
     }
 
-    static private InterfaceToPacketMapping createRequestMyDeviceMapping() {
+    static private MethodToPacketMapping createGet2ValueMapping() {
+        List<ConstValueToPacketMapping> constMapping = new LinkedList<>();
+        // Warning note: See class doc
+        constMapping.add(new ConstValueToPacketMapping(2, new short[]{0x21}));
+
+        List<ValueToPacketMapping> argMapping = new LinkedList<>();
+        argMapping.add(new ValueToPacketMapping(4, Uns16Convertor.getInstance()));
+
+        return new MethodToPacketMapping(constMapping, argMapping);
+    }
+
+    static private InterfaceToPacketMapping createRequestMyADCMapping() {
         List<ConstValueToPacketMapping> constMappings = new LinkedList<>();
-        constMappings.add(new ConstValueToPacketMapping(2, new short[]{0x20}));
+        // Warning note: See class doc
+        constMappings.add(new ConstValueToPacketMapping(3, new short[]{0x00}));
 
         Map<String, MethodToPacketMapping> methodMappings = new HashMap<>();
 
         methodMappings.put("0", createGetValueMapping());
+        methodMappings.put("1", createGet2ValueMapping());
 
         return new InterfaceToPacketMapping(constMappings, methodMappings);
     }
@@ -106,7 +123,7 @@ public class UserProtocolMappingFactory implements ProtocolMappingFactory {
         Map<Class, InterfaceToPacketMapping> mappings = new HashMap<>();
 
         // creating interface mappings
-        mappings.put(MyADC.class, createRequestMyDeviceMapping());
+        mappings.put(MyADC.class, createRequestMyADCMapping());
         return mappings;
     }
 
@@ -120,8 +137,7 @@ public class UserProtocolMappingFactory implements ProtocolMappingFactory {
                 constMappings, networkMappings, nodeMappings, ifaceMappings
         );
     }
-    
-    
+
     // RESPONSES MAPPING
     static private PacketToValueMapping createResponseNetworkMapping() {
         return new PacketToValueMapping(0, 0, StringToByteConvertor.getInstance());
@@ -134,21 +150,32 @@ public class UserProtocolMappingFactory implements ProtocolMappingFactory {
     // ADC
     static private PacketToMethodMapping createResponseGetValue() {
         List<PacketPositionValues> packetValues = new LinkedList<>();
-        packetValues.add(new PacketPositionValues(3, (short) 0x80));
+        // Warning note: See class doc
+        packetValues.add(new PacketPositionValues(2, (short) 0x20));
 
         PacketToValueMapping resultMapping = new PacketToValueMapping(8, Uns16Convertor.getInstance());
-        //PacketToValueMapping resultMapping = new PacketToValueMapping(8, Value10bConvertor.getInstance());
         return new PacketToMethodMapping("0", packetValues, resultMapping);
     }
-    
-    static private PacketToInterfaceMapping createResponseMyDeviceMapping() {
+
+    static private PacketToMethodMapping createResponseGet2Value() {
         List<PacketPositionValues> packetValues = new LinkedList<>();
-        packetValues.add(new PacketPositionValues(2, (short) 0x20));
+        // Warning note: See class doc
+        packetValues.add(new PacketPositionValues(2, (short) 0x21));
+
+        PacketToValueMapping resultMapping = new PacketToValueMapping(8, Uns16Convertor.getInstance());
+        return new PacketToMethodMapping("1", packetValues, resultMapping);
+    }
+
+    static private PacketToInterfaceMapping createResponseMyADCMapping() {
+        List<PacketPositionValues> packetValues = new LinkedList<>();
+        // Warning note: See class doc
+        packetValues.add(new PacketPositionValues(3, (short) 0x80));
 
         Map<String, PacketToMethodMapping> methodMappings = new HashMap<>();
 
         methodMappings.put("0", createResponseGetValue());
-    
+        methodMappings.put("1", createResponseGet2Value());
+
         return new PacketToInterfaceMapping(MyADC.class, packetValues, methodMappings);
     }
 
@@ -157,7 +184,7 @@ public class UserProtocolMappingFactory implements ProtocolMappingFactory {
         Map<Class, PacketToInterfaceMapping> mappings = new HashMap<>();
 
         // creating interface mappings
-        mappings.put(MyADC.class, createResponseMyDeviceMapping());
+        mappings.put(MyADC.class, createResponseMyADCMapping());
 
         return mappings;
     }
@@ -182,7 +209,7 @@ public class UserProtocolMappingFactory implements ProtocolMappingFactory {
 
     @Override
     public ProtocolMapping createProtocolMapping() throws Exception {
-        if ( protocolMapping != null ) {
+        if (protocolMapping != null) {
             return protocolMapping;
         }
 

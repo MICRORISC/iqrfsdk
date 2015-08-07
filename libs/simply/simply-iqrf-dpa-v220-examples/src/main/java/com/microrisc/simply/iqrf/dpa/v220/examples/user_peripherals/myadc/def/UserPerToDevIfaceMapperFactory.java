@@ -39,8 +39,10 @@ implements PeripheralToDevIfaceMapperFactory {
     
     
         private void createMappings() {
+            // Warning: This interface is manipulating with few peripherals together.
+            // See com.microrisc.simply.iqrf.dpa.v220.examples.user_periherals.myadc.UserProtocolMappingFactory
             peripheralToIface.put(32, MyADC.class);
-
+           
             // creating transposition
             for ( Map.Entry<Integer, Class> entry : peripheralToIface.entrySet() ) {
                 ifaceToPeripheral.put(entry.getValue(), entry.getKey());

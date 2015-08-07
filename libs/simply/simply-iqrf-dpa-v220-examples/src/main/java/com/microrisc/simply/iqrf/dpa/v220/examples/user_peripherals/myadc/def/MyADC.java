@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.microrisc.simply.iqrf.dpa.v220.examples.user_peripherals.myadc.def;
 
 import com.microrisc.simply.DeviceInterface;
@@ -23,25 +22,42 @@ import com.microrisc.simply.di_services.MethodIdTransformer;
 import com.microrisc.simply.iqrf.dpa.di_services.DPA_StandardServices;
 
 /**
- *  MyADC Device Interface.
- * 
+ * MyADC Device Interface providing reading a value from ADC convertor on
+ * module. This example is recommended use with DK-EVAL and DDC-SE. Get returns
+ * in this case value from potentionmeter and Get2 returns value from
+ * photoresistor.
+ *
  * @author Martin Strouhal
  */
 @DeviceInterface
-public interface MyADC 
-extends DPA_StandardServices, GenericAsyncCallable, MethodIdTransformer {
+public interface MyADC
+        extends DPA_StandardServices, GenericAsyncCallable, MethodIdTransformer {
 
     /**
      * Identifiers of this Device Interface's methods.
      */
     enum MethodID implements DeviceInterfaceMethodId {
-        GET
+
+        GET,
+        GET2
     }
 
     /**
-     * Gets actual value of MyADC.
-     * @return actual value of MyADC <br> 
-     *         {@code Integer.MAX_VALUE} if an error has occurred during processing
+     * Gets first actual value of MyADC. In case use with DDC-SE value from
+     * potentionmeter.
+     *
+     * @return first actual value of MyADC <br> {@code Integer.MAX_VALUE} if an
+     * error has occurred during processing
      */
     int get();
+
+    /**
+     * Gets second actual value of MyADC. In case use with DDC-SE value from
+     * photoresistor.
+     *
+     * @return second actual value of MyADC <br> {@code Integer.MAX_VALUE} if an
+     * error has occurred during processing
+     */
+    int get2();
+
 }
