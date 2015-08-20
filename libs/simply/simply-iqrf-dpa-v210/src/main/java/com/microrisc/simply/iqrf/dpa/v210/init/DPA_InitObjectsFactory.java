@@ -114,56 +114,9 @@ extends AbstractInitObjectsFactory<Configuration, SimpleDPA_InitObjects>
             );
             _protocolMapping = protocolMapping;
             return protocolMapping;
-        }
-        
-        
-        private static RF_Mode parseRF_Mode(String rfMode) {
-            switch ( rfMode.toUpperCase() ) {
-                case "STD":
-                    return RF_Mode.STD;
-                case "LP":
-                    return RF_Mode.LP;
-                case "XLP":
-                    return RF_Mode.XLP;
-                default:
-                    throw new IllegalArgumentException("Uknown RF mode: " + rfMode);
-            }
-        }
-        
-        /** 
-        * Creates protocol layer.
-        * Overrides the original method for support to specify the RF mode.
-        * @param networkLayerService network layer service to use
-        * @param msgConvertor message convertor to use
-        * @param configuration source configuration
-        * @return protocol layer
-        * @throws java.lang.Exception if an error has occured during creating of 
-        *         protocol layer 
-        */
-        @Override
-        protected ProtocolLayer createProtocolLayer(
-                NetworkLayerService networkLayerService, 
-                MessageConvertor msgConvertor, 
-                Configuration configuration
-        ) throws Exception {
-            String rfModeStr = configuration.getString("protocolLayer.type.iqrf.rf_mode", "");
-            if ( rfModeStr.isEmpty() ) {
-                return super.createProtocolLayer(networkLayerService, msgConvertor, configuration);
-            }
-            
-            RF_Mode rfMode = parseRF_Mode(rfModeStr);
-            
-            String protoClassName = configuration.getString("protocolLayer.class");
-            Class protoClass = Class.forName(protoClassName);
-            java.lang.reflect.Constructor constructor 
-                    = protoClass.getConstructor(
-                            NetworkLayerService.class, MessageConvertor.class, RF_Mode.class
-                    );
-            return (ProtocolLayer)constructor.newInstance(networkLayerService, msgConvertor, rfMode);
-        }
+        }       
     }
-    
-    
+        
     /**
      * Creates user peripherals to device interface mapping.
      * @param configuration configuration to use

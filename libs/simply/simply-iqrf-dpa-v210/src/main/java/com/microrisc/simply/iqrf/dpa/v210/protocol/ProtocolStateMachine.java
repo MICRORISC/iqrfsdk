@@ -22,7 +22,9 @@ import com.microrisc.simply.SimplyException;
 import com.microrisc.simply.iqrf.dpa.broadcasting.BroadcastRequest;
 import com.microrisc.simply.iqrf.dpa.v210.types.DPA_Confirmation;
 import com.microrisc.simply.iqrf.RF_Mode;
+import com.microrisc.simply.iqrf.dpa.v210.init.DeterminetedNetworkConfig;
 import java.util.Arrays;
+import java.util.Map;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -30,7 +32,9 @@ import org.slf4j.LoggerFactory;
  * DPA protocol's message exchange. 
  * 
  * @author Michal Konopa
+ * @author Martin Strouhal
  */
+ //JUNE-2015 - improved determing and using RF mode
 final class ProtocolStateMachine implements ManageableObject {
     /** Logger. */
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(ProtocolStateMachine.class);
@@ -39,6 +43,8 @@ final class ProtocolStateMachine implements ManageableObject {
     // currently used RF mode
     private RF_Mode rfMode = RF_Mode.STD;
     
+    //map of configuration for specific networks
+    private Map<String, DeterminetedNetworkConfig> networkConfigMap;
     
     /**
      * Events, which occur during DPA protocol running, 
@@ -556,20 +562,7 @@ final class ProtocolStateMachine implements ManageableObject {
         }
         return time;
     }
-    
-    private static RF_Mode checkRF_Mode(RF_Mode rfMode) {
-        if ( rfMode == null ) {
-            throw new IllegalArgumentException("RF mode must be defined.");
-        }
         
-        if ( rfMode == RF_Mode.XLP ) {
-            throw new IllegalArgumentException("XLP mode is not currently supported.");
-        }
-        
-        return rfMode;
-    }
-    
-    
     /**
      * Creates new object of Protocol Machine.
      * RF mode will be set to STD.
@@ -577,19 +570,7 @@ final class ProtocolStateMachine implements ManageableObject {
     public ProtocolStateMachine() {
         waitingTimeCounter = new WaitingTimeCounter();
         logger.info("Protocol machine successfully created.");
-    }
-    
-    /**
-     * Creates new object of Protocol Machine, which will use specified RF mode 
-     * for messages timing.
-     * @param rfMode RF mode to use for messages timing
-     * @throws IllegalArgumentException if {@code rfMode} is {@code null}
-     */
-    public ProtocolStateMachine(RF_Mode rfMode) {
-        this.rfMode = checkRF_Mode(rfMode);
-        waitingTimeCounter = new WaitingTimeCounter();
-        logger.info("Protocol machine successfully created.");
-    }
+    }        
     
     /**
      * Returns actual value of time to wait for confirmation arrival [ in ms ].
@@ -664,6 +645,17 @@ final class ProtocolStateMachine implements ManageableObject {
         
         logger.info("Listener unregistered.");
         logger.debug("unregisterListener - end");
+    }
+    
+    /**
+     * Add configuration to protocol state machine, which was determinted while 
+     * init and is depending on specific network.
+     * 
+     * @param network network name
+     * @param config determineted network configuration
+     */
+    public void addNetworkConfig(String network, DeterminetedNetworkConfig config){
+        networkConfigMap.put(network, config);
     }
     
     /**

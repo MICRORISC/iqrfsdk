@@ -26,7 +26,6 @@ import com.microrisc.simply.SimpleMethodMessageSource;
 import com.microrisc.simply.SimplyException;
 import com.microrisc.simply.asynchrony.BaseAsynchronousMessage;
 import com.microrisc.simply.errors.NetworkInternalError;
-import com.microrisc.simply.iqrf.RF_Mode;
 import com.microrisc.simply.iqrf.dpa.asynchrony.DPA_AsynchronousMessage;
 import com.microrisc.simply.iqrf.dpa.asynchrony.SimpleDPA_AsynchronousMessageSource;
 import com.microrisc.simply.iqrf.dpa.broadcasting.BroadcastRequest;
@@ -36,6 +35,7 @@ import com.microrisc.simply.iqrf.dpa.v210.devices.Coordinator;
 import com.microrisc.simply.iqrf.dpa.v210.devices.FRC;
 import com.microrisc.simply.iqrf.dpa.v210.di_services.method_id_transformers.CoordinatorStandardTransformer;
 import com.microrisc.simply.iqrf.dpa.v210.di_services.method_id_transformers.FRCStandardTransformer;
+import com.microrisc.simply.iqrf.dpa.v210.init.DeterminetedNetworkConfig;
 import com.microrisc.simply.iqrf.dpa.v210.typeconvertors.DPA_ConfirmationConvertor;
 import com.microrisc.simply.iqrf.dpa.v210.types.DPA_Confirmation;
 import com.microrisc.simply.network.BaseNetworkData;
@@ -58,7 +58,9 @@ import org.slf4j.LoggerFactory;
  * Protocol layer based on DPA_ProtocolProperties of IQRF.
  * 
  * @author Michal Konopa
- */
+ * @author Martin Strouhal
+*/
+//JUNE-2015 - improved determing and using RF mode
 public final class DPA_ProtocolLayer 
 extends AbstractProtocolLayer
 implements ProtocolStateMachineListener
@@ -428,29 +430,23 @@ implements ProtocolStateMachineListener
         super(networkLayerService, msgConvertor);
         protoMachine = new ProtocolStateMachine();
         initTimeUnlimitedRequests();
-    }
-    
-    /**
-     * Creates new protocol layer object with specified network layer to use.
-     * @param networkLayerService network layer service object to use
-     * @param msgConvertor message convertor to use
-     * @param rfMode RF mode to use
-     */
-    public DPA_ProtocolLayer(
-            NetworkLayerService networkLayerService, 
-            MessageConvertor msgConvertor,
-            RF_Mode rfMode
-    ) {
-        super(networkLayerService, msgConvertor);
-        protoMachine = new ProtocolStateMachine(rfMode);
-        initTimeUnlimitedRequests();
-    }
+    }    
     
     @Override
     public void onFreeForSend() {
         synchronized ( protoMachineStateChangeSignal ) {
             protoMachineStateChangeSignal.notifyAll();
         }
+    }
+    
+    /**
+     * Add configuration to protocol layer, which was determinted while init and 
+     * is depending on specific network.
+     * @param network network name
+     * @param config determineted network configuration
+     */
+    public void addNetworkConfig(String network, DeterminetedNetworkConfig config){
+        this.protoMachine.addNetworkConfig(network, config);
     }
     
     @Override

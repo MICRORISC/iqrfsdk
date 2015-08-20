@@ -25,8 +25,11 @@ import com.microrisc.simply.SimplyException;
 import com.microrisc.simply.connector.response_waiting.ResponseWaitingConnector;
 import com.microrisc.simply.init.AbstractInitializer;
 import com.microrisc.simply.init.InitConfigSettings;
+import com.microrisc.simply.iqrf.RF_Mode;
 import com.microrisc.simply.iqrf.dpa.v210.devices.Coordinator;
 import com.microrisc.simply.iqrf.dpa.v210.devices.PeripheralInfoGetter;
+import static com.microrisc.simply.iqrf.dpa.v210.init.NodeFactory.init;
+import com.microrisc.simply.iqrf.dpa.v210.protocol.DPA_ProtocolLayer;
 import com.microrisc.simply.iqrf.dpa.v210.protocol.DPA_ProtocolProperties;
 import com.microrisc.simply.iqrf.dpa.v210.types.BondedNodes;
 import com.microrisc.simply.iqrf.dpa.v210.types.DiscoveryParams;
@@ -38,6 +41,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 import org.apache.commons.configuration.Configuration;
@@ -48,7 +52,9 @@ import org.slf4j.LoggerFactory;
  * Encapsulates inicialization process of DPA based networks.
  * 
  * @author Michal Konopa
+ * @author Martin Strouhal
  */
+//JUNE-2015 - improved determing and using RF mode
 public final class DPA_Initializer 
 extends 
     AbstractInitializer<DPA_InitObjects<InitConfigSettings<Configuration, Map<String, Configuration>>>, Network> 
@@ -64,9 +70,56 @@ extends
     private final SimpleDeviceObjectFactory devObjectFactory = new SimpleDeviceObjectFactory();
     
     /** Configuration settings for initializer. */
-    private DPA_InitializerConfiguration dpaInitConfig = null;
-    
-    
+   private DPA_InitializerConfiguration dpaInitConfig = null;
+   
+   private void determineAndUseNetworkConfig(String networkId, Node masterNode){        
+        RF_Mode rfMode;
+       
+        // get PeripheralInfoGetter and check it
+        PeripheralInfoGetter peripheralInfo = 
+                masterNode.getDeviceObject(PeripheralInfoGetter.class);
+        if(peripheralInfo == null){
+            logger.warn("Master node doesn't contain PeripheralInfoGetter interface.");
+            logger.warn("It will be used STD RF mode.");
+            rfMode = RF_Mode.STD;
+        } else {
+            PeripheralEnumeration enumeration = 
+                    peripheralInfo.getPeripheralEnumeration();
+            if(enumeration == null){
+                logger.warn("Peripheral enumeration wasn't read succesfully.");
+                logger.warn("It will be used STD RF mode.");
+                rfMode = RF_Mode.STD;
+            } else {
+                // Flags            Various flags:
+                // bit 0           STD IQMESH RF Mode supported
+                // bit 1           LP IQMESH RF Mode supported
+                // recognize RF mode
+                switch (enumeration.getFlags()){
+                    case 0b10:
+                        rfMode = RF_Mode.LP;
+                        break;
+                    case 0b01:
+                        rfMode = RF_Mode.STD;
+                        break;
+                    default: 
+                        logger.warn("RF mode wasn't read succesfully.");
+                        logger.warn("It will be used STD RF mode.");
+                        rfMode = RF_Mode.STD;
+                }
+            }     
+        }        
+              
+        DeterminetedNetworkConfig determinetedConfig = 
+                new SimpleDeterminetedNetworkConfig(rfMode);
+       
+        if(initObjects.getConnectionStack().getProtocolLayer() instanceof DPA_ProtocolLayer){
+            DPA_ProtocolLayer protocolLayer = (DPA_ProtocolLayer)
+                    initObjects.getConnectionStack().getProtocolLayer();
+            
+            protocolLayer.addNetworkConfig(networkId, determinetedConfig);
+        }        
+    }
+
     /**
      * Creates and returns peripheral information object for specified node.
      */
@@ -277,6 +330,9 @@ extends
         // creating master node
         Node masterNode = createNode(networkId, "0");
         logger.info("Master node created");
+
+        //determine config depending on each network and set to use in protocol layer
+        determineAndUseNetworkConfig(networkId, masterNode);
         
         // map of nodes of this network
         Map<String, Node> nodesMap = null;
@@ -399,6 +455,9 @@ extends
         // creating master node
         Node masterNode = NodeFactory.createNode(networkId, "0", networkMapping.get("0"));
         logger.info("Master node created");
+        
+        //determine config depending on each network and set to use in protocol layer
+        determineAndUseNetworkConfig(networkId, masterNode);  
         
         // checking, if coordinator is present at the master
         Coordinator masterCoord = masterNode.getDeviceObject(Coordinator.class);
