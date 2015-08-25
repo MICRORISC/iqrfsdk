@@ -108,8 +108,14 @@
     </implMapping>    
     
     <implMapping>
-        <interface>com.microrisc.simply.iqrf.dpa.v220.examples.user_peripherals.myadc.def.MyADC</interface>
-        <implClass>com.microrisc.simply.iqrf.dpa.v220.examples.user_peripherals.myadc.def.SimpleMyADC</implClass>
+        <interface>com.microrisc.simply.iqrf.dpa.v220.examples.user_peripherals.myadc.def.MyPotentiometer</interface>
+        <implClass>com.microrisc.simply.iqrf.dpa.v220.examples.user_peripherals.myadc.def.SimpleMyPotentiometer</implClass>
+        <note></note>
+    </implMapping>
+    
+    <implMapping>
+        <interface>com.microrisc.simply.iqrf.dpa.v220.examples.user_peripherals.myadc.def.MyPhotoResistor</interface>
+        <implClass>com.microrisc.simply.iqrf.dpa.v220.examples.user_peripherals.myadc.def.SimpleMyPhotoResistor</implClass>
         <note></note>
     </implMapping>
     

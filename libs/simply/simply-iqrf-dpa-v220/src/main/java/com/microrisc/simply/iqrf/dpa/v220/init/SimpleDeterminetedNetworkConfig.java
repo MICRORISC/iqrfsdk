@@ -23,12 +23,12 @@ import com.microrisc.simply.iqrf.dpa.v220.types.OsInfo;
  * 
  * @author Martin Strouhal
  */
-public class SimpleDeterminetedNetworkConfig implements DeterminetedNetworkConfig{
+public final class SimpleDeterminetedNetworkConfig implements DeterminetedNetworkConfig{
 
     /** TR_TypeSeries used in network */
-    private OsInfo.TR_Type.TR_TypeSeries trSeries;
+    private final OsInfo.TR_Type.TR_TypeSeries trSeries;
     /** RF_Mode used in network */
-    private RF_Mode rfMode;
+    private final RF_Mode rfMode;
 
     private static RF_Mode checkRF_Mode(RF_Mode rfMode) {
         if ( rfMode == null ) {

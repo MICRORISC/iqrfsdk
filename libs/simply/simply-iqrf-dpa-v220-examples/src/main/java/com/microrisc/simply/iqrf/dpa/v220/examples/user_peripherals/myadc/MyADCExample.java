@@ -13,41 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.microrisc.simply.iqrf.dpa.v220.examples.user_peripherals.myadc;
 
 import com.microrisc.simply.*;
 import com.microrisc.simply.errors.CallRequestProcessingError;
 import com.microrisc.simply.iqrf.dpa.v220.DPA_SimplyFactory;
-import com.microrisc.simply.iqrf.dpa.v220.examples.user_peripherals.myadc.def.MyADC;
+import com.microrisc.simply.iqrf.dpa.v220.examples.user_peripherals.myadc.def.MyPhotoResistor;
+import com.microrisc.simply.iqrf.dpa.v220.examples.user_peripherals.myadc.def.MyPotentiometer;
 import java.io.File;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 /**
- *  Main class for example of ADC device.
- * 
+ * Main class for example of ADC devices.
+ * <p>
  * @author Martin Strouhal
  */
 public class MyADCExample {
 
     // reference to Simply
     private static Simply simply = null;
-
-    private static Map<String, MyADC> getADCDevices(Network network, String[] nodeIds) {
-        Map<String, MyADC> MyADCMap = new LinkedHashMap<>();
-        for ( String nodeId : nodeIds ) {
-            Node node = network.getNode(nodeId);
-            MyADC adcDevice = node.getDeviceObject(MyADC.class);
-            
-            if ( adcDevice == null ) {
-                System.out.println("ADC is not on node " + nodeId + ", return.");
-                return null;
-            }
-            MyADCMap.put(nodeId, adcDevice);
-        }
-        return MyADCMap;
-    }
 
     // prints out specified message, destroys the Simply and exits
     private static void printMessageAndExit(String message) {
@@ -57,66 +40,74 @@ public class MyADCExample {
         }
         System.exit(1);
     }
-    
+
     public static void main(String[] args) {
-        // get simply
+        // getting simply
         try {
             simply = DPA_SimplyFactory.getSimply(
-                "config" + File.separator + "Simply.properties"
-            );
+                    "config" + File.separator + "Simply.properties");
         } catch (SimplyException ex) {
             printMessageAndExit("Error while creating Simply: " + ex.getMessage());
         }
 
-        // get network "1"
+        // getting network "1"
         Network network1 = simply.getNetwork("1", Network.class);
-        if ( network1 == null ) {
+        if (network1 == null) {
             printMessageAndExit("Network 1 doesn't exist");
         }
-
-        // get ADC from all nodes
-        Map<String, MyADC> adcDevices = getADCDevices(network1, new String[]{"1"});
-        if ( adcDevices == null ) {
-            printMessageAndExit("Error when ADC was getting from node.");
+        
+        // getting node 1
+        Node node = network1.getNode("1");
+        if (node == null) {
+            printMessageAndExit("Node 1 doesn't exist");
         }
+        
+        // getting photoresistor on node 1
+        MyPhotoResistor photoResistor = node.getDeviceObject(MyPhotoResistor.class);
+        if (photoResistor == null) {
+            printMessageAndExit("Error when PhotoResistor was getting from node.");
+        }
+        
+        // getting ADC value
+        int photoResult = photoResistor.get();
 
-        // get ADC "1"
-        MyADC adc1 = adcDevices.get("1");
-        
-        System.out.println("Example of Get method.");
-        // get result
-        int result = adc1.get();
-        
-        if ( result == Integer.MAX_VALUE ) {
-            CallRequestProcessingState procState = adc1.getCallRequestProcessingStateOfLastCall();
+        if (photoResult == Integer.MAX_VALUE) {
+            CallRequestProcessingState procState = photoResistor.getCallRequestProcessingStateOfLastCall();
             if (procState == CallRequestProcessingState.ERROR) {
-                CallRequestProcessingError error = adc1.getCallRequestProcessingErrorOfLastCall();
+                CallRequestProcessingError error = photoResistor.getCallRequestProcessingErrorOfLastCall();
                 printMessageAndExit("Getting ADC value failed: " + error);
             } else {
                 printMessageAndExit("Getting ADC value hasn't been processed yet: " + procState);
             }
         } else {
-            System.out.println("ADC value is " + result);
+            // printing result
+            System.out.println("Photo value is " + photoResult);
         }
 
         
-        System.out.println("Example of Get2 method.");
-        // get2 result
-        int result2 = adc1.get2();
+        // getting potentiometer on node 1
+        MyPotentiometer potentiometer = node.getDeviceObject(MyPotentiometer.class);
+        if (potentiometer == null) {
+            printMessageAndExit("Error when PhotoResistor was getting from node.");
+        }
         
-        if ( result2 == Integer.MAX_VALUE ) {
-            CallRequestProcessingState procState = adc1.getCallRequestProcessingStateOfLastCall();
+        // getting ADC value
+        int potentiometerResult = potentiometer.get();
+
+        if (potentiometerResult == Integer.MAX_VALUE) {
+            CallRequestProcessingState procState = potentiometer.getCallRequestProcessingStateOfLastCall();
             if (procState == CallRequestProcessingState.ERROR) {
-                CallRequestProcessingError error = adc1.getCallRequestProcessingErrorOfLastCall();
+                CallRequestProcessingError error = potentiometer.getCallRequestProcessingErrorOfLastCall();
                 printMessageAndExit("Getting ADC value failed: " + error);
             } else {
                 printMessageAndExit("Getting ADC value hasn't been processed yet: " + procState);
             }
         } else {
-            System.out.println("ADC value is " + result2);
+            // printing result
+            System.out.println("Potentiometer is " + potentiometerResult);
         }
 
-        
+        // destroys simply reference
         simply.destroy();
     }
 }

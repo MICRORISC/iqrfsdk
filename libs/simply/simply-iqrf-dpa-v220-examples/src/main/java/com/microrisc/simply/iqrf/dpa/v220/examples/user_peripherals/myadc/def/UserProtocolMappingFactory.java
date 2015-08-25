@@ -40,20 +40,13 @@ import java.util.Map;
 
 /**
  * Factory for protocol mapping of my periperals.
- * <br>
- * Warning note: This interface designed for CustomDpaHandler-UserPeripheral-ADC
- * has unsual style of using. One interface hasn't got few commands, but 2 id of
- * periheral for getting infomartion. This situation is fixed by switching
- * position of constants values.
  *
  * @author Michal Konopa
  * @author Martin Strouhal
  */
 public class UserProtocolMappingFactory implements ProtocolMappingFactory {
 
-    /**
-     * Reference to protocol mapping.
-     */
+    /** Reference to protocol mapping. */
     private ProtocolMapping protocolMapping = null;
 
     // REQUEST MAPPING
@@ -78,42 +71,41 @@ public class UserProtocolMappingFactory implements ProtocolMappingFactory {
         return mappings;
     }
 
-    // ADC interface
+    // MyPotentiometer
     static private MethodToPacketMapping createGetValueMapping() {
         List<ConstValueToPacketMapping> constMapping = new LinkedList<>();
-        // Warning note: See class doc
-        constMapping.add(new ConstValueToPacketMapping(2, new short[]{0x20}));
+        constMapping.add(new ConstValueToPacketMapping(3, new short[]{0x00}));
 
         List<ValueToPacketMapping> argMapping = new LinkedList<>();
         argMapping.add(new ValueToPacketMapping(4, Uns16Convertor.getInstance()));
 
         return new MethodToPacketMapping(constMapping, argMapping);
-    }
+    }   
 
-    static private MethodToPacketMapping createGet2ValueMapping() {
-        List<ConstValueToPacketMapping> constMapping = new LinkedList<>();
-        // Warning note: See class doc
-        constMapping.add(new ConstValueToPacketMapping(2, new short[]{0x21}));
-
-        List<ValueToPacketMapping> argMapping = new LinkedList<>();
-        argMapping.add(new ValueToPacketMapping(4, Uns16Convertor.getInstance()));
-
-        return new MethodToPacketMapping(constMapping, argMapping);
-    }
-
-    static private InterfaceToPacketMapping createRequestMyADCMapping() {
+    static private InterfaceToPacketMapping createRequestMyPotentiometerMapping() {
         List<ConstValueToPacketMapping> constMappings = new LinkedList<>();
-        // Warning note: See class doc
-        constMappings.add(new ConstValueToPacketMapping(3, new short[]{0x00}));
+        constMappings.add(new ConstValueToPacketMapping(2, new short[]{0x20}));
 
         Map<String, MethodToPacketMapping> methodMappings = new HashMap<>();
 
         methodMappings.put("0", createGetValueMapping());
-        methodMappings.put("1", createGet2ValueMapping());
 
         return new InterfaceToPacketMapping(constMappings, methodMappings);
     }
+    
+    // MyPhotoresistor
+    static private InterfaceToPacketMapping createRequestPhotoResistorMapping() {
+        List<ConstValueToPacketMapping> constMappings = new LinkedList<>();
+        constMappings.add(new ConstValueToPacketMapping(2, new short[]{0x21}));
 
+        Map<String, MethodToPacketMapping> methodMappings = new HashMap<>();
+
+        methodMappings.put("0", createGetValueMapping());
+
+        return new InterfaceToPacketMapping(constMappings, methodMappings);
+    }
+    
+     
     /**
      * Creates map of mapping of Device Interfaces into protocol packets.
      *
@@ -123,7 +115,8 @@ public class UserProtocolMappingFactory implements ProtocolMappingFactory {
         Map<Class, InterfaceToPacketMapping> mappings = new HashMap<>();
 
         // creating interface mappings
-        mappings.put(MyADC.class, createRequestMyADCMapping());
+        mappings.put(MyPotentiometer.class, createRequestMyPotentiometerMapping());
+        mappings.put(MyPhotoResistor.class, createRequestPhotoResistorMapping());
         return mappings;
     }
 
@@ -136,8 +129,8 @@ public class UserProtocolMappingFactory implements ProtocolMappingFactory {
         return new SimpleCallRequestToPacketMapping(
                 constMappings, networkMappings, nodeMappings, ifaceMappings
         );
-    }
-
+    }    
+    
     // RESPONSES MAPPING
     static private PacketToValueMapping createResponseNetworkMapping() {
         return new PacketToValueMapping(0, 0, StringToByteConvertor.getInstance());
@@ -147,44 +140,46 @@ public class UserProtocolMappingFactory implements ProtocolMappingFactory {
         return new PacketToValueMapping(0, 1, StringToByteConvertor.getInstance());
     }
 
-    // ADC
+    // MyPotentiometer (response)
     static private PacketToMethodMapping createResponseGetValue() {
         List<PacketPositionValues> packetValues = new LinkedList<>();
-        // Warning note: See class doc
-        packetValues.add(new PacketPositionValues(2, (short) 0x20));
+        packetValues.add(new PacketPositionValues(3, (short) 0x80));
 
         PacketToValueMapping resultMapping = new PacketToValueMapping(8, Uns16Convertor.getInstance());
         return new PacketToMethodMapping("0", packetValues, resultMapping);
     }
 
-    static private PacketToMethodMapping createResponseGet2Value() {
+    static private PacketToInterfaceMapping createResponseMyPotentiometerMapping() {
         List<PacketPositionValues> packetValues = new LinkedList<>();
-        // Warning note: See class doc
-        packetValues.add(new PacketPositionValues(2, (short) 0x21));
-
-        PacketToValueMapping resultMapping = new PacketToValueMapping(8, Uns16Convertor.getInstance());
-        return new PacketToMethodMapping("1", packetValues, resultMapping);
-    }
-
-    static private PacketToInterfaceMapping createResponseMyADCMapping() {
-        List<PacketPositionValues> packetValues = new LinkedList<>();
-        // Warning note: See class doc
-        packetValues.add(new PacketPositionValues(3, (short) 0x80));
+        packetValues.add(new PacketPositionValues(2, (short) 0x20));
 
         Map<String, PacketToMethodMapping> methodMappings = new HashMap<>();
 
         methodMappings.put("0", createResponseGetValue());
-        methodMappings.put("1", createResponseGet2Value());
 
-        return new PacketToInterfaceMapping(MyADC.class, packetValues, methodMappings);
+        return new PacketToInterfaceMapping(MyPotentiometer.class, packetValues, methodMappings);
     }
 
+    // MyPhotoResistor (response)
+     static private PacketToInterfaceMapping createResponseMyPhotoResistorMapping() {
+        List<PacketPositionValues> packetValues = new LinkedList<>();
+        packetValues.add(new PacketPositionValues(2, (short) 0x21));
+
+        Map<String, PacketToMethodMapping> methodMappings = new HashMap<>();
+
+        methodMappings.put("0", createResponseGetValue());
+
+        return new PacketToInterfaceMapping(MyPhotoResistor.class, packetValues, methodMappings);
+    }      
+    
+    
     // creating response mapping for Device Interfaces
     static private Map<Class, PacketToInterfaceMapping> createResponseIfaceMappings() {
         Map<Class, PacketToInterfaceMapping> mappings = new HashMap<>();
 
         // creating interface mappings
-        mappings.put(MyADC.class, createResponseMyADCMapping());
+        mappings.put(MyPotentiometer.class, createResponseMyPotentiometerMapping());
+        mappings.put(MyPhotoResistor.class, createResponseMyPhotoResistorMapping());
 
         return mappings;
     }

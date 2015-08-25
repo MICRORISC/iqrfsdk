@@ -21,7 +21,6 @@ import com.microrisc.simply.init.AbstractInitObjectsFactory;
 import com.microrisc.simply.init.InitConfigSettings;
 import com.microrisc.simply.init.InitObjects;
 import com.microrisc.simply.init.SimpleInitObjectsFactory;
-import com.microrisc.simply.iqrf.RF_Mode;
 import com.microrisc.simply.iqrf.dpa.protocol.PeripheralToDevIfaceMapper;
 import com.microrisc.simply.iqrf.dpa.protocol.PeripheralToDevIfaceMapperFactory;
 import com.microrisc.simply.iqrf.dpa.protocol.ProtocolObjects;
@@ -78,9 +77,17 @@ extends AbstractInitObjectsFactory<Configuration, SimpleDPA_InitObjects>
                 return null;
             }
             Class factoryClass = Class.forName(factoryClassName);
-            java.lang.reflect.Constructor constructor = factoryClass.getConstructor();
-            ProtocolMappingFactory protoFactory = 
-                    (ProtocolMappingFactory)constructor.newInstance(); 
+            
+            // if ProtocolMappingFactory support Constructor for configuration, it's given
+            // recognizing of used constructor            
+            ProtocolMappingFactory protoFactory;
+            try{
+                java.lang.reflect.Constructor constructor = factoryClass.getConstructor(Configuration.class);
+                protoFactory = (ProtocolMappingFactory)constructor.newInstance(configuration); 
+            }catch(NoSuchMethodException ex){
+                java.lang.reflect.Constructor constructor = factoryClass.getConstructor();
+                protoFactory = (ProtocolMappingFactory)constructor.newInstance(); 
+            }            
             return protoFactory.createProtocolMapping();   
         }
         
@@ -115,39 +122,8 @@ extends AbstractInitObjectsFactory<Configuration, SimpleDPA_InitObjects>
             _protocolMapping = protocolMapping;
             return protocolMapping;
         }                          
-      
-        /**
-        * Creates protocol layer.
-        * Overrides the original method for support to specify the RF mode.
-        * @param networkLayerService network layer service to use
-        * @param msgConvertor message convertor to use
-        * @param configuration source configuration
-        * @return protocol layer
-        * @throws java.lang.Exception if an error has occured during creating of 
-        *         protocol layer 
-        */
-        @Override
-        protected ProtocolLayer createProtocolLayer(
-                NetworkLayerService networkLayerService, 
-                MessageConvertor msgConvertor, 
-                Configuration configuration
-        ) throws Exception {
-            String rfModeStr = configuration.getString("protocolLayer.type.iqrf.rf_mode", "");
-            if ( rfModeStr.isEmpty() ) {
-                return super.createProtocolLayer(networkLayerService, msgConvertor, configuration);
-            }
-                        
-            String protoClassName = configuration.getString("protocolLayer.class");
-            Class protoClass = Class.forName(protoClassName);
-            java.lang.reflect.Constructor constructor 
-                    = protoClass.getConstructor(
-                            NetworkLayerService.class, MessageConvertor.class
-                    );
-            return (ProtocolLayer)constructor.newInstance(networkLayerService, msgConvertor);
-        }
     }
-    
-    
+        
     /**
      * Creates user peripherals to device interface mapping.
      * @param configuration configuration to use

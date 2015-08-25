@@ -22,15 +22,13 @@ import com.microrisc.simply.di_services.MethodIdTransformer;
 import com.microrisc.simply.iqrf.dpa.di_services.DPA_StandardServices;
 
 /**
- * MyADC Device Interface providing reading a value from ADC convertor on
- * module. This example is recommended use with DK-EVAL and DDC-SE. Get returns
- * in this case value from potentionmeter and Get2 returns value from
- * photoresistor.
- *
+ * MyPhotoResistor Device Interface providing reading a value from ADC convertor
+ * on module. This example is recommended use with DK-EVAL and DDC-SE.
+ * <p>
  * @author Martin Strouhal
  */
 @DeviceInterface
-public interface MyADC
+public interface MyPhotoResistor
         extends DPA_StandardServices, GenericAsyncCallable, MethodIdTransformer {
 
     /**
@@ -38,26 +36,15 @@ public interface MyADC
      */
     enum MethodID implements DeviceInterfaceMethodId {
 
-        GET,
-        GET2
+        GET
     }
 
     /**
-     * Gets first actual value of MyADC. In case use with DDC-SE value from
-     * potentionmeter.
-     *
-     * @return first actual value of MyADC <br> {@code Integer.MAX_VALUE} if an
+     * Gets actual value from ADC convertor. In case use with DDC-SE value from
+     * photoresistor.
+     * <p>
+     * @return actual value from ADC convertor <br> {@code Integer.MAX_VALUE} if an
      * error has occurred during processing
      */
     int get();
-
-    /**
-     * Gets second actual value of MyADC. In case use with DDC-SE value from
-     * photoresistor.
-     *
-     * @return second actual value of MyADC <br> {@code Integer.MAX_VALUE} if an
-     * error has occurred during processing
-     */
-    int get2();
-
 }
