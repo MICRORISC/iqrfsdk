@@ -24,14 +24,16 @@
 
 #ifdef __SPI_INTERFACE__
 
-#define SPI_TRANSFER_NONE			0
-#define SPI_TRANSFER_WRITE			1
-#define SPI_TRANSFER_READ			2
+#define SPI_TRANSFER_NONE		0
+#define SPI_TRANSFER_WRITE		1
+#define SPI_TRANSFER_READ		2
 
 #define SPI_CHECK  			0x00    // Master checks the SPI status of the TR module
 #define SPI_WR_RD 	 		0xF0	// Master reads/writes a packet from/to TR module
+#define SPI_CRCM_OK                     0x3F    // SPI not ready (full buffer, last CRCM ok)
+#define SPI_CRCM_ERR                    0x3E    // SPI not ready (full buffer, last CRCM error)
 
-#define SPI_STATUS_POOLING_TIME		5		// SPI status pooling time 5ms
+#define SPI_STATUS_POOLING_TIME		5	// SPI status pooling time 5ms
 
 typedef struct{
 	UINT8	DLEN;
@@ -58,13 +60,13 @@ UINT8 DPA_GetCRCM(void);
 
 #ifdef __UART_INTERFACE__
 
-#define UART_TRANSFER_NONE			0
-#define UART_TRANSFER_WRITE			1
-#define UART_TRANSFER_READ			2
+#define UART_TRANSFER_NONE		0
+#define UART_TRANSFER_WRITE		1
+#define UART_TRANSFER_READ		2
 
 #define HDLC_FRM_FLAG_SEQUENCE		0x7E
 #define HDLC_FRM_CONTROL_ESCAPE		0x7D
-#define HDLC_FRM_ESCAPE_BIT			0x20
+#define HDLC_FRM_ESCAPE_BIT		0x20
 
 typedef struct{
 	UINT8	direction;
