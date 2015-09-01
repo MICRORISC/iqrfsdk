@@ -1,0 +1,143 @@
+C:\Users\lenovo\Desktop\SDK\DEMOS\AutoNetworkDemo>run-windows-x64.bat
+
+C:\Users\lenovo\Desktop\SDK\DEMOS\AutoNetworkDemo>set NETWORK_ID_VAL=1
+
+C:\Users\lenovo\Desktop\SDK\DEMOS\AutoNetworkDemo>set DISCOVERY_TX_POWER_VAL=5
+
+C:\Users\lenovo\Desktop\SDK\DEMOS\AutoNetworkDemo>set PREBONDING_INTERVAL_VAL=10
+
+C:\Users\lenovo\Desktop\SDK\DEMOS\AutoNetworkDemo>set AUTHORIZE_RETRIES_VAL=1
+
+C:\Users\lenovo\Desktop\SDK\DEMOS\AutoNetworkDemo>set DISCOVERY_RETRIES_VAL=1
+
+C:\Users\lenovo\Desktop\SDK\DEMOS\AutoNetworkDemo>set TEMPORARY_ADDRESS_TIMEOUT_VAL=10
+
+C:\Users\lenovo\Desktop\SDK\DEMOS\AutoNetworkDemo>set AUTO_USE_FRC_VAL=true
+
+C:\Users\lenovo\Desktop\SDK\DEMOS\AutoNetworkDemo>set HELP_OPTION=
+
+C:\Users\lenovo\Desktop\SDK\DEMOS\AutoNetworkDemo>set NODES_NUMBER_TO_BOND=-1
+
+C:\Users\lenovo\Desktop\SDK\DEMOS\AutoNetworkDemo>set MAX_RUNNING_TIME_VAL=-1
+
+C:\Users\lenovo\Desktop\SDK\DEMOS\AutoNetworkDemo>call java -Djava.library.path=
+.\dependencies\microrisc\jlibcdc\x64 -Dlogback.configurationFile=config\logback.
+xml -classpath .\dependencies\microrisc\jlibcdc\jlibcdc-1.0.0.jar;.\dependencies
+\microrisc\simply-asynchrony-1.0.1-SNAPSHOT.jar;.\dependencies\microrisc\simply-
+core-2.0.0-SNAPSHOT.jar;.\dependencies\microrisc\simply-iqrf-2.0.1-SNAPSHOT.jar;
+.\dependencies\microrisc\simply-iqrf-dpa-3.0.0-SNAPSHOT.jar;.\dependencies\micro
+risc\simply-iqrf-dpa-v210-2.0.0-SNAPSHOT.jar;.\dependencies\microrisc\simply-net
+work-usbcdc-1.0.2-SNAPSHOT.jar;.\dependencies\3rd\commons-cli-1.2.jar;.\dependen
+cies\3rd\commons-lang-2.6.jar;.\dependencies\3rd\commons-configuration-1.8.jar;.
+\dependencies\3rd\commons-logging-1.1.1.jar;.\dependencies\3rd\logback-core-1.1.
+2.jar;.\dependencies\3rd\logback-classic-1.1.2.jar;.\dependencies\3rd\joda-time-
+2.6.jar;.\dependencies\3rd\slf4j-api-1.7.6.jar;AutoNetworkDemo-1.0.0.jar com.mic
+rorisc.simply.iqrf.dpa.v210.autonetwork.demo.AutoNetworkDemo   -networkId 1 -dis
+coveryTxPower 5 -prebondingInterval 10  -authorizeRetries 1 -discoveryRetries 1
+-temporaryAddressTimeout 10  -autoUseFrc true -maxRunningTime -1 -nodesNumberToBond -1
+
+Starting initialization of Simply ...
+Creating network 1 ...
+Number of bonded nodes: 0
+Bonded nodes: []
+Run discovery ...
+Number of discovered nodes: 0
+Network 1 successfully created.
+Initialization of Simply complete.
+Started
+Automatic network construction started at 12:26:45
+Finding coordinator
+Initial network check
+Bonded nodes: [0]
+Discovered nodes: [0]
+NOT discovered nodes: [0]
+Number of hops set to the number of routers
+No LED indication and use of optimal time slot length
+Automatic network construction in progress
+Round=1, Nodes=0, New nodes=0, Time=0 hours 0 minutes 1 second
+Enable prebonding, mask = 0, time = 10, and LEDR=1 at Nodes and Coordinator
+Waiting for prebonding for 10 seconds ...
+Coordinator prebonded MID=[81001e0c], UserData=[0000]
+Authorizing node [81001e0c], address=1, devices count=1, waiting to finish authorization...
+Bonded nodes: [1] 1
+Discovered nodes: [0]
+NOT discovered nodes: [1] 1
+Running FRC to check new nodes
+Running discovery ...
+Discovered 1 nodes
+Bonded nodes: [1] 1
+Discovered nodes: [1] 1
+NOT discovered nodes: [0]
+Round=2, Nodes=1, New nodes=1, Time=0 hours 0 minutes 16 seconds
+Enable prebonding, mask = 1, time = 10, and LEDR=1 at Nodes and Coordinator
+Waiting for prebonding for 10 seconds ...
+Coordinator prebonded MID=[81001e36], UserData=[0000]
+Running FRC to disable and check for prebonding ( bit 0 is 1 when node is access
+ible; bit1 is 1 if the node provided pre-bonding to a new node )
+bit0: [1] 1
+bit1: [1] 1
+Nodes provided prebonding: [1] 1
+Node 1 prebonded MID=[810015bf], UserData=[0000]
+Authorizing node [81001e36], address=2, devices count=2, waiting to finish authorization...
+Bonded nodes: [2] <1-2>
+Discovered nodes: [1] 1
+NOT discovered nodes: [1] 2
+Authorizing node [810015bf], address=3, devices count=3, waiting to finish authorization...
+Bonded nodes: [3] <1-3>
+Discovered nodes: [1] 1
+NOT discovered nodes: [2] <2-3>
+Running FRC to check new nodes
+Running discovery ...
+Discovered 3 nodes
+Bonded nodes: [3] <1-3>
+Discovered nodes: [3] <1-3>
+NOT discovered nodes: [0]
+Round=3, Nodes=3, New nodes=3, Time=0 hours 0 minutes 33 seconds
+Enable prebonding, mask = 11, time = 10, and LEDR=1 at Nodes and Coordinator
+Waiting for prebonding for 10 seconds ...
+Unable to read prebonded MID from coordinator
+Running FRC to disable and check for prebonding ( bit 0 is 1 when node is access
+ible; bit1 is 1 if the node provided pre-bonding to a new node )
+bit0: [3] <1-3>
+bit1: [2] 1, 3
+Nodes provided prebonding: [2] 1, 3
+Node 1 prebonded MID=[81001e21], UserData=[0000]
+Node 3 prebonded MID=[81001e2e], UserData=[0000]
+Authorizing node [81001e21], address=4, devices count=4, waiting to finish authorization...
+Bonded nodes: [4] <1-4>
+Discovered nodes: [3] <1-3>
+NOT discovered nodes: [1] 4
+Authorizing node [81001e2e], address=5, devices count=5, waiting to finish authorization...
+Bonded nodes: [5] <1-5>
+Discovered nodes: [3] <1-3>
+NOT discovered nodes: [2] <4-5>
+Running FRC to check new nodes
+Running discovery ...
+Discovered 5 nodes
+Bonded nodes: [5] <1-5>
+Discovered nodes: [5] <1-5>
+NOT discovered nodes: [0]
+Round=4, Nodes=5, New nodes=5, Time=0 hours 0 minutes 51 seconds
+Enable prebonding, mask = 111, time = 10, and LEDR=1 at Nodes and Coordinator
+Waiting for prebonding for 10 seconds ...
+Unable to read prebonded MID from coordinator
+Running FRC to disable and check for prebonding ( bit 0 is 1 when node is access
+ible; bit1 is 1 if the node provided pre-bonding to a new node )
+bit0: [5] <1-5>
+bit1: [0]
+No node prebonded.
+Round=5, Nodes=5, New nodes=5, Time=0 hours 1 minute 4 seconds
+Enable prebonding, mask = 111, time = 10, and LEDR=1 at Nodes and Coordinator
+Waiting for prebonding for 10 seconds ...
+Unable to read prebonded MID from coordinator
+Running FRC to disable and check for prebonding ( bit 0 is 1 when node is access
+ible; bit1 is 1 if the node provided pre-bonding to a new node )
+bit0: [5] <1-5>
+bit1: [0]
+No node prebonded.
+Round=6, Nodes=5, New nodes=5, Time=0 hours 1 minute 17 seconds
+Enable prebonding, mask = 111, time = 10, and LEDR=1 at Nodes and Coordinator
+Waiting for prebonding for 10 seconds ...
+Finish the script (Y/N)? y
+
+C:\Users\lenovo\Desktop\SDK\DEMOS\AutoNetworkDemo>
