@@ -131,6 +131,13 @@ public final class SimpleFRC
         );
     }
 
+    @Override
+    public UUID async_setFRCParams(FRC_Configuration config){
+        checkTime(config);
+        return dispatchCall("4", new Object[]{getRequestHwProfile(), config},
+                getDefaultWaitingTimeout()
+        );
+    }
     
     
     // SYNCHRONOUS WRAPPERS IMPLEMENTATIONS
