@@ -24,6 +24,7 @@ import com.microrisc.simply.iqrf.dpa.v210.types.DPA_Confirmation;
 import com.microrisc.simply.iqrf.RF_Mode;
 import com.microrisc.simply.iqrf.dpa.v210.init.DeterminetedNetworkConfig;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 import org.slf4j.LoggerFactory;
 
@@ -570,6 +571,7 @@ final class ProtocolStateMachine implements ManageableObject {
     public ProtocolStateMachine() {
         waitingTimeCounter = new WaitingTimeCounter();
         logger.info("Protocol machine successfully created.");
+        this.networkConfigMap = new HashMap<>();
     }        
     
     /**

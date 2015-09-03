@@ -118,9 +118,11 @@ extends
                 switch (enumeration.getFlags()){
                     case 0b10:
                         rfMode = RF_Mode.LP;
+                        logger.info("Recognized LP mode.");
                         break;
                     case 0b01:
                         rfMode = RF_Mode.STD;
+                        logger.info("Recognized STD mode.");
                         break;
                     default: 
                         logger.warn("RF mode wasn't read succesfully.");
