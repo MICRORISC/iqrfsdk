@@ -1166,21 +1166,33 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
                 break;
             }
             
+            // getting lowest 2 bytes of module ID
+            short[] lowest2bytes = new short[2];
+            System.arraycopy(moduleId.getModuleId(), 0, lowest2bytes, 0, 2);
+            
             for ( int authorizeRetry = authorizeRetries; authorizeRetry != 0; authorizeRetry-- ) {
                 if ( authorizeRetry == authorizeRetries ) {
                     nextAddr = nextFreeAddr(bondedNodes, nextAddr);
                 }
                 
-                // getting lowest 2 bytes of module ID
-                short[] lowest2bytes = new short[2];
-                System.arraycopy(moduleId.getModuleId(), 0, lowest2bytes, 0, 2);
-                
                 BondedNode bondedNode = coordinator.authorizeBond(nextAddr, lowest2bytes);
                 if ( bondedNode == null ) {
-                    throw new Exception(
-                        "Error while doing authorizing bond request."
-                         + "Module ID: " + moduleId
+                    
+                    logger.error(
+                        "Authorizing node {}, retries={}, authorization failed ...", 
+                        toHexaFromLastByteString(moduleId.getModuleId()),
+                        authorizeRetry
                     );
+                    
+                    // last retry
+                    if ( authorizeRetry == 1 ) {
+                        Integer devCount = coordinator.removeBondedNode(nextAddr);
+                        if ( devCount == null ) {
+                            logger.error("Error while removing bond");
+                        }
+                    }
+                
+                    continue;
                 }
                 
                 logger.info(
@@ -1190,21 +1202,13 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
                     bondedNode.getBondedNodesNum()
                 );
                 
-                
                 // waiting with the possibility of interruption
-                Thread.sleep( bondedNodes.getNodesNumber() * 40 + 150 );
+                Thread.sleep( bondedNodes.getNodesNumber() * 60 + 150 );
                 
-                if ( authorizeRetry != 1 ) {
-                    Integer devCount = coordinator.removeBondedNode(nextAddr);
-                    if ( devCount == null ) {
-                        logger.error("Error while removing bond");
-                    } 
-                } else {
                     newAddrs.add(Integer.valueOf(bondedNode.getBondedAddress()));
                     updateNodesInfo(coordinator);
                 }
             }
-        }
         
         logger.debug("authorizeBonds - end: {}", StringUtils.join(newAddrs, ','));
         return newAddrs;
@@ -1213,7 +1217,7 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
     // checks new nodes, removes the nonresponding ones
     // returns IDs of nodes, which are responding
     private List<Integer> checkNewNodes(
-            Coordinator coordinator, com.microrisc.simply.Node coordNode, List<Integer> newAddrs
+            String networkId, Coordinator coordinator, com.microrisc.simply.Node coordNode, List<Integer> newAddrs
     ) throws Exception {
         logger.debug("checkNewNodes - start: coordinator={}, coordNode={}, newAddrs={}",
                 coordinator, coordNode, StringUtils.join(newAddrs, ',')
@@ -1231,9 +1235,31 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
             if ( ( ( frcDataCheck.getData()[0 + newAddr / 8] >> ( newAddr % 8 ) ) & 0x01 ) == 0x00 )
             {
                 logger.warn("Removing bond {}", newAddr);
-                Integer bondedNodesNum = coordinator.removeBondedNode(newAddr);
-                if ( bondedNodesNum == null ) {
-                    logger.error("Error while removing bond {}", newAddr);
+                
+                // creating new node
+                com.microrisc.simply.Node newNode 
+                = NodeFactory.createNodeWithAllPeripherals(networkId, Integer.toString(newAddr));
+                               
+                OS os = newNode.getDeviceObject(OS.class);
+                if ( os == null ) {
+                    throw new Exception("OS peripheral could not been found on the node");
+                }
+                
+                VoidType result = os.batch(
+                    new DPA_Request[] { 
+                        new DPA_Request( Node.class, Node.MethodID.REMOVE_BOND, new Object[] {}, 0xFFFF ),
+                        new DPA_Request( OS.class, OS.MethodID.RESET, new Object[] {}, 0xFFFF ) }
+                );
+                
+                if( result == null ) {
+                    logger.error("Error while removing bond of the remote node {}", newAddr);
+                    
+                    Thread.sleep(( bondedNodes.getNodesNumber() + 1 ) * (40 + 40));
+
+                    Integer bondedNodesNum = coordinator.removeBondedNode(newAddr);
+                    if ( bondedNodesNum == null ) {
+                            logger.error("Error while removing bond at coordinator {}", newAddr);
+                    }
                 }
             } else {
                 respondingNodes.add(newAddr);
@@ -1384,7 +1410,8 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
         // storing previous value to be able to restore it later
         long prevDefaultWaitingTimeout = coordinator.getDefaultWaitingTimeout();
         
-        // IMPORTANT: SET DEFAULT TIMEOUT FOR GETTING RESULT TO 'UNLIMITED'
+        // IMPORTANT: SET DEFAULT TIMEOUT FOR GETTING RESULT TO 'UNLIMITED', 
+        // DPA TIMING IS HANDLED BY TIMING STATE MACHINE
         coordinator.setDefaultWaitingTimeout( WaitingTimeoutService.UNLIMITED_WAITING_TIMEOUT );
         
         OS coordOs = coordNode.getDeviceObject(OS.class);
@@ -1509,7 +1536,7 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
             
                 if ( autoUseFrc ) {
                     logger.info("Running FRC to check new nodes");
-                    newAddrs = checkNewNodes(coordinator, coordNode, newAddrs);
+                    newAddrs = checkNewNodes(resultNetwork.getId(), coordinator, coordNode, newAddrs);
                 }
 
                 logger.info( "Running discovery ...");
