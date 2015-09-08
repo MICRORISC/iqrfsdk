@@ -39,9 +39,19 @@
  */
 static int libIsInitialized = 0;
 
+//select your PI board, done in Makefile, alse here
+//#define RPI     /* A, B, B+ */
+//#define RPI2
 
 // Access from ARM Running Linux
+#ifdef RPI 
 #define BCM2708_PERI_BASE        0x20000000
+#endif
+
+#ifdef RPI2
+#define BCM2708_PERI_BASE        0x3F000000
+#endif
+
 #define GPIO_BASE                (BCM2708_PERI_BASE + 0x200000) /* GPIO controller */
 
 #define PAGE_SIZE (4*1024)
