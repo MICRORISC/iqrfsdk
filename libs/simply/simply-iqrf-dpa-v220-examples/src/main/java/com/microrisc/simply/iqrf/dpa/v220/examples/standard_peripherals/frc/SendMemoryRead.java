@@ -122,8 +122,8 @@ public class SendMemoryRead {
             printMessageAndExit("FRC doesn't exist or is not enabled");
         }
 
-        FRC_Data frcData = frc.send(new FRC_MemoryRead(new MemoryRequest(0x4A4,
-                DPA_ProtocolProperties.PNUM_Properties.OS, 0x0, 0, new short[]{})));
+        FRC_Data frcData = frc.send(new FRC_MemoryRead(new MemoryRequest(0x04A4,
+                DPA_ProtocolProperties.PNUM_Properties.OS, 0x00, 0, new short[]{})));
 
         if (frcData == null) {
             processNullResult(frc, "Sending FRC command failed",

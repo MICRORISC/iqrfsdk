@@ -19,7 +19,7 @@ import com.microrisc.simply.Node;
 
 /**
  * Abstract base class of FRC command classes
- *
+ * <p>
  * @author Michal Konopa
  */
 public abstract class AbstractFRC_Command implements FRC_Command {
@@ -39,7 +39,7 @@ public abstract class AbstractFRC_Command implements FRC_Command {
 
     /**
      * Checks validity of specified user data.
-     *
+     * <p>
      * @param userData user data to check
      * @return specified user data if the validity checking was allright
      * @throws IllegalArgumentException if the validity check failed. This would
@@ -63,7 +63,7 @@ public abstract class AbstractFRC_Command implements FRC_Command {
 
     /**
      * Checks validity of specified selected nodes.
-     *
+     * <p>
      * @param selectedNodes selected nodes to check
      * @return specified selected nodes if the validity checking was allright
      * @throws IllegalArgumentException if the validity check failed. This would
@@ -72,9 +72,16 @@ public abstract class AbstractFRC_Command implements FRC_Command {
     private static Node[] checkSelectedNodes(Node[] selectedNodes) {
         if (selectedNodes == null) {
             throw new IllegalArgumentException("Selected nodes cannot be null.");
-        } else {
-            return selectedNodes;
         }
+        if(selectedNodes.length == 0){
+            throw new IllegalArgumentException("Must be selected at least one node.");
+        }
+        for (Node selectedNode : selectedNodes) {
+            if (selectedNode == null) {
+                throw new IllegalArgumentException("Any from selected nodes cannot be null.");
+            }
+        }
+        return selectedNodes;
     }
 
     /**
@@ -85,7 +92,7 @@ public abstract class AbstractFRC_Command implements FRC_Command {
      * {@code null} <br>
      * - length of {@code userData} must be in the
      * USER_DATA_MIN_LENGHT..USER_DATA_MAX_LENGHT interval
-     *
+     * <p>
      * @param userData user data
      * @throws IllegalArgumentException if {@code userData} validity checking of
      * user data has failed
@@ -114,7 +121,7 @@ public abstract class AbstractFRC_Command implements FRC_Command {
      * {@code selectedNodes} cannot be {@code null} <br>
      * - length of {@code userData} must be in the
      * USER_DATA_MIN_LENGHT..USER_DATA_MAX_LENGHT interval
-     *
+     * <p>
      * @param userData user data
      * @param selectedNodes node on which will be command processed
      * @throws IllegalArgumentException if {@code userData} validity checking of
@@ -132,7 +139,7 @@ public abstract class AbstractFRC_Command implements FRC_Command {
      * {@code USER_DATA_MIN_LENGHT} length where each data item is equal to
      * {@code 0} - <b>default user data</b>.<br> {@code selectedNodes} cannot be
      * null.
-     *
+     * <p>
      * @param selectedNodes node on which will be command processed
      * @throws IllegalArgumentException if {@code selectedNodes} validity
      * checking of selected nodes has failed

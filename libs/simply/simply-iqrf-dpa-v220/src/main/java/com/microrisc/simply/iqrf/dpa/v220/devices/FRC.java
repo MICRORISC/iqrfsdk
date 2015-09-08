@@ -81,6 +81,13 @@ public interface FRC
      * @return unique identifier of sent request
      */
     UUID async_sendSelective(FRC_Command frcCmd);
+    
+    /**
+     * Sets global FRC parameters specified in {@link FRC_Configuration}.
+     * @param config data to configuration
+     * @return {@code VoidType} object, if method call has processed allright
+     */
+    UUID async_setFRCParams(FRC_Configuration config);
 
     // SYNCHRONOUS WRAPPERS
     /**
@@ -114,7 +121,7 @@ public interface FRC
     FRC_Data sendSelective(FRC_Command frcCmd);
     
     /**
-     * Sets global FRC parameters specified in {@link FRC_Configuration}.
+     * Synchronous wrapper for {@link #async_setFRCParams(com.microrisc.simply.iqrf.dpa.v220.types.FRC_Configuration) async_setfRCParams}
      * @param config data to configuration
      * @return {@code VoidType} object, if method call has processed allright
      */

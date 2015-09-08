@@ -28,7 +28,7 @@ public final class FRC_UniversalWithBytes extends AbstractFRC_Command {
     *
     * @throws IllegalArgumentException if is FRC ID incorrect
     */
-   public FRC_UniversalWithBytes(int frc_id) {
+   public FRC_UniversalWithBytes(int frc_id)    {
       super();
       this.id = checkID(frc_id);
    }
@@ -50,14 +50,14 @@ public final class FRC_UniversalWithBytes extends AbstractFRC_Command {
    /**
     * Creates new object of {@code FRC_UniversalWithBytes} with specified user
     * data and FRC id.
-    *
+    *   
+    * @param frcId ID of FRC command, it should be in range 0 - 255    
     * @param dpaRequest DPA request to take as a user data
-    * @param id ID of FRC command, it should be in range 0 - 255
     * @throws IllegalArgumentException if an error has occured during conversion
     * of specified DPA request into the series of bytes of user data or if is
     * FRC ID incorrect
     */
-   public FRC_UniversalWithBytes(DPA_Request dpaRequest, int id) {
+   public FRC_UniversalWithBytes(int frcId, DPA_Request dpaRequest) {
       super();
       try {
          this.userData = DPA_RequestConvertor.getInstance().toProtoValue(
@@ -66,7 +66,7 @@ public final class FRC_UniversalWithBytes extends AbstractFRC_Command {
          throw new IllegalArgumentException(
                  "Conversion of DPA request failed: " + e);
       }
-      this.id = checkID(id);
+      this.id = checkID(frcId);
    }
 
     /**

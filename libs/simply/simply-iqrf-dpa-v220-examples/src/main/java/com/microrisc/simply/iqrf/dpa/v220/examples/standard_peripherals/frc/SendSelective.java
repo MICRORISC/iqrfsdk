@@ -23,10 +23,13 @@ import com.microrisc.simply.SimplyException;
 import com.microrisc.simply.errors.CallRequestProcessingError;
 import com.microrisc.simply.iqrf.dpa.v220.DPA_SimplyFactory;
 import com.microrisc.simply.iqrf.dpa.v220.devices.FRC;
+import com.microrisc.simply.iqrf.dpa.v220.protocol.DPA_ProtocolProperties;
 import com.microrisc.simply.iqrf.dpa.v220.types.FRC_Data;
 import com.microrisc.simply.iqrf.dpa.v220.types.FRC_Temperature;
 import java.io.File;
 import java.util.Comparator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -116,16 +119,81 @@ public class SendSelective {
             printMessageAndExit("FRC doesn't exist or is not enabled");
         }
 
-        // choose nodes on which will be FRC executed
-        Node[] selectedNodes = network1.getNodes(new String[]{"1", "2", "4"});
 
-        // choose all even nodes
-        //Map<String, Node> allNodes = network1.getNodesMap();        
-        //Node[] selectedNodes = new Node[allNodes.size()/2];
-        //for (int i = 0; i < allNodes.size(); i+=2) {
-        //    selectedNodes[i/2] = allNodes.get(Integer.toString(i));
-        //}
-        
+        // variable for saving results
+        Map<String, FRC_Temperature.Result> result;
+
+//        // getting result
+//        result = sendSelectiveFRC(frc, getSpecificNodes(network1));
+//        // printing result
+//        printFRCResult(result);
+//
+//        // getting result
+//        result = sendSelectiveFRC(frc, getEvenNodes(network1));
+//        // printing result
+//        printFRCResult(result);
+
+        // getting result
+        result = send1BFRCViaNetwork(frc, network1);
+        // printing result
+        printFRCResult(result);
+
+        // end working with Simply
+        simply.destroy();
+    }
+
+    private static Map<String, FRC_Temperature.Result> send1BFRCViaNetwork(FRC frc, Network network1) {
+        // count of nodes in sent one FRC command
+        final int MAX_NODE_SIZE = 62;
+        // actual count of processed nodes
+        int totalProcessedNodes = 0;
+        // merged results from all nodes
+        Map<String, FRC_Temperature.Result> allResults = null;
+
+        while (totalProcessedNodes <= DPA_ProtocolProperties.NADR_Properties.IQMESH_NODE_ADDRESS_MAX) 
+        {
+            /* getting all non-null nodes with maximal count for FRC 
+             possibilities of FRC command (for 1B FRC command is 
+             max count 62 of processing nodes) */
+            List<Node> nodesList = new LinkedList<>();
+            for (int i = 1 + totalProcessedNodes; nodesList.size() < MAX_NODE_SIZE
+                    && i <= DPA_ProtocolProperties.NADR_Properties.IQMESH_NODE_ADDRESS_MAX; i++) 
+            {
+                Node node = network1.getNode(Integer.toString(i));
+                if (node != null) {
+                    nodesList.add(node);
+                }
+            }
+            
+            // checking if are available nodes for selecting
+            if(nodesList.size() == 0){
+                System.out.println("There aren't next nodes in network. It was found " 
+                + totalProcessedNodes + " for processing in selective FRC.");
+                break;
+            }
+            
+            // updating count of processed nodes
+            totalProcessedNodes += nodesList.size();
+            
+            // converts nodes to Node array
+            Node[] nodes = new Node[nodesList.size()];
+            nodes = nodesList.toArray(nodes);
+
+            // sending selective FRC
+            Map<String, FRC_Temperature.Result> result = sendSelectiveFRC(frc, nodes);
+            
+            // processing results
+            if (allResults == null) {
+                allResults = result;
+            } else {
+                allResults.putAll(result);
+            }
+        }
+
+        return allResults;
+    }
+
+    private static Map<String, FRC_Temperature.Result> sendSelectiveFRC(FRC frc, Node[] selectedNodes) {
         //send selective FRC
         FRC_Data frcData = frc.sendSelective(new FRC_Temperature(selectedNodes));
 
@@ -152,14 +220,31 @@ public class SendSelective {
 
         // sort the results
         SortedMap<String, FRC_Temperature.Result> sortedResult = sortResult(result);
-      
+
+        return sortedResult;
+    }
+
+    private static Node[] getEvenNodes(Network network1) {
+        // choose all even nodes
+        Map<String, Node> allNodes = network1.getNodesMap();
+        Node[] selectedNodes = new Node[allNodes.size() / 2];
+        for (int i = 0; i < allNodes.size(); i += 2) {
+            selectedNodes[i / 2] = allNodes.get(Integer.toString(i));
+        }
+        return selectedNodes;
+    }
+
+    private static Node[] getSpecificNodes(Network network1) {
+        // choose nodes on which will be FRC executed
+        Node[] selectedNodes = network1.getNodes(new String[]{"1", "2", "4"});
+        return selectedNodes;
+    }
+
+    private static void printFRCResult(Map<String, FRC_Temperature.Result> result) {
         // printing temperature on each node
-        for (Map.Entry<String, FRC_Temperature.Result> dataEntry : sortedResult.entrySet()) {
+        for (Map.Entry<String, FRC_Temperature.Result> dataEntry : result.entrySet()) {
             System.out.println("Node: " + dataEntry.getKey()
                     + ", temperature: " + dataEntry.getValue().getTemperature());
         }
-
-        // end working with Simply
-        simply.destroy();
     }
 }
