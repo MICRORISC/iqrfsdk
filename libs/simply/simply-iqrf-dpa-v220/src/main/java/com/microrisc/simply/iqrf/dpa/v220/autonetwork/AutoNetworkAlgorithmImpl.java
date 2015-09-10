@@ -1252,14 +1252,14 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
                 );
                 
                 if( result == null ) {
-                    logger.error("Error while removing bond of the remote node {}", newAddr);
-                    
-                    Thread.sleep(( bondedNodes.getNodesNumber() + 1 ) * (40 + 40));
-
-                    Integer bondedNodesNum = coordinator.removeBondedNode(newAddr);
-                    if ( bondedNodesNum == null ) {
-                        logger.error("Error while removing bond at coordinator {}", newAddr);
-                    }
+                    logger.error("Removing bond of the remote node {} failed", newAddr);
+                }
+                
+                // Wait for sure
+                Thread.sleep(( bondedNodes.getNodesNumber() + 1 ) * (40 + 40));
+                Integer bondedNodesNum = coordinator.removeBondedNode(newAddr);
+                if (bondedNodesNum == null) {
+                    logger.error("Removing bond at coordinator {} failed", newAddr);
                 }
             } else {
                 respondingNodes.add(newAddr);
@@ -1511,7 +1511,7 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
                     .appendSuffix(" second", " seconds")
                     .toFormatter();
             logger.info(
-                    "Round={}, Nodes={}, New nodes={}, Time={}", 
+                    "Round={}, All nodes={}, New nodes from start={}, Time={}", 
                     round, 
                     bondedNodes.getNodesNumber(), 
                     bondedNodes.getNodesNumber() - origNodesCount,
