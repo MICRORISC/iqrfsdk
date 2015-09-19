@@ -24,6 +24,7 @@ import com.microrisc.simply.errors.CallRequestProcessingError;
 import com.microrisc.simply.iqrf.dpa.v220.DPA_SimplyFactory;
 import com.microrisc.simply.iqrf.dpa.v220.devices.FRC;
 import com.microrisc.simply.iqrf.dpa.v220.protocol.DPA_ProtocolProperties;
+import com.microrisc.simply.iqrf.dpa.v220.types.FRC_Configuration;
 import com.microrisc.simply.iqrf.dpa.v220.types.FRC_Data;
 import com.microrisc.simply.iqrf.dpa.v220.types.FRC_Temperature;
 import java.io.File;
@@ -118,7 +119,12 @@ public class SendSelective {
         if (frc == null) {
             printMessageAndExit("FRC doesn't exist or is not enabled");
         }
-
+        
+        // For FRC peripheral must be set timeout:
+        // timeout = Bonded Nodes x 130 + _RESPONSE_FRC_TIME_xxx_MS + 250 [ms]
+        // eg. for 5 bonded nodes and FRC response time 640ms
+        long timeout = 5 * 130 + (long)FRC_Configuration.FRC_RESPONSE_TIME.TIME_640_MS.getRepsonseTimeInInt() + 250;
+        frc.setDefaultWaitingTimeout(timeout);
 
         // variable for saving results
         Map<String, FRC_Temperature.Result> result;
