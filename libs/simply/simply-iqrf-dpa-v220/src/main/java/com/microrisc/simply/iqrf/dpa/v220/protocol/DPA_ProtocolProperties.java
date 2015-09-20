@@ -110,20 +110,24 @@ public final class DPA_ProtocolProperties {
         }
         
         /** Peripherals numbers. */
-        public static final int COORDINATOR =   0x00;
-        public static final int NODE =          0x01;
-        public static final int OS =            0x02;
-        public static final int EEPROM =        0x03;
-        public static final int EEEPROM =       0x04;
-        public static final int RAM =           0x05;
-        public static final int LEDR =          0x06;
-        public static final int LEDG =          0x07;
-        public static final int SPI =           0x08;
-        public static final int IO =            0x09;
-        public static final int THERMOMETER =   0x0A;
-        public static final int PWM =           0x0B;
-        public static final int UART =          0x0C;
-        public static final int FRC =           0x0D;
+        public static final int COORDINATOR =             0x00;
+        public static final int NODE =                    0x01;
+        public static final int OS =                      0x02;
+        public static final int EEPROM =                  0x03;
+        public static final int EEEPROM =                 0x04;
+        public static final int RAM =                     0x05;
+        public static final int LEDR =                    0x06;
+        public static final int LEDG =                    0x07;
+        public static final int SPI =                     0x08;
+        public static final int IO =                      0x09;
+        public static final int THERMOMETER =             0x0A;
+        public static final int PWM =                     0x0B;
+        public static final int UART =                    0x0C;
+        public static final int FRC =                     0x0D;
+        
+        /** User peripherals properties. */
+        public static final int USER_PERIPHERAL_START =   0x20;
+        public static final int USER_PERIPHERAL_END =     0x6F;
         
         /**
          * Indicates, wheather the specified value of PNUM is a user peripheral.
@@ -132,7 +136,8 @@ public final class DPA_ProtocolProperties {
          *         {@code false} otherwise
          */
         public static boolean isUser(int pnum) {
-            return (( pnum >= 0x20 ) && ( pnum <= 0x6F ));
+            return (( pnum >= USER_PERIPHERAL_START ) 
+                    && ( pnum <= USER_PERIPHERAL_END ));
         }
         
         /**
@@ -169,6 +174,10 @@ public final class DPA_ProtocolProperties {
         /** PCmd values range. */
         public static final int VALUE_MIN = 0x00;
         public static final int VALUE_MAX = 0x3E;
+        
+        /** PCmd response values range. */
+        public static final int RESPONSE_VALUE_MIN = 0x80;
+        public static final int RESPONSE_VALUE_MAX = 0xFF;
         
         /**
          * Indicates, wheather the specified value of PCMD is reserved.
