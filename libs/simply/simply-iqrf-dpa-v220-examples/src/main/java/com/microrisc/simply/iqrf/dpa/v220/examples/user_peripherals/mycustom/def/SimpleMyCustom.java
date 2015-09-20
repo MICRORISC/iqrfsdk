@@ -13,29 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.microrisc.simply.iqrf.dpa.v220.examples.user_peripherals.mycustom.def;
 
 import com.microrisc.simply.CallRequestProcessingInfoContainer;
 import com.microrisc.simply.ConnectorService;
 import com.microrisc.simply.di_services.MethodArgumentsChecker;
 import com.microrisc.simply.iqrf.dpa.v220.DPA_DeviceObject;
+import com.microrisc.simply.iqrf.dpa.v220.protocol.DPA_ProtocolProperties;
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.UUID;
 
 /**
  * Simple {@code MyDallas18B20} implementation.
- *
+ * <p>
  * @author Martin Strouhal
  */
-public final class SimpleMyCustom 
-extends DPA_DeviceObject implements MyCustom {
-    
+public final class SimpleMyCustom
+        extends DPA_DeviceObject implements MyCustom {
+
     /**
      * Mapping of method IDs to theirs string representations.
      */
-    private static final Map<MyCustom.MethodID, String> methodIdsMap 
+    private static final Map<MyCustom.MethodID, String> methodIdsMap
             = new EnumMap<>(MyCustom.MethodID.class);
 
     private static void initMethodIdsMap() {
@@ -44,6 +44,32 @@ extends DPA_DeviceObject implements MyCustom {
 
     static {
         initMethodIdsMap();
+    }
+
+    private short checkPeripheralId(short peripheralId) {
+        if (DPA_ProtocolProperties.PNUM_Properties.isUser(peripheralId)) {
+            throw new IllegalArgumentException("Peripheral ID must be in use with Custom in range of user peripherals.");
+        }
+        return peripheralId;
+    }
+    
+    private short checkCmdId(short cmdId) {
+        if (cmdId < DPA_ProtocolProperties.PCMD_VALUE_MIN
+                || cmdId > DPA_ProtocolProperties.PCMD_VALUE_MAX) {
+            throw new IllegalArgumentException("Command ID must be in range from "
+                    + DPA_ProtocolProperties.PCMD_VALUE_MIN + " to " + DPA_ProtocolProperties.PCMD_VALUE_MAX);
+        }
+        return cmdId;
+    }
+    
+    private short[] checkData(short[] data){
+        if(data == null){
+            throw new IllegalArgumentException("Data cannot be null.");
+        }else if(data.length > DPA_ProtocolProperties.PDATA_MAX_LENGTH){
+            throw new IllegalArgumentException("Data cannot be greater than " +
+                    DPA_ProtocolProperties.PDATA_MAX_LENGTH);
+        }
+        return data;
     }
 
     public SimpleMyCustom(
@@ -56,16 +82,19 @@ extends DPA_DeviceObject implements MyCustom {
     @Override
     public UUID call(Object methodId, Object[] args) {
         String methodIdStr = transform((MyCustom.MethodID) methodId);
-        if ( methodIdStr == null ) {
+        if (methodIdStr == null) {
             return null;
         }
 
-        switch ( (MyCustom.MethodID)methodId ) {
+        switch ((MyCustom.MethodID) methodId) {
             case SEND:
-                MethodArgumentsChecker.checkArgumentTypes(args, new Class[] {short.class, short[].class } );
+                MethodArgumentsChecker.checkArgumentTypes(args, new Class[]{short.class, short.class, short[].class});
+                checkPeripheralId((short)args[0]);
+                checkCmdId((short)args[1]);
+                checkData((short[])args[2]);
                 return dispatchCall(
-                        methodIdStr, 
-                        new Object[] { getRequestHwProfile(), args[0], args[1] },
+                        methodIdStr,
+                        new Object[]{args[0], getRequestHwProfile(), args[1], args[2]},
                         getDefaultWaitingTimeout()
                 );
             default:
@@ -75,7 +104,7 @@ extends DPA_DeviceObject implements MyCustom {
 
     @Override
     public String transform(Object methodId) {
-        if ( !(methodId instanceof MyCustom.MethodID) ) {
+        if (!(methodId instanceof MyCustom.MethodID)) {
             throw new IllegalArgumentException(
                     "Method ID must be of type MyCustom.MethodID."
             );
@@ -84,15 +113,19 @@ extends DPA_DeviceObject implements MyCustom {
     }
 
     @Override
-    public Short[] send(short cmdId, short[] data) {
+    public Short[] send(short peripheralId, short cmdId, short[] data) {
+        checkPeripheralId(peripheralId);
+        checkCmdId(cmdId);
+        checkData(data);
         UUID uid = dispatchCall(
-                "0", new Object[]{getRequestHwProfile(), cmdId, data}, getDefaultWaitingTimeout()
+                "0", new Object[]{peripheralId, getRequestHwProfile(), cmdId, data},
+                getDefaultWaitingTimeout()
         );
-        if ( uid == null ) {
+        if (uid == null) {
             return null;
         }
         Short[] result = getCallResult(uid, Short[].class, getDefaultWaitingTimeout());
-        if ( result == null ) {
+        if (result == null) {
             return null;
         }
         return result;

@@ -13,53 +13,58 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.microrisc.simply.iqrf.dpa.v220.examples.user_peripherals.mycustom.def;
 
 import com.microrisc.simply.iqrf.dpa.protocol.PeripheralToDevIfaceMapper;
 import com.microrisc.simply.iqrf.dpa.protocol.PeripheralToDevIfaceMapperFactory;
+import com.microrisc.simply.iqrf.dpa.v220.protocol.DPA_ProtocolProperties;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
 /**
  * User peripheral to Device Interfaces mapper.
- * 
+ * <p>
  * @author Michal Konopa
+ * @author Martin Strouhal
  */
-public class UserPerToDevIfaceMapperFactory 
-implements PeripheralToDevIfaceMapperFactory { 
-    
+// September 2015 - for Custom peripheral implemented advanced mapping
+// of multiple interfaces
+public class UserPerToDevIfaceMapperFactory
+        implements PeripheralToDevIfaceMapperFactory {
+
     /**
      * Holds mapping between my peripherals and Device Interfaces.
      */
     private class UserPerToDevIfaceMapper implements PeripheralToDevIfaceMapper {
-        private final Map<Integer, Class> peripheralToIface; 
+
+        private final Map<Integer, Class> peripheralToIface;
         private final Map<Class, Integer> ifaceToPeripheral;
-    
-    
+
         private void createMappings() {
-            peripheralToIface.put(MyCustom.USER_PERIPHERAL_ID, MyCustom.class);
+            for (int i = DPA_ProtocolProperties.PNUM_Properties.USER_PERIPHERAL_START;
+                    i <= DPA_ProtocolProperties.PNUM_Properties.USER_PERIPHERAL_END; i++) {
+                peripheralToIface.put(i, MyCustom.class);
+            }
 
             // creating transposition
-            for ( Map.Entry<Integer, Class> entry : peripheralToIface.entrySet() ) {
+            for (Map.Entry<Integer, Class> entry : peripheralToIface.entrySet()) {
                 ifaceToPeripheral.put(entry.getValue(), entry.getKey());
             }
         }
-    
-    
+
         public UserPerToDevIfaceMapper() {
             peripheralToIface = new HashMap<>();
             ifaceToPeripheral = new HashMap<>();
             createMappings();
         }
-    
+
         @Override
         public Set<Class> getMappedDeviceInterfaces() {
             return ifaceToPeripheral.keySet();
         }
 
-        @Override   
+        @Override
         public Class getDeviceInterface(int perId) {
             return peripheralToIface.get(perId);
         }
@@ -74,7 +79,7 @@ implements PeripheralToDevIfaceMapperFactory {
             return peripheralToIface.keySet();
         }
     }
-    
+
     @Override
     public PeripheralToDevIfaceMapper createPeripheralToDevIfaceMapper() throws Exception {
         return new UserPerToDevIfaceMapper();

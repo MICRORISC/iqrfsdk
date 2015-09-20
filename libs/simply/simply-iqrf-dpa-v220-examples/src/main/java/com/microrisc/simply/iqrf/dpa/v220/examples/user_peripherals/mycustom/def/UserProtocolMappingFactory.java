@@ -16,6 +16,7 @@
 
 package com.microrisc.simply.iqrf.dpa.v220.examples.user_peripherals.mycustom.def;
 
+import com.microrisc.simply.iqrf.dpa.v220.protocol.DPA_ProtocolProperties;
 import com.microrisc.simply.iqrf.dpa.v220.typeconvertors.DPA_AdditionalInfoConvertor;
 import com.microrisc.simply.iqrf.typeconvertors.ArrayUns8Convertor;
 import com.microrisc.simply.iqrf.typeconvertors.Uns16Convertor;
@@ -36,6 +37,7 @@ import com.microrisc.simply.protocol.mapping.SimplePacketToCallResponseMapping;
 import com.microrisc.simply.protocol.mapping.SimpleProtocolMapping;
 import com.microrisc.simply.protocol.mapping.ValueToPacketMapping;
 import com.microrisc.simply.typeconvertors.StringToByteConvertor;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -79,9 +81,9 @@ public class UserProtocolMappingFactory implements ProtocolMappingFactory {
     // MyCustom interface
     static private MethodToPacketMapping createSendMapping() {
         List<ConstValueToPacketMapping> constMapping = new LinkedList<>();     
-        constMapping.add(new ConstValueToPacketMapping(2, new short[]{MyCustom.USER_PERIPHERAL_ID}));
 
         List<ValueToPacketMapping> argMapping = new LinkedList<>();        
+        argMapping.add(new ValueToPacketMapping(2, Uns8Convertor.getInstance()));
         argMapping.add(new ValueToPacketMapping(4, Uns16Convertor.getInstance()));
         argMapping.add(new ValueToPacketMapping(3, Uns8Convertor.getInstance()));
         argMapping.add(new ValueToPacketMapping(6, ArrayUns8Convertor.getInstance()));
@@ -91,7 +93,6 @@ public class UserProtocolMappingFactory implements ProtocolMappingFactory {
 
     static private InterfaceToPacketMapping createRequestMyCustomMapping() {
         List<ConstValueToPacketMapping> constMappings = new LinkedList<>();
-    //    constMappings.add(new ConstValueToPacketMapping(2, new short[]{MyCustom.USER_PERIPHERAL_ID}));
 
         Map<String, MethodToPacketMapping> methodMappings = new HashMap<>();
 
@@ -137,15 +138,27 @@ public class UserProtocolMappingFactory implements ProtocolMappingFactory {
     // MyCustom
     static private PacketToMethodMapping createResponseSend() {
         List<PacketPositionValues> packetValues = new LinkedList<>();
-        packetValues.add(new PacketPositionValues(2, (short) MyCustom.USER_PERIPHERAL_ID));
-
+        List<Short> possibleResponseId = new LinkedList<>();
+        for (int i = DPA_ProtocolProperties.PNUM_Properties.USER_PERIPHERAL_START;
+                    i <= DPA_ProtocolProperties.PNUM_Properties.USER_PERIPHERAL_END; i++) {
+            possibleResponseId.add((short)i);    
+        }
+        
+        packetValues.add(new PacketPositionValues(DPA_ProtocolProperties.PCMD_START, possibleResponseId));
+        
         PacketToValueMapping resultMapping = new PacketToValueMapping(8, ArrayUns8Convertor.getInstance());
         return new PacketToMethodMapping("0", packetValues, resultMapping);
     }
     
     static private PacketToInterfaceMapping createResponseMyCustomMapping() {
         List<PacketPositionValues> packetValues = new LinkedList<>();
-        packetValues.add(new PacketPositionValues(2, (short) MyCustom.USER_PERIPHERAL_ID));
+        List<Short> possiblePNumIds = new LinkedList<>();
+        for (short i = DPA_ProtocolProperties.PNUM_Properties.USER_PERIPHERAL_START; 
+                i <= DPA_ProtocolProperties.PNUM_Properties.USER_PERIPHERAL_END; i++) {
+            possiblePNumIds.add(i);
+        }        
+        
+        packetValues.add(new PacketPositionValues(DPA_ProtocolProperties.PNUM_START, possiblePNumIds));
 
         Map<String, PacketToMethodMapping> methodMappings = new HashMap<>();
 

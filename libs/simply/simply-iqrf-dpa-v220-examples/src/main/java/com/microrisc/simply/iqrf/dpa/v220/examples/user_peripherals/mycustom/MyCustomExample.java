@@ -79,7 +79,7 @@ public class MyCustomExample {
         }
 
         // sending command and getting result
-        Short[] result = custom.send((short) 0x00, new short[]{});
+        Short[] result = custom.send((short)0x21, (short) 0x00, new short[]{});
 
         // printing result
         System.out.println(Arrays.toString(result));
