@@ -13,14 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.microrisc.simply.iqrf.dpa.v220.examples.user_peripherals.mycustom.def;
+package com.microrisc.simply.iqrf.dpa.v220.protocol;
 
+import com.microrisc.simply.iqrf.dpa.v220.devices.MyCustom;
 import com.microrisc.simply.iqrf.dpa.protocol.PeripheralToDevIfaceMapper;
 import com.microrisc.simply.iqrf.dpa.protocol.PeripheralToDevIfaceMapperFactory;
-import com.microrisc.simply.iqrf.dpa.v220.protocol.DPA_ProtocolProperties;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import org.apache.commons.configuration.Configuration;
 
 /**
  * User peripheral to Device Interfaces mapper.
@@ -30,7 +31,7 @@ import java.util.Set;
  */
 // September 2015 - for Custom peripheral implemented advanced mapping
 // of multiple interfaces
-public class UserPerToDevIfaceMapperFactory
+public class CustomUserPerToDevIfaceMapperFactory
         implements PeripheralToDevIfaceMapperFactory {
 
     /**
@@ -41,7 +42,9 @@ public class UserPerToDevIfaceMapperFactory
         private final Map<Integer, Class> peripheralToIface;
         private final Map<Class, Integer> ifaceToPeripheral;
 
-        private void createMappings() {
+        private void createMappings(Configuration config) {
+            //TODO zpracovat config
+            
             for (int i = DPA_ProtocolProperties.PNUM_Properties.USER_PERIPHERAL_START;
                     i <= DPA_ProtocolProperties.PNUM_Properties.USER_PERIPHERAL_END; i++) {
                 peripheralToIface.put(i, MyCustom.class);
@@ -53,10 +56,16 @@ public class UserPerToDevIfaceMapperFactory
             }
         }
 
-        public UserPerToDevIfaceMapper() {
+        /**
+         * Create a new instance of {@link UserPerToDevIfaceMapper} with
+         * peripherals used in specified config.
+         * <p>
+         * @param config must contain used perpiherals which will be mapped
+         */
+        public UserPerToDevIfaceMapper(Configuration config) {
             peripheralToIface = new HashMap<>();
             ifaceToPeripheral = new HashMap<>();
-            createMappings();
+            createMappings(config);
         }
 
         @Override
@@ -80,8 +89,17 @@ public class UserPerToDevIfaceMapperFactory
         }
     }
 
+    private Configuration config;
+
+    public void setInitConfig(Configuration config) {
+        this.config = config;
+    }
+
     @Override
     public PeripheralToDevIfaceMapper createPeripheralToDevIfaceMapper() throws Exception {
-        return new UserPerToDevIfaceMapper();
+        if (config == null) {
+            throw new Exception("In implementation CustomPerToDevIfaceMapperFactory must be called setInitConfig method first!");
+        }
+        return new UserPerToDevIfaceMapper(config);
     }
 }

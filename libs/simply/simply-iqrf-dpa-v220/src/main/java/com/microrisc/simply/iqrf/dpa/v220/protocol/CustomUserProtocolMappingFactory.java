@@ -13,10 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.microrisc.simply.iqrf.dpa.v220.protocol;
 
-package com.microrisc.simply.iqrf.dpa.v220.examples.user_peripherals.mycustom.def;
-
-import com.microrisc.simply.iqrf.dpa.v220.protocol.DPA_ProtocolProperties;
+import com.microrisc.simply.iqrf.dpa.v220.devices.MyCustom;
 import com.microrisc.simply.iqrf.dpa.v220.typeconvertors.DPA_AdditionalInfoConvertor;
 import com.microrisc.simply.iqrf.typeconvertors.ArrayUns8Convertor;
 import com.microrisc.simply.iqrf.typeconvertors.Uns16Convertor;
@@ -37,19 +36,19 @@ import com.microrisc.simply.protocol.mapping.SimplePacketToCallResponseMapping;
 import com.microrisc.simply.protocol.mapping.SimpleProtocolMapping;
 import com.microrisc.simply.protocol.mapping.ValueToPacketMapping;
 import com.microrisc.simply.typeconvertors.StringToByteConvertor;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import org.apache.commons.configuration.Configuration;
 
 /**
  * Factory for protocol mapping of my periperals.
- *
+ * <p>
  * @author Michal Konopa
  * @author Martin Strouhal
  */
-public class UserProtocolMappingFactory implements ProtocolMappingFactory {
+public class CustomUserProtocolMappingFactory implements ProtocolMappingFactory {
 
     /**
      * Reference to protocol mapping.
@@ -77,12 +76,12 @@ public class UserProtocolMappingFactory implements ProtocolMappingFactory {
         mappings.add(nodeMapping);
         return mappings;
     }
-    
+
     // MyCustom interface
     static private MethodToPacketMapping createSendMapping() {
-        List<ConstValueToPacketMapping> constMapping = new LinkedList<>();     
+        List<ConstValueToPacketMapping> constMapping = new LinkedList<>();
 
-        List<ValueToPacketMapping> argMapping = new LinkedList<>();        
+        List<ValueToPacketMapping> argMapping = new LinkedList<>();
         argMapping.add(new ValueToPacketMapping(2, Uns8Convertor.getInstance()));
         argMapping.add(new ValueToPacketMapping(4, Uns16Convertor.getInstance()));
         argMapping.add(new ValueToPacketMapping(3, Uns8Convertor.getInstance()));
@@ -102,7 +101,7 @@ public class UserProtocolMappingFactory implements ProtocolMappingFactory {
 
     /**
      * Creates map of mapping of Device Interfaces into protocol packets.
-     *
+     * <p>
      * @return
      */
     static private Map<Class, InterfaceToPacketMapping> createRequestIfaceMappings() {
@@ -124,8 +123,6 @@ public class UserProtocolMappingFactory implements ProtocolMappingFactory {
         );
     }
 
-    
-    
     // RESPONSES MAPPING
     static private PacketToValueMapping createResponseNetworkMapping() {
         return new PacketToValueMapping(0, 0, StringToByteConvertor.getInstance());
@@ -140,30 +137,30 @@ public class UserProtocolMappingFactory implements ProtocolMappingFactory {
         List<PacketPositionValues> packetValues = new LinkedList<>();
         List<Short> possibleResponseId = new LinkedList<>();
         for (int i = DPA_ProtocolProperties.PNUM_Properties.USER_PERIPHERAL_START;
-                    i <= DPA_ProtocolProperties.PNUM_Properties.USER_PERIPHERAL_END; i++) {
-            possibleResponseId.add((short)i);    
+                i <= DPA_ProtocolProperties.PNUM_Properties.USER_PERIPHERAL_END; i++) {
+            possibleResponseId.add((short) i);
         }
-        
+
         packetValues.add(new PacketPositionValues(DPA_ProtocolProperties.PCMD_START, possibleResponseId));
-        
+
         PacketToValueMapping resultMapping = new PacketToValueMapping(8, ArrayUns8Convertor.getInstance());
         return new PacketToMethodMapping("0", packetValues, resultMapping);
     }
-    
+
     static private PacketToInterfaceMapping createResponseMyCustomMapping() {
         List<PacketPositionValues> packetValues = new LinkedList<>();
         List<Short> possiblePNumIds = new LinkedList<>();
-        for (short i = DPA_ProtocolProperties.PNUM_Properties.USER_PERIPHERAL_START; 
+        for (short i = DPA_ProtocolProperties.PNUM_Properties.USER_PERIPHERAL_START;
                 i <= DPA_ProtocolProperties.PNUM_Properties.USER_PERIPHERAL_END; i++) {
             possiblePNumIds.add(i);
-        }        
-        
+        }
+
         packetValues.add(new PacketPositionValues(DPA_ProtocolProperties.PNUM_START, possiblePNumIds));
 
         Map<String, PacketToMethodMapping> methodMappings = new HashMap<>();
 
         methodMappings.put("0", createResponseSend());
-    
+
         return new PacketToInterfaceMapping(MyCustom.class, packetValues, methodMappings);
     }
 
@@ -192,13 +189,27 @@ public class UserProtocolMappingFactory implements ProtocolMappingFactory {
         );
     }
 
-    public UserProtocolMappingFactory() {
+    private final Configuration config;
+
+    /**
+     * Create a new instance of {@link CustomUserProtocolMappingFactory} with peripherals
+     * used in specified config.
+     * <p>
+     * @param config must contain used perpiherals which will be mapped
+     */
+    public CustomUserProtocolMappingFactory(Configuration config) {
+        this.config = config;
     }
 
+    //TODO použít config
+    
     @Override
     public ProtocolMapping createProtocolMapping() throws Exception {
-        if ( protocolMapping != null ) {
+        if (protocolMapping != null) {
             return protocolMapping;
+        }
+        if (config == null) {
+            throw new Exception("It must be called method for assign Configuration first!");
         }
 
         CallRequestToPacketMapping callRequestToPacketMapping

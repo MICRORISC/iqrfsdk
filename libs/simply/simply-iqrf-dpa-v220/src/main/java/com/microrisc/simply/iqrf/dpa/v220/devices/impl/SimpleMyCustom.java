@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.microrisc.simply.iqrf.dpa.v220.examples.user_peripherals.mycustom.def;
+package com.microrisc.simply.iqrf.dpa.v220.devices.impl;
 
+import com.microrisc.simply.iqrf.dpa.v220.devices.MyCustom;
 import com.microrisc.simply.CallRequestProcessingInfoContainer;
 import com.microrisc.simply.ConnectorService;
 import com.microrisc.simply.di_services.MethodArgumentsChecker;
@@ -47,7 +48,7 @@ public final class SimpleMyCustom
     }
 
     private short checkPeripheralId(short peripheralId) {
-        if (DPA_ProtocolProperties.PNUM_Properties.isUser(peripheralId)) {
+        if (!DPA_ProtocolProperties.PNUM_Properties.isUser(peripheralId)) {
             throw new IllegalArgumentException("Peripheral ID must be in use with Custom in range of user peripherals.");
         }
         return peripheralId;

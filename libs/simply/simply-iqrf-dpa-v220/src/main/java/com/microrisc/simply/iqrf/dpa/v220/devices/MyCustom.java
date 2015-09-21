@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.microrisc.simply.iqrf.dpa.v220.examples.user_peripherals.mycustom.def;
+package com.microrisc.simply.iqrf.dpa.v220.devices;
 
 import com.microrisc.simply.DeviceInterface;
 import com.microrisc.simply.DeviceInterfaceMethodId;
@@ -41,7 +41,7 @@ extends DPA_StandardServices, GenericAsyncCallable, MethodIdTransformer {
     /**
      * Send custom data to user periheral.
      *
-     * @param peripheralId od of peripheral
+     * @param peripheralId id of peripheral
      * @param cmdId id of command
      * @param data to send
      * @return response data <br> 
