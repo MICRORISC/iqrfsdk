@@ -7,7 +7,7 @@
     <packaging>jar</packaging>
     
     <name>simply-iqrf-dpa-v220</name>
-    <description>IQRF DPA v2.10 extension of Simply framework.</description>
+    <description>IQRF DPA v2.20 extension of Simply framework.</description>
     <url>http://iqrf.org/weben/index.php?sekce=products&amp;id=iqrf-sdk&amp;ot=development-tools&amp;ot2=development-sw</url>
     
     <organization>
