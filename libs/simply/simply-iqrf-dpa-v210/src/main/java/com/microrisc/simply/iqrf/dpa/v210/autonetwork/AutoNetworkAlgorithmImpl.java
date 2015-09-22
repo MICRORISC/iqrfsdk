@@ -711,15 +711,40 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
         
         // 100 ms unit
         int wTimeout = (int)( ( (long)temporaryAddressTimeout * 1000 ) / 100 );
-        int waitBonding = bondedNodes.getNodesNumber() * 1;
-
+        
         // how long to wait for prebonding [ in seconds ]
-        waitBonding = (int)Math.min( Math.max( 10, waitBonding ), prebondingInterval );
+        
+        // real bonding time equals to: NominalBondingTime - 0.06 * ( NumberOfNodes + 4 ) [seconds]. 
+        // we recommend to have real bonding time minimally 10s in order to let not yet bonded nodes 
+        // to have enough time get bonded. Longer bonding time is always recommended.
+
+        // minimal NominalBondingTime is 15  (derived from: 0.06 * (239 + 4) = 14.58 s)
+        // maximal NominalBondingTime is 655 (derived from: 16.bit number with 10ms unit)
+        
+        // different approaches can be implemented to adjust the waiting time
+        // e.g. linear interpolation between min a max values wrt to already bonded nodes
+        
+        // x1 (min) = 10 s              (input variable)
+        // x2 (max) = 60 s              (input variable)
+        // y1 (min) = 0 bonded nodes    (fixed for calculation below)
+        // y2 (max) = 239 bonded nodes  (fixed for calculation below)
+        
+        // x = (y + (239/(x2-x1))*x1)/(239/(x2-x1))
+        // e.g. for y=20 already bonded nodes => x = (20 + 4.8*10)/4.8 => 14.125s
+        
+        // set min and max waiting time values and make linear interpolation between them
+        //short x1 = 10;
+        //short x2 = 60;
+        //int waitBonding = Math.round((bondedNodes.getNodesNumber() + (239/(x2-x1)) * x1)/(239/(x2-x1)));
+        
+        // simple approach of having constant waiting time during the network formation
+        int waitBonding = (int)prebondingInterval;
+        
         // 10 ms unit
         int waitBonding10ms = waitBonding * 100;
 
         logger.info(
-            "Enable prebonding, mask = {}, time = {}, and LEDR=1 at Nodes and Coordinator",
+            "Enable prebonding, mask = {}, address timeout = {}, and LEDR=1 at Nodes and Coordinator",
             Integer.toBinaryString(bondingMask), temporaryAddressTimeout
         );
         
