@@ -24,6 +24,8 @@ import com.microrisc.simply.init.SimpleInitObjectsFactory;
 import com.microrisc.simply.iqrf.dpa.protocol.PeripheralToDevIfaceMapper;
 import com.microrisc.simply.iqrf.dpa.protocol.PeripheralToDevIfaceMapperFactory;
 import com.microrisc.simply.iqrf.dpa.protocol.ProtocolObjects;
+import com.microrisc.simply.iqrf.dpa.v220.protocol.CustomUserPerToDevIfaceMapperFactory;
+import com.microrisc.simply.iqrf.dpa.v220.protocol.CustomUserProtocolMappingFactory;
 import com.microrisc.simply.iqrf.dpa.v220.protocol.DPA_PeripheralToDevIfaceMapperFactory;
 import com.microrisc.simply.iqrf.dpa.v220.protocol.DPA_StandardPerProtocolMappingFactory;
 import com.microrisc.simply.protocol.MessageConvertor;
@@ -74,7 +76,9 @@ extends AbstractInitObjectsFactory<Configuration, SimpleDPA_InitObjects>
             String factoryClassName = configuration.getString("protocolLayer.protocolMapping.factory.class", "");
             // if user hasn't defined his mapping
             if ( factoryClassName.isEmpty() ) {
-                return null;
+                //if any mapping doesn't exist, create mapping with custom 
+                // peripheral over specified peripherals in config
+                return new CustomUserProtocolMappingFactory(configuration).createProtocolMapping();
             }
             Class factoryClass = Class.forName(factoryClassName);
             
@@ -135,7 +139,9 @@ extends AbstractInitObjectsFactory<Configuration, SimpleDPA_InitObjects>
        String factoryClassName = configuration.getString("dpa.perToDevIfaceMapper.factory.class", "");
        // if user hasn't defined his mapping
        if ( factoryClassName.isEmpty() ) {
-           return null;
+            //if any mapping doesn't exist, create mapping with custom 
+            // peripheral over specified peripherals in config
+           return new CustomUserPerToDevIfaceMapperFactory(configuration).createPeripheralToDevIfaceMapper();
        }
        
        Class factoryClass = Class.forName(factoryClassName);

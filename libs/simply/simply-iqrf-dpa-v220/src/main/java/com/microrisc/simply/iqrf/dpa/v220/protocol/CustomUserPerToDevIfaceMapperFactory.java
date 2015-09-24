@@ -18,10 +18,19 @@ package com.microrisc.simply.iqrf.dpa.v220.protocol;
 import com.microrisc.simply.iqrf.dpa.v220.devices.MyCustom;
 import com.microrisc.simply.iqrf.dpa.protocol.PeripheralToDevIfaceMapper;
 import com.microrisc.simply.iqrf.dpa.protocol.PeripheralToDevIfaceMapperFactory;
+import com.microrisc.simply.iqrf.dpa.v220.init.NetworksFunctionalityToSimplyMapping;
+import com.microrisc.simply.iqrf.dpa.v220.init.NetworksFunctionalityToSimplyMappingParser;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import org.apache.commons.configuration.Configuration;
+import org.apache.commons.configuration.ConfigurationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * User peripheral to Device Interfaces mapper.
@@ -42,17 +51,20 @@ public class CustomUserPerToDevIfaceMapperFactory
         private final Map<Integer, Class> peripheralToIface;
         private final Map<Class, Integer> ifaceToPeripheral;
 
-        private void createMappings(Configuration config) {
-            //TODO zpracovat config
-            
-            for (int i = DPA_ProtocolProperties.PNUM_Properties.USER_PERIPHERAL_START;
-                    i <= DPA_ProtocolProperties.PNUM_Properties.USER_PERIPHERAL_END; i++) {
-                peripheralToIface.put(i, MyCustom.class);
-            }
+        private final Logger logger = LoggerFactory.getLogger(CustomUserPerToDevIfaceMapperFactory.class);
 
+        private void createMappings() {
             // creating transposition
             for (Map.Entry<Integer, Class> entry : peripheralToIface.entrySet()) {
                 ifaceToPeripheral.put(entry.getValue(), entry.getKey());
+            }
+         
+            // mapping determined peripherals
+            for (Integer peripheral : usedPeripherals) {
+                if (peripheral >= DPA_ProtocolProperties.PNUM_Properties.USER_PERIPHERAL_START
+                        && peripheral <= DPA_ProtocolProperties.PNUM_Properties.USER_PERIPHERAL_END) {
+                    peripheralToIface.put(peripheral, MyCustom.class);
+                }
             }
         }
 
@@ -62,10 +74,10 @@ public class CustomUserPerToDevIfaceMapperFactory
          * <p>
          * @param config must contain used perpiherals which will be mapped
          */
-        public UserPerToDevIfaceMapper(Configuration config) {
+        public UserPerToDevIfaceMapper() {
             peripheralToIface = new HashMap<>();
             ifaceToPeripheral = new HashMap<>();
-            createMappings(config);
+            createMappings();
         }
 
         @Override
@@ -89,17 +101,57 @@ public class CustomUserPerToDevIfaceMapperFactory
         }
     }
 
-    private Configuration config;
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final Set<Integer> usedPeripherals = new HashSet<>();
 
-    public void setInitConfig(Configuration config) {
-        this.config = config;
+    public CustomUserPerToDevIfaceMapperFactory(Configuration config) {
+        if (config == null) {
+            new CustomUserPerToDevIfaceMapperFactory();
+        }
+
+        String sourceFileName = config.getString(
+                "initialization.type.dpa.fixed.sourceFile",
+                "PeripheralDistribution.xml"
+        );
+
+        // parsing peripherals
+        NetworksFunctionalityToSimplyMapping networkFuncMapping = null;
+        try {
+            networkFuncMapping = NetworksFunctionalityToSimplyMappingParser.parse(sourceFileName);
+        } catch (ConfigurationException ex) {
+            logger.warn(ex.toString());
+            logger.info("Custom peripheral will be mapped only for 0x20.");
+            usedPeripherals.add(0x20);
+            return;
+        }
+
+        // determining only peripherals IDs
+        Map<String, Map<String, Set<Integer>>> mapping = networkFuncMapping.getMapping();
+        List<Integer> usedPer = new LinkedList<>();
+        for (Entry<String, Map<String, Set<Integer>>> networkEntry : mapping.entrySet()) {
+            Map<String, Set<Integer>> network = networkEntry.getValue();
+            for (Entry<String, Set<Integer>> node : network.entrySet()) {
+                usedPer.addAll(node.getValue());
+            }
+        }
+
+        // mapping determined peripherals
+        for (Integer peripheral : usedPer) {
+            if (peripheral >= DPA_ProtocolProperties.PNUM_Properties.USER_PERIPHERAL_START
+                    && peripheral <= DPA_ProtocolProperties.PNUM_Properties.USER_PERIPHERAL_END) {
+                usedPeripherals.add(peripheral);
+            }
+        }
+    }
+
+    public CustomUserPerToDevIfaceMapperFactory() {
+        logger.warn("Configuration wasn't found.");
+        logger.info("Custom peripheral will be mapped only for 0x20.");
+        usedPeripherals.add(0x20);
     }
 
     @Override
     public PeripheralToDevIfaceMapper createPeripheralToDevIfaceMapper() throws Exception {
-        if (config == null) {
-            throw new Exception("In implementation CustomPerToDevIfaceMapperFactory must be called setInitConfig method first!");
-        }
-        return new UserPerToDevIfaceMapper(config);
+        return new UserPerToDevIfaceMapper();
     }
 }
