@@ -37,10 +37,11 @@
             </node>
         </nodes>
 
-        <!-- Standard -->
+        <!-- Standard
         <nodesInterval min="1" max="5">
             <peripherals>1, 2, 3, 4, 5, 6, 7, 9, 10, 13</peripherals>
         </nodesInterval>        
+        -->
         
         <!-- For MyDallas
         <nodesInterval min="1" max="5">
@@ -53,6 +54,12 @@
             <peripherals>1, 2, 3, 4, 5, 6, 7, 9, 10, 13, 32, 33</peripherals>
         </nodesInterval>
         -->
+        
+        <!-- For MyCustom -->
+        <nodesInterval min="1" max="5">
+            <peripherals>1, 2, 3, 4, 5, 6, 7, 9, 10, 13, 32, 33, 34</peripherals>
+        </nodesInterval>        
+
 
         <!-- nodes set
         <nodesSet id="1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20">
