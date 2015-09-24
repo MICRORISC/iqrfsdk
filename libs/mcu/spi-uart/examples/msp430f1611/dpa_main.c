@@ -47,12 +47,13 @@ static const uint8_t endingToSend[] 		= "\r\n\n";
 #define CONFIRMATION_WAITING			1
 #define RESPONSE_WAITING			2
 
-#define COORDINATOR				0
-#define NODE1					1
-#define NODE2					2
-#define NODE3					3
-#define NODE4					4
-#define NODE5					5
+#define COORDINATOR				0x00
+#define NODE1					0x01
+#define NODE2					0x02
+#define NODE3					0x03
+#define NODE4					0x04
+#define NODE5					0x05
+#define LOCAL                   0xFC
 
 //=========================== variables =======================================
 
@@ -191,7 +192,7 @@ void MyDpaLibRequests(void) {
 
 	leds_green_toggle();
 
-	if (app_vars.myDpaRequest.NAdr == 0)
+	if (app_vars.myDpaRequest.NAdr == 0x00 || app_vars.myDpaRequest.NAdr == 0xFC)
 		app_vars.dpaStep = RESPONSE_WAITING;			// dpa answer would be response
 	else
 		app_vars.dpaStep = CONFIRMATION_WAITING;		// dpa answer would be confirmation
