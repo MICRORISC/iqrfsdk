@@ -26,6 +26,7 @@ import com.microrisc.simply.iqrf.dpa.protocol.ProtocolObjects;
 import com.microrisc.simply.iqrf.dpa.v22x.protocol.CustomUserProtocolMappingFactory;
 import com.microrisc.simply.iqrf.dpa.v22x.protocol.DPA_PeripheralToDevIfaceMapperFactory;
 import com.microrisc.simply.iqrf.dpa.v22x.protocol.DPA_StandardPerProtocolMappingFactory;
+import com.microrisc.simply.iqrf.dpa.v22x.protocol.CustomUserPerToDevIfaceMapperFactory;
 import com.microrisc.simply.protocol.mapping.CallRequestToPacketMapping;
 import com.microrisc.simply.protocol.mapping.PacketToCallResponseMapping;
 import com.microrisc.simply.protocol.mapping.ProtocolMapping;
@@ -136,7 +137,9 @@ extends AbstractInitObjectsFactory<Configuration, SimpleDPA_InitObjects>
         String factoryClassName = configuration.getString("dpa.perToDevIfaceMapper.factory.class", "");
         // if user hasn't defined his mapping
        if ( factoryClassName.isEmpty() ) {
-            return null;
+            //if any mapping doesn't exist, create mapping with custom 
+            // peripheral over specified peripherals in config
+           return new CustomUserPerToDevIfaceMapperFactory(configuration).createPeripheralToDevIfaceMapper();
         }
         Class factoryClass = Class.forName(factoryClassName);
         
@@ -152,7 +155,7 @@ extends AbstractInitObjectsFactory<Configuration, SimpleDPA_InitObjects>
         }
                                 
         return factory.createPeripheralToDevIfaceMapper();
-    }
+    }    
 
     /** Creates peripheral to device interface mapper. */
     private PeripheralToDevIfaceMapper createPeripheralToDevIfaceMapper(Configuration configuration)
