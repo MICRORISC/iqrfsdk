@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.microrisc.simply.iqrf.dpa.v220.devices;
 
 import com.microrisc.simply.DeviceInterface;
@@ -23,29 +22,35 @@ import com.microrisc.simply.di_services.MethodIdTransformer;
 import com.microrisc.simply.iqrf.dpa.di_services.DPA_StandardServices;
 
 /**
- *  MyDallas18B20 Device Interface.
- * 
+ * MyCustom Device Interface.
+ * <p>
+ * MyCustom is peripheral which is used for all user peripherals when isn't used
+ * any mapping of user peripherals.<br>
+ * All used user peripherals must be specified in PeripheralDistribution.xml
+ * file.
+ * <p>
  * @author Martin Strouhal
  */
 @DeviceInterface
-public interface MyCustom 
-extends DPA_StandardServices, GenericAsyncCallable, MethodIdTransformer {        
-    
+public interface MyCustom
+        extends DPA_StandardServices, GenericAsyncCallable, MethodIdTransformer {
+
     /**
      * Identifiers of this Device Interface's methods.
      */
     enum MethodID implements DeviceInterfaceMethodId {
+
         SEND
     }
 
     /**
      * Send custom data to user periheral.
-     *
+     * <p>
      * @param peripheralId id of peripheral
      * @param cmdId id of command
      * @param data to send
-     * @return response data <br> 
-     *         {@code null} if an error has occurred during processing
+     * @return response data <br> {@code null} if an error has occurred during
+     * processing
      */
     Short[] send(short peripheralId, short cmdId, short[] data);
 }

@@ -20,19 +20,15 @@ import com.microrisc.simply.Node;
 import com.microrisc.simply.Simply;
 import com.microrisc.simply.SimplyException;
 import com.microrisc.simply.iqrf.dpa.v220.DPA_SimplyFactory;
-import com.microrisc.simply.iqrf.dpa.v220.examples.user_peripherals.mycustom.def.MyCustom;
+import com.microrisc.simply.iqrf.dpa.v220.devices.MyCustom;
 import java.io.File;
 import java.util.Arrays;
 
 /**
- * Example of MyCustom peripheral. Id of custom peripheral is defined in
- * {@link MyCustom.USER_PERIPHERAL_ID}.
+ * Example of MyCustom peripheral. See {@link MyCustom} for more information.
  * <p>
- * For using MyCustom peripheral is need specify peripheral number (same as in MyCustom) in Peripheral
- * distribution file and add next lines to Simply configuration:
- * dpa.perToDevIfaceMapper.factory.class = com.microrisc.simply.iqrf.dpa.v220.examples.user_peripherals.mycustom.def.UserPerToDevIfaceMapperFactory
- * protocolLayer.protocolMapping.factory.class = com.microrisc.simply.iqrf.dpa.v220.examples.user_peripherals.mycustom.def.UserProtocolMappingFactory
- * <p>
+ * For using MyCustom peripheral is need to specify peripheral number (same as
+ * in MyCustom) in Peripheral distribution file.
  * <p>
  * @author Martin Strouhal
  */
@@ -51,7 +47,7 @@ public class MyCustomExample {
     }
 
     public static void main(String[] args) {
-        // get simply
+        // creating Simply instance
         try {
             simply = DPA_SimplyFactory.getSimply(
                     "config" + File.separator + "Simply.properties"
@@ -60,30 +56,36 @@ public class MyCustomExample {
             printMessageAndExit("Error while creating Simply: " + ex.getMessage());
         }
 
-        // get network "1"
+        // getting network 1
         Network network1 = simply.getNetwork("1", Network.class);
         if (network1 == null) {
             printMessageAndExit("Network 1 doesn't exist");
         }
 
-        // get node "1"
+        // getting node 1
         Node node = network1.getNode("1");
         if (node == null) {
             printMessageAndExit("Node 1 doesn't exist");
         }
 
-        // getting MyCustom device
+        // getting MyCustom interface
         MyCustom custom = node.getDeviceObject(MyCustom.class);
         if (custom == null) {
             printMessageAndExit("Error when MyCustom was getting from node.");
         }
 
         // sending command and getting result
-        Short[] result = custom.send((short)0x21, (short) 0x00, new short[]{});
-
+        Short[] result = custom.send((short) 0x20, (short) 0x00, new short[]{});
         // printing result
         System.out.println(Arrays.toString(result));
 
+
+        // sending command and getting result on another peripheral
+        result = custom.send((short) 0x21, (short) 0x00, new short[]{});
+        // printing result
+        System.out.println(Arrays.toString(result));
+
+        // end working with Simply
         simply.destroy();
     }
 }

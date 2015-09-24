@@ -26,7 +26,7 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * Simple {@code MyDallas18B20} implementation.
+ * Simple {@code MyCustom} implementation.
  * <p>
  * @author Martin Strouhal
  */
