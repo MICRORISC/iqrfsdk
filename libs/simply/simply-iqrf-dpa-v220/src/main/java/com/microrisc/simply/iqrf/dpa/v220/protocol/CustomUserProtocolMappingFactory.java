@@ -149,7 +149,10 @@ public class CustomUserProtocolMappingFactory implements ProtocolMappingFactory 
                 i <= DPA_ProtocolProperties.PNUM_Properties.USER_PERIPHERAL_END; i++) {
             possibleResponseId.add((short) i);
         }*/
-        possibleResponseId.addAll(usedPeripherals); 
+        //possibleResponseId.addAll(usedPeripherals); 
+         for (Integer i = 128; i < 255; i++) {
+             possibleResponseId.add(i.shortValue());
+         }
         packetValues.add(new PacketPositionValues(DPA_ProtocolProperties.PCMD_START, possibleResponseId));
 
         PacketToValueMapping resultMapping = new PacketToValueMapping(8, ArrayUns8Convertor.getInstance());
