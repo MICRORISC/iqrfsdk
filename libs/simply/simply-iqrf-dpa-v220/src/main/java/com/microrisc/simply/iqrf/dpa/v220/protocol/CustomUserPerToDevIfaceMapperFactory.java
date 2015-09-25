@@ -53,12 +53,7 @@ public class CustomUserPerToDevIfaceMapperFactory
 
         private final Logger logger = LoggerFactory.getLogger(CustomUserPerToDevIfaceMapperFactory.class);
 
-        private void createMappings() {
-            // creating transposition
-            for (Map.Entry<Integer, Class> entry : peripheralToIface.entrySet()) {
-                ifaceToPeripheral.put(entry.getValue(), entry.getKey());
-            }
-         
+        private void createMappings() {         
             // mapping determined peripherals
             for (Integer peripheral : usedPeripherals) {
                 if (peripheral >= DPA_ProtocolProperties.PNUM_Properties.USER_PERIPHERAL_START
@@ -66,8 +61,13 @@ public class CustomUserPerToDevIfaceMapperFactory
                     peripheralToIface.put(peripheral, MyCustom.class);
                 }
             }
+            
+            // creating transposition
+            for (Map.Entry<Integer, Class> entry : peripheralToIface.entrySet()) {
+                ifaceToPeripheral.put(entry.getValue(), entry.getKey());
+            }
         }
-
+        
         /**
          * Create a new instance of {@link UserPerToDevIfaceMapper} with
          * peripherals used in specified config.
