@@ -101,8 +101,8 @@
     </implMapping>
     
     <implMapping>
-        <interface>com.microrisc.simply.iqrf.dpa.v220.devices.MyCustom</interface>
-        <implClass>com.microrisc.simply.iqrf.dpa.v220.devices.impl.SimpleMyCustom</implClass>
+        <interface>com.microrisc.simply.iqrf.dpa.v220.devices.Custom</interface>
+        <implClass>com.microrisc.simply.iqrf.dpa.v220.devices.impl.SimpleCustom</implClass>
         <note></note>
     </implMapping>
     
@@ -115,26 +115,20 @@
     </implMapping>    
     
     <implMapping>
-        <interface>com.microrisc.simply.iqrf.dpa.v220.examples.user_peripherals.myadc.def.MyPotentiometer</interface>
-        <implClass>com.microrisc.simply.iqrf.dpa.v220.examples.user_peripherals.myadc.def.SimpleMyPotentiometer</implClass>
+        <interface>com.microrisc.simply.iqrf.dpa.v220.examples.user_per.myadc.user_map.MyPotentiometer</interface>
+        <implClass>com.microrisc.simply.iqrf.dpa.v220.examples.user_per.myadc.user_map.SimpleMyPotentiometer</implClass>
         <note></note>
     </implMapping>
     
     <implMapping>
-        <interface>com.microrisc.simply.iqrf.dpa.v220.examples.user_peripherals.myadc.def.MyPhotoResistor</interface>
-        <implClass>com.microrisc.simply.iqrf.dpa.v220.examples.user_peripherals.myadc.def.SimpleMyPhotoResistor</implClass>
+        <interface>com.microrisc.simply.iqrf.dpa.v220.examples.user_per.myadc.user_map.MyPhotoResistor</interface>
+        <implClass>com.microrisc.simply.iqrf.dpa.v220.examples.user_per.myadc.user_map.SimpleMyPhotoResistor</implClass>
         <note></note>
     </implMapping>
     
     <implMapping>
-        <interface>com.microrisc.simply.iqrf.dpa.v220.examples.user_peripherals.mydallas.def.MyDallas18B20</interface>
-        <implClass>com.microrisc.simply.iqrf.dpa.v220.examples.user_peripherals.mydallas.def.SimpleMyDallas18B20</implClass>
+        <interface>com.microrisc.simply.iqrf.dpa.v220.examples.user_per.mydallas.user_map.MyDallas18B20</interface>
+        <implClass>com.microrisc.simply.iqrf.dpa.v220.examples.user_per.mydallas.user_map.SimpleMyDallas18B20</implClass>
         <note></note>
-    </implMapping>
-    
-    <implMapping>
-        <interface>com.microrisc.simply.iqrf.dpa.v220.examples.user_peripherals.mycustom.def.MyCustom</interface>
-        <implClass>com.microrisc.simply.iqrf.dpa.v220.examples.user_peripherals.mycustom.def.SimpleMyCustom</implClass>
-        <note></note>
-    </implMapping>            
+    </implMapping>    
 </implMappings>

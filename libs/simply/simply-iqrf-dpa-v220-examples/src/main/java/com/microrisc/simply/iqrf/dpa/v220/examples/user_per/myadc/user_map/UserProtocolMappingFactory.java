@@ -13,15 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.microrisc.simply.iqrf.dpa.v220.protocol;
+package com.microrisc.simply.iqrf.dpa.v220.examples.user_per.myadc.user_map;
 
-import com.microrisc.simply.iqrf.dpa.v220.devices.Custom;
-import com.microrisc.simply.iqrf.dpa.v220.init.NetworksFunctionalityToSimplyMapping;
-import com.microrisc.simply.iqrf.dpa.v220.init.NetworksFunctionalityToSimplyMappingParser;
 import com.microrisc.simply.iqrf.dpa.v220.typeconvertors.DPA_AdditionalInfoConvertor;
-import com.microrisc.simply.iqrf.typeconvertors.ArrayUns8Convertor;
 import com.microrisc.simply.iqrf.typeconvertors.Uns16Convertor;
-import com.microrisc.simply.iqrf.typeconvertors.Uns8Convertor;
 import com.microrisc.simply.protocol.mapping.CallRequestToPacketMapping;
 import com.microrisc.simply.protocol.mapping.ConstValueToPacketMapping;
 import com.microrisc.simply.protocol.mapping.InterfaceToPacketMapping;
@@ -39,45 +34,35 @@ import com.microrisc.simply.protocol.mapping.SimpleProtocolMapping;
 import com.microrisc.simply.protocol.mapping.ValueToPacketMapping;
 import com.microrisc.simply.typeconvertors.StringToByteConvertor;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import org.apache.commons.configuration.Configuration;
-import org.apache.commons.configuration.ConfigurationException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Factory for protocol mapping of my periperals.
- * <p>
+ *
  * @author Michal Konopa
  * @author Martin Strouhal
  */
-public class CustomUserProtocolMappingFactory implements ProtocolMappingFactory {
+public class UserProtocolMappingFactory implements ProtocolMappingFactory {
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
-    /**
-     * Reference to protocol mapping.
-     */
+    /** Reference to protocol mapping. */
     private ProtocolMapping protocolMapping = null;
 
     // REQUEST MAPPING
     // returns currently empty list of mappings
-     private List<ConstValueToPacketMapping> createRequestConstMappings() {
+    static private List<ConstValueToPacketMapping> createRequestConstMappings() {
         List<ConstValueToPacketMapping> mappings = new LinkedList<>();
         return mappings;
     }
 
     // returns empty list of mappings - more networks capability is not currently used
-     private List<ValueToPacketMapping> createRequestNetworkMappings() {
+    static private List<ValueToPacketMapping> createRequestNetworkMappings() {
         List<ValueToPacketMapping> mappings = new LinkedList<>();
         return mappings;
     }
 
-     private List<ValueToPacketMapping> createRequestNodeMappings() {
+    static private List<ValueToPacketMapping> createRequestNodeMappings() {
         List<ValueToPacketMapping> mappings = new LinkedList<>();
         ValueToPacketMapping nodeMapping = new ValueToPacketMapping(0,
                 StringToByteConvertor.getInstance()
@@ -86,108 +71,124 @@ public class CustomUserProtocolMappingFactory implements ProtocolMappingFactory 
         return mappings;
     }
 
-    // MyCustom interface
-     private MethodToPacketMapping createSendMapping() {
+    // MyPotentiometer
+    static private MethodToPacketMapping createGetValueMapping() {
         List<ConstValueToPacketMapping> constMapping = new LinkedList<>();
+        constMapping.add(new ConstValueToPacketMapping(3, new short[]{0x00}));
 
         List<ValueToPacketMapping> argMapping = new LinkedList<>();
-        argMapping.add(new ValueToPacketMapping(2, Uns8Convertor.getInstance()));
         argMapping.add(new ValueToPacketMapping(4, Uns16Convertor.getInstance()));
-        argMapping.add(new ValueToPacketMapping(3, Uns8Convertor.getInstance()));
-        argMapping.add(new ValueToPacketMapping(6, ArrayUns8Convertor.getInstance()));
 
         return new MethodToPacketMapping(constMapping, argMapping);
-    }
+    }   
 
-     private InterfaceToPacketMapping createRequestMyCustomMapping() {
+    static private InterfaceToPacketMapping createRequestMyPotentiometerMapping() {
         List<ConstValueToPacketMapping> constMappings = new LinkedList<>();
+        constMappings.add(new ConstValueToPacketMapping(2, new short[]{0x20}));
 
         Map<String, MethodToPacketMapping> methodMappings = new HashMap<>();
 
-        methodMappings.put("0", createSendMapping());
+        methodMappings.put("0", createGetValueMapping());
+
         return new InterfaceToPacketMapping(constMappings, methodMappings);
     }
+    
+    // MyPhotoresistor
+    static private InterfaceToPacketMapping createRequestPhotoResistorMapping() {
+        List<ConstValueToPacketMapping> constMappings = new LinkedList<>();
+        constMappings.add(new ConstValueToPacketMapping(2, new short[]{0x21}));
 
+        Map<String, MethodToPacketMapping> methodMappings = new HashMap<>();
+
+        methodMappings.put("0", createGetValueMapping());
+
+        return new InterfaceToPacketMapping(constMappings, methodMappings);
+    }
+    
+     
     /**
      * Creates map of mapping of Device Interfaces into protocol packets.
-     * <p>
+     *
      * @return
      */
-     private Map<Class, InterfaceToPacketMapping> createRequestIfaceMappings() {
+    static private Map<Class, InterfaceToPacketMapping> createRequestIfaceMappings() {
         Map<Class, InterfaceToPacketMapping> mappings = new HashMap<>();
 
         // creating interface mappings
-        mappings.put(Custom.class, createRequestMyCustomMapping());
+        mappings.put(MyPotentiometer.class, createRequestMyPotentiometerMapping());
+        mappings.put(MyPhotoResistor.class, createRequestPhotoResistorMapping());
         return mappings;
     }
 
-     private CallRequestToPacketMapping createCallRequestToPacketMapping() {
+    static private CallRequestToPacketMapping createCallRequestToPacketMapping() {
         List<ConstValueToPacketMapping> constMappings = createRequestConstMappings();
         List<ValueToPacketMapping> networkMappings = createRequestNetworkMappings();
         List<ValueToPacketMapping> nodeMappings = createRequestNodeMappings();
         Map<Class, InterfaceToPacketMapping> ifaceMappings = createRequestIfaceMappings();
 
-        return new SimpleCallRequestToPacketMapping(constMappings,
-                networkMappings, nodeMappings, ifaceMappings
+        return new SimpleCallRequestToPacketMapping(
+                constMappings, networkMappings, nodeMappings, ifaceMappings
         );
-    }
-
+    }    
+    
     // RESPONSES MAPPING
-     private PacketToValueMapping createResponseNetworkMapping() {
+    static private PacketToValueMapping createResponseNetworkMapping() {
         return new PacketToValueMapping(0, 0, StringToByteConvertor.getInstance());
     }
 
-     private PacketToValueMapping createResponseNodeMapping() {
+    static private PacketToValueMapping createResponseNodeMapping() {
         return new PacketToValueMapping(0, 1, StringToByteConvertor.getInstance());
     }
 
-    // MyCustom
-     private PacketToMethodMapping createResponseSend() {
+    // MyPotentiometer (response)
+    static private PacketToMethodMapping createResponseGetValue() {
         List<PacketPositionValues> packetValues = new LinkedList<>();
-        List<Short> possibleResponseId = new LinkedList<>();
-        /*for (int i = DPA_ProtocolProperties.PNUM_Properties.USER_PERIPHERAL_START;
-                i <= DPA_ProtocolProperties.PNUM_Properties.USER_PERIPHERAL_END; i++) {
-            possibleResponseId.add((short) i);
-        }*/
-        //possibleResponseId.addAll(usedPeripherals); 
-         for (Integer i = 128; i < 255; i++) {
-             possibleResponseId.add(i.shortValue());
-         }
-        packetValues.add(new PacketPositionValues(DPA_ProtocolProperties.PCMD_START, possibleResponseId));
+        packetValues.add(new PacketPositionValues(3, (short) 0x80));
 
-        PacketToValueMapping resultMapping = new PacketToValueMapping(8, ArrayUns8Convertor.getInstance());
+        PacketToValueMapping resultMapping = new PacketToValueMapping(8, Uns16Convertor.getInstance());
         return new PacketToMethodMapping("0", packetValues, resultMapping);
     }
 
-     private PacketToInterfaceMapping createResponseMyCustomMapping() {
+    static private PacketToInterfaceMapping createResponseMyPotentiometerMapping() {
         List<PacketPositionValues> packetValues = new LinkedList<>();
-        
-        List<Short> possiblePNumIds = new LinkedList<>();
-        possiblePNumIds.addAll(usedPeripherals);        
-        packetValues.add(new PacketPositionValues(DPA_ProtocolProperties.PNUM_START, possiblePNumIds));
+        packetValues.add(new PacketPositionValues(2, (short) 0x20));
 
         Map<String, PacketToMethodMapping> methodMappings = new HashMap<>();
 
-        methodMappings.put("0", createResponseSend());
+        methodMappings.put("0", createResponseGetValue());
 
-        return new PacketToInterfaceMapping(Custom.class, packetValues, methodMappings);
+        return new PacketToInterfaceMapping(MyPotentiometer.class, packetValues, methodMappings);
     }
 
+    // MyPhotoResistor (response)
+     static private PacketToInterfaceMapping createResponseMyPhotoResistorMapping() {
+        List<PacketPositionValues> packetValues = new LinkedList<>();
+        packetValues.add(new PacketPositionValues(2, (short) 0x21));
+
+        Map<String, PacketToMethodMapping> methodMappings = new HashMap<>();
+
+        methodMappings.put("0", createResponseGetValue());
+
+        return new PacketToInterfaceMapping(MyPhotoResistor.class, packetValues, methodMappings);
+    }      
+    
+    
     // creating response mapping for Device Interfaces
-     private Map<Class, PacketToInterfaceMapping> createResponseIfaceMappings() {
+    static private Map<Class, PacketToInterfaceMapping> createResponseIfaceMappings() {
         Map<Class, PacketToInterfaceMapping> mappings = new HashMap<>();
 
         // creating interface mappings
-        mappings.put(Custom.class, createResponseMyCustomMapping());
+        mappings.put(MyPotentiometer.class, createResponseMyPotentiometerMapping());
+        mappings.put(MyPhotoResistor.class, createResponseMyPhotoResistorMapping());
 
         return mappings;
     }
 
-     private PacketToValueMapping createAdditionalDataMapping() {
+    static private PacketToValueMapping createAdditionalDataMapping() {
         return new PacketToValueMapping(4, DPA_AdditionalInfoConvertor.getInstance());
     }
 
-     private PacketToCallResponseMapping createPacketToCallResponseMapping() {
+    static private PacketToCallResponseMapping createPacketToCallResponseMapping() {
         PacketToValueMapping networkMapping = createResponseNetworkMapping();
         PacketToValueMapping nodeMapping = createResponseNodeMapping();
         Map<Class, PacketToInterfaceMapping> ifaceMappings = createResponseIfaceMappings();
@@ -198,48 +199,7 @@ public class CustomUserProtocolMappingFactory implements ProtocolMappingFactory 
         );
     }
 
-    private final Set<Short> usedPeripherals = new HashSet<>();
-
-    /**
-     * Create a new instance of {@link CustomUserProtocolMappingFactory} with
-     * peripherals used in specified config.
-     * <p>
-     * @param config must contain used perpiherals which will be mapped
-     */
-    public CustomUserProtocolMappingFactory(Configuration config) {
-        String sourceFileName = config.getString(
-                "initialization.type.dpa.fixed.sourceFile",
-                "PeripheralDistribution.xml"
-        );
-
-        // parsing peripherals
-        NetworksFunctionalityToSimplyMapping networkFuncMapping = null;
-        try {
-            networkFuncMapping = NetworksFunctionalityToSimplyMappingParser.parse(sourceFileName);
-        } catch (ConfigurationException ex) {
-            logger.warn(ex.toString());
-            logger.info("Custom peripheral will be mapped only for 0x20.");
-            usedPeripherals.add((short)0x20);
-            return;
-        }
-
-        // determining only peripherals IDs
-        Map<String, Map<String, Set<Integer>>> mapping = networkFuncMapping.getMapping();
-        List<Integer> usedPerOnAllNodes = new LinkedList<>();
-        for (Map.Entry<String, Map<String, Set<Integer>>> networkEntry : mapping.entrySet()) {
-            Map<String, Set<Integer>> network = networkEntry.getValue();
-            for (Map.Entry<String, Set<Integer>> node : network.entrySet()) {
-                usedPerOnAllNodes.addAll(node.getValue());
-            }
-        }
-
-        // mapping determined peripherals
-        for (Integer peripheral : usedPerOnAllNodes) {
-            if (peripheral >= DPA_ProtocolProperties.PNUM_Properties.USER_PERIPHERAL_START
-                    && peripheral <= DPA_ProtocolProperties.PNUM_Properties.USER_PERIPHERAL_END) {
-                usedPeripherals.add(peripheral.shortValue());
-            }
-        }
+    public UserProtocolMappingFactory() {
     }
 
     @Override

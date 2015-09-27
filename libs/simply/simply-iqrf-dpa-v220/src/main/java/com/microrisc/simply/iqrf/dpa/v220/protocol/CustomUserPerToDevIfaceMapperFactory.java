@@ -15,7 +15,7 @@
  */
 package com.microrisc.simply.iqrf.dpa.v220.protocol;
 
-import com.microrisc.simply.iqrf.dpa.v220.devices.MyCustom;
+import com.microrisc.simply.iqrf.dpa.v220.devices.Custom;
 import com.microrisc.simply.iqrf.dpa.protocol.PeripheralToDevIfaceMapper;
 import com.microrisc.simply.iqrf.dpa.protocol.PeripheralToDevIfaceMapperFactory;
 import com.microrisc.simply.iqrf.dpa.v220.init.NetworksFunctionalityToSimplyMapping;
@@ -58,7 +58,7 @@ public class CustomUserPerToDevIfaceMapperFactory
             for (Integer peripheral : usedPeripherals) {
                 if (peripheral >= DPA_ProtocolProperties.PNUM_Properties.USER_PERIPHERAL_START
                         && peripheral <= DPA_ProtocolProperties.PNUM_Properties.USER_PERIPHERAL_END) {
-                    peripheralToIface.put(peripheral, MyCustom.class);
+                    peripheralToIface.put(peripheral, Custom.class);
                 }
             }
             
