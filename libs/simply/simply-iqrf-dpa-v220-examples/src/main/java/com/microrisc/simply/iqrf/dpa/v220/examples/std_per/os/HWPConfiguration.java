@@ -26,6 +26,7 @@ import com.microrisc.simply.errors.CallRequestProcessingError;
 import com.microrisc.simply.iqrf.dpa.v220.DPA_SimplyFactory;
 import com.microrisc.simply.iqrf.dpa.v220.devices.OS;
 import com.microrisc.simply.iqrf.dpa.v220.types.HWP_Configuration;
+import com.microrisc.simply.iqrf.types.VoidType;
 import java.io.File;
 
 /**
@@ -33,8 +34,10 @@ import java.io.File;
  * 
  * @author Michal Konopa
  * @author Rostislav Spinar
+ * @author Martin Strouhal
  */
-public class ReadHWPConfiguration {
+// October 2015 - extended example with writing HWP config
+public class HWPConfiguration {
     // reference to Simply
     private static Simply simply = null;
     
@@ -63,7 +66,7 @@ public class ReadHWPConfiguration {
         }
         
         // getting node 1
-        Node node1 = network1.getNode("1");
+        Node node1 = network1.getNode("0");
         if (node1 == null) {
             printMessageAndExit("Node 1 doesn't exist");
         }
@@ -73,8 +76,27 @@ public class ReadHWPConfiguration {
         if (os == null) {
             printMessageAndExit("OS doesn't exist or is not enabled");
         }
+        
+        // rewrite config flags of HWP config and allow using of Custom handler
+        // rewriteConfigFlagByte(os);
                
-        // read HWP config setting
+        // read and print HWP config setting
+        HWP_Configuration config = readAndPrintHWPConfig(os);        
+        
+        // edit config
+        // config.setConfigFlags(new HWP_Configuration.DPA_ConfigFlags(false, true, true, true, true, true));
+        
+        //write edited config
+        writeHWPConfig(os, config);
+        
+        // readAndPrintHWPConfig(os);
+        
+        // end working with Simply
+        simply.destroy();
+    }
+    
+    private static HWP_Configuration readAndPrintHWPConfig(OS os){     
+        // read HWP config
         HWP_Configuration hwpConfig = os.readHWPConfiguration();
         if (hwpConfig == null) {
             CallRequestProcessingState procState = os.getCallRequestProcessingStateOfLastCall();
@@ -86,9 +108,35 @@ public class ReadHWPConfiguration {
             }
         }
         
+        // print HWP config
         System.out.println("HWP config: \n" + hwpConfig.toPrettyFormatedString());
         
-        // end working with Simply
-        simply.destroy();
+        return hwpConfig;
+    }
+    
+    private static void writeHWPConfig(OS os, HWP_Configuration config){
+        VoidType result = os.writeHWPConfiguration(config);
+        if (result == null) {            
+            CallRequestProcessingState procState = os.getCallRequestProcessingStateOfLastCall();
+            if ( procState == ERROR ) {
+                CallRequestProcessingError error = os.getCallRequestProcessingErrorOfLastCall();
+                printMessageAndExit("HWP config writing failed: " + error);
+            } else {
+                printMessageAndExit("HWP config writing hasn't been processed yet: " + procState);
+            }
+        }
+    }    
+    
+    private static void rewriteConfigFlagByte(OS os){
+        VoidType result = os.writeHWPConfigurationByte(0x05, 0b00000001);
+        if (result == null) {            
+            CallRequestProcessingState procState = os.getCallRequestProcessingStateOfLastCall();
+            if ( procState == ERROR ) {
+                CallRequestProcessingError error = os.getCallRequestProcessingErrorOfLastCall();
+                printMessageAndExit("HWP config writing of one byte failed: " + error);
+            } else {
+                printMessageAndExit("HWP config writing of one byte hasn't been processed yet: " + procState);
+            }
+        }
     }
 }
