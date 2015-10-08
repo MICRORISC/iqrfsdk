@@ -141,12 +141,14 @@ implements ProtocolStateMachineListener
                 .getInstance()
                 .transform(FRC.MethodID.SEND)
         );
-        
+
+/*        
         frcUnlimitedOperations.add(
                 FRCStandardTransformer
                 .getInstance()
                 .transform(FRC.MethodID.EXTRA_RESULT)
         );
+*/
         
         timeUnlimitedRequestsMap.put(
                 FRC.class,
