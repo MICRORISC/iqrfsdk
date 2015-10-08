@@ -69,7 +69,9 @@ public final class IntegerFastQueryListConvertor extends AbstractConvertor {
                 maxPeripheralId = actualValue;
             }
         }
-        int size = maxPeripheralId % 8 == 0 ? maxPeripheralId / 8 : maxPeripheralId / 8 + 1;        
+        maxPeripheralId++;
+        int size = maxPeripheralId / 8 + (maxPeripheralId % 8 > 0 ? 1 : 0);
+        //int size = maxPeripheralId % 8 == 0 ? maxPeripheralId / 8 : maxPeripheralId / 8 + 1;        
         short[] protoValue = new short[size];
         for (Integer peripheral : rawList) {
             short byteIndex, bitIndex, protoBinValue = 1;
