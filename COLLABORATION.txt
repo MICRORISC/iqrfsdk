@@ -1,0 +1,41 @@
+IQRF SDK - IQRF Software Development Kit
+========================================
+
+IQRF SDK team strongly believes in open source software and collaboration.
+
+
+1. Public repository
+--------------------
+
+We rely on proven Github.
+
+* Complete source code is available at https://github.com/MICRORISC/iqrfsdk.
+  
+
+2. Public development
+---------------------
+
+We rely on proven Atlassian.
+
+* Tracking at http://jira.iqrfsdk.org
+  (Issue tracking and code integration to plan, collaborate, and ship great product)
+
+* Collaborating at http://confluence.iqrfsdk.org
+  (One place for our team to share, find, collaborate, and get more work done)
+
+
+3. Public documentation
+-----------------------
+
+We rely on proven Javadoc and Doxygen.
+
+*  Online documentation for developers at http://www.iqrfsdk/doc
+
+
+We believe that with your active participation the IQRF SDK can be greatly improved!
+We are looking forward to working together with you.
+
+Enjoy!
+
+IQRF SDK Team
+http://www.iqrf.org/sdk

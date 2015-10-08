@@ -17,11 +17,11 @@
 #ifndef _DPA_LIBRARY_H
 #define _DPA_LIBRARY_H
 
-#include <stddef.h>
+#include <WProgram.h>
 #include <stdint.h>
 
-#define __SPI_INTERFACE__				// select for comunication via SPI
-//#define __UART_INTERFACE__			    // select for comunication via UART
+//#define __SPI_INTERFACE__			// select for comunication via SPI
+#define __UART_INTERFACE__			// select for comunication via UART
 
 // #define __DPA_LIB_VER_2_0x			// select for DPA ver.2.00 or ver.2.01
 //#define __DPA_LIB_VER_2_1x			// select for DPA ver.2.1x
@@ -81,7 +81,8 @@
 #define  CMD_COORDINATOR_SET_HOPS 					9 
 #define  CMD_COORDINATOR_DISCOVERY_DATA 			10 
 #define  CMD_COORDINATOR_BACKUP 					11 
-#define  CMD_COORDINATOR_RESTORE 					12 
+#define  CMD_COORDINATOR_RESTORE 					12
+#define  CMD_COORDINATOR_AUTHORIZE_BOND                 13 
 #define  CMD_COORDINATOR_READ_REMOTELY_BONDED_MID 	15 
 #define  CMD_COORDINATOR_CLEAR_REMOTELY_BONDED_MID 	16 
 #define  CMD_COORDINATOR_ENABLE_REMOTE_BONDING 		17 

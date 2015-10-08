@@ -94,7 +94,7 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
     public static final int PREBONDING_INTERVAL_MAX = (0xFFFF-1) / 100;
     
     /** Default prebonding interval [ in seconds ]. */
-    public static final long PREBONDING_INTERVAL_DEFAULT = 10;
+    public static final long PREBONDING_INTERVAL_DEFAULT = 15;
     
     
     /** Default number of retries to authorize new bonded node. */
@@ -161,7 +161,7 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
         return discoveryTxPower;
     }
     private static long checkPrebondingInterval(long prebondingInterval) {
-        if ( prebondingInterval < 0 ) {
+        if ( prebondingInterval < 15 ) {
             throw new IllegalArgumentException("Prebonding interval cannot be negative.");
         }
         return prebondingInterval;
@@ -724,16 +724,16 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
         // different approaches can be implemented to adjust the waiting time
         // e.g. linear interpolation between min a max values wrt to already bonded nodes
         
-        // x1 (min) = 10 s              (input variable)
+        // x1 (min) = 15 s              (input variable)
         // x2 (max) = 60 s              (input variable)
         // y1 (min) = 0 bonded nodes    (fixed for calculation below)
         // y2 (max) = 239 bonded nodes  (fixed for calculation below)
         
         // x = (y + (239/(x2-x1))*x1)/(239/(x2-x1))
-        // e.g. for y=20 already bonded nodes => x = (20 + 4.8*10)/4.8 => 14.125s
+        // e.g. for y=20 already bonded nodes => x = (20 + 5.3*15)/5.3 => 18.8s
         
         // set min and max waiting time values and make linear interpolation between them
-        //short x1 = 10;
+        //short x1 = 15;
         //short x2 = 60;
         //int waitBonding = Math.round((bondedNodes.getNodesNumber() + (239/(x2-x1)) * x1)/(239/(x2-x1)));
         
@@ -916,7 +916,14 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
         if ( coordFrc == null ) {
             throw new Exception("Could not find FRC on coordinator node.");
         }
-            
+        
+        // For FRC peripheral can be set timeout following way otherwise timeout is unlimited:
+        // timeout for IQRF = Bonded Nodes x 130 + _RESPONSE_FRC_TIME_xxx_MS + 250 [ms]
+        // + overhead for the Java framework (for threads) = 2000 [ms]
+        final short overhead = 2000;
+        long timeout = bondedNodes.getNodesNumber() * 130 + 40 + 250 + overhead;
+        coordFrc.setDefaultWaitingTimeout(timeout);
+        
         FRC_Data frcData = coordFrc.send( new FRC_Prebonding( new short[] { 0x01, 0x00 }) );
         if ( frcData == null ) {
             throw new Exception("Error while disabling prebonding.");
@@ -1255,9 +1262,27 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
             throw new Exception("FRC peripheral could not been found on coordinator");
         }
         
-        FRC_Data frcDataCheck = coordFrc.send( new FRC_Prebonding( new short[] { 0x01, 0x00 }) );
+        // For FRC peripheral can be set timeout following way otherwise timeout is unlimited:
+        // timeout for IQRF = Bonded Nodes x 130 + _RESPONSE_FRC_TIME_xxx_MS + 250 [ms]
+        // + overhead for the Java framework (for threads) = 2000 [ms]
+        final short overhead = 2000;
+        long timeout = bondedNodes.getNodesNumber() * 130 + 40 + 250 + overhead;
+        coordFrc.setDefaultWaitingTimeout(timeout);
+        
+        FRC_Data frcData = coordFrc.send( new FRC_Prebonding( new short[] { 0x01, 0x00 }) );
+        if ( frcData == null ) {
+            throw new Exception("Error while checking new nodes.");
+        }
+        
+        short[] extraData = coordFrc.extraResult();
+        if ( extraData == null ) {
+            throw new Exception("Error while checking new nodes - getting extra data.");
+        }
+        
+        short[] frcDataCheck = getCompleteFrcData(frcData.getData(), extraData);
+        
         for ( int newAddr : newAddrs ) {
-            if ( ( ( frcDataCheck.getData()[0 + newAddr / 8] >> ( newAddr % 8 ) ) & 0x01 ) == 0x00 )
+            if ( ( ( frcDataCheck[0 + newAddr / 8] >> ( newAddr % 8 ) ) & 0x01 ) == 0x00 )
             {
                 logger.warn("Removing bond {}", newAddr);
                 
@@ -1293,6 +1318,50 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
         
         logger.debug("checkNewNodes - end: {}", getGentleListOfNodes(respondingNodes));
         return respondingNodes;
+    }
+    
+    // remove nodes with temporary address 0xFE
+    private void forceRemovalofNodesWithTemporaryAddress() throws Exception {
+        UUID nodesRemoveTAUid = null;
+        
+        if ( bondedNodes.getNodesNumber() > 0 ) {
+            String networkId = null;
+            
+            logger.info("Removing nodes with temporary address 0xFE");
+            
+            synchronized ( synchroResultNetwork ) {
+                networkId = resultNetwork.id;
+            }
+            
+            // reference to all nodes with temporary address 0xFE
+            com.microrisc.simply.Node temporaryNodes 
+                = NodeFactory.createNodeWithAllPeripherals(networkId, Integer.toString(0xFE));
+            
+            // reference to OS peripheral
+            OS tnsOS = temporaryNodes.getDeviceObject(OS.class);
+            
+            // issue a batch for 0xFE nodes
+            nodesRemoveTAUid = tnsOS.call(
+                OS.MethodID.BATCH,
+                new Object[] {
+                    new DPA_Request[] {
+                        new DPA_Request( Node.class, Node.MethodID.REMOVE_BOND, new Object[] {}, 0xFFFF ),
+                        new DPA_Request( OS.class, OS.MethodID.RESET, new Object[] {}, 0xFFFF )
+                    }
+                }
+            );
+            
+            if ( nodesRemoveTAUid == null ) {
+                throw new Exception(
+                    "Error while sending request for removing nodes with temporary address"
+                );
+            }
+        
+            // wait the whole above broadcast and little bit more
+            Thread.sleep(
+                ( ( bondedNodes.getNodesNumber() + 1 ) * 60 ) + 150 
+            );
+        }
     }
     
     // runs discovery
@@ -1560,12 +1629,15 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
                 }
             
                 if ( autoUseFrc ) {
-                    logger.info("Running FRC to check new nodes");
+                    logger.info("Running FRC to check new nodes and removing 0xFE nodes");
                     newAddrs = checkNewNodes(resultNetwork.getId(), coordinator, coordNode, newAddrs);
+                    forceRemovalofNodesWithTemporaryAddress();
                 }
 
-                logger.info( "Running discovery ...");
-                runDiscovery(coordinator); 
+                if(!newAddrs.isEmpty()) {
+                    logger.info( "Running discovery ...");
+                    runDiscovery(coordinator);
+                }
                 
                 // adding new bonded nodes into network
                 addNewNodesWithAllPeripherals(newAddrs);

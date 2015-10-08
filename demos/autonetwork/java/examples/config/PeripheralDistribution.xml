@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : PeripheralDistribution.xml
+    Created on : 31.12.2014
+    Author     : Michal Konopa
+    Description:
+        Distribution of peripherals on nodes in connected IQRF networks.
+        
+    Peripherals numbers:
+        public static final int COORDINATOR =   0x00;
+        public static final int NODE =          0x01;
+        public static final int OS =            0x02;
+        public static final int EEPROM =        0x03;
+        public static final int EEEPROM =       0x04;
+        public static final int RAM =           0x05;
+        public static final int LEDR =          0x06;
+        public static final int LEDG =          0x07;
+        public static final int SPI =           0x08;
+        public static final int IO =            0x09;
+        public static final int THERMOMETER =   0x0A;
+        public static final int PWM =           0x0B;
+        public static final int UART =          0x0C;
+        public static final int FRC =           0x0D;
+            
+        public static boolean isUser(int pnum) {
+            return (( pnum >= 0x20 ) && ( pnum <= 0x6F ));
+        }    
+-->
+
+<networks>
+    <network id="1">
+        <!--coordinator-->
+        <nodes>
+            <node id="0">
+                <peripherals>0, 2, 3, 4, 5, 6, 7, 9, 10, 13, 32</peripherals>
+            </node>
+        </nodes>
+            
+        <!--nodes-->   
+        <nodesInterval min="1" max="239">
+            <peripherals>1, 2, 3, 4, 5, 6, 7, 9, 10, 13, 32</peripherals>
+        </nodesInterval>
+    </network>
+</networks>
