@@ -8,11 +8,12 @@ The library implementation is based on encapsulation of DPA commands, sent from 
 into programming language's functions. More detailed information about DPA framework and commands 
 are in document "IQRF DPA framework, Technical Guide" ( in IQRF Startup package ).
 
+These boards [1,2] can be used to interface DCTR modules to a control unit.
 
 Features
 --------
 
-- intended for communication with TR-72(52) modules
+- intended for communication with DCTR-72(52) modules
 - intended for both DPA coordinator and node
 - supported DPA frameworks: 2.01, 2.1x, 2.2x
 - supported communication interfaces: SPI, UART
@@ -92,4 +93,11 @@ API functions
 
 	DPA_READY - the library is ready for new requests
 	DPA_BUSY  - the library is processing the request 
+
+
+References
+----------
+
+[1] http://iqrf.org/weben/index.php?sekce=products&id=iqrf-bb-01&ot=development-tools&ot2=development-kits
+[2] http://iqrf.org/weben/index.php?sekce=products&id=iqrf-bb-02&ot=development-tools&ot2=development-kits
 
