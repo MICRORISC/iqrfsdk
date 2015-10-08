@@ -13,37 +13,42 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.microrisc.simply.iqrf.dpa.v220.typeconvertors;
 
 import com.microrisc.simply.iqrf.dpa.v220.types.HWP_Configuration;
 import com.microrisc.simply.iqrf.dpa.v220.types.IntegerFastQueryList;
 import com.microrisc.simply.typeconvertors.PrimitiveConvertor;
 import com.microrisc.simply.typeconvertors.ValueConversionException;
+import java.util.BitSet;
+import java.util.LinkedList;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Provides functionality for converting from HWP Configuration type values 
- * to {@code HWP_Configuration} objects. 
- * 
+ * Provides functionality for converting from HWP Configuration type values to
+ * {@code HWP_Configuration} objects.
+ * <p>
  * @author Michal Konopa
  */
 public final class HWP_ConfigurationConvertor extends PrimitiveConvertor {
+
     /** Logger. */
     private static final Logger logger = LoggerFactory.getLogger(HWP_ConfigurationConvertor.class);
-    
-    private HWP_ConfigurationConvertor() {}
-    
+
+    private HWP_ConfigurationConvertor() {
+    }
+
     /** Singleton. */
     private static final HWP_ConfigurationConvertor instance = new HWP_ConfigurationConvertor();
-    
+
     /** Size of returned response. */
-    static public final int TYPE_SIZE = 0x13;
-    
+    static public final int REQUEST_TYPE_SIZE = 0x21;        
+    static public final int RESPONSE_TYPE_SIZE = 0x21;    
+
     /** Operand value to use for xoring values comming from protocol. */
     static private final int XOR_OPERAND = 0x34;
-    
+
     // positions of fields
     static private final int CHECKSUM_POS = 0x00;
     static private final int STANDARD_PER_POS = 0x01;
@@ -57,59 +62,142 @@ public final class HWP_ConfigurationConvertor extends PrimitiveConvertor {
     static private final int BAUD_RATE_OF_UART = 0x0B;
     static private final int RFCHANNEL_A_POS = 0x11;
     static private final int RFCHANNEL_B_POS = 0x12;
-    
-    
+    static private final int UNDOCUMENTED_POS = 0x20;
+    static private final int UNDOCUMENTED_RESPONSE_LENGTH = 2;
+    static private final int UNDOCUMENTED_REQUEST_LENGTH = 1;
+
     /**
-     * @return {@code HWP_ConfigurationConvertor} instance 
+     * @return {@code HWP_ConfigurationConvertor} instance
      */
     static public HWP_ConfigurationConvertor getInstance() {
         return instance;
     }
-    
+
     @Override
     public int getGenericTypeSize() {
-        return TYPE_SIZE;
+        return REQUEST_TYPE_SIZE;
     }
-    
-    
-    private IntegerFastQueryList getStandardPeripherals(short[] standPerBytes) 
-            throws ValueConversionException 
-    { 
-        return (IntegerFastQueryList)IntegerFastQueryListConvertor.getInstance().toObject(standPerBytes);
+
+    private IntegerFastQueryList getStandardPeripherals(short[] standPerBytes)
+            throws ValueConversionException {
+        return (IntegerFastQueryList) IntegerFastQueryListConvertor.getInstance().toObject(standPerBytes);
     }
-    
+
+    /**
+     * Puts speicified standard peripherals into spciefied proto value.
+     */
+    private void putStandardPeriperals(short[] protoValue, IntegerFastQueryList peripherals)
+    throws ValueConversionException {
+        short[] shortPeripherals =  IntegerFastQueryListConvertor.getInstance().toProtoValue(peripherals);
+        
+        if(shortPeripherals.length > STANDARD_PER_LENGTH){
+            throw new ValueConversionException("IntegerQueryList size is greater than is allowed length of peripherals!");
+        }
+
+        for (int i = 0; i < STANDARD_PER_LENGTH; i++) {
+            protoValue[i + STANDARD_PER_POS] += i < shortPeripherals.length ? shortPeripherals[i] : 0;
+            protoValue[i + STANDARD_PER_POS] ^= XOR_OPERAND;
+        }        
+    }
+
     private HWP_Configuration.DPA_ConfigFlags getConfigFlags(short configFlagsByte) {
         boolean callHandlerOnEvent = ((configFlagsByte & 0x01) == 0x01);
         boolean controlledByLocalSPI = ((configFlagsByte & 0x02) == 0x02);
         boolean runAutoexecOnBootTime = ((configFlagsByte & 0x04) == 0x04);
         boolean notRouteOnBackground = ((configFlagsByte & 0x08) == 0x08);
+        boolean runIOSetupOnBootTime = ((configFlagsByte & 0x10) == 0x10);
+        boolean receivePeerToPeer = ((configFlagsByte & 0x20) == 0x20);
         return new HWP_Configuration.DPA_ConfigFlags(
-                callHandlerOnEvent, controlledByLocalSPI, runAutoexecOnBootTime, 
-                notRouteOnBackground
+                callHandlerOnEvent, controlledByLocalSPI, runAutoexecOnBootTime,
+                notRouteOnBackground, runIOSetupOnBootTime, receivePeerToPeer
         );
     }
-    
+
     /**
-     * Currently not supported. Throws {@code UnsupportedOperationException }.
-     * @throws UnsupportedOperationException 
+     * Puts speicified config flags into spciefied proto value.
      */
+    private short putConfigFlags(HWP_Configuration.DPA_ConfigFlags configFlags) {
+        short flags = 0;
+        flags += configFlags.isReceivesPeerToPeer() ? 1 : 0;
+        flags <<= 1;
+        flags += configFlags.isIOSetupRunOnBootTime() ? 1 : 0;
+        flags <<= 1;
+        flags += configFlags.notRouteOnBackground() ? 1 : 0;
+        flags <<= 1;
+        flags += configFlags.isAutoexecRunOnBootTime() ? 1 : 0;
+        flags <<= 1;
+        flags += configFlags.canBeControlledByLocalSPI() ? 1 : 0;
+        flags <<= 1;
+        flags += configFlags.isHandlerCalledOnEvent() ? 1 : 0;        
+
+        flags ^= XOR_OPERAND;
+        return flags;
+    }
+
+    private short[] getUndocumentedByte(short[] protoValue){
+        short[] undocumented = new short[UNDOCUMENTED_RESPONSE_LENGTH];
+        System.arraycopy(protoValue, UNDOCUMENTED_POS, undocumented, 0, UNDOCUMENTED_RESPONSE_LENGTH);
+        return undocumented;
+    }
+    
+    private HWP_Configuration checkHWPConfig(Object config) {
+        if (!(config instanceof HWP_Configuration)) {
+            throw new IllegalArgumentException("Object to convert must be type of HWP configuration.");
+        }
+        if (config == null) {
+            throw new IllegalArgumentException("HWP configuration cannot be null.");
+        }
+        HWP_Configuration hwp_config = (HWP_Configuration) config;
+        if(hwp_config.getUndocumented() == null){
+            throw new IllegalArgumentException("Undocumented byte cannot be null.");
+        }
+        if(hwp_config.getUndocumented().length < 1){
+            throw new IllegalArgumentException("Undocumented byte value cannot be smaller than 1.");
+        }
+        return hwp_config;
+    }
+
     @Override
     public short[] toProtoValue(Object value) throws ValueConversionException {
-        throw new UnsupportedOperationException("Not supported yet.");
+        logger.debug("toProtoValue - start: value={}", value);
+
+        HWP_Configuration config = checkHWPConfig(value);                
+        short[] protoValue = new short[REQUEST_TYPE_SIZE];
+        // prevently XOR all values icnlucing non xored zeros on the end
+        for (int i = RFCHANNEL_B_POS+1; i < REQUEST_TYPE_SIZE; i++) {
+            protoValue[i] ^= (short) (XOR_OPERAND);
+        }
+
+        putStandardPeriperals(protoValue, config.getStandardPeripherals());
+        protoValue[CONFIG_FLAGS_POS] = putConfigFlags(config.getConfigFlags());
+
+        protoValue[RFCHANNEL_A_SUB_NETWORK_POS] = (short) (config.getRFChannelASubNetwork() ^ XOR_OPERAND);
+        protoValue[RFCHANNEL_B_SUB_NETWORK_POS] = (short) (config.getRFChannelBSubNetwork() ^ XOR_OPERAND);
+        protoValue[RFOUTPUT_POWER_POS] = (short) (config.getRFOutputPower() ^ XOR_OPERAND);
+        protoValue[RFSIGNAL_FILTER_POS] = (short) (config.getRFSignalFilter() ^ XOR_OPERAND);
+        protoValue[TIMEOUT_RECV_RF_PACKETS] = (short) (config.getTimeoutRecvRFPackets() ^ XOR_OPERAND);
+        protoValue[BAUD_RATE_OF_UART] = (short) (config.getBaudRateOfUARF() ^ XOR_OPERAND);
+        protoValue[RFCHANNEL_A_POS] = (short) (config.getRFChannelA() ^ XOR_OPERAND);
+        protoValue[RFCHANNEL_B_POS] = (short) (config.getRFChannelB() ^ XOR_OPERAND);
+        
+        protoValue[UNDOCUMENTED_POS] = (short) (config.getUndocumented()[0]);
+
+        logger.debug("toProtoValue - end: {}", protoValue);
+        return protoValue;
     }
 
     @Override
     public Object toObject(short[] protoValue) throws ValueConversionException {
         logger.debug("toObject - start: protoValue={}", protoValue);
-        
+
         short[] standPerBytes = new short[STANDARD_PER_LENGTH];
-        for ( short valueId = 0; valueId < STANDARD_PER_LENGTH; valueId++ ) {
-            standPerBytes[valueId] = (short) (protoValue[valueId + STANDARD_PER_POS] ^ XOR_OPERAND); 
+        for (short valueId = 0; valueId < STANDARD_PER_LENGTH; valueId++) {
+            standPerBytes[valueId] = (short) (protoValue[valueId + STANDARD_PER_POS] ^ XOR_OPERAND);
         }
-        
+
         IntegerFastQueryList standardPeripherals = getStandardPeripherals(standPerBytes);
         HWP_Configuration.DPA_ConfigFlags configFlags = getConfigFlags(
-                (short)( protoValue[CONFIG_FLAGS_POS] ^ XOR_OPERAND )
+                (short) (protoValue[CONFIG_FLAGS_POS] ^ XOR_OPERAND)
         );
         int RFChannelASubNetwork = protoValue[RFCHANNEL_A_SUB_NETWORK_POS] ^ XOR_OPERAND;
         int RFChannelBSubNetwork = protoValue[RFCHANNEL_B_SUB_NETWORK_POS] ^ XOR_OPERAND;
@@ -120,12 +208,14 @@ public final class HWP_ConfigurationConvertor extends PrimitiveConvertor {
         int RFChannelA = protoValue[RFCHANNEL_A_POS] ^ XOR_OPERAND;
         int RFChannelB = protoValue[RFCHANNEL_B_POS] ^ XOR_OPERAND;
         
+        short[] undocumentedByte = getUndocumentedByte(protoValue);
+
         HWP_Configuration hwpConfig = new HWP_Configuration(
                 standardPeripherals, configFlags, RFChannelASubNetwork, RFChannelBSubNetwork,
-                RFOutputPower, RFSignalFilter, timeoutRecvRFPackets, baudRateOfUARF, 
-                RFChannelA, RFChannelB
+                RFOutputPower, RFSignalFilter, timeoutRecvRFPackets, baudRateOfUARF,
+                RFChannelA, RFChannelB, undocumentedByte
         );
-        
+
         logger.debug("toObject - end: {}", hwpConfig);
         return hwpConfig;
     }

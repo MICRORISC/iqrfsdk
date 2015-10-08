@@ -51,7 +51,9 @@ public interface OS
         BATCH,
         SET_USEC,
         SET_MID,
-        RESTART
+        RESTART,
+        WRITE_HWP_CONFIGURATION,
+        WRITE_HWP_CONFIGURATION_BYTE
     }
 
     
@@ -135,6 +137,20 @@ public interface OS
      * @return unique identifier of sent request
      */
     UUID async_restart();
+    
+    /**
+     * Sends method call request for writing HWP configuration into module memory.
+     * @param configuration configuration memory data to write
+     * @return unique identifier of sent request
+     */
+    UUID async_writeHWPConfiguration(HWP_Configuration configuration);
+    
+    /**
+     * Sends method call request for writing one byte value to HWP configuration 
+     * into module memory.    
+     * @return unique identifier of sent request
+     */
+    UUID async_writeHWPConfigurationByte(int address, int value);
 
     
     // SYNCHRONOUS WRAPPERS
@@ -203,4 +219,19 @@ public interface OS
      * @return {@code VoidType} object, if method call has processed allright
      */
     VoidType restart();
+    
+    /**
+     * Synchronous wrapper for {@link
+     * #async_readHWPConfiguration() async_writeHWPConfiguration} method.
+     * @param configuration configuration memory data to write
+     * @return {@code VoidType} object, if method call has processed allright
+     */
+    VoidType writeHWPConfiguration(HWP_Configuration configuration);
+    
+    /**
+     * Synchronous wrapper for {@link
+     * #async_readHWPConfigurationByte() async_writeHWPConfiguration} method.
+     * @return {@code VoidType} object, if method call has processed allright
+     */
+    VoidType writeHWPConfigurationByte(int address, int value);
 }

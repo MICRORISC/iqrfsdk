@@ -16,6 +16,7 @@
 
 package com.microrisc.simply.iqrf.dpa.v220.typeconvertors;
 
+import com.microrisc.simply.iqrf.dpa.v220.types.HWP_Configuration;
 import com.microrisc.simply.iqrf.dpa.v220.types.IntegerFastQueryList;
 import com.microrisc.simply.typeconvertors.AbstractConvertor;
 import com.microrisc.simply.typeconvertors.ValueConversionException;
@@ -46,13 +47,40 @@ public final class IntegerFastQueryListConvertor extends AbstractConvertor {
         return instance;
     }
     
-    /**
-     * Currently not supported. Throws {@code UnsupportedOperationException }.
-     * @throws UnsupportedOperationException 
-     */
+        private IntegerFastQueryList checkIntegerFastQueryList(Object list) {
+        if (!(list instanceof IntegerFastQueryList)) {
+            throw new IllegalArgumentException("Object to convert must be type of IntegerFastQueryList.");
+        }
+        if (list == null) {
+            throw new IllegalArgumentException("IntegerFastQueryList cannot be null.");
+        }
+        return (IntegerFastQueryList) list;
+    }
+
     @Override
     public short[] toProtoValue(Object value) throws ValueConversionException {
-        throw new UnsupportedOperationException("Currently not supported");
+        logger.debug("toProtoValue - start: protoValue={}", value);
+        
+        IntegerFastQueryList intQueryList = checkIntegerFastQueryList(value);   
+        List<Integer> rawList = intQueryList.getList();
+        int maxPeripheralId = rawList.size() < 1 ? 0 : rawList.get(0);
+        for (Integer actualValue : rawList) {
+            if(actualValue > maxPeripheralId){
+                maxPeripheralId = actualValue;
+            }
+        }
+        int size = maxPeripheralId % 8 == 0 ? maxPeripheralId / 8 : maxPeripheralId / 8 + 1;        
+        short[] protoValue = new short[size];
+        for (Integer peripheral : rawList) {
+            short byteIndex, bitIndex, protoBinValue = 1;
+            byteIndex = (short)(peripheral / 8);
+            bitIndex = (short)(peripheral % 8);
+            protoBinValue <<= bitIndex;
+            protoValue[byteIndex] += protoBinValue;
+        }
+                                   
+        logger.debug("toProtoValue - end: {}", protoValue);
+        return protoValue;
     }
 
     @Override

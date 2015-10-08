@@ -13,39 +13,43 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.microrisc.simply.iqrf.dpa.v220.types;
 
 /**
  * HWP Configuration.
- * 
+ * <p>
  * @author Michal Konopa
  */
 public final class HWP_Configuration {
-    /** Standard peripherals. */
-    private final IntegerFastQueryList standardPeripherals;
 
-    
+    /** Standard peripherals. */
+    private IntegerFastQueryList standardPeripherals;
+
     /**
      * Various DPA configuration flag bits.
      */
     public static class DPA_ConfigFlags {
+
         private final boolean callHandlerOnEvent;
         private final boolean controlledByLocalSPI;
         private final boolean runAutoexecOnBootTime;
         private final boolean notRouteOnBackground;
-        
-        
+        private final boolean runIOSetupOnBootTime;
+        private final boolean receivesPeerToPeer;
+
         public DPA_ConfigFlags(
-                boolean callHandlerOnEvent, boolean controlledByLocalSPI, 
-                boolean runAutoexecOnBootTime, boolean notRouteOnBackground
+                boolean callHandlerOnEvent, boolean controlledByLocalSPI,
+                boolean runAutoexecOnBootTime, boolean notRouteOnBackground,
+                boolean runIOSetupOnBootTime, boolean receivePeerToPeer
         ) {
             this.callHandlerOnEvent = callHandlerOnEvent;
             this.controlledByLocalSPI = controlledByLocalSPI;
             this.runAutoexecOnBootTime = runAutoexecOnBootTime;
             this.notRouteOnBackground = notRouteOnBackground;
+            this.runIOSetupOnBootTime = runIOSetupOnBootTime;
+            this.receivesPeerToPeer = receivePeerToPeer;
         }
-        
+
         /**
          * @return indication if custom DPA handler is called in case of event
          */
@@ -68,12 +72,28 @@ public final class HWP_Configuration {
         }
 
         /**
-         * @return indication if Node device does not route packet on the background
+         * @return indication if Node device does not route packet on the
+         * background
          */
         public boolean notRouteOnBackground() {
             return notRouteOnBackground;
         }
-        
+
+        /**
+         * @return indication if IOSetup is run on boot time
+         */
+        public boolean isIOSetupRunOnBootTime() {
+            return runIOSetupOnBootTime;
+        }
+
+        /**
+         * @return indication if Node receives also peer-to-peer
+         * (non-networking) packets and raises PeerToPeer event
+         */
+        public boolean isReceivesPeerToPeer() {
+            return receivesPeerToPeer;
+        }
+
         @Override
         public String toString() {
             StringBuilder strBuilder = new StringBuilder();
@@ -84,11 +104,27 @@ public final class HWP_Configuration {
             strBuilder.append(" Can DPA be controlled by local SPI: " + controlledByLocalSPI + NEW_LINE);
             strBuilder.append(" Is Autoexec run on boot time: " + runAutoexecOnBootTime + NEW_LINE);
             strBuilder.append(" Node does not route on background: " + notRouteOnBackground + NEW_LINE);
+            strBuilder.append(" Is IO setup run on boot time: " + runIOSetupOnBootTime + NEW_LINE);
+            strBuilder.append(" Node receives also peer-to-peer (non-networking) packets and raises PeerToPeer event: " + receivesPeerToPeer + NEW_LINE);
             strBuilder.append("}");
 
             return strBuilder.toString();
         }
-        
+
+        @Override
+        public boolean equals(Object obj) {
+            if (obj instanceof DPA_ConfigFlags) {
+                DPA_ConfigFlags flags = (DPA_ConfigFlags) obj;
+                return (callHandlerOnEvent == flags.isHandlerCalledOnEvent()
+                        && controlledByLocalSPI == flags.canBeControlledByLocalSPI()
+                        && notRouteOnBackground == flags.notRouteOnBackground()
+                        && receivesPeerToPeer == flags.isReceivesPeerToPeer()
+                        && runAutoexecOnBootTime == flags.isAutoexecRunOnBootTime()
+                        && runIOSetupOnBootTime == flags.isIOSetupRunOnBootTime());
+            }
+            return false;
+        }
+
         public String toPrettyFormatedString() {
             StringBuilder strBuilder = new StringBuilder();
             String NEW_LINE = System.getProperty("line.separator");
@@ -97,82 +133,91 @@ public final class HWP_Configuration {
             strBuilder.append("Can DPA be controlled by local SPI: " + controlledByLocalSPI + NEW_LINE);
             strBuilder.append("Is Autoexec run on boot time: " + runAutoexecOnBootTime + NEW_LINE);
             strBuilder.append("Node does not route on background: " + notRouteOnBackground + NEW_LINE);
+            strBuilder.append(" Is IO setup run on boot time: " + runIOSetupOnBootTime + NEW_LINE);
+            strBuilder.append(" Node receives also peer-to-peer (non-networking) packets and raises PeerToPeer event: " + receivesPeerToPeer + NEW_LINE);
 
             return strBuilder.toString();
         }
-        
+
     }
-    
+
     /** Various DPA configuration flag bits. */
-    private final DPA_ConfigFlags configFlags;
-    
+    private DPA_ConfigFlags configFlags;
+
     /**
-     * RF channel A of the optional subordinate network in case the node also 
+     * RF channel A of the optional subordinate network in case the node also
      * plays a role of the coordinator of such network.
      */
-    private final int RFChannelASubNetwork;
-    
+    private int RFChannelASubNetwork;
+
     /**
-     * RF channel B of the optional subordinate network in case the node also 
+     * RF channel B of the optional subordinate network in case the node also
      * plays a role of the coordinator of such network.
      */
-    private final int RFChannelBSubNetwork;
-    
+    private int RFChannelBSubNetwork;
+
     /** RF output power. Valid numbers 0-7. */
-    private final int RFOutputPower;
-    
+    private int RFOutputPower;
+
     /** RF signal filter. Valid numbers 0-64. */
-    private final int RFSignalFilter;
-    
+    private int RFSignalFilter;
+
     /**
-     * Timeout when receiving RF packets at LP or XLP modes. Unit is cycles 
-     * (one cycle is 46 ms at LP, 770 ms at XLP mode). Greater values save energy 
-     * but might decrease responsiveness to the master interface DPA Requests and 
-     * also decrease Idle event calling frequency. Valid numbers 1-255. Also see 
+     * Timeout when receiving RF packets at LP or XLP modes. Unit is cycles (one
+     * cycle is 46 ms at LP, 770 ms at XLP mode). Greater values save energy but
+     * might decrease responsiveness to the master interface DPA Requests and
+     * also decrease Idle event calling frequency. Valid numbers 1-255. Also see
      * APIvariable uns8 LP_XLP_toutRF.
      */
-    private final int timeoutRecvRFPackets;
-    
+    private int timeoutRecvRFPackets;
+
     /**
-     * Baud rate of the UART interface if used. Uses the same coding as UART Open
-     * (i.e. 0x00 = 1200 ).
+     * Baud rate of the UART interface if used. Uses the same coding as UART
+     * Open (i.e. 0x00 = 1200 ).
      */
-    private final int baudRateOfUARF;
-    
+    private int baudRateOfUARF;
+
     /** RF channel A of the main network. Valid numbers depend on used RF band. */
-    private final int RFChannelA;
-    
+    private int RFChannelA;
+
     /** RF channel B of the main network. Valid numbers depend on used RF band. */
-    private final int RFChannelB;
-    
-    
+    private int RFChannelB;
+
+    /** Undocumented byte value, maybe identifing concrete module. */
+    private short[] undocumented;
+
     /**
      * Creates new object of HWP configuration.
+     * <p>
      * @param standardPeripherals standard peripherals.
      * @param configFlags Various DPA configuration flag bits.
-     * @param RFChannelASubNetwork RF channel A of the optional subordinate network 
-     *                             in case the node also plays a role of the coordinator 
-     *                             of such network.
-     * @param RFChannelBSubNetwork RF channel B of the optional subordinate network 
-     *                             in case the node also plays a role of the coordinator 
-     *                             of such network.
+     * @param RFChannelASubNetwork RF channel A of the optional subordinate
+     * network in case the node also plays a role of the coordinator of such
+     * network.
+     * @param RFChannelBSubNetwork RF channel B of the optional subordinate
+     * network in case the node also plays a role of the coordinator of such
+     * network.
      * @param RFOutputPower RF output power. Valid numbers 0-7.
      * @param RFSignalFilter RF signal filter. Valid numbers 0-64.
-     * @param timeoutRecvRFPackets Timeout when receiving RF packets at LP or 
-     *        XLP modes. Unit is cycles (one cycle is 46 ms at LP, 770 ms at XLP mode).
-     *        Greater values save energy but might decrease responsiveness to the master 
-     *        interface DPA Requests and also decrease Idle event calling frequency. 
-     *        Valid numbers 1-255. Also see API variable uns8 LP_XLP_toutRF.
-     * @param baudRateOfUARF Baud rate of the UART interface if used. Uses the 
-     *        same coding as UART Open (i.e. 0x00 = 1200 )
-     * @param RFChannelA RF channel A of the main network. Valid numbers depend on used RF band. 
-     * @param RFChannelB RF channel B of the main network. Valid numbers depend on used RF band.
+     * @param timeoutRecvRFPackets Timeout when receiving RF packets at LP or
+     * XLP modes. Unit is cycles (one cycle is 46 ms at LP, 770 ms at XLP mode).
+     * Greater values save energy but might decrease responsiveness to the
+     * master interface DPA Requests and also decrease Idle event calling
+     * frequency. Valid numbers 1-255. Also see API variable uns8 LP_XLP_toutRF.
+     * @param baudRateOfUARF Baud rate of the UART interface if used. Uses the
+     * same coding as UART Open (i.e. 0x00 = 1200 )
+     * @param RFChannelA RF channel A of the main network. Valid numbers depend
+     * on used RF band.
+     * @param RFChannelB RF channel B of the main network. Valid numbers depend
+     * on used RF band.
+     * @param undocumented undocumented byte value, which must be same for write HWP config
+     * as was while reading HWP config
      */
     public HWP_Configuration(
-            IntegerFastQueryList standardPeripherals, DPA_ConfigFlags configFlags, 
-            int RFChannelASubNetwork, int RFChannelBSubNetwork, int RFOutputPower, 
-            int RFSignalFilter, int timeoutRecvRFPackets, int baudRateOfUARF, 
-            int RFChannelA, int RFChannelB
+            IntegerFastQueryList standardPeripherals, DPA_ConfigFlags configFlags,
+            int RFChannelASubNetwork, int RFChannelBSubNetwork, int RFOutputPower,
+            int RFSignalFilter, int timeoutRecvRFPackets, int baudRateOfUARF,
+            int RFChannelA, int RFChannelB, short[] undocumented
     ) {
         this.standardPeripherals = standardPeripherals;
         this.configFlags = configFlags;
@@ -184,8 +229,9 @@ public final class HWP_Configuration {
         this.baudRateOfUARF = baudRateOfUARF;
         this.RFChannelA = RFChannelA;
         this.RFChannelB = RFChannelB;
+        this.undocumented = undocumented;
     }
-    
+
     /**
      * @return list of standard peripherals
      */
@@ -201,16 +247,16 @@ public final class HWP_Configuration {
     }
 
     /**
-     * @return RF channel A of the optional subordinate network in case the node also 
-     *         plays a role of the coordinator of such network.
+     * @return RF channel A of the optional subordinate network in case the node
+     * also plays a role of the coordinator of such network.
      */
     public int getRFChannelASubNetwork() {
         return RFChannelASubNetwork;
     }
 
     /**
-     * @return RF channel B of the optional subordinate network in case the node also 
-     *         plays a role of the coordinator of such network.
+     * @return RF channel B of the optional subordinate network in case the node
+     * also plays a role of the coordinator of such network.
      */
     public int getRFChannelBSubNetwork() {
         return RFChannelBSubNetwork;
@@ -243,26 +289,80 @@ public final class HWP_Configuration {
     public int getBaudRateOfUARF() {
         return baudRateOfUARF;
     }
-    
+
     /**
-     * @return RF channel A of the main network. Valid numbers depend on used RF band.
+     * @return RF channel A of the main network. Valid numbers depend on used RF
+     * band.
      */
     public int getRFChannelA() {
         return RFChannelA;
     }
 
     /**
-     * @return RF channel B of the main network. Valid numbers depend on used RF band.
+     * @return RF channel B of the main network. Valid numbers depend on used RF
+     * band.
      */
     public int getRFChannelB() {
         return RFChannelB;
     }
-    
+
+    /**
+     * @return undocumented byte value, which must be same for write HWP config
+     * as was while reading HWP config
+     */
+    public short[] getUndocumented() {
+        return undocumented;
+    }
+
+    public void setStandardPeripherals(IntegerFastQueryList standardPeripherals) {
+        this.standardPeripherals = standardPeripherals;
+    }
+
+    public void setConfigFlags(DPA_ConfigFlags configFlags) {
+        this.configFlags = configFlags;
+    }
+
+    public void setRFChannelASubNetwork(int RFChannelASubNetwork) {
+        this.RFChannelASubNetwork = RFChannelASubNetwork;
+    }
+
+    public void setRFChannelBSubNetwork(int RFChannelBSubNetwork) {
+        this.RFChannelBSubNetwork = RFChannelBSubNetwork;
+    }
+
+    public void setRFOutputPower(int RFOutputPower) {
+        this.RFOutputPower = RFOutputPower;
+    }
+
+    public void setRFSignalFilter(int RFSignalFilter) {
+        this.RFSignalFilter = RFSignalFilter;
+    }
+
+    public void setTimeoutRecvRFPackets(int timeoutRecvRFPackets) {
+        this.timeoutRecvRFPackets = timeoutRecvRFPackets;
+    }
+
+    public void setBaudRateOfUARF(int baudRateOfUARF) {
+        this.baudRateOfUARF = baudRateOfUARF;
+    }
+
+    public void setRFChannelA(int RFChannelA) {
+        this.RFChannelA = RFChannelA;
+    }
+
+    public void setRFChannelB(int RFChannelB) {
+        this.RFChannelB = RFChannelB;
+    }
+
+    public void setUndocumented(short[] undocumented) {
+        this.undocumented = undocumented;
+    }
+
     @Override
     public String toString() {
         StringBuilder strBuilder = new StringBuilder();
         String NEW_LINE = System.getProperty("line.separator");
-        
+
         strBuilder.append(this.getClass().getSimpleName() + " { " + NEW_LINE);
         strBuilder.append(" Standard peripherals: " + standardPeripherals.membersListToString() + NEW_LINE);
         strBuilder.append(" Configuration flags: " + configFlags + NEW_LINE);
@@ -275,14 +375,14 @@ public final class HWP_Configuration {
         strBuilder.append(" RF channel A of the main network: " + RFChannelA + NEW_LINE);
         strBuilder.append(" RF channel B of the main network: " + RFChannelB + NEW_LINE);
         strBuilder.append("}");
-        
+
         return strBuilder.toString();
     }
-    
+
     public String toPrettyFormatedString() {
         StringBuilder strBuilder = new StringBuilder();
         String NEW_LINE = System.getProperty("line.separator");
-        
+
         strBuilder.append("Standard peripherals: " + standardPeripherals.membersListToString() + NEW_LINE);
         strBuilder.append("Configuration flags: " + NEW_LINE);
         strBuilder.append(configFlags.toPrettyFormatedString());
@@ -294,8 +394,25 @@ public final class HWP_Configuration {
         strBuilder.append("Baud rate of the UART: " + baudRateOfUARF + NEW_LINE);
         strBuilder.append("RF channel A of the main network: " + RFChannelA + NEW_LINE);
         strBuilder.append("RF channel B of the main network: " + RFChannelB + NEW_LINE);
-        
+
         return strBuilder.toString();
     }
-}
 
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof HWP_Configuration) {
+            HWP_Configuration hwp = (HWP_Configuration) obj;
+            return (RFChannelA == hwp.getRFChannelA()
+                    && RFChannelASubNetwork == hwp.getRFChannelASubNetwork()
+                    && RFChannelB == hwp.getRFChannelB()
+                    && RFChannelBSubNetwork == hwp.getRFChannelBSubNetwork()
+                    && RFOutputPower == hwp.getRFOutputPower()
+                    && RFSignalFilter == hwp.getRFSignalFilter()
+                    && baudRateOfUARF == hwp.getBaudRateOfUARF()
+                    && configFlags.equals(hwp.getConfigFlags())
+                    && standardPeripherals.getList().equals(hwp.getStandardPeripherals().getList())
+                    && timeoutRecvRFPackets == hwp.getTimeoutRecvRFPackets());
+        }
+        return false;
+    }
+}
