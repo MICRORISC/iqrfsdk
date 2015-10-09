@@ -84,12 +84,16 @@ public class HWPConfiguration {
         HWP_Configuration config = readAndPrintHWPConfig(os);        
         
         // edit config
-        // config.setConfigFlags(new HWP_Configuration.DPA_ConfigFlags(false, true, true, true, true, true));
+        config.setConfigFlags(new HWP_Configuration.DPA_ConfigFlags(false, true, true, true, true, true));
         
         //write edited config
         writeHWPConfig(os, config);
         
-        // readAndPrintHWPConfig(os);
+        // restart device for use of new HWP Configuration
+        restartDevice(os);        
+        
+        // read HWP config again
+        readAndPrintHWPConfig(os);
         
         // end working with Simply
         simply.destroy();
@@ -126,6 +130,19 @@ public class HWPConfiguration {
             }
         }
     }    
+    
+    private static void restartDevice(OS os){
+        VoidType restartResult = os.restart();
+        if(restartResult == null){
+               CallRequestProcessingState procState = os.getCallRequestProcessingStateOfLastCall();
+            if ( procState == ERROR ) {
+                CallRequestProcessingError error = os.getCallRequestProcessingErrorOfLastCall();
+                printMessageAndExit("Device restart wasn't succcesful " + error);
+            } else {
+                printMessageAndExit("Device restart hasn't been processed yet: " + procState);
+            }                   
+        }
+    }
     
     private static void rewriteConfigFlagByte(OS os){
         VoidType result = os.writeHWPConfigurationByte(0x05, 0b00000001);

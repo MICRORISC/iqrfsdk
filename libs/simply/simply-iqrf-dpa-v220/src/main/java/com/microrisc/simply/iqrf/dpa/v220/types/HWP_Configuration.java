@@ -183,7 +183,10 @@ public final class HWP_Configuration {
     /** RF channel B of the main network. Valid numbers depend on used RF band. */
     private int RFChannelB;
 
-    /** Undocumented byte value, maybe identifing concrete module. */
+    /** Undocumented byte value, which can be read from module and written again. 
+     * (It doesn't matter on module - value can be read from module 1 and and can 
+     * be written into module 2) 
+     */
     private short[] undocumented;
 
     /**
