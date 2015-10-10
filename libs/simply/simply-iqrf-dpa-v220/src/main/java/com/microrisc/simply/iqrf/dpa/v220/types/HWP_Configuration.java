@@ -1,5 +1,5 @@
 /* 
- * Copyright 2014 MICRORISC s.r.o.
+ * Copyright 2014-2015 MICRORISC s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,9 @@ package com.microrisc.simply.iqrf.dpa.v220.types;
  * HWP Configuration.
  * <p>
  * @author Michal Konopa
+ * @author Martin Strouhal
  */
+// October 2015 - added undocumented byte property and implemented equals method
 public final class HWP_Configuration {
 
     /** Standard peripherals. */

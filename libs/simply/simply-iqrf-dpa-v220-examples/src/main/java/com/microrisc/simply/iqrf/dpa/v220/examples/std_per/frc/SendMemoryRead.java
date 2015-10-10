@@ -124,8 +124,12 @@ public class SendMemoryRead {
         }
 
         // For FRC peripheral must be set timeout:
+        // 1) For typical standard FRC (can transfer up to 2B to the nodes) duration is lower than:
         // timeout = Bonded Nodes x 130 + _RESPONSE_FRC_TIME_xxx_MS + 250 [ms]
-        // eg. for 5 bonded nodes and FRC response time 640ms
+        // 2) Typical advanced FRC (can transfer up to 30B to the nodes) duration is lower than:
+        // timeout for STD mode = Bonded Nodes x 150 + _RESPONSE_FRC_TIME_xxx_MS + 290 [ms].
+        // timeout for LP mode = Bonded Nodes x 200 + _RESPONSE_FRC_TIME_xxx_MS + 390 [ms].
+        // eg. for 5 bonded nodes and FRC response time 640ms 
         boolean std = true; // indicates if is used STD or LP mode
         long timeout = 5 * (std ? 150 : 200) + (long) FRC_Configuration.FRC_RESPONSE_TIME.TIME_640_MS.getRepsonseTimeInInt() + (std ? 290 : 390);
         frc.setDefaultWaitingTimeout(timeout);

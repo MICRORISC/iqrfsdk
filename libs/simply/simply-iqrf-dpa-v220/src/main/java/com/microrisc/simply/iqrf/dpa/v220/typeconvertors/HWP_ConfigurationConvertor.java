@@ -1,5 +1,5 @@
 /* 
- * Copyright 2014 MICRORISC s.r.o.
+ * Copyright 2014-2015 MICRORISC s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,9 @@ import org.slf4j.LoggerFactory;
  * {@code HWP_Configuration} objects.
  * <p>
  * @author Michal Konopa
+ * @author Martin Strouhal
  */
+// October 2015 - implemented toProtoValue and added conversion of undocumented byte
 public final class HWP_ConfigurationConvertor extends PrimitiveConvertor {
 
     /** Logger. */
@@ -40,8 +42,8 @@ public final class HWP_ConfigurationConvertor extends PrimitiveConvertor {
     private static final HWP_ConfigurationConvertor instance = new HWP_ConfigurationConvertor();
 
     /** Size of returned response. */
-    static public final int REQUEST_TYPE_SIZE = 0x21;        
-    static public final int RESPONSE_TYPE_SIZE = 0x21;    
+    static public final int REQUEST_TYPE_SIZE = 0x21;
+    static public final int RESPONSE_TYPE_SIZE = 0x21;
 
     /** Operand value to use for xoring values comming from protocol. */
     static private final int XOR_OPERAND = 0x34;
@@ -84,12 +86,12 @@ public final class HWP_ConfigurationConvertor extends PrimitiveConvertor {
      * Puts speicified standard peripherals into spciefied proto value.
      */
     private void putStandardPeriperals(short[] protoValue, IntegerFastQueryList peripherals)
-    throws ValueConversionException {
-        short[] shortPeripherals =  IntegerFastQueryListConvertor.getInstance().toProtoValue(peripherals);
-        
-        if(shortPeripherals.length > STANDARD_PER_LENGTH){
+            throws ValueConversionException {
+        short[] shortPeripherals = IntegerFastQueryListConvertor.getInstance().toProtoValue(peripherals);
+
+        if (shortPeripherals.length > STANDARD_PER_LENGTH) {
             throw new ValueConversionException("IntegerQueryList size is greater than is allowed length of peripherals!");
-        }      
+        }
 
         for (int i = 0; i < STANDARD_PER_LENGTH; i++) {
             protoValue[i + STANDARD_PER_POS] += i < shortPeripherals.length ? shortPeripherals[i] : 0;
@@ -124,25 +126,28 @@ public final class HWP_ConfigurationConvertor extends PrimitiveConvertor {
         flags <<= 1;
         flags += configFlags.canBeControlledByLocalSPI() ? 1 : 0;
         flags <<= 1;
-        flags += configFlags.isHandlerCalledOnEvent() ? 1 : 0;        
+        flags += configFlags.isHandlerCalledOnEvent() ? 1 : 0;
 
         return flags;
     }
 
     /**
      * Get undocumented byte from protoValue.
+     * <p>
      * @param protoValue from which will be getted undocumented byte
      * @return undocumented byte, see {@link HWP_Configuration#undocumented}
      */
-    private short[] getUndocumentedByte(short[] protoValue){
+    private short[] getUndocumentedByte(short[] protoValue) {
         short[] undocumented = new short[UNDOCUMENTED_RESPONSE_LENGTH];
         System.arraycopy(protoValue, UNDOCUMENTED_POS, undocumented, 0, UNDOCUMENTED_RESPONSE_LENGTH);
         return undocumented;
     }
-    
+
     /**
-     * Checks, if specified object contains allowable value of HWP config and 
-     * returns {@link HWP_Configuration} object. Otherwise is {@link IllegalArgumentException} thrown.
+     * Checks, if specified object contains allowable value of HWP configuration
+     * and returns {@link HWP_Configuration} object. Otherwise is
+     * {@link IllegalArgumentException} thrown.
+     * <p>
      * @param config object to check and convert
      * @return converted {@link HWP_Configuration} object
      */
@@ -154,10 +159,10 @@ public final class HWP_ConfigurationConvertor extends PrimitiveConvertor {
             throw new IllegalArgumentException("HWP configuration cannot be null.");
         }
         HWP_Configuration hwp_config = (HWP_Configuration) config;
-        if(hwp_config.getUndocumented() == null){
+        if (hwp_config.getUndocumented() == null) {
             throw new IllegalArgumentException("Undocumented byte cannot be null.");
         }
-        if(hwp_config.getUndocumented().length < 1){
+        if (hwp_config.getUndocumented().length < 1) {
             throw new IllegalArgumentException("Undocumented byte value cannot be smaller than 1.");
         }
         return hwp_config;
@@ -167,7 +172,7 @@ public final class HWP_ConfigurationConvertor extends PrimitiveConvertor {
     public short[] toProtoValue(Object value) throws ValueConversionException {
         logger.debug("toProtoValue - start: value={}", value);
 
-        HWP_Configuration config = checkHWPConfig(value);                
+        HWP_Configuration config = checkHWPConfig(value);
         short[] protoValue = new short[REQUEST_TYPE_SIZE];
 
         // put stanrd peripherals in protoValue to HWP config's protoValue
@@ -189,8 +194,8 @@ public final class HWP_ConfigurationConvertor extends PrimitiveConvertor {
         protoValue[CHECKSUM_POS] = 0x5F;
         for (int i = 1; i < UNDOCUMENTED_POS; i++) {
             protoValue[CHECKSUM_POS] ^= protoValue[i];
-        }                
-        
+        }
+
         //undocumented byte
         protoValue[UNDOCUMENTED_POS] = (short) (config.getUndocumented()[0]);
 
@@ -219,16 +224,17 @@ public final class HWP_ConfigurationConvertor extends PrimitiveConvertor {
         int baudRateOfUARF = protoValue[BAUD_RATE_OF_UART] ^ XOR_OPERAND;
         int RFChannelA = protoValue[RFCHANNEL_A_POS] ^ XOR_OPERAND;
         int RFChannelB = protoValue[RFCHANNEL_B_POS] ^ XOR_OPERAND;
-        
+
         short[] undocumentedByte = getUndocumentedByte(protoValue);
 
         HWP_Configuration hwpConfig = new HWP_Configuration(
-                standardPeripherals, configFlags, RFChannelASubNetwork, RFChannelBSubNetwork,
-                RFOutputPower, RFSignalFilter, timeoutRecvRFPackets, baudRateOfUARF,
-                RFChannelA, RFChannelB, undocumentedByte
+                standardPeripherals, configFlags, RFChannelASubNetwork, 
+                RFChannelBSubNetwork, RFOutputPower, RFSignalFilter, 
+                timeoutRecvRFPackets, baudRateOfUARF, RFChannelA, RFChannelB, 
+                undocumentedByte
         );
 
         logger.debug("toObject - end: {}", hwpConfig);
         return hwpConfig;
-    }    
+    }
 }
