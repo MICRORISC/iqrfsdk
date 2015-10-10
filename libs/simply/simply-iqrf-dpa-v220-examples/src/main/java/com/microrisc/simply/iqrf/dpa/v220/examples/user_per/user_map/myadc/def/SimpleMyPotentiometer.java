@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.microrisc.simply.iqrf.dpa.v220.examples.user_per.myadc.user_map;
+package com.microrisc.simply.iqrf.dpa.v220.examples.user_per.user_map.myadc.def;
 
 import com.microrisc.simply.CallRequestProcessingInfoContainer;
 import com.microrisc.simply.ConnectorService;

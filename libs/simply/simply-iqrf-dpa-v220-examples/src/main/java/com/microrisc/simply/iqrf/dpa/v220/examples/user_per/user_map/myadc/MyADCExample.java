@@ -18,8 +18,8 @@ package com.microrisc.simply.iqrf.dpa.v220.examples.user_per.myadc;
 import com.microrisc.simply.*;
 import com.microrisc.simply.errors.CallRequestProcessingError;
 import com.microrisc.simply.iqrf.dpa.v220.DPA_SimplyFactory;
-import com.microrisc.simply.iqrf.dpa.v220.examples.user_per.myadc.user_map.MyPhotoResistor;
-import com.microrisc.simply.iqrf.dpa.v220.examples.user_per.myadc.user_map.MyPotentiometer;
+import com.microrisc.simply.iqrf.dpa.v220.examples.user_per.user_map.myadc.def.MyPhotoResistor;
+import com.microrisc.simply.iqrf.dpa.v220.examples.user_per.user_map.myadc.def.MyPotentiometer;
 import java.io.File;
 
 /**

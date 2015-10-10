@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.microrisc.simply.iqrf.dpa.v220.examples.user_per.mydallas.user_map;
+package com.microrisc.simply.iqrf.dpa.v220.examples.user_per.user_map.mydallas.def;
 
 import com.microrisc.simply.typeconvertors.PrimitiveConvertor;
 import com.microrisc.simply.typeconvertors.ValueConversionException;
