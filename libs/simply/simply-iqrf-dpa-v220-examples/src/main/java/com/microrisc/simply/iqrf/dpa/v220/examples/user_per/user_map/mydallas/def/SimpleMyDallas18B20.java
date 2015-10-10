@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.microrisc.simply.iqrf.dpa.v220.examples.user_per.mydallas.user_map;
+package com.microrisc.simply.iqrf.dpa.v220.examples.user_per.user_map.mydallas.def;
 
 import com.microrisc.simply.CallRequestProcessingInfoContainer;
 import com.microrisc.simply.ConnectorService;

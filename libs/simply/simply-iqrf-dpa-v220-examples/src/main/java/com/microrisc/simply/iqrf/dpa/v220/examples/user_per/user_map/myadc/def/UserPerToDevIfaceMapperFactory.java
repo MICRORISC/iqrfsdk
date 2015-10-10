@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.microrisc.simply.iqrf.dpa.v220.examples.user_per.mydallas.user_map;
+package com.microrisc.simply.iqrf.dpa.v220.examples.user_per.user_map.myadc.def;
 
 import com.microrisc.simply.iqrf.dpa.protocol.PeripheralToDevIfaceMapper;
 import com.microrisc.simply.iqrf.dpa.protocol.PeripheralToDevIfaceMapperFactory;
@@ -39,8 +39,9 @@ implements PeripheralToDevIfaceMapperFactory {
     
     
         private void createMappings() {
-            peripheralToIface.put(32, MyDallas18B20.class);
-
+            peripheralToIface.put(32, MyPotentiometer.class);
+            peripheralToIface.put(33, MyPhotoResistor.class);
+           
             // creating transposition
             for ( Map.Entry<Integer, Class> entry : peripheralToIface.entrySet() ) {
                 ifaceToPeripheral.put(entry.getValue(), entry.getKey());

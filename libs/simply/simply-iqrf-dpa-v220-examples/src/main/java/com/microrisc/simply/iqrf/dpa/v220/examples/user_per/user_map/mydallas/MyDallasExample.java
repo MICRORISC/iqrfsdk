@@ -23,7 +23,7 @@ import com.microrisc.simply.Simply;
 import com.microrisc.simply.SimplyException;
 import com.microrisc.simply.errors.CallRequestProcessingError;
 import com.microrisc.simply.iqrf.dpa.v220.DPA_SimplyFactory;
-import com.microrisc.simply.iqrf.dpa.v220.examples.user_per.mydallas.user_map.MyDallas18B20;
+import com.microrisc.simply.iqrf.dpa.v220.examples.user_per.user_map.mydallas.def.MyDallas18B20;
 import java.io.File;
 import java.util.LinkedHashMap;
 import java.util.Map;

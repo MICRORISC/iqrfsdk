@@ -13,8 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-package com.microrisc.simply.iqrf.dpa.v220.examples.user_per.mydallas.user_map;
+package com.microrisc.simply.iqrf.dpa.v220.examples.user_per.user_map.myadc.def;
 
 import com.microrisc.simply.DeviceInterface;
 import com.microrisc.simply.DeviceInterfaceMethodId;
@@ -23,26 +22,30 @@ import com.microrisc.simply.di_services.MethodIdTransformer;
 import com.microrisc.simply.iqrf.dpa.di_services.DPA_StandardServices;
 
 /**
- *  MyDallas18B20 Device Interface.
- * 
+ * MyPhotoResistor Device Interface providing reading a value from ADC convertor
+ * on module. This example is recommended use with DK-EVAL and DDC-SE.
+ * <p>
  * @author Martin Strouhal
  */
 @DeviceInterface
-public interface MyDallas18B20 
-extends DPA_StandardServices, GenericAsyncCallable, MethodIdTransformer {
+public interface MyPotentiometer
+        extends DPA_StandardServices, GenericAsyncCallable, MethodIdTransformer {
 
     /**
      * Identifiers of this Device Interface's methods.
      */
     enum MethodID implements DeviceInterfaceMethodId {
+
         GET
     }
 
     /**
-     * Gets actual temperature.
-     *
-     * @return actual temperature <br> 
-     *         {@code Float.MAX_VALUE} if an error has occurred during processing
+     * Gets actual value from ADC convertor. In case use with DDC-SE value from
+     * potentiometer.
+     * <p>
+     * @return actual value from ADC convertor <br> {@code Integer.MAX_VALUE} if
+     * an error has occurred during processing
      */
-    float get();
+    int get();
+
 }

@@ -13,7 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.microrisc.simply.iqrf.dpa.v220.examples.user_per.myadc.user_map;
+
+package com.microrisc.simply.iqrf.dpa.v220.examples.user_per.user_map.mydallas.def;
 
 import com.microrisc.simply.iqrf.dpa.v220.typeconvertors.DPA_AdditionalInfoConvertor;
 import com.microrisc.simply.iqrf.typeconvertors.Uns16Convertor;
@@ -46,7 +47,9 @@ import java.util.Map;
  */
 public class UserProtocolMappingFactory implements ProtocolMappingFactory {
 
-    /** Reference to protocol mapping. */
+    /**
+     * Reference to protocol mapping.
+     */
     private ProtocolMapping protocolMapping = null;
 
     // REQUEST MAPPING
@@ -70,9 +73,9 @@ public class UserProtocolMappingFactory implements ProtocolMappingFactory {
         mappings.add(nodeMapping);
         return mappings;
     }
-
-    // MyPotentiometer
-    static private MethodToPacketMapping createGetValueMapping() {
+    
+    // MyDallas18B20 interface
+    static private MethodToPacketMapping createGetMapping() {
         List<ConstValueToPacketMapping> constMapping = new LinkedList<>();
         constMapping.add(new ConstValueToPacketMapping(3, new short[]{0x00}));
 
@@ -80,32 +83,18 @@ public class UserProtocolMappingFactory implements ProtocolMappingFactory {
         argMapping.add(new ValueToPacketMapping(4, Uns16Convertor.getInstance()));
 
         return new MethodToPacketMapping(constMapping, argMapping);
-    }   
+    }
 
-    static private InterfaceToPacketMapping createRequestMyPotentiometerMapping() {
+    static private InterfaceToPacketMapping createRequestMyDallas18B20Mapping() {
         List<ConstValueToPacketMapping> constMappings = new LinkedList<>();
         constMappings.add(new ConstValueToPacketMapping(2, new short[]{0x20}));
 
         Map<String, MethodToPacketMapping> methodMappings = new HashMap<>();
 
-        methodMappings.put("0", createGetValueMapping());
-
+        methodMappings.put("0", createGetMapping());
         return new InterfaceToPacketMapping(constMappings, methodMappings);
     }
-    
-    // MyPhotoresistor
-    static private InterfaceToPacketMapping createRequestPhotoResistorMapping() {
-        List<ConstValueToPacketMapping> constMappings = new LinkedList<>();
-        constMappings.add(new ConstValueToPacketMapping(2, new short[]{0x21}));
 
-        Map<String, MethodToPacketMapping> methodMappings = new HashMap<>();
-
-        methodMappings.put("0", createGetValueMapping());
-
-        return new InterfaceToPacketMapping(constMappings, methodMappings);
-    }
-    
-     
     /**
      * Creates map of mapping of Device Interfaces into protocol packets.
      *
@@ -115,8 +104,7 @@ public class UserProtocolMappingFactory implements ProtocolMappingFactory {
         Map<Class, InterfaceToPacketMapping> mappings = new HashMap<>();
 
         // creating interface mappings
-        mappings.put(MyPotentiometer.class, createRequestMyPotentiometerMapping());
-        mappings.put(MyPhotoResistor.class, createRequestPhotoResistorMapping());
+        mappings.put(MyDallas18B20.class, createRequestMyDallas18B20Mapping());
         return mappings;
     }
 
@@ -126,10 +114,12 @@ public class UserProtocolMappingFactory implements ProtocolMappingFactory {
         List<ValueToPacketMapping> nodeMappings = createRequestNodeMappings();
         Map<Class, InterfaceToPacketMapping> ifaceMappings = createRequestIfaceMappings();
 
-        return new SimpleCallRequestToPacketMapping(
-                constMappings, networkMappings, nodeMappings, ifaceMappings
+        return new SimpleCallRequestToPacketMapping(constMappings,
+                networkMappings, nodeMappings, ifaceMappings
         );
-    }    
+    }
+
+    
     
     // RESPONSES MAPPING
     static private PacketToValueMapping createResponseNetworkMapping() {
@@ -140,46 +130,32 @@ public class UserProtocolMappingFactory implements ProtocolMappingFactory {
         return new PacketToValueMapping(0, 1, StringToByteConvertor.getInstance());
     }
 
-    // MyPotentiometer (response)
-    static private PacketToMethodMapping createResponseGetValue() {
+    // MyDallas18B20
+    static private PacketToMethodMapping createResponseGet() {
         List<PacketPositionValues> packetValues = new LinkedList<>();
         packetValues.add(new PacketPositionValues(3, (short) 0x80));
 
-        PacketToValueMapping resultMapping = new PacketToValueMapping(8, Uns16Convertor.getInstance());
+        PacketToValueMapping resultMapping = new PacketToValueMapping(8, DallasTemperatureConvertor.getInstance());
         return new PacketToMethodMapping("0", packetValues, resultMapping);
     }
-
-    static private PacketToInterfaceMapping createResponseMyPotentiometerMapping() {
+    
+    static private PacketToInterfaceMapping createResponseMyDallas18B20Mapping() {
         List<PacketPositionValues> packetValues = new LinkedList<>();
         packetValues.add(new PacketPositionValues(2, (short) 0x20));
 
         Map<String, PacketToMethodMapping> methodMappings = new HashMap<>();
 
-        methodMappings.put("0", createResponseGetValue());
-
-        return new PacketToInterfaceMapping(MyPotentiometer.class, packetValues, methodMappings);
+        methodMappings.put("0", createResponseGet());
+    
+        return new PacketToInterfaceMapping(MyDallas18B20.class, packetValues, methodMappings);
     }
 
-    // MyPhotoResistor (response)
-     static private PacketToInterfaceMapping createResponseMyPhotoResistorMapping() {
-        List<PacketPositionValues> packetValues = new LinkedList<>();
-        packetValues.add(new PacketPositionValues(2, (short) 0x21));
-
-        Map<String, PacketToMethodMapping> methodMappings = new HashMap<>();
-
-        methodMappings.put("0", createResponseGetValue());
-
-        return new PacketToInterfaceMapping(MyPhotoResistor.class, packetValues, methodMappings);
-    }      
-    
-    
     // creating response mapping for Device Interfaces
     static private Map<Class, PacketToInterfaceMapping> createResponseIfaceMappings() {
         Map<Class, PacketToInterfaceMapping> mappings = new HashMap<>();
 
         // creating interface mappings
-        mappings.put(MyPotentiometer.class, createResponseMyPotentiometerMapping());
-        mappings.put(MyPhotoResistor.class, createResponseMyPhotoResistorMapping());
+        mappings.put(MyDallas18B20.class, createResponseMyDallas18B20Mapping());
 
         return mappings;
     }
@@ -204,7 +180,7 @@ public class UserProtocolMappingFactory implements ProtocolMappingFactory {
 
     @Override
     public ProtocolMapping createProtocolMapping() throws Exception {
-        if (protocolMapping != null) {
+        if ( protocolMapping != null ) {
             return protocolMapping;
         }
 
