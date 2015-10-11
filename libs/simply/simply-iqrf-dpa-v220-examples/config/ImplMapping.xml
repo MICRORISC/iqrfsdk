@@ -115,20 +115,20 @@
     </implMapping>    
     
     <implMapping>
-        <interface>com.microrisc.simply.iqrf.dpa.v220.examples.user_per.myadc.user_map.MyPotentiometer</interface>
-        <implClass>com.microrisc.simply.iqrf.dpa.v220.examples.user_per.myadc.user_map.SimpleMyPotentiometer</implClass>
+        <interface>com.microrisc.simply.iqrf.dpa.v220.examples.user_per.user_map.myadc.def.MyPotentiometer</interface>
+        <implClass>com.microrisc.simply.iqrf.dpa.v220.examples.user_per.user_map.myadc.def.SimpleMyPotentiometer</implClass>
         <note></note>
     </implMapping>
     
     <implMapping>
-        <interface>com.microrisc.simply.iqrf.dpa.v220.examples.user_per.myadc.user_map.MyPhotoResistor</interface>
-        <implClass>com.microrisc.simply.iqrf.dpa.v220.examples.user_per.myadc.user_map.SimpleMyPhotoResistor</implClass>
+        <interface>com.microrisc.simply.iqrf.dpa.v220.examples.user_per.user_map.myadc.def.MyPhotoResistor</interface>
+        <implClass>com.microrisc.simply.iqrf.dpa.v220.examples.user_per.user_map.myadc.def.SimpleMyPhotoResistor</implClass>
         <note></note>
     </implMapping>
     
     <implMapping>
-        <interface>com.microrisc.simply.iqrf.dpa.v220.examples.user_per.mydallas.user_map.MyDallas18B20</interface>
-        <implClass>com.microrisc.simply.iqrf.dpa.v220.examples.user_per.mydallas.user_map.SimpleMyDallas18B20</implClass>
+        <interface>com.microrisc.simply.iqrf.dpa.v220.examples.user_per.user_map.mydallas.def.MyDallas18B20</interface>
+        <implClass>com.microrisc.simply.iqrf.dpa.v220.examples.user_per.user_map.mydallas.def.SimpleMyDallas18B20</implClass>
         <note></note>
     </implMapping>    
 </implMappings>

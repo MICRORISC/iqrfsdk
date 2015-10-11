@@ -144,7 +144,7 @@ public class HWPConfiguration {
 
         // waiting until module is restarted
         System.out.println("Module will be restarted...");
-        Thread.sleep(5000);
+        Thread.sleep(1000);
         System.out.println("Module has been restarted.");
     }
 
