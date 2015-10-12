@@ -11,23 +11,23 @@
 <networkSettings>
 
     <network>
-		<id>1</id>
-		<type>COM</type>
+	<id>1</id>
+	<type>COM</type>
         <!--Select either Windows port or Linux port, NOT BOTH-->
-		<!--Uncomment for Windows and replace x with the number of your port-->
+	<!--Uncomment for Windows and replace x with the number of your port-->
         <!--<port>COMx</port>-->
         <!--Uncomment for Linux and replace x with the number of your port-->
         <!--<port>/dev/ttyACM0</port>-->
-		<note>Some note here.</note>
+	<note>Some note here.</note>
     </network>
 
 <!--    
     <network>
-		<id>1</id>
-		<type>UDP</type>
-		<host>10.1.30.76</host>
+	<id>1</id>
+	<type>UDP</type>
+	<host>10.1.30.76</host>
         <port>55300</port>
-		<note>Some note here.</note>
+	<note>Some note here.</note>
     </network>
 -->
 
@@ -35,7 +35,7 @@
     <network>
         <id>1</id>
     	<type>SPI</type>
-		<port>/dev/spidev0.0</port>
+	<port>/dev/spidev0.0</port>
         <note>Some note here.</note>
     </network>
 -->
