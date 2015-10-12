@@ -18,7 +18,6 @@ package com.microrisc.simply.iqrf.dpa.v21x.types;
 
 import com.microrisc.simply.iqrf.dpa.protocol.DPA_ProtocolProperties;
 
-
 /**
  * Encapsulates information about parameters of discovery process of IQMesh network.
  * 

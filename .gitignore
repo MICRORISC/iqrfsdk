@@ -126,5 +126,3 @@ demos/autonetwork/java/nb-configuration.xml
 /libs/simply/simply-iqrf-dpa-v22x/target/
 /libs/simply/simply-iqrf-dpa-v22x-examples/target/
 /libs/simply/simply-iqrf-dpa-v21x-examples/target/
-/demos/autonetwork/java/examples/target/
-/libs/iqrf/cdc-uart/jssc-examples/target/
