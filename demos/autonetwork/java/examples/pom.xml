@@ -18,7 +18,7 @@
     <dependencies>
         <dependency>
             <groupId>com.microrisc.simply.iqrf.dpa</groupId>
-            <artifactId>simply-iqrf-dpa-v220</artifactId>
+            <artifactId>simply-iqrf-dpa-v22x</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
         <dependency>

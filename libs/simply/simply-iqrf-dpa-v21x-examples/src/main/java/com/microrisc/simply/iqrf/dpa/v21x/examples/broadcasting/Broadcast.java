@@ -19,13 +19,13 @@ package com.microrisc.simply.iqrf.dpa.v21x.examples.broadcasting;
 import com.microrisc.simply.Network;
 import com.microrisc.simply.SimplyException;
 import com.microrisc.simply.iqrf.dpa.DPA_Simply;
-import com.microrisc.simply.iqrf.dpa.v210.DPA_SimplyFactory;
+import com.microrisc.simply.iqrf.dpa.v21x.DPA_SimplyFactory;
 import com.microrisc.simply.iqrf.dpa.broadcasting.BroadcastResult;
 import com.microrisc.simply.iqrf.dpa.broadcasting.services.BroadcastServices;
-import com.microrisc.simply.iqrf.dpa.v210.devices.LEDG;
-import com.microrisc.simply.iqrf.dpa.v210.devices.LEDR;
-import com.microrisc.simply.iqrf.dpa.v210.devices.OS;
-import com.microrisc.simply.iqrf.dpa.v210.types.LED_State;
+import com.microrisc.simply.iqrf.dpa.v21x.devices.LEDG;
+import com.microrisc.simply.iqrf.dpa.v21x.devices.LEDR;
+import com.microrisc.simply.iqrf.dpa.v21x.devices.OS;
+import com.microrisc.simply.iqrf.dpa.v21x.types.LED_State;
 import java.io.File;
 import java.util.UUID;
 

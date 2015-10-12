@@ -20,10 +20,9 @@ import com.microrisc.simply.SimplyException;
 import com.microrisc.simply.asynchrony.AsynchronousMessagesListener;
 import com.microrisc.simply.asynchrony.AsynchronousMessagingManager;
 import com.microrisc.simply.iqrf.dpa.DPA_Simply;
-import com.microrisc.simply.iqrf.dpa.v210.DPA_SimplyFactory;
+import com.microrisc.simply.iqrf.dpa.v21x.DPA_SimplyFactory;
 import com.microrisc.simply.iqrf.dpa.asynchrony.DPA_AsynchronousMessage;
 import com.microrisc.simply.iqrf.dpa.asynchrony.DPA_AsynchronousMessageProperties;
-import com.microrisc.simply.iqrf.dpa.v210.types.OsInfo;
 import java.io.File;
 
 /**
