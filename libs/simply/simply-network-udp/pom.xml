@@ -7,7 +7,8 @@
     <version>1.0.1-SNAPSHOT</version>
     
     <name>simply-network-udp</name>
-    <description>UDP implementation of network layer for Simply framework.</description>
+    <description>UDP implementation of network layer 
+for jSimply framework.</description>
     <url>http://iqrf.org/weben/index.php?sekce=products&amp;id=iqrf-sdk&amp;ot=development-tools&amp;ot2=development-sw</url>
     
     <organization>

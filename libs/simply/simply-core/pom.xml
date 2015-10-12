@@ -7,7 +7,7 @@
     <version>2.1.0-SNAPSHOT</version>
     
     <name>simply-core</name>
-    <description>Core functionality of Simply framework.</description>
+    <description>Core functionality of jSimply framework.</description>
     <url>http://iqrf.org/weben/index.php?sekce=products&amp;id=iqrf-sdk&amp;ot=development-tools&amp;ot2=development-sw</url>
     
     <organization>

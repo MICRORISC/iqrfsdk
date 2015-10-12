@@ -7,7 +7,8 @@
     <packaging>jar</packaging>
 
     <name>simply-network-spi</name>
-    <description>SPI implementation of network layer for Simply framework.</description>
+    <description>SPI implementation of network layer 
+for jSimply framework.</description>
     <url>http://iqrf.org/weben/index.php?sekce=products&amp;id=iqrf-sdk&amp;ot=development-tools&amp;ot2=development-sw</url>
     
     <organization>

@@ -7,7 +7,7 @@
     <version>2.0.1-SNAPSHOT</version>
     
     <name>simply-iqrf</name>
-    <description>IQRF functionality of Simply framework.</description>
+    <description>IQRF functionality of jSimply framework.</description>
     <url>http://iqrf.org/weben/index.php?sekce=products&amp;id=iqrf-sdk&amp;ot=development-tools&amp;ot2=development-sw</url>
     
     <organization>

@@ -8,7 +8,8 @@
     <packaging>jar</packaging>
 
     <name>simply-network-serial-v2</name>
-    <description>Serial port implementation of network layer for Simply.</description>
+    <description>Serial port implementation of network layer 
+for jSimply framework.</description>
     <url>http://iqrf.org/weben/index.php?sekce=products&amp;id=iqrf-sdk&amp;ot=development-tools&amp;ot2=development-sw</url>
   
     <organization>

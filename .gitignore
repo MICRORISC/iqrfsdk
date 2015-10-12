@@ -116,3 +116,7 @@ libs/simply/simply-network-usbcdc/nb-configuration.xml
 demos/autonetwork/java/nb-configuration.xml
 
 /demos/autonetwork/java/target/
+/libs/simply/simply-iqrf-dpa-v21x/target/
+/libs/simply/simply-iqrf-dpa-v22x/target/
+/libs/simply/simply-iqrf-dpa-v22x-examples/target/
+/libs/simply/simply-iqrf-dpa-v21x-examples/target/
