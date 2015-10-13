@@ -24,11 +24,6 @@ It consists of these parts:
 		- simply-iqrf-2.0.1.jar
 		- simply-iqrf-dpa-3.0.0.jar
 		
-- jSimply IQRF DPA v21x
-	A framework extension with direct support of IQRF DPA 2.1x.
-	Packages:
-		- simply-iqrf-dpa-v21x-1.0.0.jar
-		
 - jSimply IQRF DPA v22x
 	A framework extension with direct support of IQRF DPA 2.2x.
 	Packages:
@@ -142,11 +137,8 @@ Five maven projects have been prepared for IQRF/DPA network:
 	* judp-examples
   	  For IQRF UDP ( GW-ETH-02A or GW-WIFI-01 )
 
-Two maven projects have been prepared for DPA network:
+One maven projects have been prepared for DPA network:
 
-	* simply-iqrf-dpa-v21x-examples
-  	  For IQRF DPA 2.1x
-  
 	* simply-iqrf-dpa-v22x-examples
   	  For IQRF DPA 2.2x
 
@@ -177,6 +169,7 @@ Four make projects have been prepared for DPA network:
 	* clibdpa-arduino (via SPI/UART)
 	  For IQRF SPI/UART/IO extension board ( IQRF-BB-01 )
 
+
 * required HW ( For default configuration option - Simply Network USBCDC layer )
 
 DS-DPA-01(02)
@@ -188,15 +181,15 @@ http://www.iqrf.org/weben/index.php?sekce=products&id=gw-usb-05&ot=gateways&ot2=
 http://www.iqrf.org/weben/index.php?sekce=products&id=gw-usb-06&ot=gateways&ot2=gw-usb-06
 http://www.iqrf.org/weben/index.php?sekce=products&id=ck-usb-04a&ot=development-tools&ot2=development-kits
 
+
 * required FW
 
-Demo HWP v2.2x (v2.1x) or General HWP v2.2x (v2.1x)
+Demo HWP v2.2x or General HWP v2.2x
 http://www.iqrfalliance.org/index.php?section=members_zone#downl
 
-( General HWP v2.2x (v2.1x) and CustomDpaHandler-UserPeripheral-V220 (V21x) example are required 
-  in order to work with an example for the user peripherals. CustomDpaHandler-UserPeripheral-V220  
-  (V21x) is part of released HWP pack. Examples for ADC a DALLAS 18B20 are also included in HWP
-  pack. ) 
+( General HWP v2.2x and CustomDpaHandler-UserPeripheral-V22x example are required in order to 
+  work with an example for the user peripherals. CustomDpaHandler-UserPeripheral-V22x is part 
+  of released HWP pack. Examples for ADC a DALLAS 18B20 are also included in HWP pack. ) 
 
 
 * required SW

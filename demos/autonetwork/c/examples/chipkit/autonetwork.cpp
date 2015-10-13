@@ -46,7 +46,7 @@ unsigned char getBitValue(unsigned char *bitField, unsigned char bitAddr)
 //----------------------------------------
 // Set the specified bit in bitField array
 //----------------------------------------
-unsigned char setBitValue(unsigned char *bitField, unsigned char bitAddr)
+void setBitValue(unsigned char *bitField, unsigned char bitAddr)
 {
    bitField[bitAddr / 8] |= (1 << (bitAddr % 8));
 }
@@ -134,7 +134,7 @@ void notifyMainApp(unsigned char eventCode, unsigned char param)
 {
     if(notify_cb != NULL)
     {
-      if(param == 0)
+      if(param == EVT_WITHOUT_PARAM)
           notify_cb(eventCode, NULL);
       else
           notify_cb(eventCode, &autonetworkState);
@@ -218,13 +218,13 @@ void MyDpaLibRequest(unsigned char len)
     }
     if(dpaStep & DPA_TIMEOUT)
     {
-        // Notify main app. except the temporary address case
-        if(myDpaRequest.NAdr != DPA_ADDRESS_TEMP)
+        // Notify main app. except the temporary address and command CMD_COORDINATOR_DISCOVERY
+        if((myDpaRequest.NAdr != DPA_ADDRESS_TEMP) && (myDpaRequest.PCmd != CMD_COORDINATOR_DISCOVERY))
         {
             if((dpaStep & 0x7f) == CONFIRMATION_WAITING)
-                notifyMainApp(EVT_DPA_CONFIRMATION_TIMEOUT, 0);
+                notifyMainApp(EVT_DPA_CONFIRMATION_TIMEOUT, EVT_WITHOUT_PARAM);
             else
-                notifyMainApp(EVT_DPA_RESPONSE_TIMEOUT, 0);
+                notifyMainApp(EVT_DPA_RESPONSE_TIMEOUT, EVT_WITHOUT_PARAM);
         }
     }
 }
@@ -260,7 +260,7 @@ unsigned char getDiscoveredNodes(void)
     myDpaRequest.PCmd = CMD_COORDINATOR_DISCOVERED_DEVICES;
     MyDpaLibRequest(0);
     if(dpaStep == DPA_OK)
-        memcpy(networkInfo.discoveredNodesMap, (void*)myDpaResponse->Extension.Response.Data, 32);
+        memcpy(networkInfo.discoveredNodesMap, (void*)myDpaResponse->Extension.Response.Data, NODE_BITMAP_SIZE);
     return(dpaStep);
 }
 
@@ -276,7 +276,7 @@ unsigned char getBondedNodes(void)
     myDpaRequest.PCmd = CMD_COORDINATOR_BONDED_DEVICES;
     MyDpaLibRequest(0);
     if(dpaStep == DPA_OK)
-        memcpy(networkInfo.bondedNodesMap, (void*)myDpaResponse->Extension.Response.Data, 32);
+        memcpy(networkInfo.bondedNodesMap, (void*)myDpaResponse->Extension.Response.Data, NODE_BITMAP_SIZE);
     return(dpaStep);}
 
 //----------------
@@ -478,7 +478,7 @@ unsigned char frcSend(unsigned char len)
     dpaTimeoutMS = (unsigned short)(networkInfo.bondedNodesCount) * 130 + 40 + 250 + 2000;
     MyDpaLibRequest(len);   
     if(dpaStep == DPA_OK)
-        memcpy((void*)prebonding.frcData, (void*)&myDpaResponse->Extension.Response.Data[1], 55);
+        memcpy((void*)&prebonding.frcData[FRC_DATA_OFFSET], (void*)&myDpaResponse->Extension.Response.Data[1], FRC_DATA_SIZE);
     return(dpaStep);
 }
 
@@ -494,7 +494,7 @@ unsigned char frcExtraResult(void)
     myDpaRequest.PCmd = CMD_FRC_EXTRARESULT;
     MyDpaLibRequest(0);
     if(dpaStep == DPA_OK)
-        memcpy((void*)&prebonding.frcData[55], (void*)myDpaResponse->Extension.Response.Data, 9);
+        memcpy((void*)&prebonding.frcData[FRC_EXTRA_DATA_OFFSET], (void*)myDpaResponse->Extension.Response.Data, FRC_EXTRA_DATA_SIZE);
     return(dpaStep);       
 }
 
@@ -520,7 +520,7 @@ unsigned char authorizeBond(unsigned char reqAddr, unsigned short mid)
         if(authorizeRetry != 1)
         {
             prebonding.param = reqAddr;
-            notifyMainApp(EVT_COOR_REMOVING_BOND, 1);
+            notifyMainApp(EVT_COOR_REMOVING_BOND, EVT_WITH_PARAM);
             removeBondedNode(reqAddr);
         }
         else
@@ -567,41 +567,27 @@ unsigned char removeBond(unsigned short addr)
     return(dpaStep);
 }
 
-//------------------------------------------
-// Remove bond and reset using batch command
-//------------------------------------------
-unsigned char removeBondReset(unsigned short addr)
+//--------------------------------------------
+// Remove bond and restart using batch command
+//--------------------------------------------
+unsigned char removeBondRestart(unsigned short addr)
 {
     // Remove bond
     myDpaRequest.Extension.Plain.Data[0] = 5;
     myDpaRequest.Extension.Plain.Data[1] = PNUM_NODE;
     myDpaRequest.Extension.Plain.Data[2] = CMD_NODE_REMOVE_BOND;
-    myDpaRequest.Extension.Plain.Data[3] = 0xff;
-    myDpaRequest.Extension.Plain.Data[4] = 0xff;
+    myDpaRequest.Extension.Plain.Data[3] = HWPID_DoNotCheck & 0xff;
+    myDpaRequest.Extension.Plain.Data[4] = HWPID_DoNotCheck >> 0x08;
     // Reset
     myDpaRequest.Extension.Plain.Data[5] = 5;
     myDpaRequest.Extension.Plain.Data[6] = PNUM_OS;
-    myDpaRequest.Extension.Plain.Data[7] = CMD_OS_RESET;
-    myDpaRequest.Extension.Plain.Data[8] = 0xff;
-    myDpaRequest.Extension.Plain.Data[9] = 0xff;
+    myDpaRequest.Extension.Plain.Data[7] = CMD_OS_RESTART;
+    myDpaRequest.Extension.Plain.Data[8] = HWPID_DoNotCheck & 0xff;
+    myDpaRequest.Extension.Plain.Data[9] = HWPID_DoNotCheck >> 0x08;
     // EndBatch
     myDpaRequest.Extension.Plain.Data[10] = 0;
     // Batch command
     return(sendBatch(addr, 11));
-}
-
-//----------------
-// Reset TR module
-//----------------
-unsigned char resetModule(unsigned short addr)
-{
-    // Reset TR module
-    myDpaRequest.NAdr = addr;
-    myDpaRequest.HwProfile = HWPID_DoNotCheck;
-    myDpaRequest.PNum = PNUM_OS;
-    myDpaRequest.PCmd = CMD_OS_RESET;
-    MyDpaLibRequest(0);
-    return(dpaStep);
 }
 
 //--------------
@@ -644,8 +630,8 @@ unsigned char checkDuplicitMID(unsigned char idx)
 void removeAllBonds(void)
 {
     // Send broadcast batch command to remove bonds and reset nodes
-    notifyMainApp(EVT_REMOVE_ALL_BONDS, 0);
-    removeBondReset(DPA_ADDRESS_BROADCAST);
+    notifyMainApp(EVT_REMOVE_ALL_BONDS, EVT_WITHOUT_PARAM);
+    removeBondRestart(DPA_ADDRESS_BROADCAST);
   
     // Remove bonds at coordinator too
     clearAllBond();
@@ -662,11 +648,11 @@ void terminateProcess(void)
     enableBonding.BondingMask = 0;
     enableBonding.Control = 0;
     enableBonding.UserData = 0;
-    notifyMainApp(EVT_NODE_DISABLE_PREBONDING, 0);
+    notifyMainApp(EVT_NODE_DISABLE_PREBONDING, EVT_WITHOUT_PARAM);
     enableRemoteBonding(DPA_ADDRESS_BROADCAST, &enableBonding);
-    notifyMainApp(EVT_COOR_DISABLE_PREBONDING, 0);
+    notifyMainApp(EVT_COOR_DISABLE_PREBONDING, EVT_WITHOUT_PARAM);
     enableRemoteBonding(DPA_ADDRESS_COORD, &enableBonding);
-    notifyMainApp(EVT_AN_PROCESS_STOPPED, 0);
+    notifyMainApp(EVT_AN_PROCESS_STOPPED, EVT_WITHOUT_PARAM);
     ledR(DPA_ADDRESS_BROADCAST, CMD_LED_SET_OFF);
 }
 
@@ -683,9 +669,9 @@ void autonetworkInit(autonetworkNotify_CB notify_CB, autonetworkCheckInput_CB ch
     
     // Set callback functions
     if(notify_CB != NULL)
-      notify_cb = notify_CB;   
+        notify_cb = notify_CB;   
     if(checkInput_CB != NULL)
-      checkInput_cb = checkInput_CB;
+        checkInput_cb = checkInput_CB;
 }
 
 //---------------------
@@ -703,10 +689,10 @@ unsigned char autonetwork(T_AN_PARAMS *par)
     autonetworkState.params = &ANparams;
 
     // Notify main application
-    notifyMainApp(EVT_AN_PROCESS_STARTED, 0);
+    notifyMainApp(EVT_AN_PROCESS_STARTED, EVT_WITHOUT_PARAM);
 
     // Get addresing info
-    notifyMainApp(EVT_GET_NETWORK_INFO, 0);
+    notifyMainApp(EVT_GET_NETWORK_INFO, EVT_WITHOUT_PARAM);
     getAddrInfo();
     prebonding.origNodesCount = networkInfo.bondedNodesCount;
 
@@ -728,8 +714,8 @@ unsigned char autonetwork(T_AN_PARAMS *par)
         prebonding.MIDcount = 0;
         prebonding.newNode = 0x00;
         // Reset bitmap of nodes provided prebonding, new adrress and MID
-        memset(prebonding.newNodesMap, 0, 32);
-        memset((unsigned char*)prebonding.MIDlist, 0, 512);
+        memset(prebonding.newNodesMap, 0, NODE_BITMAP_SIZE);
+        memset((unsigned char*)prebonding.MIDlist, 0, MID_BUFFER_SIZE);
 
         // Set bonding mask
         prebonding.bondingMask = 0;                // Default value for 0 nodes
@@ -753,26 +739,26 @@ unsigned char autonetwork(T_AN_PARAMS *par)
         prebonding.waitBonding10ms = prebonding.waitBonding * 100;
 
         // Notify main application
-        notifyMainApp(EVT_ROUND_START, 1);
+        notifyMainApp(EVT_ROUND_START, EVT_WITH_PARAM);
 
         // Send batch command to all nodes, if any
         if(networkInfo.bondedNodesCount > 0)
         {
             // Notify main application
-            notifyMainApp(EVT_NODE_ENABLE_PREBONDING, 1);
+            notifyMainApp(EVT_NODE_ENABLE_PREBONDING, EVT_WITH_PARAM);
 
             // LEDR = 1
             myDpaRequest.Extension.Plain.Data[0] = 5;
             myDpaRequest.Extension.Plain.Data[1] = PNUM_LEDR;
             myDpaRequest.Extension.Plain.Data[2] = CMD_LED_SET_ON;
-            myDpaRequest.Extension.Plain.Data[3] = 0xff;
-            myDpaRequest.Extension.Plain.Data[4] = 0xff;
+            myDpaRequest.Extension.Plain.Data[3] = HWPID_DoNotCheck & 0xff;
+            myDpaRequest.Extension.Plain.Data[4] = HWPID_DoNotCheck >> 0x08;
             // Enable prebonding
             myDpaRequest.Extension.Plain.Data[5] = 9;
             myDpaRequest.Extension.Plain.Data[6] = PNUM_NODE;
             myDpaRequest.Extension.Plain.Data[7] = CMD_NODE_ENABLE_REMOTE_BONDING;
-            myDpaRequest.Extension.Plain.Data[8] = 0xff;
-            myDpaRequest.Extension.Plain.Data[9] = 0xff;
+            myDpaRequest.Extension.Plain.Data[8] = HWPID_DoNotCheck & 0xff;
+            myDpaRequest.Extension.Plain.Data[9] = HWPID_DoNotCheck >> 0x08;
             myDpaRequest.Extension.Plain.Data[10] = prebonding.bondingMask;
             myDpaRequest.Extension.Plain.Data[11] = 1;
             myDpaRequest.Extension.Plain.Data[12] = prebonding.wTimeout & 0xff;
@@ -781,8 +767,8 @@ unsigned char autonetwork(T_AN_PARAMS *par)
             // Send P2P packet to allow prebonding
             myDpaRequest.Extension.Plain.Data[15] = PNUM_USER,
             myDpaRequest.Extension.Plain.Data[16] = 0;
-            myDpaRequest.Extension.Plain.Data[17] = 0xff;
-            myDpaRequest.Extension.Plain.Data[18] = 0xff;
+            myDpaRequest.Extension.Plain.Data[17] = HWPID_DoNotCheck & 0xff;
+            myDpaRequest.Extension.Plain.Data[18] = HWPID_DoNotCheck >> 0x08;
             myDpaRequest.Extension.Plain.Data[19] = 0x55;
             myDpaRequest.Extension.Plain.Data[20] = prebonding.waitBonding10ms & 0xff;
             myDpaRequest.Extension.Plain.Data[21] = prebonding.waitBonding10ms >> 8 ;
@@ -790,7 +776,7 @@ unsigned char autonetwork(T_AN_PARAMS *par)
             // EndBatch
             myDpaRequest.Extension.Plain.Data[23] = 0;
             // Broadcast batch command
-            sendBatch(0xff, 24);
+            sendBatch(DPA_ADDRESS_BROADCAST, 24);
             delayMS(((unsigned long)(networkInfo.bondedNodesCount) + 1) * 40 + (unsigned long)(networkInfo.bondedNodesCount) * 60);
             // Terminate process ?
             if(terminate == ERR_PROCESS_TERMINATED)
@@ -805,8 +791,8 @@ unsigned char autonetwork(T_AN_PARAMS *par)
         myDpaRequest.Extension.Plain.Data[0] = 9;
         myDpaRequest.Extension.Plain.Data[1] = PNUM_COORDINATOR;
         myDpaRequest.Extension.Plain.Data[2] = CMD_COORDINATOR_ENABLE_REMOTE_BONDING;
-        myDpaRequest.Extension.Plain.Data[3] = 0xff;
-        myDpaRequest.Extension.Plain.Data[4] = 0xff;
+        myDpaRequest.Extension.Plain.Data[3] = HWPID_DoNotCheck & 0xff;
+        myDpaRequest.Extension.Plain.Data[4] = HWPID_DoNotCheck >> 0x08;
         myDpaRequest.Extension.Plain.Data[5] = prebonding.bondingMask;
         myDpaRequest.Extension.Plain.Data[6] = 1;
         myDpaRequest.Extension.Plain.Data[7] = prebonding.wTimeout & 0xff;
@@ -815,8 +801,8 @@ unsigned char autonetwork(T_AN_PARAMS *par)
         myDpaRequest.Extension.Plain.Data[9] = 9;
         myDpaRequest.Extension.Plain.Data[10] = PNUM_USER;
         myDpaRequest.Extension.Plain.Data[11] = 0;
-        myDpaRequest.Extension.Plain.Data[12] = 0xff;
-        myDpaRequest.Extension.Plain.Data[13] = 0xff;
+        myDpaRequest.Extension.Plain.Data[12] = HWPID_DoNotCheck & 0xff;
+        myDpaRequest.Extension.Plain.Data[13] = HWPID_DoNotCheck >> 0x08;
         myDpaRequest.Extension.Plain.Data[14] = 0x55;
         myDpaRequest.Extension.Plain.Data[15] = prebonding.waitBonding10ms & 0xff;
         myDpaRequest.Extension.Plain.Data[16] = prebonding.waitBonding10ms >> 8;
@@ -825,14 +811,14 @@ unsigned char autonetwork(T_AN_PARAMS *par)
         myDpaRequest.Extension.Plain.Data[18] = 0;
 
         // Notify main application
-        notifyMainApp(EVT_COOR_ENABLE_PREBONDING, 1);
+        notifyMainApp(EVT_COOR_ENABLE_PREBONDING, EVT_WITH_PARAM);
 
         // Send the batch command to [C]
-        sendBatch(0x00, 19);
+        sendBatch(DPA_ADDRESS_COORD, 19);
 
         // Waiting for prebonding
         prebonding.delay = prebonding.waitBonding;
-        notifyMainApp(EVT_WAIT_PREBONDING, 1);        
+        notifyMainApp(EVT_WAIT_PREBONDING, EVT_WITH_PARAM);        
         delay_ms = (unsigned long)(prebonding.waitBonding) * 1000 + 1000;        
         delayMS(delay_ms);
         // Terminate process ?
@@ -847,17 +833,17 @@ unsigned char autonetwork(T_AN_PARAMS *par)
         enableBonding.BondingMask = 0;
         enableBonding.Control = 0;
         enableBonding.UserData = 0;
-        notifyMainApp(EVT_COOR_DISABLE_PREBONDING, 0);
-        enableRemoteBonding(0x00, &enableBonding);
+        notifyMainApp(EVT_COOR_DISABLE_PREBONDING, EVT_WITHOUT_PARAM);
+        enableRemoteBonding(DPA_ADDRESS_COORD, &enableBonding);
 
         // Try to read prebonded MID from coordinator
-        if(readPrebondedMID(0x00, &prebonding.MID, &prebonding.userData) == DPA_OK)
+        if(readPrebondedMID(DPA_ADDRESS_COORD, &prebonding.MID, &prebonding.userData) == DPA_OK)
         {
             // Check the new MID
             if(checkNewMID(prebonding.MID) == 0)
             {
                 // Notify main application
-                notifyMainApp(EVT_COOR_READ_MID, 1);                
+                notifyMainApp(EVT_COOR_READ_MID, EVT_WITH_PARAM);                
                 prebonding.MIDlist[prebonding.MIDcount++] = prebonding.MID;
 
                 // Terminate process ?
@@ -873,7 +859,7 @@ unsigned char autonetwork(T_AN_PARAMS *par)
         if(networkInfo.bondedNodesCount)
         {
             // Send FRC command Prebonding to get bitmap of nodes provided prebonding
-            notifyMainApp(EVT_FRC_DISABLE_PREBONDING, 0);
+            notifyMainApp(EVT_FRC_DISABLE_PREBONDING, EVT_WITHOUT_PARAM);
             myDpaRequest.Extension.Plain.Data[0] = 0;       // Command 0 - Prebonding
             myDpaRequest.Extension.Plain.Data[1] = 0x01;
             myDpaRequest.Extension.Plain.Data[2] = 0x00;
@@ -897,11 +883,13 @@ unsigned char autonetwork(T_AN_PARAMS *par)
 
                 // Bit0 is set (node sent response to FRC) ?
                 if(getBitValue(prebonding.frcData, addr) == 0x01)
+                {
                     if(nodeBonded)
                         bit0OK = 0xff;
                     else
-                        notifyMainApp(EVT_FRC_DISABLE_PREBONDING_BIT0_ERR, 1);
-
+                        notifyMainApp(EVT_FRC_DISABLE_PREBONDING_BIT0_ERR, EVT_WITH_PARAM);
+                }
+                
                 // Is Bit1 set (node provided the prebonding) ?
                 if(getBitValue(prebonding.frcData + 32, addr) == 0x01)
                 {
@@ -917,12 +905,12 @@ unsigned char autonetwork(T_AN_PARAMS *par)
                                 // Check the current MID
                                 if(checkNewMID(prebonding.MID) == 0x00)
                                 {
-                                    notifyMainApp(EVT_NODE_READ_MID, 1);
+                                    notifyMainApp(EVT_NODE_READ_MID, EVT_WITH_PARAM);
                                     prebonding.MIDlist[prebonding.MIDcount++] = prebonding.MID;          
-                                    if(prebonding.MIDcount >= 127)
+                                    if(prebonding.MIDcount >= (MID_BUFFER_SIZE - 1))
                                     {
                                         // Error, maximum prebonded nodes reached
-                                        notifyMainApp(EVT_MAX_NODES_PREBONDED, 0);
+                                        notifyMainApp(EVT_MAX_NODES_PREBONDED, EVT_WITHOUT_PARAM);
                                         terminateProcess();
                                         return(ERR_MAX_NODES_PREBONDED);
                                     }
@@ -931,7 +919,7 @@ unsigned char autonetwork(T_AN_PARAMS *par)
                         }
                     }
                     else
-                        notifyMainApp(EVT_FRC_DISABLE_PREBONDING_BIT1_ERR, 1);
+                        notifyMainApp(EVT_FRC_DISABLE_PREBONDING_BIT1_ERR, EVT_WITH_PARAM);
                 }
             }
         }
@@ -940,25 +928,25 @@ unsigned char autonetwork(T_AN_PARAMS *par)
         for(unsigned char addr = 0; addr < prebonding.MIDcount; addr++)
         {
             prebonding.MID = prebonding.MIDlist[addr];
-            if(checkDuplicitMID(addr) == 0x00)
+            if(checkDuplicitMID(addr) == 0)
             {
                 // OK, Get next free address
                 prebonding.nextAddr = nextFreeAddr(prebonding.nextAddr);
                 if(prebonding.nextAddr == 0xff)
                 {
                     // Error, no free address, terminate process
-                    notifyMainApp(EVT_NO_FREE_ADDRESS, 0);
+                    notifyMainApp(EVT_NO_FREE_ADDRESS, EVT_WITHOUT_PARAM);
                     terminateProcess();
                     return(ERR_NO_FREE_ADDRESS);
                 }            
 
                 // Authorize node
-                notifyMainApp(EVT_AUTHORIZE_BOND, 1);
-                if(authorizeBond(prebonding.nextAddr, (unsigned short)prebonding.MIDlist[addr]) == DPA_OK);
+                notifyMainApp(EVT_AUTHORIZE_BOND, EVT_WITH_PARAM);
+                if(authorizeBond(prebonding.nextAddr, (unsigned short)prebonding.MIDlist[addr]) == DPA_OK)
                 {
                     setBitValue(prebonding.newNodesMap, prebonding.nextAddr);
                     prebonding.newNode = 0xff;
-                    notifyMainApp(EVT_AUTHORIZE_BOND_OK, 1);
+                    notifyMainApp(EVT_AUTHORIZE_BOND_OK, EVT_WITH_PARAM);
                 }
             }
             delayMS(10);
@@ -968,7 +956,7 @@ unsigned char autonetwork(T_AN_PARAMS *par)
         if(prebonding.newNode)
         {
             // Send FRC command Prebonding to check the new nodes
-            notifyMainApp(EVT_FRC_CHECK_NEW_NODES, 0);
+            notifyMainApp(EVT_FRC_CHECK_NEW_NODES, EVT_WITHOUT_PARAM);
             myDpaRequest.Extension.Plain.Data[0] = 0;       // Command 0 - Prebonding
             myDpaRequest.Extension.Plain.Data[1] = 0x01;
             myDpaRequest.Extension.Plain.Data[2] = 0x00;
@@ -985,14 +973,14 @@ unsigned char autonetwork(T_AN_PARAMS *par)
                         // No response from the node                                                                    
                         prebonding.param = addr;
                         // Remove and reset the node   
-                        notifyMainApp(EVT_NODE_REMOTE_UNBOND, 1);
-                        if(removeBondReset(addr) != DPA_OK)
+                        notifyMainApp(EVT_NODE_REMOTE_UNBOND, EVT_WITH_PARAM);
+                        if(removeBondRestart(addr) != DPA_OK)
                         {
                              delay_ms = (unsigned long)(networkInfo.bondedNodesCount + 1) * 80;
                              delayMS(delay_ms);
                         }
                         // Remove node at coordinator too
-                        notifyMainApp(EVT_COOR_REMOVING_BOND, 1);
+                        notifyMainApp(EVT_COOR_REMOVING_BOND, EVT_WITH_PARAM);
                         removeBondedNode(addr);
                     }
                 }
@@ -1004,10 +992,10 @@ unsigned char autonetwork(T_AN_PARAMS *par)
             // Run Discovery
             for(unsigned char discoveryRetry = ANparams.discoveryRetries; discoveryRetry != 0; discoveryRetry--)
             {
-                notifyMainApp(EVT_DISCOVERY, 0);
+                notifyMainApp(EVT_DISCOVERY, EVT_WITHOUT_PARAM);
                 if(discovery(ANparams.discoveryTxPower, 0) == DPA_OK)
-                    notifyMainApp(EVT_DISCOVERY_OK, 1);
-                notifyMainApp(EVT_DISCOVERY_WAIT, 0);
+                    notifyMainApp(EVT_DISCOVERY_OK, EVT_WITH_PARAM);
+                notifyMainApp(EVT_DISCOVERY_WAIT, EVT_WITHOUT_PARAM);
                 for( ; ; )
                 {
                     // Wait for finish the Discovery
@@ -1043,7 +1031,7 @@ unsigned char autonetwork(T_AN_PARAMS *par)
             }
         }
         else
-            notifyMainApp(EVT_NO_NEW_NODE_PREBONDED, 0);
+            notifyMainApp(EVT_NO_NEW_NODE_PREBONDED, EVT_WITHOUT_PARAM);
     }
 
     terminateProcess();
