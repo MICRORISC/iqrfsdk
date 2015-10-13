@@ -17,13 +17,16 @@
 #ifndef _DPA_LIBRARY_H
 #define _DPA_LIBRARY_H
 
+// Uncomment for chipKIT boards
 #include <WProgram.h>
+
+#include <stddef.h>
 #include <stdint.h>
 
 //#define __SPI_INTERFACE__			// select for comunication via SPI
 #define __UART_INTERFACE__			// select for comunication via UART
 
-// #define __DPA_LIB_VER_2_0x			// select for DPA ver.2.00 or ver.2.01
+//#define __DPA_LIB_VER_2_0x			// select for DPA ver.2.00 or ver.2.01
 //#define __DPA_LIB_VER_2_1x			// select for DPA ver.2.1x
 #define __DPA_LIB_VER_2_2x				// select for DPA ver.2.2x
 

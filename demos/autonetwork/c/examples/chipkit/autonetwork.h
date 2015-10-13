@@ -83,7 +83,7 @@
 // Buffer size, offset
 //--------------------
 #define NODE_BITMAP_SIZE                    32        // Bitmap for 256 nodes
-#define MID_BUFFER_SIZE                     4 * 128   // Buffer for 128 MIDs 
+#define MID_BUFFER_SIZE                     128       // Buffer for 128 MIDs 
 #define FRC_BUFFER_SIZE                     64
 #define FRC_DATA_OFFSET                     0
 #define FRC_DATA_SIZE                       55

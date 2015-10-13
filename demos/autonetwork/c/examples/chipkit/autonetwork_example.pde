@@ -19,9 +19,11 @@
 #include "DPA_LIBRARY.h"
 #include "AUTONETWORK.h"
 #include "AUTONETWORK_Example.h"
-// For ARDUINO BOARDS
+
+// Uncomment for ARDUINO Boards
 //#include <SPI.h>
 //#include <MsTimer2.h>
+//#include <avr/pgmspace.h>
 
 //=========================== defines =========================================
 #define UNO32
@@ -128,6 +130,7 @@ uint32_t cb_timer1ms(uint32_t currentTime)
 //-------------------------------------------
 void getEventDescription(unsigned char index)
 {
+#ifdef UNO32
     // Autonetwork event description strings array, in this example placed in the CPU Flash memory
     // Event EVT_AN_PROCESS_STARTED 
     const char evt_00[] = {"Automatic network construction started\r\n\0"};
@@ -192,7 +195,75 @@ void getEventDescription(unsigned char index)
                              evt_26, evt_27};
     
     // Copy the event description to serial_buffer_out
-    strcpy(serial_buffer_out, (char*)ptr_evt[index]);                   
+    strcpy(serial_buffer_out, (char*)ptr_evt[index]);
+#endif
+#ifdef LEONARDO
+    // Autonetwork event description strings array, in this example placed in the CPU Flash memory
+    // Event EVT_AN_PROCESS_STARTED 
+    const static char evt_00[] PROGMEM = {"Automatic network construction started\r\n\0"};
+    // Event EVT_AN_PROCESS_STOPPED
+    const static char evt_01[] PROGMEM = {"Automatic network construction stopped\r\n\0"};
+    // Event EVT_GET_NETWORK_INFO
+    const static char evt_02[] PROGMEM = {"Getting initial network info\r\n\0"};
+    // Event EVT_ROUND_START
+    const static char evt_03[] PROGMEM = {"\r\nRound=%u, Nodes=%u, New nodes=%u\r\n\0"};
+    // Event EVT_COOR_ENABLE_PREBONDING
+    const static char evt_04[] PROGMEM = {"Enable prebonding at coordinator, mask=%u, time=%u\r\n\0"};
+    // Event EVT_COOR_DISABLE_PREBONDING
+    const static char evt_05[] PROGMEM = {"Disable prebonding at coordinator\r\n\0"};
+    // Event EVT_COOR_READ_MID
+    const static char evt_06[] PROGMEM = {"Coordinator prebonded MID=%08lX, UserData=%04X\r\n\0"};
+    // Event EVT_COOR_REMOVING_BOND
+    const static char evt_07[] PROGMEM = {"Removing node %u\r\n\0"};
+    // Event EVT_NODE_ENABLE_PREBONDING
+    const static char evt_08[] PROGMEM = {"Enable prebonding at nodes, mask=%u, time=%u, LEDR=1\r\n\0"};
+    // Event EVT_NODE_DISABLE_PREBONDING
+    const static char evt_09[] PROGMEM = {"Disable prebonding at nodes\r\n\0"};
+    // Event EVT_NODE_READ_MID
+    const static char evt_10[] PROGMEM = {"Node %u prebonded MID=%08lX, UserData=%04X\r\n\0"};
+    // Event EVT_AUTHORIZE_BOND
+    const static char evt_11[] PROGMEM = {"Authorizing node MID=%08lX, address %u\r\n\0"};
+    // Event EVT_AUTHORIZE_BOND_OK 
+    const static char evt_12[] PROGMEM = {"OK, nodes count=%u\r\n\0"};
+    // Event EVT_DISCOVERY 
+    const static char evt_13[] PROGMEM = {"Running discovery\r\n\0"};
+    // Event EVT_DISCOVERY_WAIT
+    const static char evt_14[] PROGMEM = {"Waiting for coordinator to finish discovery\r\n\0"};
+    // Event EVT_DISCOVERY_OK 
+    const static char evt_15[] PROGMEM = {"Discovered nodes=%u\r\n\0"};
+    // Event EVT_WAIT_PREBONDING  
+    const static char evt_16[] PROGMEM = {"Waiting for prebonding for %u seconds\r\n\0"};
+    // Event EVT_FRC_DISABLE_PREBONDING
+    const static char evt_17[] PROGMEM = {"Running FRC to disable and check for prebonding\r\n\0"};
+    // Event EVT_FRC_DISABLE_PREBONDING_BIT0_ERR
+    const static char evt_18[] PROGMEM = {"Error @ FRC bit.0 is set, but node %u not bonded\r\n\0"};
+    // Event EVT_FRC_DISABLE_PREBONDING_BIT1_ERR
+    const static char evt_19[] PROGMEM = {"Error @ FRC bit.1, set, but node %u is already bonded\r\n\0"};
+    // Event EVT_FRC_CHECK_NEW_NODES
+    const static char evt_20[] PROGMEM = {"Running FRC to check new nodes and removing 0xFE nodes\r\n\0"};
+    // Event EVT_NO_FREE_ADDRESS
+    const static char evt_21[] PROGMEM = {"No free address\r\n\0"};        
+    // Event EVT_NO_NEW_NODE_PREBONDED
+    const static char evt_22[] PROGMEM = {"No new node prebonded\r\n\0"};
+    // Event EVT_DPA_CONFIRMATION_TIMEOUT
+    const static char evt_23[] PROGMEM = {"DPA confirmation timeout\r\n\0"};
+    // Event EVT_DPA_RESPONSE_TIMEOUT
+    const static char evt_24[] PROGMEM = {"DPA response timeout\r\n\0"};
+    // Event EVT_REMOVE_ALL_BONDS
+    const static char evt_25[] PROGMEM = {"Remove all bonds at nodes and coordinator, restart nodes\r\n\0"};
+    // Event EVT_MAX_NODES_PREBONDED
+    const static char evt_26[] PROGMEM = {"Maximum prebonded nodes reached\r\n\0"};
+    // Event EVT_NODE_REMOTE_UNBOND
+    const static char evt_27[] PROGMEM = {"Remote unbonding node %u\r\n\0"};
+    
+    // Array of autonetwork description string pointers, must be defined in correct order from evt_00 to evt_nn
+    const char* const ptr_evt[] PROGMEM = {evt_00, evt_01, evt_02, evt_03, evt_04, evt_05, evt_06, evt_07, evt_08, evt_09, evt_10, evt_11, evt_12,
+                                           evt_13, evt_14, evt_15, evt_16, evt_17, evt_18, evt_19, evt_20, evt_21, evt_22, evt_23, evt_24, evt_25,
+                                           evt_26, evt_27};
+    
+    // Copy the event description to serial_buffer_out
+    strcpy_P(serial_buffer_out, (char*)pgm_read_word(&(ptr_evt[index])));
+#endif                
 }
 
 //--------------------
