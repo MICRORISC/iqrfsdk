@@ -567,12 +567,23 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
         return new MethodToPacketMapping(constMapping, argMapping);
     }
     
+    static private MethodToPacketMapping createWriteHWPConfigurationMapping() {
+        List<ConstValueToPacketMapping> constMapping = new LinkedList<>();
+        constMapping.add(new ConstValueToPacketMapping(3, new short[]{0x0F}));
+
+        List<ValueToPacketMapping> argMapping = new LinkedList<>();
+        argMapping.add(new ValueToPacketMapping(4, Uns16Convertor.getInstance()));
+        argMapping.add(new ValueToPacketMapping(6, HWP_ConfigurationConvertor.getInstance()));
+
+        return new MethodToPacketMapping(constMapping, argMapping);
+    }         
+    
     static private InterfaceToPacketMapping createRequestOsMapping() {
         List<ConstValueToPacketMapping> constMappings = new LinkedList<>();
-        constMappings.add(new ConstValueToPacketMapping(2, new short[] { 2 })); 
-        
+        constMappings.add(new ConstValueToPacketMapping(2, new short[]{2}));
+
         Map<String, MethodToPacketMapping> methodMappings = new HashMap<>();
-        
+
         methodMappings.put("1", createOsReadMapping());
         methodMappings.put("2", createResetMapping());
         methodMappings.put("3", createReadHWPConfigMapping());
@@ -581,7 +592,8 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
         methodMappings.put("6", createBatchMapping());
         methodMappings.put("7", createSetUSEC_UserMapping());
         methodMappings.put("8", createSetMIDMapping());
-        
+        methodMappings.put("10", createWriteHWPConfigurationMapping());
+     
         return new InterfaceToPacketMapping(constMappings, methodMappings);
     }
     
@@ -1395,7 +1407,7 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
         return new PacketToMethodMapping("2", packetValues, resultMapping);
     }
     
-    static private PacketToMethodMapping createResponseHWPConfig() {
+    static private PacketToMethodMapping createResponseReadHWPConfig() {
         List<PacketPositionValues> packetValues = new LinkedList<>();
         packetValues.add( new PacketPositionValues(3, (short)0x82));
         
@@ -1455,21 +1467,32 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
         return new PacketToMethodMapping("8", packetValues, resultMapping);
     }
     
+    static private PacketToMethodMapping createResponseWriteHWPConfig() {
+        List<PacketPositionValues> packetValues = new LinkedList<>();
+        packetValues.add(new PacketPositionValues(3, (short) 0x8F));
+
+        PacketToValueMapping resultMapping = new PacketToValueMapping(
+                8, 0, VoidTypeConvertor.getInstance()
+        );
+        return new PacketToMethodMapping("10", packetValues, resultMapping);
+    }
+    
     static private PacketToInterfaceMapping createResponseOsMapping() {
         List<PacketPositionValues> packetValues = new LinkedList<>();
         packetValues.add(new PacketPositionValues(2, (short)2));
-        
+
         Map<String, PacketToMethodMapping> methodMappings = new HashMap<>();
-    
+
         methodMappings.put("1", createResponseRead());
         methodMappings.put("2", createResponseReset());
-        methodMappings.put("3", createResponseHWPConfig());
+        methodMappings.put("3", createResponseReadHWPConfig());
         methodMappings.put("4", createResponseRunRFPGM());
         methodMappings.put("5", createResponseSleep());
         methodMappings.put("6", createResponseBatch());
         methodMappings.put("7", createResponseSetUSEC());
         methodMappings.put("8", createResponseSetMID());
-        
+        methodMappings.put("10", createResponseWriteHWPConfig());
+     
         return new PacketToInterfaceMapping(OS.class, packetValues, methodMappings);
     }
     

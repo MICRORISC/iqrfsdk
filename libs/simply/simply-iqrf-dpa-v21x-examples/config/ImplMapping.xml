@@ -102,12 +102,6 @@
 
     <!-- user peripherals -->
     <implMapping>
-        <interface>com.microrisc.simply.iqrf.dpa.v21x.autonetwork.P2PPrebonder</interface>
-        <implClass>com.microrisc.simply.iqrf.dpa.v21x.autonetwork.SimpleP2PPrebonder</implClass>
-        <note></note>
-    </implMapping>
-        
-    <implMapping>
         <interface>com.microrisc.simply.iqrf.dpa.v21x.examples.user_per.user_map.myadc.def.MyADC</interface>
         <implClass>com.microrisc.simply.iqrf.dpa.v21x.examples.user_per.user_map.myadc.def.SimpleMyADC</implClass>
         <note></note>

@@ -26,69 +26,123 @@ import com.microrisc.simply.errors.CallRequestProcessingError;
 import com.microrisc.simply.iqrf.dpa.v21x.DPA_SimplyFactory;
 import com.microrisc.simply.iqrf.dpa.v21x.devices.OS;
 import com.microrisc.simply.iqrf.dpa.v21x.types.HWP_Configuration;
+import com.microrisc.simply.iqrf.types.VoidType;
 import java.io.File;
 
 /**
  * Example of using OS Peripheral - synchronous version.
- * 
+ * <p>
  * @author Michal Konopa
  * @author Rostislav Spinar
+ * @author Martin Strouhal
  */
-public class ReadHWPConfiguration {
+// October 2015 - extended example with writing HWP config
+public class HWPConfiguration {
+
     // reference to Simply
+
     private static Simply simply = null;
-    
+
     // prints out specified message, destroys the Simply and exits
     private static void printMessageAndExit(String message) {
         System.out.println(message);
-        if ( simply != null) {
+        if (simply != null) {
             simply.destroy();
         }
         System.exit(1);
     }
-    
 
     public static void main(String[] args) throws InterruptedException {
         // creating Simply instance
         try {
             simply = DPA_SimplyFactory.getSimply("config" + File.separator + "Simply.properties");
-        } catch ( SimplyException ex ) {
+        } catch (SimplyException ex) {
             printMessageAndExit("Error while creating Simply: " + ex.getMessage());
         }
-        
+
         // getting network 1
         Network network1 = simply.getNetwork("1", Network.class);
         if (network1 == null) {
             printMessageAndExit("Network 1 doesn't not exist");
         }
-        
+
         // getting node 1
         Node node1 = network1.getNode("1");
         if (node1 == null) {
             printMessageAndExit("Node 1 doesn't exist");
         }
-        
+
         // get access to OS peripheral
         OS os = node1.getDeviceObject(OS.class);
         if (os == null) {
             printMessageAndExit("OS doesn't exist or is not enabled");
         }
-               
-        // read HWP config setting
+
+        // read and print HWP config setting
+        HWP_Configuration config = readAndPrintHWPConfig(os);
+
+        // edit config - allow using of Custom handler        
+        config.setConfigFlags(new HWP_Configuration.DPA_ConfigFlags(true, false, false, false, false, false));
+
+        //write edited config
+        writeHWPConfig(os, config);
+
+        // reset of device is required for use of new HWP Configuration
+        resetDevice(os);
+
+        // read HWP config again
+        readAndPrintHWPConfig(os);
+
+        // end working with Simply
+        simply.destroy();
+    }
+
+    private static HWP_Configuration readAndPrintHWPConfig(OS os) {
+        // read HWP config
         HWP_Configuration hwpConfig = os.readHWPConfiguration();
         if (hwpConfig == null) {
             CallRequestProcessingState procState = os.getCallRequestProcessingStateOfLastCall();
-            if ( procState == ERROR ) {
+            if (procState == ERROR) {
                 CallRequestProcessingError error = os.getCallRequestProcessingErrorOfLastCall();
                 printMessageAndExit("HWP config reading failed: " + error);
             } else {
                 printMessageAndExit("HWP config reading hasn't been processed yet: " + procState);
             }
         }
-        
-        System.out.println("HWP config: \n" + hwpConfig.toPrettyFormatedString());
-        
-        // end working with Simply
-        simply.destroy();
+
+        // print HWP config
+        System.out.println("HWP configuration: \n" + hwpConfig.toPrettyFormatedString());
+        return hwpConfig;
+    }
+
+    private static void writeHWPConfig(OS os, HWP_Configuration config) {
+        VoidType result = os.writeHWPConfiguration(config);
+        if (result == null) {
+            CallRequestProcessingState procState = os.getCallRequestProcessingStateOfLastCall();
+            if (procState == ERROR) {
+                CallRequestProcessingError error = os.getCallRequestProcessingErrorOfLastCall();
+                printMessageAndExit("HWP config writing failed: " + error);
+            } else {
+                printMessageAndExit("HWP config writing hasn't been processed yet: " + procState);
+            }
+        }
+    }
+
+    private static void resetDevice(OS os) throws InterruptedException{
+        VoidType resetResult = os.reset();
+        if (resetResult == null) {
+            CallRequestProcessingState procState = os.getCallRequestProcessingStateOfLastCall();
+            if (procState == ERROR) {
+                CallRequestProcessingError error = os.getCallRequestProcessingErrorOfLastCall();
+                printMessageAndExit("Device reset wasn't succcesful " + error);
+            } else {
+                printMessageAndExit("Device reset hasn't been processed yet: " + procState);
+            }
+        }
+
+        // waiting until module is resetted
+        System.out.println("Module will be resetted...");
+        Thread.sleep(3000);
+        System.out.println("Module has been resetted.");
     }
 }

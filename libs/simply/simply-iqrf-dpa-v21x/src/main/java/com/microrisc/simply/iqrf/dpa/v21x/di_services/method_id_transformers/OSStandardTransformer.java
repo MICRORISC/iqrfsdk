@@ -41,6 +41,7 @@ public final class OSStandardTransformer implements MethodIdTransformer {
         methodIdsMap.put(OS.MethodID.BATCH, "6");
         methodIdsMap.put(OS.MethodID.SET_USEC, "7");
         methodIdsMap.put(OS.MethodID.SET_MID, "8");
+        methodIdsMap.put(OS.MethodID.WRITE_HWP_CONFIGURATION, "10");
     }
     
     static  {

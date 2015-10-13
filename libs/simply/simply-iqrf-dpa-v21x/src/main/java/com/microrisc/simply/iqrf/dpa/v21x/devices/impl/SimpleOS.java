@@ -33,7 +33,10 @@ import java.util.UUID;
  * Simple {@code OS} implementation.
  * 
  * @author Michal Konopa
+ * @author Martin Strouhal
  */
+//JUNE-2015 - implemented restart
+//SEPTEMBER 2015 - implemented write HWP config, write HWP config byte
 public final class SimpleOS 
 extends DPA_DeviceObject implements OS {
     
@@ -58,6 +61,18 @@ extends DPA_DeviceObject implements OS {
             throw new IllegalArgumentException(
                     "Invalid key length. Expected: " + MID_KEY_LENGTH
             );
+        }
+    }
+    
+    // range of allowed address used with writing byte to HWP configuration
+    private static final int CONFIG_ADDRESS_RANGE_START = 0x01;
+    private static final int CONFIG_ADDRESS_RANGE_END = 0x1F;
+    
+    private static void checkConfigAddress(int address) {
+        if(address < CONFIG_ADDRESS_RANGE_START 
+                || address > CONFIG_ADDRESS_RANGE_END) {
+            throw new IllegalArgumentException("Valid address range is "
+            + CONFIG_ADDRESS_RANGE_START + " - " + CONFIG_ADDRESS_RANGE_END);
         }
     }
     
@@ -134,6 +149,13 @@ extends DPA_DeviceObject implements OS {
                         new Object[] { getRequestHwProfile(), (short[]) args[0] }, 
                         getDefaultWaitingTimeout()
                 );
+            case WRITE_HWP_CONFIGURATION:
+                MethodArgumentsChecker.checkArgumentTypes(args, new Class[]{HWP_Configuration.class});
+                 return dispatchCall(
+                        methodIdStr,
+                        new Object[] { getRequestHwProfile(), (HWP_Configuration) args[0] }, 
+                        getDefaultWaitingTimeout()
+                ); 
             default:
                 throw new IllegalArgumentException("Unsupported command: " + methodId);
         }
@@ -207,7 +229,13 @@ extends DPA_DeviceObject implements OS {
         );
     }
     
-    
+    @Override
+    public UUID async_writeHWPConfiguration(HWP_Configuration configuration) {
+        return dispatchCall(
+                "10", new Object[] { getRequestHwProfile(), configuration }, getDefaultWaitingTimeout() 
+        );
+    }
+
     
     // SYNCHRONOUS WRAPPERS IMPLEMENTATIONS
     
@@ -300,5 +328,16 @@ extends DPA_DeviceObject implements OS {
             return null;
         }
         return getCallResult(uid, VoidType.class, getDefaultWaitingTimeout());
-    }
+    }    
+    
+    @Override
+    public VoidType writeHWPConfiguration(HWP_Configuration configuration) {
+        UUID uid = dispatchCall(
+                "10", new Object[] { getRequestHwProfile(), configuration }, getDefaultWaitingTimeout() 
+        );
+        if ( uid == null ) {
+            return null;
+        }
+        return getCallResult(uid, VoidType.class, getDefaultWaitingTimeout() );
+    }    
 }
