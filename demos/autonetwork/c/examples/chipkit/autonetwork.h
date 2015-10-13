@@ -67,6 +67,8 @@
 #define EVT_REMOVE_ALL_BONDS                0x19
 #define EVT_MAX_NODES_PREBONDED             0x1a
 #define EVT_NODE_REMOTE_UNBOND              0x1b
+#define EVT_WITH_PARAM                      0x01
+#define EVT_WITHOUT_PARAM                   0x00
 
 //-------------------------
 // Autonetwork return codes
@@ -76,6 +78,17 @@
 #define ERR_MAX_NODES_PREBONDED             0xfd
 #define AN_OK                               0x00
 #define AN_ERROR                            0xff
+
+//--------------------
+// Buffer size, offset
+//--------------------
+#define NODE_BITMAP_SIZE                    32        // Bitmap for 256 nodes
+#define MID_BUFFER_SIZE                     4 * 128   // Buffer for 128 MIDs 
+#define FRC_BUFFER_SIZE                     64
+#define FRC_DATA_OFFSET                     0
+#define FRC_DATA_SIZE                       55
+#define FRC_EXTRA_DATA_OFFSET               55
+#define FRC_EXTRA_DATA_SIZE                 9
 
 //-----------------------
 // Autonetwork parameters
@@ -104,9 +117,9 @@ typedef struct
 //-------------
 typedef struct
 {
-    unsigned char bondedNodesMap[32];
+    unsigned char bondedNodesMap[NODE_BITMAP_SIZE];
     unsigned char bondedNodesCount;
-    unsigned char discoveredNodesMap[32];
+    unsigned char discoveredNodesMap[NODE_BITMAP_SIZE];
     unsigned char discoveredNodesCount;
     unsigned char DID;
 }T_NETWORK_INFO;
@@ -116,12 +129,12 @@ typedef struct
 //----------------
 typedef struct
 {
-    unsigned long MIDlist[128];
+    unsigned long MIDlist[MID_BUFFER_SIZE];
     unsigned char MIDcount;
     unsigned long MID;
     unsigned short userData;
-    unsigned char newNodesMap[32];
-    unsigned char frcData[64];
+    unsigned char newNodesMap[NODE_BITMAP_SIZE];
+    unsigned char frcData[FRC_BUFFER_SIZE];
     unsigned char round;
     unsigned char param;
     unsigned char origNodesCount;

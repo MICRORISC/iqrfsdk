@@ -180,7 +180,7 @@ void getEventDescription(unsigned char index)
     // Event EVT_DPA_RESPONSE_TIMEOUT
     const char evt_24[] = {"DPA response timeout\r\n\0"};
     // Event EVT_REMOVE_ALL_BONDS
-    const char evt_25[] = {"Remove all bonds at nodes and coordinator, reset nodes\r\n\0"};
+    const char evt_25[] = {"Remove all bonds at nodes and coordinator, restart nodes\r\n\0"};
     // Event EVT_MAX_NODES_PREBONDED
     const char evt_26[] = {"Maximum prebonded nodes reached\r\n\0"};
     // Event EVT_NODE_REMOTE_UNBOND
@@ -207,7 +207,7 @@ void autonetworkHandler(unsigned char eventCode, T_AN_STATE *state)
     if(state != NULL)
     {      
         // Yes, event with parameters            
-        char buffer[64];
+        char buffer[SERIAL_BUFFER_SIZE];
         switch(eventCode)
         {
             case EVT_ROUND_START:
@@ -281,11 +281,20 @@ unsigned char checkInput(T_AN_PARAMS *AN_Params)
         }
         
         // Read incomming character
-        serial_buffer_in[offset++] = Serial.read();
+        char c = Serial.read();
         
-        // Find the end of command line
-        char *ptr = strchr((char*)serial_buffer_in, '\r');
-        if(ptr != NULL)
+        // Backspace ?
+        if(c == '\b')
+        {
+            // Yes
+            if(offset > 0)
+                offset--; 
+            return(result);            
+        }
+        serial_buffer_in[offset++] = c;
+        
+        // End of command line ?
+        if((c == '\r') || (c == '\n'))
         {
             // Check the first character is '>'
             if(serial_buffer_in[0] == '>')
@@ -298,19 +307,46 @@ unsigned char checkInput(T_AN_PARAMS *AN_Params)
                         // Check the pointer to T_AN_PARAMS
                         if(AN_Params != NULL)
                         {
+                            // Get temporaryAddressTimeout, default value is 60 sec
                             AN_Params->temporaryAddressTimeout = atoi((char*)&serial_buffer_in[2]);
-                            ptr = strchr((char*)serial_buffer_in, ',');
+                            if(AN_Params->temporaryAddressTimeout == 0)
+                                AN_Params->temporaryAddressTimeout = 60;
+                               
+                            // Get authorizeRetries, default value is 1
+                            char *ptr = strchr((char*)serial_buffer_in, ',');
+                            if(ptr == NULL)
+                                goto SYNT_ERR;                              
                             ptr++;
                             AN_Params->authorizeRetries = atoi(ptr);
+                            if(AN_Params->authorizeRetries == 0)
+                                AN_Params->authorizeRetries = 1;
+                            
+                            // Get discoveryRetries, default value is 1
                             ptr = strchr(ptr, ',');
+                            if(ptr == NULL)
+                                goto SYNT_ERR;                            
                             ptr++;
                             AN_Params->discoveryRetries = atoi(ptr);
+                            if(AN_Params->discoveryRetries == 0)
+                                AN_Params->discoveryRetries = 1;                            
+                            
+                            // Get prebondingInterval, default value is 15 sec.
                             ptr = strchr(ptr, ',');
+                            if(ptr == NULL)
+                                goto SYNT_ERR;                            
                             ptr++;
                             AN_Params->prebondingInterval = atoi(ptr);
+                            if(AN_Params->prebondingInterval < 15)
+                                AN_Params->prebondingInterval = 15;                              
+                            
+                            // Get discoveryTxPower, default value is 0
                             ptr = strchr(ptr, ',');
+                            if(ptr == NULL)
+                                goto SYNT_ERR;
                             ptr++;
                             AN_Params->discoveryTxPower = atoi(ptr);
+                            if(AN_Params->discoveryTxPower > 7)
+                                AN_Params->discoveryTxPower = 0;                            
                             result = CMD_START_AN;
                         }
                         break;
@@ -333,7 +369,10 @@ unsigned char checkInput(T_AN_PARAMS *AN_Params)
                 }
             }
             else
+            {
+SYNT_ERR:              
                 Serial.print("Syntax error\r\n");
+            }
 
             // Prepare for next command
             memset(serial_buffer_in, 0, SERIAL_BUFFER_SIZE);

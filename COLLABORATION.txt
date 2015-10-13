@@ -29,7 +29,7 @@ We rely on proven Atlassian.
 
 We rely on proven Javadoc and Doxygen.
 
-*  Online documentation for developers at http://www.iqrfsdk/doc
+*  Online documentation for developers at http://www.iqrfsdk.org/doc
 
 
 We believe that with your active participation the IQRF SDK can be greatly improved!
