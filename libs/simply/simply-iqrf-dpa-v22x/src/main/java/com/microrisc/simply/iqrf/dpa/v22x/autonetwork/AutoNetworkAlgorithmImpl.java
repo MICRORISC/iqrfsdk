@@ -933,6 +933,8 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
             throw new Exception("Error while disabling prebonding.");
         }
         
+        Thread.sleep(100);
+        
         short[] extraData = coordFrc.extraResult();
         if ( extraData == null ) {
             throw new Exception("Error while disabling prebonding - getting extra data.");
@@ -1280,6 +1282,8 @@ public final class AutoNetworkAlgorithmImpl implements AutoNetworkAlgorithm {
         if ( frcData == null ) {
             throw new Exception("Error while checking new nodes.");
         }
+        
+        Thread.sleep(100);
         
         short[] extraData = coordFrc.extraResult();
         if ( extraData == null ) {

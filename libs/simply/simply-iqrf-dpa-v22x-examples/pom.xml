@@ -3,60 +3,142 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.microrisc.simply.iqrf.dpa</groupId>
     <artifactId>simply-iqrf-dpa-v22x-examples</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.0</version>
     <packaging>jar</packaging>
     <dependencies>
+        <!--Core, Asynchrony, IQRF, DPA - Insert manually -->
         <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <version>1.1.2</version>
-        </dependency>
-        <dependency>
-            <groupId>com.microrisc.simply.iqrf.dpa</groupId>
-            <artifactId>simply-iqrf-dpa-v22x</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>com.microrisc.simply.network.usbcdc</groupId>
-            <artifactId>simply-network-usbcdc</artifactId>
-            <version>1.0.2-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.10</version>
-            <scope>test</scope>
-            <type>jar</type>
+            <groupId>com.microrisc.simply</groupId>
+            <artifactId>simply-core</artifactId>
+            <version>2.1.0</version>
         </dependency>
         <dependency>
             <groupId>com.microrisc.simply.asynchrony</groupId>
             <artifactId>simply-asynchrony</artifactId>
-            <version>1.0.1-SNAPSHOT</version>
+            <version>1.0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.microrisc.simply.iqrf</groupId>
+            <artifactId>simply-iqrf</artifactId>
+            <version>2.0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.microrisc.simply.iqrf.dpa</groupId>
+            <artifactId>simply-iqrf-dpa</artifactId>
+            <version>3.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.microrisc.simply.iqrf.dpa</groupId>
+            <artifactId>simply-iqrf-dpa-v22x</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        
+        <!--For CK-USB-04A CDC-UART - Insert Manually-->
+        <!--
+        <dependency>
+            <groupId>com.microrisc.simply.network.serial</groupId>
+            <artifactId>simply-network-serial-v2</artifactId>
+            <version>1.0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.microrisc</groupId>
+            <artifactId>hdlc-framing-v2</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        -->
+        
+        <!--For Raspberry PI SPI - Insert Manually-->
+        <!--
+        <dependency>
+            <groupId>com.microrisc.simply.network.spi</groupId>
+            <artifactId>simply-network-spi</artifactId>
+            <version>1.0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.microrisc.rpi</groupId>
+            <artifactId>jlibrpi-io</artifactId>
+            <version>2.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.microrisc.rpi</groupId>
+            <artifactId>jlibrpi-spi</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.microrisc.rpi</groupId>
+            <artifactId>jlibrpi-spi-iqrf</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        -->
+        
+        <!--For GW-ETH-02A or GW-WIFI-01 - Insert Manually-->
+        <!--
+        <dependency>
+            <groupId>com.microrisc.simply.network.udp</groupId>
+            <artifactId>simply-network-udp</artifactId>
+            <version>1.0.1</version>
+        </dependency>
+        -->
+        
+        <!--For GW-USB-0x or CK-USB-04A CDC-IQRF - Insert Manually-->
+        <dependency>
+            <groupId>com.microrisc.simply.network.usbcdc</groupId>
+            <artifactId>simply-network-usbcdc</artifactId>
+            <version>1.0.2</version>
         </dependency>
         <dependency>
             <groupId>com.microrisc.cdc</groupId>
             <artifactId>jlibcdc</artifactId>
             <version>1.0.0</version>
         </dependency>
+        
+        <!--Logger - download automatically-->
         <dependency>
-            <groupId>com.microrisc.simply</groupId>
-            <artifactId>simply-core</artifactId>
-            <version>2.1.0-SNAPSHOT</version>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.1.2</version>
         </dependency>
         <dependency>
-            <groupId>com.microrisc.simply.iqrf</groupId>
-            <artifactId>simply-iqrf</artifactId>
-            <version>2.0.1-SNAPSHOT</version>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-core</artifactId>
+            <version>1.1.2</version>
         </dependency>
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>simply-iqrf-dpa</artifactId>
-            <version>3.0.0-SNAPSHOT</version>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.6</version>
+        </dependency>
+        
+        <!--Commons - download automatically-->
+        <dependency>
+            <groupId>commons-configuration</groupId>
+            <artifactId>commons-configuration</artifactId>
+            <version>1.8</version>
         </dependency>
         <dependency>
-            <groupId>com.microrisc</groupId>
-            <artifactId>hdlc-framing-v2</artifactId>
-            <version>1.0.0</version>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+            <version>2.6</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <version>1.1.1</version>
+        </dependency>
+        
+        <!--Time - download automatically-->
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+            <version>2.6</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.10</version>
+            <scope>test</scope>
+            <type>jar</type>
         </dependency>
     </dependencies>
     

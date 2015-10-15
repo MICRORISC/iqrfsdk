@@ -192,7 +192,7 @@
     
     
     <!-- iqrf.dpa.v22x.autonetwork package -->
-    <logger name="com.microrisc.simply.iqrf.dpa.v22x.autonetwork.AutoNetworkAlgorithmImpl" level="INHERITED">
+    <logger name="com.microrisc.simply.iqrf.dpa.v22x.autonetwork.AutoNetworkAlgorithmImpl" level="debug">
             <appender-ref ref="FILE" />
             <appender-ref ref="AUTONETWORK_ALGO_STDOUT" />
     </logger>
@@ -329,7 +329,7 @@
         
 	
     <!-- com.microrisc.simply.network.usbcdc package --> 
-    <logger name="com.microrisc.simply.network.usbcdc.CDCNetworkLayer" level="INHERITED">
+    <logger name="com.microrisc.simply.network.usbcdc.CDCNetworkLayer" level="debug">
             <appender-ref ref="FILE" />
     </logger>
 

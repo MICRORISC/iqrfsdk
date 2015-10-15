@@ -17,7 +17,7 @@
 	<!--Uncomment for Windows and replace x with the number of your port-->
         <!--<port>COMx</port>-->
         <!--Uncomment for Linux and replace x with the number of your port-->
-        <!--<port>/dev/ttyACM0</port>-->
+        <port>/dev/ttyACM0</port>
 	<note>Some note here.</note>
     </network>
 
