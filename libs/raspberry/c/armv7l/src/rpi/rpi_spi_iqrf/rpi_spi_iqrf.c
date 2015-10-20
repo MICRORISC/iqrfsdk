@@ -93,8 +93,8 @@ static struct spi_ioc_transfer nullTransfer;
  * "SPI. Implementation if IQRF modules. User Guide", version: 130430
  */
 static void initNullTransfer(void) {
-    nullTransfer.tx_buf = NULL;
-    nullTransfer.rx_buf = NULL;
+    nullTransfer.tx_buf = 0;
+    nullTransfer.rx_buf = 0;
     nullTransfer.len = 0;
     nullTransfer.delay_usecs = DELAY_AFTER_TRANSFER;
     nullTransfer.speed_hz = SPI_MAX_SPEED;
