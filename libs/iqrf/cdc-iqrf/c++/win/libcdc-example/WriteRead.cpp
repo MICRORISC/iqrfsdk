@@ -125,58 +125,59 @@ void receiveData(unsigned char* data, unsigned int length) {
         return;
     }
 
-    std::cout << "Unknown type of message. Data: ";
-    printDataInHex(data, length);
-    delete[] msgHeader;
+	std::cout << "Unknown type of message. Data: ";
+	printDataInHex(data, length);
+	delete[] msgHeader;
 }
 
 
 int main() {
-    CDCImpl* testImp = NULL;
-    try {
-        testImp = new CDCImpl("COM4");
-        bool test = testImp->test();
+	CDCImpl* testImp = NULL;
+	try {
+		testImp = new CDCImpl("COM5");
 
-        if ( test ) {
-            std::cout << "Test OK\n";
-        } else {
-            std::cout << "Test FAILED\n";
-            delete testImp;
-            return 2;
-        }
-    } catch ( CDCImplException& e ) {
-        std::cout << e.getDescr() << "\n";
-        if ( testImp != NULL ) {
-            delete testImp;
-        }
-        return 1;
-    }
+		bool test = testImp->test();
 
-    // register to receiving asynchronous messages
-    testImp->registerAsyncMsgListener(&receiveData);
+		if ( test ) {
+			std::cout << "Test OK\n";
+		} else {
+			std::cout << "Test FAILED\n";
+			delete testImp;
+			return 2;
+		}
+	} catch ( CDCImplException& e ) {
+		std::cout << e.getDescr() << "\n";
+		if ( testImp != NULL ) {
+			delete testImp;
+		}
+		return 1;
+	}
 
-    // data to send to USB device
-    const int REQUEST_LENGTH = 6;
-    unsigned char temperatureRequest[REQUEST_LENGTH] = { 0x01, 0x00, 0x0A, 0x00, 0xFF, 0xFF };
+	// register to receiving asynchronous messages
+	testImp->registerAsyncMsgListener(&receiveData);
 
-    for ( int sendCounter = 0; sendCounter < 10; sendCounter++ ) {
-        try {
-            // sending read temperature request and checking response of the device
-            DSResponse dsResponse = testImp->sendData(temperatureRequest, REQUEST_LENGTH);
-            if ( dsResponse != OK ) {
-                // bad response processing...
-                std::cout << "Response not OK: " << dsResponse << "\n";
-            }
-        } catch ( CDCSendException& ex ) {
-            std::cout << ex.getDescr() << "\n";
-            // send exception processing...
-        } catch ( CDCReceiveException& ex ) {
-            std::cout << ex.getDescr() << "\n";
-            // receive exception processing...
-        }
+	// data to send to USB device
+	const int REQUEST_LENGTH = 6;
+	unsigned char temperatureRequest[REQUEST_LENGTH] = { 0x01, 0x00, 0x0A, 0x00, 0xFF, 0xFF };
 
-        // if reception is stopped, is not further possible to send and
-        // to receive any next messages
+	for ( int sendCounter = 0; sendCounter < 10; sendCounter++ ) {
+		try {
+			// sending read temperature request and checking response of the device
+			DSResponse dsResponse = testImp->sendData(temperatureRequest, REQUEST_LENGTH);
+			if ( dsResponse != OK ) {
+				// bad response processing...
+				std::cout << "Response not OK: " << dsResponse << "\n";
+			}
+		} catch ( CDCSendException& ex ) {
+			std::cout << ex.getDescr() << "\n";
+			// send exception processing...
+		} catch ( CDCReceiveException& ex ) {
+			std::cout << ex.getDescr() << "\n";
+			// receive exception processing...
+		}
+
+		// if reception is stopped, is not further possible to send and
+		// to receive any next messages
         if ( testImp->isReceptionStopped() ) {
             delete testImp;
             return 1;

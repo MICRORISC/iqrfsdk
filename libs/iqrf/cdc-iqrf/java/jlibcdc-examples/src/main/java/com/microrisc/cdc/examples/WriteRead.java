@@ -86,7 +86,7 @@ public class WriteRead implements J_AsyncMsgListener {
         try {
             // creating CDC object, which will communicate via /dev/ttyACM0
             //myCDC = new J_CDCImpl("/dev/ttyACM0");
-            myCDC = new J_CDCImpl("COM4");
+            myCDC = new J_CDCImpl("COM5");
             
             // communication testing
             if (myCDC.test()) {

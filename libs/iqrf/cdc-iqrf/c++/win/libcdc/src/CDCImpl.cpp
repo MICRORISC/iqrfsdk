@@ -25,6 +25,9 @@
 #include <iostream>
 #include <fstream>
 #include <limits.h>
+
+#include <iomanip>
+
 #include <cdc/CDCImpl.h>
 #include <cdc/CDCMessageParser.h>
 using namespace std;
@@ -292,7 +295,7 @@ void CDCImplPrivate::init() {
 			GetLastError());
 		throw CDCImplException(errStr.c_str());
 	}
-	
+
 	initMessageHeaders();
 	initLastResponse();
 	initLastReceptionError();
@@ -449,16 +452,16 @@ static LPTSTR getCompletePortName(LPCTSTR portName) {
 void CDCImplPrivate::openPort() {
 	LPTSTR completePortName = getCompletePortName(commPort);
 	if (completePortName == NULL) {
-    	throw CDCImplException("Complete port name creation failed");
+		throw CDCImplException("Complete port name creation failed");
 	}
 
 	portHandle = CreateFile( completePortName,
-                      GENERIC_READ | GENERIC_WRITE, // read and write
-                      0,      //  must be opened with exclusive-access
-                      NULL,   //  default security attributes
-                      OPEN_EXISTING, //  must use OPEN_EXISTING
-                      FILE_FLAG_OVERLAPPED, // overlapped operation
-                      NULL ); //   must be NULL for comm devices
+					  GENERIC_READ | GENERIC_WRITE, // read and write
+					  0,      //  must be opened with exclusive-access
+					  NULL,   //  default security attributes
+					  OPEN_EXISTING, //  must use OPEN_EXISTING
+					  FILE_FLAG_OVERLAPPED, // overlapped operation
+					  NULL ); //   must be NULL for comm devices
 
 	//  Handle the error.
 	if (portHandle == INVALID_HANDLE_VALUE) {
@@ -509,8 +512,9 @@ void CDCImplPrivate::openPort() {
 	timeouts.ReadTotalTimeoutMultiplier=10;
 	timeouts.WriteTotalTimeoutConstant=50;
 	timeouts.WriteTotalTimeoutMultiplier=10;
+
 	if(!SetCommTimeouts(portHandle, &timeouts)) {
-		string errStr = createErrorString("Port timeouts setting failed with error", 
+		string errStr = createErrorString("Port timeouts setting failed with error",
 			GetLastError());
 		throw CDCImplException(errStr.c_str());
 	}
@@ -615,47 +619,57 @@ DWORD WINAPI CDCImplPrivate::readMsgThreadStub(LPVOID data) {
 }
 
 /*
- *	Function of reading thread of incomming COM port messages. 
+ *	Function of reading thread of incomming COM port messages.
  */
 DWORD WINAPI CDCImplPrivate::readMsgThread() {
 	DWORD eventFlags = EV_RXCHAR;
 	ustring receivedBytes;
-	HANDLE waitEvents[2];
+	receivedBytes.clear();
+
+	DWORD bytesTotal = 0;
+	unsigned char byteRead = '\0';
+
+	BOOL fWaitingOnRead = FALSE;
+	DWORD occuredEvent = 0;
+
+	int count1 = 0;
+	int count2 = 0;
 
 	// critical initialization setting - if it fails, cannot continue
 	if (!SetCommMask(portHandle, eventFlags)) {
 		char* errorDescr = createErrorChars("SetCommMask failed with error ",
 						GetLastError());
-        setLastReceptionError(errorDescr);
+		setLastReceptionError(errorDescr);
 		goto READ_ERROR;
 	}
 
 	OVERLAPPED overlap;
 	//SecureZeroMemory(&overlap, sizeof(OVERLAPPED));
-    memset(&overlap, 0, sizeof(OVERLAPPED));
+	memset(&overlap, 0, sizeof(OVERLAPPED));
 
 	// critical initialization setting - if it fails, cannot continue
 	overlap.hEvent = CreateEvent(NULL, TRUE, FALSE, NULL);
 	if (overlap.hEvent == NULL) {
 		char* errorDescr = createErrorChars("Create read char event failed "
 								"with error ", GetLastError());
-        setLastReceptionError(errorDescr);
+		setLastReceptionError(errorDescr);
 		goto READ_ERROR;
 	}
 
-	receivedBytes.clear();
-
+	HANDLE waitEvents[2];
 	waitEvents[0] = overlap.hEvent;
 	waitEvents[1] = readEndEvent;
-READ_BEGIN: while (true) {
-		DWORD occuredEvent = 0;
+
+READ_BEGIN:
+while (true) {
+		//cout << "WaitCommEvent" << endl;
 		DWORD waitEventResult = WaitCommEvent(portHandle, &occuredEvent, &overlap);
-		
+
 		// signal for main thread to start incomming user requests
 		if (!SetEvent(readStartEvent)) {
 			char* errorDescr = createErrorChars("Setting event for read start "
 									"failed with error ", GetLastError());
-            setLastReceptionError(errorDescr);
+			setLastReceptionError(errorDescr);
 			goto READ_ERROR;
 		}
 
@@ -663,54 +677,194 @@ READ_BEGIN: while (true) {
 			if (GetLastError() != ERROR_IO_PENDING){
 				char* errorDescr = createErrorChars("Waiting for char event "
 										"failed with error ", GetLastError());
-                setLastReceptionError(errorDescr);
-				goto READ_ERROR;
-			} 
-		} else {
-			try {
-				int messageEnd = appendDataFromPort(&overlap, receivedBytes);
-				if (messageEnd != -1) {
-					processAllMessages(receivedBytes);
-				}
-			} catch (CDCReceiveException& e) {
-				setLastReceptionError(e.what());
+				setLastReceptionError(errorDescr);
 				goto READ_ERROR;
 			}
-			
-			continue;
+			else {
+				// Waiting for WaitCommEvent to finish
+				//cout << "WaitCommEvent waiting to finish" << endl;
+
+				// Wait a little while for an event to occur.
+				//const DWORD READ_TIMEOUT = 500;
+				DWORD waitResult = WaitForMultipleObjects(2, waitEvents, FALSE, INFINITE);
+				switch(waitResult)
+				{
+					// Event occurred.
+					case WAIT_OBJECT_0:
+
+						if (!GetOverlappedResult(portHandle, &overlap, &bytesTotal, FALSE)) {
+							char* errorDescr = createErrorChars("Waiting for char "
+										"event failed with error ", GetLastError());
+							setLastReceptionError(errorDescr);
+							goto READ_ERROR;
+						}
+						else {
+							// WaitCommEvent returned.
+							// Deal with reading event as appropriate.
+							//cout << "WaitCommEvent returned in overlapped" << endl;
+						}
+						break;
+
+					case (WAIT_OBJECT_0 + 1):
+						//cout << "End reading thread..." << endl;
+						goto READ_END;
+
+					case WAIT_TIMEOUT:
+						// Operation isn't complete yet. fWaitingOnStatusHandle flag
+						// isn't changed since I'll loop back around and I don't want
+						// to issue another WaitCommEvent until the first one finishes.
+						//
+						// This is a good time to do some background work.
+						break;
+
+					default:
+						// Error in the WaitForSingleObject; abort
+						// This indicates a problem with the OVERLAPPED structure's
+						// event handle.
+						break;
+				}
+			}
+		}
+		else {
+			// WaitCommEvent returned immediately.
+			// Deal with reading event as appropriate.
+			//cout << "WaitCommEvent returned immediately" << endl;
 		}
 
-		DWORD waitResult = WaitForMultipleObjects(2, waitEvents, FALSE, INFINITE);
-		DWORD bytesTrans = 0;
-		switch (waitResult) {
-			case WAIT_OBJECT_0:
-				if (!GetOverlappedResult(portHandle, &overlap, &bytesTrans, FALSE)) {
-					char* errorDescr = createErrorChars("Waiting for char "
-									"event failed with error ", GetLastError());
-                    setLastReceptionError(errorDescr);
-					goto READ_ERROR;
-				} else {
+		//reading loop
+		do {
+			if (!fWaitingOnRead) {
+
+				// Issue read operation - overlapped - just once, must waiting for completion
+				DWORD dwReadResult = ReadFile(portHandle, &byteRead, 1, &bytesTotal, &overlap);
+
+				if (!dwReadResult) {
+					// read not delayed?
+					if (GetLastError() != ERROR_IO_PENDING) {
+						// Error in communications; report it.
+						char* errorDescr = createErrorChars("Reading "
+										"failed with error ", GetLastError());
+						setLastReceptionError(errorDescr);
+						goto READ_ERROR;
+					}
+					else {
+						//cout << "Waiting for reading..." << endl;
+
+						//cout << "Read result:" << dwReadResult << endl;
+						//cout << "Last error:" << GetLastError() << endl;
+						//cout << "Read byte:" << byteRead << endl;
+						//cout << "TotalBytes:" << bytesTotal << endl;
+
+						fWaitingOnRead = TRUE;
+					}
+				}
+				else {
+					// read completed immediately
 					try {
-						int messageEnd = appendDataFromPort(&overlap, receivedBytes);
-						if (messageEnd != -1) {
+						//cout << "Reading immediately:" << ++count1 << endl;
+
+						//cout << "Read result:" << dwReadResult << endl;
+						//cout << "Last error:" << GetLastError() << endl;
+						//cout << "Read byte:" << byteRead << endl;
+						//cout << "TotalBytes:" << bytesTotal << endl;
+
+						receivedBytes.push_back(byteRead);
+
+						if (byteRead == 0x0D) {
+/*
+							basic_string<unsigned char>::iterator its;
+							cout.setf(ios_base::hex, ios_base::basefield);
+							cout.setf(ios_base::uppercase);
+							for(its = receivedBytes.begin(); its != receivedBytes.end(); its++)
+								cout << setw(3) << (int) *its;
+							cout << endl;
+*/
 							processAllMessages(receivedBytes);
 						}
 					} catch (CDCReceiveException& e) {
 						setLastReceptionError(e.what());
 						goto READ_ERROR;
 					}
+
+					// ready to read out another byte (bytesTotal) if available
+					fWaitingOnRead = FALSE;
 				}
-				break;
-			case (WAIT_OBJECT_0 + 1):
-				goto READ_END;
-			default:
-				char* errorDescr = createErrorChars(
-					"Waiting for event in read cycle failed with error ", GetLastError());
-                setLastReceptionError(errorDescr);
-				goto READ_ERROR;
-		}
+			}
+
+			if (fWaitingOnRead) {
+				//cout << "WaitForMultipleObjects" << endl;
+
+				//const DWORD READ_TIMEOUT = 500;
+				DWORD waitResult = WaitForMultipleObjects(2, waitEvents, FALSE, INFINITE);
+				switch(waitResult)
+				{
+					// Read completed.
+					case WAIT_OBJECT_0:
+
+						if (!GetOverlappedResult(portHandle, &overlap, &bytesTotal, FALSE)) {
+							char* errorDescr = createErrorChars("Waiting for reading "
+										"event failed with error ", GetLastError());
+							setLastReceptionError(errorDescr);
+							goto READ_ERROR;
+						}
+						else {
+							// Read completed successfully.
+							try {
+								//cout << "Reading overlap:" << ++count2 << endl;
+								//cout << "TotalBytes:" << bytesTotal << endl;
+
+								if(bytesTotal != 0) {
+									//cout << "Read byte:" << byteRead << endl;
+									receivedBytes.push_back(byteRead);
+								}
+
+								if (byteRead == 0x0D) {
+/*
+									basic_string<unsigned char>::iterator its;
+									cout.setf(ios_base::hex, ios_base::basefield);
+									cout.setf(ios_base::uppercase);
+									for(its = receivedBytes.begin(); its != receivedBytes.end(); its++)
+										cout << setw(3) << (int) *its;
+									cout << endl;
+*/
+									processAllMessages(receivedBytes);
+								}
+							} catch (CDCReceiveException& e) {
+								setLastReceptionError(e.what());
+								goto READ_ERROR;
+							}
+						}
+
+						//  Reset flag so that another opertion can be issued.
+						fWaitingOnRead = FALSE;
+						break;
+
+					case (WAIT_OBJECT_0 + 1):
+						cout << "End reading thread..." << endl;
+						goto READ_END;
+
+					case WAIT_TIMEOUT:
+						// Operation isn't complete yet. fWaitingOnRead flag isn't
+						// changed since I'll loop back around, and I don't want
+						// to issue another read until the first one finishes.
+						//
+						// This is a good time to do some background work.
+						//cout << "Reading timeouted..." << endl;
+						break;
+
+					default:
+						// Error in the WaitForSingleObject; abort.
+						// This indicates a problem with the OVERLAPPED structure's
+						// event handle.
+						char* errorDescr = createErrorChars(
+							"Waiting for event in read cycle failed with error ", GetLastError());
+						setLastReceptionError(errorDescr);
+						goto READ_ERROR;
+				}
+			}
+		} while (bytesTotal);
 	}
-	
+
 READ_END:
 	CloseHandle(overlap.hEvent);
 	return 0;
@@ -722,68 +876,29 @@ READ_ERROR:
 }
 
 /*
- * Reads data from port and appends them to specified buffer until no
- * other data are in input buffer of the port.
- * @return position of message end character present in the specified buffer <br>
- *		   -1, if no message end character was appended into specified buffer
- * @throw CDCReceiveException
- */
-int CDCImplPrivate::appendDataFromPort(LPOVERLAPPED overlap, ustring& destBuffer) {
-	DWORD bytesTotal = 0;
-	unsigned char byteRead = '\0';
-	int messageEnd = -1;
-
-	do {
-		BOOL readResult = ReadFile(portHandle, &byteRead, 1, &bytesTotal, overlap);
-		if (readResult) {
-			destBuffer.push_back(byteRead);
-			if (byteRead == 0x0D) {
-				messageEnd = destBuffer.size()-1;
-			}
-		} else {
-			DWORD transBytes = 0;
-			if (!GetOverlappedResult(portHandle, overlap, &transBytes, TRUE)) {
-				// error in communication
-				string errStr = createErrorString("Appending data from COM-port "
-									"failed with error ", GetLastError());
-				throw CDCReceiveException(errStr.c_str());
-			} else {
-				// read OK
-				if (transBytes == 1) {
-					destBuffer.push_back(byteRead);
-				}
-				break;
-			}
-		}
-	} while (bytesTotal > 0);
-
-	return messageEnd;
-}
-
-/*
  * Extracts and processes all messages inside the specified buffer.
  * @throw CDCReading Exception
  */
 void CDCImplPrivate::processAllMessages(ustring& msgBuffer) {
 	if (msgBuffer.empty()) {
-    	return;
+		return;
 	}
 
 	ParsedMessage parsedMessage = parseNextMessage(msgBuffer);
 	while ( parsedMessage.parseResult.resultType != PARSE_NOT_COMPLETE ) {
 		if ( parsedMessage.parseResult.resultType == PARSE_BAD_FORMAT ) {
-        	// throw all bytes from the buffer up to next 0x0D
-            size_t endMsgPos = msgBuffer.find(0x0D, parsedMessage.parseResult.lastPosition);
+			// throw all bytes from the buffer up to next 0x0D
+			size_t endMsgPos = msgBuffer.find(0x0D, parsedMessage.parseResult.lastPosition);
 			if (endMsgPos == string::npos) {
 				msgBuffer.clear();
 			}  else {
-                msgBuffer.erase(0, endMsgPos+1);
+				msgBuffer.erase(0, endMsgPos+1);
 			}
 
 			setLastReceptionError("Bad message format");
 		} else {
 			msgBuffer.erase(0, parsedMessage.parseResult.lastPosition+1);
-        	processMessage(parsedMessage);
+			processMessage(parsedMessage);
 		}
 
 		if (msgBuffer.empty()) {
@@ -901,7 +1016,7 @@ void CDCImplPrivate::processCommand(Command& cmd) {
 	waitForResponse();
 
 	if (lastResponse.parseResult.msgType != cmd.msgType) {
-        throw CDCReceiveException("Response has bad type.");
+		throw CDCReceiveException("Response has bad type.");
 	}
 }
 
@@ -912,28 +1027,28 @@ void CDCImplPrivate::processCommand(Command& cmd) {
 void CDCImplPrivate::sendCommand(Command& cmd) {
 	OVERLAPPED overlap;
 	//SecureZeroMemory(&overlap, sizeof(OVERLAPPED));
-    memset(&overlap, 0, sizeof(OVERLAPPED));
+	memset(&overlap, 0, sizeof(OVERLAPPED));
 
 	overlap.hEvent = CreateEvent(NULL, TRUE, FALSE, NULL);
 	if (overlap.hEvent == NULL) {
-		string errStr = createErrorString("Creating send event failed with error ", 
+		string errStr = createErrorString("Creating send event failed with error ",
 			GetLastError());
 		throw CDCSendException(errStr.c_str());
 	}
-	
+
 	BuffCommand buffCmd = commandToBuffer(cmd);
 	DWORD bytesWritten = 0;
 	if (!WriteFile(portHandle, buffCmd.cmd, buffCmd.len, &bytesWritten, &overlap)) {
-		if (GetLastError() != ERROR_IO_PENDING) { 
-			string errStr = createErrorString("Sending message failed with error ", 
+		if (GetLastError() != ERROR_IO_PENDING) {
+			string errStr = createErrorString("Sending message failed with error ",
 				GetLastError());
 			throw CDCSendException(errStr.c_str());
 		} else {
 			DWORD waitResult = WaitForSingleObject(overlap.hEvent, TM_SEND_MSG);
-			switch(waitResult) { 
+			switch(waitResult) {
 				case WAIT_OBJECT_0:
 					if (!GetOverlappedResult(portHandle, &overlap, &bytesWritten, FALSE)) {
-						string errStr = createErrorString("Waiting for send failed with error ", 
+						string errStr = createErrorString("Waiting for send failed with error ",
 							GetLastError());
 						throw CDCSendException(errStr.c_str());
 					} else {
@@ -943,7 +1058,7 @@ void CDCImplPrivate::sendCommand(Command& cmd) {
 				case WAIT_TIMEOUT:
 					throw CDCSendException("Waiting for send timeouted");
 				default:
-					string errStr = createErrorString("Waiting for send failed with error ", 
+					string errStr = createErrorString("Waiting for send failed with error ",
 						GetLastError());
 					throw CDCSendException(errStr.c_str());
 			}

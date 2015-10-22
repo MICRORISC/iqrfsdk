@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>1899.12.30 00:00:00.000.078,D:\!!Kralik\microrisc\CDCLibrary\BuilderXE2\CDCLib_JavaStub\src\com_microrisc_CDC_J_CDCImpl.h=D:\!!Kralik\microrisc\CDCLibrary\BuilderXE2\CDCLib_JavaStub\src\com_mrisc_CDC_J_CDCImpl.h</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.703,D:\Prace\microrisc\CDC\CDCLibrary\BuilderXE2\java_stub\src\com_mrisc_CDC_J_CDCImpl.h=</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.250,=D:\Prace\microrisc\CDC\CDCLibrary\BuilderXE2\java_stub\src\com_mrisc_CDC_J_CDCImpl.h</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.748,=C:\Users\E520\Desktop\SDK\GITHUB\iqrfsdk\libs\iqrf\cdc-iqrf\c++\win\libcdc-dll\libs\libcdc-1.0.1-win64.a</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.921,D:\Prace\microrisc\CDC\CDCLibrary\BuilderXE2\java_stub\CDCLib_JavaStub.cpp=</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.218,=D:\Prace\microrisc\CDC\CDCLibrary\BuilderXE2\java_stub\CDCLib_JavaStub.cpp</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.566,D:\!!Kralik\microrisc\CDCLibrary\BuilderXE2\cdc_bin\CDCLib.lib=</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.781,=D:\Prace\microrisc\CDC\CDCLibrary\BuilderXE2\cdc_bin\CDCLib.lib</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.604,=C:\Users\E520\Desktop\SDK\GITHUB\iqrfsdk\libs\iqrf\cdc-iqrf\c++\win\libcdc-dll\libs\libcdc-1.0.1-win32.lib</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.468,=D:\Prace\microrisc\CDC\CDCLibrary\BuilderXE2\build_output\CDCLib.lib</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.875,=D:\!!Kralik\microrisc\CDCLibrary\BuilderXE2\cdc_bin\CDCLib.a</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.968,=D:\Prace\microrisc\CDC\CDCLibrary\BuilderXE2\java_stub\src\CDCLib_JavaStub.cpp</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.656,D:\Prace\microrisc\CDC\CDCLibrary\BuilderXE2\java_stub\src\CDCLib_JavaStub.cpp=</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.687,D:\Prace\microrisc\CDC\CDCLibrary\BuilderXE2\java_stub\libmain.cpp=</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.218,=C:\Documents and Settings\fantomas\Dokumenty\RAD Studio\Projects\File1.cpp</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.406,=D:\Prace\microrisc\CDC\CDCLibrary\BuilderXE2\java_stub\com_mrisc_CDC_J_CDCImpl.h</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.346,=D:\!!Kralik\microrisc\CDCLibrary\BuilderXE2\cdc_bin\C_CDCLib.a</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.025,D:\!!Kralik\microrisc\CDCLibrary\BuilderXE2\cdc_bin\C_CDCLib.a=</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.203,D:\Prace\microrisc\CDC\CDCLibrary\BuilderXE2\java_stub\libmain.cpp=C:\Documents and Settings\fantomas\Dokumenty\RAD Studio\Projects\File1.cpp</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.937,D:\Prace\microrisc\CDC\CDCLibrary\BuilderXE2\java_stub\com_mrisc_CDC_J_CDCImpl.h=</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.281,D:\Prace\microrisc\CDC\CDCLibrary\BuilderXE2\java_stub\java_stub.cbproj=C:\Documents and Settings\fantomas\Dokumenty\RAD Studio\Projects\Project1.cbproj</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.906,=D:\Prace\microrisc\CDC\CDCLibrary\BuilderXE2\CDCLib_JavaStub\File1.cpp</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.437,D:\Prace\microrisc\CDC\CDCLibrary\BuilderXE2\CDCLib_JavaStub\CDCLib_JavaStub.cbproj=D:\Prace\microrisc\CDC\CDCLibrary\BuilderXE2\java_stub\CDCLib_JavaStub.cbproj</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.390,D:\Prace\microrisc\CDC\CDCLibrary\BuilderXE2\java_stub\CDCLib_JavaStub.cbproj=D:\Prace\microrisc\CDC\CDCLibrary\BuilderXE2\java_stub\java_stub.cbproj</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.390,=D:\Prace\microrisc\CDC\CDCLibrary\BuilderXE2\CDCLib_JavaStub\src\com_mrisc_CDC_J_CDCImpl.h</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.000,=D:\Prace\microrisc\CDC\CDCLibrary\BuilderXE2\CDCLib_JavaStub\src\CDCLib_JavaStub.cpp</Transaction>
+  </Transactions>
+</BorlandProject>

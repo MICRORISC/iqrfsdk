@@ -5,7 +5,7 @@
         <FrameworkType>None</FrameworkType>
         <Base>True</Base>
         <Config Condition="'$(Config)'==''">Release</Config>
-        <Platform Condition="'$(Platform)'==''">Win32</Platform>
+        <Platform Condition="'$(Platform)'==''">Win64</Platform>
         <TargetedPlatforms>3</TargetedPlatforms>
         <AppType>StaticLibrary</AppType>
     </PropertyGroup>
@@ -45,6 +45,7 @@
         <Base>true</Base>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base)'!=''">
+        <AllPackageLibs>rtl.lib</AllPackageLibs>
         <Multithreaded>true</Multithreaded>
         <ProjectType>CppStaticLibrary</ProjectType>
         <IncludePath>src\;..\..\..\Desktop\SDK\GITHUB\iqrfsdk\libs\iqrf\cdc-iqrf\c++\win\cdclib\src\;$(IncludePath)</IncludePath>
