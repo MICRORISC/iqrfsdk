@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package com.microrisc.simply.iqrf.dpa.v21x.protocol;
+package com.microrisc.simply.iqrf.dpa.protocol;
 
-import com.microrisc.simply.iqrf.dpa.v21x.DPA_ResponseCode;
+import com.microrisc.simply.iqrf.dpa.DPA_ResponseCode;
 import com.microrisc.simply.typeconvertors.AbstractConvertor;
 import com.microrisc.simply.typeconvertors.ValueConversionException;
 import java.nio.ByteBuffer;
@@ -124,7 +124,10 @@ public final class DPA_ProtocolProperties {
         public static final int PWM =           0x0B;
         public static final int UART =          0x0C;
         public static final int FRC =           0x0D;
-        
+                
+        /** User peripherals properties. */
+        public static final int USER_PERIPHERAL_START =   0x20;
+        public static final int USER_PERIPHERAL_END =     0x6F;
         /**
          * Indicates, wheather the specified value of PNUM is a user peripheral.
          * @param pnum PNUM value to check
@@ -492,7 +495,7 @@ public final class DPA_ProtocolProperties {
      * @param protoMsg source message
      * @return PNUM field of specified message.
      */
-    static int getPeripheralNumber(short[] protoMsg) {
+    public static int getPeripheralNumber(short[] protoMsg) {
         logger.debug("getPeripheralNumber - start: protoMsg={}", protoMsg);
         
         int perNumber = getMessageData_Int(protoMsg, PNUM_START, PNUM_LENGTH);
@@ -506,7 +509,7 @@ public final class DPA_ProtocolProperties {
      * @param protoMsg source message
      * @return PCMD field of specified message.
      */
-    static int getCommand(short[] protoMsg) {
+    public static int getCommand(short[] protoMsg) {
         logger.debug("getCommand - start: protoMsg={}", protoMsg);
         
         int command = getMessageData_Int(protoMsg, PCMD_START, PCMD_LENGTH);

@@ -15,6 +15,7 @@
  */
 package com.microrisc.simply.iqrf.dpa.v22x.protocol;
 
+import com.microrisc.simply.iqrf.dpa.protocol.DPA_ProtocolProperties;
 import com.microrisc.simply.iqrf.dpa.v22x.devices.Custom;
 import com.microrisc.simply.iqrf.dpa.v22x.init.NetworksFunctionalityToSimplyMapping;
 import com.microrisc.simply.iqrf.dpa.v22x.init.NetworksFunctionalityToSimplyMappingParser;

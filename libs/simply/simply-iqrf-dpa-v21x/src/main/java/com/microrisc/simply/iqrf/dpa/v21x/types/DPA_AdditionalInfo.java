@@ -16,7 +16,7 @@
 
 package com.microrisc.simply.iqrf.dpa.v21x.types;
 
-import com.microrisc.simply.iqrf.dpa.v21x.DPA_ResponseCode;
+import com.microrisc.simply.iqrf.dpa.DPA_ResponseCode;
 
 /**
  * Encapsulates additional information comming from DPA network messages.  

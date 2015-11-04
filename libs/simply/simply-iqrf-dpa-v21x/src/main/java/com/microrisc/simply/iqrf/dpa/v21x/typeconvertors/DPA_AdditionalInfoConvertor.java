@@ -16,7 +16,7 @@
 
 package com.microrisc.simply.iqrf.dpa.v21x.typeconvertors;
 
-import com.microrisc.simply.iqrf.dpa.v21x.DPA_ResponseCode;
+import com.microrisc.simply.iqrf.dpa.DPA_ResponseCode;
 import com.microrisc.simply.iqrf.dpa.v21x.types.DPA_AdditionalInfo;
 import com.microrisc.simply.iqrf.typeconvertors.Uns16Convertor;
 import com.microrisc.simply.typeconvertors.PrimitiveConvertor;

@@ -17,9 +17,9 @@
 package com.microrisc.simply.iqrf.dpa.v22x.typeconvertors;
 
 import com.microrisc.simply.di_services.MethodIdTransformer;
+import com.microrisc.simply.iqrf.dpa.protocol.DPA_ProtocolProperties;
 import com.microrisc.simply.iqrf.dpa.protocol.ProtocolObjects;
 import com.microrisc.simply.iqrf.dpa.v22x.di_services.method_id_transformers.StandardMethodIdTransformers;
-import com.microrisc.simply.iqrf.dpa.v22x.protocol.DPA_ProtocolProperties;
 import com.microrisc.simply.iqrf.dpa.v22x.types.DPA_Request;
 import com.microrisc.simply.protocol.RequestPacketCreator;
 import com.microrisc.simply.protocol.mapping.PacketFragment;

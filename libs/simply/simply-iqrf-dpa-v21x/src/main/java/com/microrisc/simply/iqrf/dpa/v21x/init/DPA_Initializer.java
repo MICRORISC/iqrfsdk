@@ -29,7 +29,7 @@ import com.microrisc.simply.iqrf.RF_Mode;
 import com.microrisc.simply.iqrf.dpa.v21x.devices.Coordinator;
 import com.microrisc.simply.iqrf.dpa.v21x.devices.PeripheralInfoGetter;
 import com.microrisc.simply.iqrf.dpa.v21x.protocol.DPA_ProtocolLayer;
-import com.microrisc.simply.iqrf.dpa.v21x.protocol.DPA_ProtocolProperties;
+import com.microrisc.simply.iqrf.dpa.protocol.DPA_ProtocolProperties;
 import com.microrisc.simply.iqrf.dpa.v21x.types.BondedNodes;
 import com.microrisc.simply.iqrf.dpa.v21x.types.DiscoveryParams;
 import com.microrisc.simply.iqrf.dpa.v21x.types.DiscoveryResult;

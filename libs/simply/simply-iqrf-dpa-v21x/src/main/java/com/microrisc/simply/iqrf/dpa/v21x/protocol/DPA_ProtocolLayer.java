@@ -16,6 +16,7 @@
 
 package com.microrisc.simply.iqrf.dpa.v21x.protocol;
 
+import com.microrisc.simply.iqrf.dpa.protocol.DPA_ProtocolProperties;
 import com.microrisc.simply.AbstractMessage;
 import com.microrisc.simply.BaseCallResponse;
 import com.microrisc.simply.CallRequest;
@@ -26,11 +27,11 @@ import com.microrisc.simply.SimpleMethodMessageSource;
 import com.microrisc.simply.SimplyException;
 import com.microrisc.simply.asynchrony.BaseAsynchronousMessage;
 import com.microrisc.simply.errors.NetworkInternalError;
+import com.microrisc.simply.iqrf.dpa.DPA_ResponseCode;
 import com.microrisc.simply.iqrf.dpa.asynchrony.DPA_AsynchronousMessage;
 import com.microrisc.simply.iqrf.dpa.asynchrony.SimpleDPA_AsynchronousMessageSource;
 import com.microrisc.simply.iqrf.dpa.broadcasting.BroadcastRequest;
 import com.microrisc.simply.iqrf.dpa.broadcasting.BroadcastResult;
-import com.microrisc.simply.iqrf.dpa.v21x.DPA_ResponseCode;
 import com.microrisc.simply.iqrf.dpa.v21x.devices.Coordinator;
 import com.microrisc.simply.iqrf.dpa.v21x.devices.FRC;
 import com.microrisc.simply.iqrf.dpa.v21x.di_services.method_id_transformers.CoordinatorStandardTransformer;

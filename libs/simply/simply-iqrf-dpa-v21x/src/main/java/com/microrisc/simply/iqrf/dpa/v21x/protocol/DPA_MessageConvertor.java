@@ -16,6 +16,7 @@
 
 package com.microrisc.simply.iqrf.dpa.v21x.protocol;
 
+import com.microrisc.simply.iqrf.dpa.protocol.DPA_ProtocolProperties;
 import com.microrisc.simply.AbstractMessage;
 import com.microrisc.simply.BaseCallResponse;
 import com.microrisc.simply.CallRequest;
@@ -24,7 +25,7 @@ import com.microrisc.simply.NetworkData;
 import com.microrisc.simply.SimpleMessageSource;
 import com.microrisc.simply.SimpleMethodMessageSource;
 import com.microrisc.simply.errors.NetworkInternalError;
-import com.microrisc.simply.iqrf.dpa.v21x.DPA_ResponseCode;
+import com.microrisc.simply.iqrf.dpa.DPA_ResponseCode;
 import com.microrisc.simply.iqrf.dpa.broadcasting.BroadcastRequest;
 import com.microrisc.simply.iqrf.dpa.v21x.devices.PeripheralInfoGetter;
 import com.microrisc.simply.protocol.RequestPacketCreator;

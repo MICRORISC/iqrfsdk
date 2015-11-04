@@ -22,7 +22,7 @@ import com.microrisc.simply.Node;
 import com.microrisc.simply.Simply;
 import com.microrisc.simply.SimplyException;
 import com.microrisc.simply.errors.CallRequestProcessingError;
-import com.microrisc.simply.iqrf.dpa.v22x.DPA_ResponseCode;
+import com.microrisc.simply.iqrf.dpa.asynchrony.DPA_ResponseCode;
 import com.microrisc.simply.iqrf.dpa.v22x.DPA_SimplyFactory;
 import com.microrisc.simply.iqrf.dpa.v22x.devices.Thermometer;
 import com.microrisc.simply.iqrf.dpa.v22x.types.DPA_AdditionalInfo;

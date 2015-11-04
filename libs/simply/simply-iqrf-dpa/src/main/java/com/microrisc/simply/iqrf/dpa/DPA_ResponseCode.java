@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.microrisc.simply.iqrf.dpa.v21x;
+package com.microrisc.simply.iqrf.dpa;
 
 /**
  * Response codes.
