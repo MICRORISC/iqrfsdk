@@ -123,11 +123,12 @@ public final class DPA_ProtocolProperties {
         public static final int THERMOMETER =   0x0A;
         public static final int PWM =           0x0B;
         public static final int UART =          0x0C;
-        public static final int FRC =           0x0D;
-                
+        public static final int FRC =           0x0D;        
+        
         /** User peripherals properties. */
         public static final int USER_PERIPHERAL_START =   0x20;
         public static final int USER_PERIPHERAL_END =     0x6F;
+        
         /**
          * Indicates, wheather the specified value of PNUM is a user peripheral.
          * @param pnum PNUM value to check

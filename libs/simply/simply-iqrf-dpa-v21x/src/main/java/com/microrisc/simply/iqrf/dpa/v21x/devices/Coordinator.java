@@ -284,7 +284,7 @@ extends DPA_StandardServices, GenericAsyncCallable, MethodIdTransformer {
     
     /**
      * Synchronous wrapper for {@link #async_runDiscovery(
-     * com.microrisc.simply.iqrf.dpa.v210.types.DiscoveryParams) async_runDiscovery}
+     * com.microrisc.simply.iqrf.dpa.v21x.types.DiscoveryParams) async_runDiscovery}
      * method.
      * @param discoveryParams discovery parameters
      * @return results of discovery process
@@ -293,7 +293,7 @@ extends DPA_StandardServices, GenericAsyncCallable, MethodIdTransformer {
     
     /**
      * Synchronous wrapper for {@link #async_setDPA_Param(
-     * com.microrisc.simply.iqrf.dpa.v210.types.DPA_Parameter) async_setDPA_Param}
+     * com.microrisc.simply.iqrf.dpa.v21x.types.DPA_Parameter) async_setDPA_Param}
      * method.
      * @param dpaParam DPA Parameter to use for settting
      * @return previous value of DPA Parameter
@@ -302,7 +302,7 @@ extends DPA_StandardServices, GenericAsyncCallable, MethodIdTransformer {
     
     /**
      * Synchronous wrapper for {@link #async_setHops(
-     * com.microrisc.simply.iqrf.dpa.v210.types.RoutingHops) async_setHops}
+     * com.microrisc.simply.iqrf.dpa.v21x.types.RoutingHops) async_setHops}
      * method.
      * @param hops routing hops to set <br>
      *        0x00, 0xFF: See a description of the parameter of function 

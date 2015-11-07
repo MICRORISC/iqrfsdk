@@ -71,7 +71,7 @@ extends DPA_StandardServices, GenericAsyncCallable, MethodIdTransformer {
     
     /**
      * Synchronous wrapper for {@link
-     * #async_send(com.microrisc.simply.iqrf.dpa.v210.types.FRC_Command)  async_send}
+     * #async_send(com.microrisc.simply.iqrf.dpa.v21x.types.FRC_Command)  async_send}
      * method.
      * @param frcCmd FRC command to use
      * @return FRC data collected from nodes

@@ -79,7 +79,7 @@ extends DPA_StandardServices, GenericAsyncCallable, MethodIdTransformer {
     
     /**
      * Synchronous wrapper for {@link 
-     * #async_open(com.microrisc.simply.iqrf.dpa.v210.types.BaudRate)  async_open} method.
+     * #async_open(com.microrisc.simply.iqrf.dpa.v21x.types.BaudRate)  async_open} method.
      * @param baudRate baudrate to use
      * @return {@code VoidType} object, if method call has processed allright
      */

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.microrisc.simply.iqrf.dpa.v210.typeconvertors;
+package com.microrisc.simply.iqrf.dpa.v21x.typeconvertors;
 
 import com.microrisc.simply.iqrf.dpa.v21x.typeconvertors.BondedNodesConvertor;
 import com.microrisc.simply.iqrf.dpa.v21x.types.BondedNodes;

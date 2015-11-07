@@ -79,7 +79,7 @@ extends DPA_StandardServices, GenericAsyncCallable, MethodIdTransformer {
     // SYNCHRONOUS WRAPPERS
     
     /** 
-     * Synchronous wrapper for {@link #async_setDirection(com.microrisc.simply.iqrf.dpa.v210.types.IO_DirectionSettings[])  
+     * Synchronous wrapper for {@link #async_setDirection(com.microrisc.simply.iqrf.dpa.v21x.types.IO_DirectionSettings[])  
      * async_setDirection} method.
      * @param directionSettings direction settings
      * @return {@code VoidType} object, if operation has processed correctly
@@ -88,7 +88,7 @@ extends DPA_StandardServices, GenericAsyncCallable, MethodIdTransformer {
     
     /**
      * Synchronous wrapper for {@link 
-     * #async_setOutputState(com.microrisc.simply.iqrf.dpa.v210.types.IO_Command[]) 
+     * #async_setOutputState(com.microrisc.simply.iqrf.dpa.v21x.types.IO_Command[]) 
      * async_setOutputState} method.
      * @param ioCommands IO commands
      * @return {@code VoidType} object, if operation has processed correctly

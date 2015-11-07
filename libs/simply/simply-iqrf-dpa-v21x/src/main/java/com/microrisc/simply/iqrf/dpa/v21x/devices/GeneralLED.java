@@ -74,7 +74,7 @@ extends DPA_StandardServices, GenericAsyncCallable, MethodIdTransformer {
     
     /**
      * Synchronous wrapper for {@link 
-     * #async_set(com.microrisc.simply.iqrf.dpa.v210.types.LED_State) async_set} 
+     * #async_set(com.microrisc.simply.iqrf.dpa.v21x.types.LED_State) async_set} 
      * method.
      * @param state to set the LED into
      * @return {@code VoidType} object, if method call has processed allright
