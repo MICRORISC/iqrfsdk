@@ -17,6 +17,7 @@
 package com.microrisc.simply.iqrf.dpa.v21x.typeconvertors;
 
 import com.microrisc.simply.iqrf.dpa.v21x.types.IO_DirectionSettings;
+import com.microrisc.simply.protocol.mapping.ConvertorFactoryMethod;
 import com.microrisc.simply.typeconvertors.ArrayConvertor;
 import com.microrisc.simply.typeconvertors.ValueConversionException;
 import org.slf4j.Logger;
@@ -44,6 +45,7 @@ public final class ArrayIO_DirectionSettingsConvertor extends ArrayConvertor {
     /**
      * @return {@code ArrayIO_DirectionSettingsConvertor} instance 
      */
+    @ConvertorFactoryMethod
     static public ArrayIO_DirectionSettingsConvertor getInstance() {
         return instance;
     }

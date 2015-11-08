@@ -17,6 +17,7 @@
 package com.microrisc.simply.iqrf.dpa.v22x.typeconvertors;
 
 import com.microrisc.simply.iqrf.dpa.v22x.types.SleepInfo;
+import com.microrisc.simply.protocol.mapping.ConvertorFactoryMethod;
 import com.microrisc.simply.typeconvertors.PrimitiveConvertor;
 import com.microrisc.simply.typeconvertors.ValueConversionException;
 import java.nio.ByteBuffer;
@@ -43,6 +44,7 @@ public final class SleepInfoConvertor extends PrimitiveConvertor {
     /**
      * @return {@code SleepInfoConvertor} instance 
      */
+    @ConvertorFactoryMethod
     static public SleepInfoConvertor getInstance() {
         return instance;
     }

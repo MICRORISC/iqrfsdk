@@ -17,6 +17,7 @@
 package com.microrisc.simply.iqrf.dpa.v21x.typeconvertors;
 
 import com.microrisc.simply.iqrf.dpa.v21x.types.IntegerFastQueryList;
+import com.microrisc.simply.protocol.mapping.ConvertorFactoryMethod;
 import com.microrisc.simply.typeconvertors.AbstractConvertor;
 import com.microrisc.simply.typeconvertors.ValueConversionException;
 import java.util.LinkedList;
@@ -46,6 +47,7 @@ public final class IntegerFastQueryListConvertor extends AbstractConvertor {
     /**
      * @return {@code IntegerFastQueryListConvertor} instance
      */
+    @ConvertorFactoryMethod
     static public IntegerFastQueryListConvertor getInstance() {
         return instance;
     }

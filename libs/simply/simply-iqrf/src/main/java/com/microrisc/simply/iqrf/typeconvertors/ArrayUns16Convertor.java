@@ -16,6 +16,7 @@
 
 package com.microrisc.simply.iqrf.typeconvertors;
 
+import com.microrisc.simply.protocol.mapping.ConvertorFactoryMethod;
 import com.microrisc.simply.typeconvertors.ArrayConvertor;
 import com.microrisc.simply.typeconvertors.ValueConversionException;
 import java.util.LinkedList;
@@ -46,6 +47,7 @@ public final class ArrayUns16Convertor extends ArrayConvertor {
     /**
      * @return {@code ArrayUns16Convertor} instance 
      */
+    @ConvertorFactoryMethod
     static public ArrayUns16Convertor getInstance() {
         return instance;
     }

@@ -16,6 +16,7 @@
 package com.microrisc.simply.iqrf.dpa.v22x.typeconvertors;
 
 import com.microrisc.simply.iqrf.dpa.v22x.types.FRC_Configuration;
+import com.microrisc.simply.protocol.mapping.ConvertorFactoryMethod;
 import com.microrisc.simply.typeconvertors.AbstractConvertor;
 import com.microrisc.simply.typeconvertors.ValueConversionException;
 import org.slf4j.Logger;
@@ -37,6 +38,10 @@ public class FRC_ConfigurationConvertor extends AbstractConvertor {
     /** Singleton. */
     private static final FRC_ConfigurationConvertor instance = new FRC_ConfigurationConvertor();
 
+    /**
+     * @return {@code FRC_ConfigurationConvertor} instance
+     */
+    @ConvertorFactoryMethod
     public static FRC_ConfigurationConvertor getInstance(){
         return instance;
     }

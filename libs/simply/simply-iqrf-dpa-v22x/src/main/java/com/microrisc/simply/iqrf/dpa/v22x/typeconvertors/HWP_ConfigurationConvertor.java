@@ -17,6 +17,7 @@ package com.microrisc.simply.iqrf.dpa.v22x.typeconvertors;
 
 import com.microrisc.simply.iqrf.dpa.v22x.types.HWP_Configuration;
 import com.microrisc.simply.iqrf.dpa.v22x.types.IntegerFastQueryList;
+import com.microrisc.simply.protocol.mapping.ConvertorFactoryMethod;
 import com.microrisc.simply.typeconvertors.PrimitiveConvertor;
 import com.microrisc.simply.typeconvertors.ValueConversionException;
 import org.slf4j.Logger;
@@ -68,6 +69,7 @@ public final class HWP_ConfigurationConvertor extends PrimitiveConvertor {
     /**
      * @return {@code HWP_ConfigurationConvertor} instance
      */
+    @ConvertorFactoryMethod
     static public HWP_ConfigurationConvertor getInstance() {
         return instance;
     }

@@ -17,6 +17,7 @@
 package com.microrisc.simply.iqrf.dpa.v21x.typeconvertors;
 
 import com.microrisc.simply.iqrf.dpa.v21x.types.PeripheralEnumeration;
+import com.microrisc.simply.protocol.mapping.ConvertorFactoryMethod;
 import com.microrisc.simply.typeconvertors.PrimitiveConvertor;
 import com.microrisc.simply.typeconvertors.ValueConversionException;
 import java.nio.ByteBuffer;
@@ -46,6 +47,7 @@ public final class PeripheralEnumerationConvertor extends PrimitiveConvertor {
     /**
      * @return {@code PeripheralEnumerationConvertor} instance 
      */
+    @ConvertorFactoryMethod
     static public PeripheralEnumerationConvertor getInstance() {
         return instance;
     }

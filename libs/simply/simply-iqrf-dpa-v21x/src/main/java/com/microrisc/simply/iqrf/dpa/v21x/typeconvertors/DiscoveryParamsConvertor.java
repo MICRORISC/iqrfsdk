@@ -17,6 +17,7 @@
 package com.microrisc.simply.iqrf.dpa.v21x.typeconvertors;
 
 import com.microrisc.simply.iqrf.dpa.v21x.types.DiscoveryParams;
+import com.microrisc.simply.protocol.mapping.ConvertorFactoryMethod;
 import com.microrisc.simply.typeconvertors.PrimitiveConvertor;
 import com.microrisc.simply.typeconvertors.ValueConversionException;
 import org.slf4j.Logger;
@@ -48,6 +49,7 @@ public final class DiscoveryParamsConvertor extends PrimitiveConvertor {
     /**
      * @return {@code DiscoveryParamsConvertor} instance 
      */
+    @ConvertorFactoryMethod
     static public DiscoveryParamsConvertor getInstance() {
         return instance;
     }

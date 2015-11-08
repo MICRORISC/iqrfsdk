@@ -17,6 +17,7 @@
 package com.microrisc.simply.iqrf.dpa.v21x.typeconvertors;
 
 import com.microrisc.simply.iqrf.dpa.v21x.types.IO_State;
+import com.microrisc.simply.protocol.mapping.ConvertorFactoryMethod;
 import com.microrisc.simply.typeconvertors.PrimitiveConvertor;
 import com.microrisc.simply.typeconvertors.ValueConversionException;
 import org.slf4j.Logger;
@@ -40,6 +41,7 @@ public final class IO_StateConvertor extends PrimitiveConvertor {
     /**
      * @return {@code IO_StateConvertor} instance 
      */
+    @ConvertorFactoryMethod
     static public IO_StateConvertor getInstance() {
         return instance;
     }

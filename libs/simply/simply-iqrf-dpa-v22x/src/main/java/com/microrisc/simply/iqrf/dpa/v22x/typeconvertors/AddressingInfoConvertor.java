@@ -17,6 +17,7 @@
 package com.microrisc.simply.iqrf.dpa.v22x.typeconvertors;
 
 import com.microrisc.simply.iqrf.dpa.v22x.types.AddressingInfo;
+import com.microrisc.simply.protocol.mapping.ConvertorFactoryMethod;
 import com.microrisc.simply.typeconvertors.PrimitiveConvertor;
 import com.microrisc.simply.typeconvertors.ValueConversionException;
 import org.slf4j.Logger;
@@ -48,6 +49,7 @@ public final class AddressingInfoConvertor extends PrimitiveConvertor {
     /**
      * @return {@code AddressingInfoConvertor} instance 
      */
+    @ConvertorFactoryMethod
     static public AddressingInfoConvertor getInstance() {
         return instance;
     }

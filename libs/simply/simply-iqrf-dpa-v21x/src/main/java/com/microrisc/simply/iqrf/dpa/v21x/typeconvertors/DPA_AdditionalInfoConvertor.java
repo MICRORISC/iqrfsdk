@@ -19,6 +19,7 @@ package com.microrisc.simply.iqrf.dpa.v21x.typeconvertors;
 import com.microrisc.simply.iqrf.dpa.DPA_ResponseCode;
 import com.microrisc.simply.iqrf.dpa.v21x.types.DPA_AdditionalInfo;
 import com.microrisc.simply.iqrf.typeconvertors.Uns16Convertor;
+import com.microrisc.simply.protocol.mapping.ConvertorFactoryMethod;
 import com.microrisc.simply.typeconvertors.PrimitiveConvertor;
 import com.microrisc.simply.typeconvertors.ValueConversionException;
 import org.slf4j.Logger;
@@ -64,6 +65,7 @@ public final class DPA_AdditionalInfoConvertor extends PrimitiveConvertor {
     /**
      * @return {@code DPA_AdditionalInfoConvertor} instance 
      */
+    @ConvertorFactoryMethod
     static public DPA_AdditionalInfoConvertor getInstance() {
         return instance;
     }

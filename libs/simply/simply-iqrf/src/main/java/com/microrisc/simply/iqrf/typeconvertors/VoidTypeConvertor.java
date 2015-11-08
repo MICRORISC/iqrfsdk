@@ -17,6 +17,7 @@
 package com.microrisc.simply.iqrf.typeconvertors;
 
 import com.microrisc.simply.iqrf.types.VoidType;
+import com.microrisc.simply.protocol.mapping.ConvertorFactoryMethod;
 import com.microrisc.simply.typeconvertors.PrimitiveConvertor;
 import com.microrisc.simply.typeconvertors.ValueConversionException;
 import org.slf4j.Logger;
@@ -41,6 +42,7 @@ public final class VoidTypeConvertor extends PrimitiveConvertor {
     /**
      * @return {@code VoidTypeConvertor} instance 
      */
+    @ConvertorFactoryMethod
     static public VoidTypeConvertor getInstance() {
         return instance;
     }

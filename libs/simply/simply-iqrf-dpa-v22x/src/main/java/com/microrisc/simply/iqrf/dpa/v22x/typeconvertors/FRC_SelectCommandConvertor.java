@@ -17,6 +17,7 @@ package com.microrisc.simply.iqrf.dpa.v22x.typeconvertors;
 
 import com.microrisc.simply.Node;
 import com.microrisc.simply.iqrf.dpa.v22x.types.FRC_Command;
+import com.microrisc.simply.protocol.mapping.ConvertorFactoryMethod;
 import com.microrisc.simply.typeconvertors.AbstractConvertor;
 import com.microrisc.simply.typeconvertors.ValueConversionException;
 import org.slf4j.Logger;
@@ -42,6 +43,7 @@ public final class FRC_SelectCommandConvertor extends AbstractConvertor {
     /**
      * @return {@code FRC_CommandConvertor} instance
      */
+    @ConvertorFactoryMethod
     static public FRC_SelectCommandConvertor getInstance() {
         return instance;
     }

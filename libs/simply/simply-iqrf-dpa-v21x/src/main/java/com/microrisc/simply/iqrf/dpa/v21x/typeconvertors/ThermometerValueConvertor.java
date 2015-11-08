@@ -17,6 +17,7 @@
 package com.microrisc.simply.iqrf.dpa.v21x.typeconvertors;
 
 import com.microrisc.simply.iqrf.dpa.v21x.types.Thermometer_values;
+import com.microrisc.simply.protocol.mapping.ConvertorFactoryMethod;
 import com.microrisc.simply.typeconvertors.PrimitiveConvertor;
 import com.microrisc.simply.typeconvertors.ValueConversionException;
 import org.slf4j.Logger;
@@ -41,6 +42,7 @@ public final class ThermometerValueConvertor extends PrimitiveConvertor {
     /**
      * @return {@code ThermometerValueConvertor} instance
      */
+    @ConvertorFactoryMethod
     static public ThermometerValueConvertor getInstance() {
         return instance;
     }

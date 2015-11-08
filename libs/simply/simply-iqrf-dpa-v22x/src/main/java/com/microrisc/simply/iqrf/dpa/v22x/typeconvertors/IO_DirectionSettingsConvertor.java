@@ -17,6 +17,7 @@
 package com.microrisc.simply.iqrf.dpa.v22x.typeconvertors;
 
 import com.microrisc.simply.iqrf.dpa.v22x.types.IO_DirectionSettings;
+import com.microrisc.simply.protocol.mapping.ConvertorFactoryMethod;
 import com.microrisc.simply.typeconvertors.PrimitiveConvertor;
 import com.microrisc.simply.typeconvertors.ValueConversionException;
 import org.slf4j.Logger;
@@ -40,6 +41,7 @@ public final class IO_DirectionSettingsConvertor extends PrimitiveConvertor {
     /**
      * @return {@code IO_DirectionSettingsConvertor} instance 
      */
+    @ConvertorFactoryMethod
     static public IO_DirectionSettingsConvertor getInstance() {
         return instance;
     }

@@ -17,6 +17,7 @@
 package com.microrisc.simply.iqrf.dpa.v22x.typeconvertors;
 
 import com.microrisc.simply.iqrf.dpa.v22x.types.DPA_Request;
+import com.microrisc.simply.protocol.mapping.ConvertorFactoryMethod;
 import com.microrisc.simply.typeconvertors.AbstractConvertor;
 import com.microrisc.simply.typeconvertors.ValueConversionException;
 import java.util.LinkedList;
@@ -42,6 +43,7 @@ public final class BatchCommandConvertor extends AbstractConvertor {
      /**
      * @return {@code BatchCommandConvertor} instance
      */
+    @ConvertorFactoryMethod
     static public BatchCommandConvertor getInstance() {
         return instance;
     }

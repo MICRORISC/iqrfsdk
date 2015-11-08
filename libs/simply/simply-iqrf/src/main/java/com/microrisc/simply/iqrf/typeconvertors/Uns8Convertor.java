@@ -16,6 +16,7 @@
 
 package com.microrisc.simply.iqrf.typeconvertors;
 
+import com.microrisc.simply.protocol.mapping.ConvertorFactoryMethod;
 import com.microrisc.simply.typeconvertors.PrimitiveConvertor;
 import com.microrisc.simply.typeconvertors.ValueConversionException;
 import java.nio.ByteBuffer;
@@ -41,6 +42,7 @@ public final class Uns8Convertor extends PrimitiveConvertor {
     /**
      * @return {@code Uns8Convertor} instance 
      */
+    @ConvertorFactoryMethod
     static public Uns8Convertor getInstance() {
         return instance;
     }

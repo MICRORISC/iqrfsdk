@@ -16,6 +16,7 @@
 
 package com.microrisc.simply.typeconvertors;
 
+import com.microrisc.simply.protocol.mapping.ConvertorFactoryMethod;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import org.slf4j.Logger;
@@ -41,6 +42,7 @@ public final class StringToByteConvertor extends PrimitiveConvertor {
     /**
      * @return StringToByteConvertor instance 
      */
+    @ConvertorFactoryMethod
     static public StringToByteConvertor getInstance() {
         return instance;
     }

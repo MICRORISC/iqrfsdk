@@ -17,6 +17,7 @@
 package com.microrisc.simply.iqrf.dpa.v21x.typeconvertors;
 
 import com.microrisc.simply.iqrf.dpa.v21x.types.DiscoveredNodes;
+import com.microrisc.simply.protocol.mapping.ConvertorFactoryMethod;
 import com.microrisc.simply.typeconvertors.PrimitiveConvertor;
 import com.microrisc.simply.typeconvertors.ValueConversionException;
 import java.util.LinkedList;
@@ -46,6 +47,7 @@ public final class DiscoveredNodesConvertor extends PrimitiveConvertor {
     /**
      * @return {@code DiscoveredNodesConvertor} instance 
      */
+    @ConvertorFactoryMethod
     static public DiscoveredNodesConvertor getInstance() {
         return instance;
     }

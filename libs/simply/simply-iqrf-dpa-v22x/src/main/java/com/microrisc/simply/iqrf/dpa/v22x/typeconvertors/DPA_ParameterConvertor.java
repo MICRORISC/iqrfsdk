@@ -17,6 +17,7 @@
 package com.microrisc.simply.iqrf.dpa.v22x.typeconvertors;
 
 import com.microrisc.simply.iqrf.dpa.v22x.types.DPA_Parameter;
+import com.microrisc.simply.protocol.mapping.ConvertorFactoryMethod;
 import com.microrisc.simply.typeconvertors.PrimitiveConvertor;
 import com.microrisc.simply.typeconvertors.ValueConversionException;
 import org.slf4j.Logger;
@@ -44,6 +45,7 @@ public final class DPA_ParameterConvertor extends PrimitiveConvertor {
     /**
      * @return {@code DPA_ParameterConvertor} instance 
      */
+    @ConvertorFactoryMethod
     static public DPA_ParameterConvertor getInstance() {
         return instance;
     }

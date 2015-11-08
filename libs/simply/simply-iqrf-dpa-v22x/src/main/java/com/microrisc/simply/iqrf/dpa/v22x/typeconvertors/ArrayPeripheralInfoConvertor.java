@@ -17,6 +17,7 @@
 package com.microrisc.simply.iqrf.dpa.v22x.typeconvertors;
 
 import com.microrisc.simply.iqrf.dpa.v22x.types.PeripheralInfo;
+import com.microrisc.simply.protocol.mapping.ConvertorFactoryMethod;
 import com.microrisc.simply.typeconvertors.ArrayConvertor;
 import com.microrisc.simply.typeconvertors.ValueConversionException;
 import java.util.LinkedList;
@@ -46,6 +47,7 @@ public final class ArrayPeripheralInfoConvertor extends ArrayConvertor {
     /**
      * @return {@code ArrayPeripheralInfoConvertor} instance 
      */
+    @ConvertorFactoryMethod
     static public ArrayPeripheralInfoConvertor getInstance() {
         return instance;
     }

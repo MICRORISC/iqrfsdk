@@ -17,6 +17,7 @@
 package com.microrisc.simply.iqrf.dpa.v21x.typeconvertors;
 
 import com.microrisc.simply.iqrf.dpa.v21x.types.RemotelyBondedModuleId;
+import com.microrisc.simply.protocol.mapping.ConvertorFactoryMethod;
 import com.microrisc.simply.typeconvertors.PrimitiveConvertor;
 import com.microrisc.simply.typeconvertors.ValueConversionException;
 import org.slf4j.Logger;
@@ -42,6 +43,7 @@ public final class RemotelyBondedModuleIdConvertor extends PrimitiveConvertor {
     /**
      * @return {@code RemotelyBondedModuleIdConvertor} instance 
      */
+    @ConvertorFactoryMethod
     static public RemotelyBondedModuleIdConvertor getInstance() {
         return instance;
     }

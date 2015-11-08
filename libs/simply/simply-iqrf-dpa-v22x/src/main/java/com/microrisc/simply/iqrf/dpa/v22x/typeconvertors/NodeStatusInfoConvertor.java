@@ -17,6 +17,7 @@
 package com.microrisc.simply.iqrf.dpa.v22x.typeconvertors;
 
 import com.microrisc.simply.iqrf.dpa.v22x.types.NodeStatusInfo;
+import com.microrisc.simply.protocol.mapping.ConvertorFactoryMethod;
 import com.microrisc.simply.typeconvertors.PrimitiveConvertor;
 import com.microrisc.simply.typeconvertors.ValueConversionException;
 import org.slf4j.Logger;
@@ -41,6 +42,7 @@ public final class NodeStatusInfoConvertor extends PrimitiveConvertor {
     /**
      * @return {@code NodeStatusInfoConvertor} instance 
      */
+    @ConvertorFactoryMethod
     static public NodeStatusInfoConvertor getInstance() {
         return instance;
     }

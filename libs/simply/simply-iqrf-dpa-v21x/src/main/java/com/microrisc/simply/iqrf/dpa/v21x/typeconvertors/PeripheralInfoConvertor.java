@@ -19,6 +19,7 @@ package com.microrisc.simply.iqrf.dpa.v21x.typeconvertors;
 import com.microrisc.simply.iqrf.dpa.v21x.types.ExtPerCharacteristic;
 import com.microrisc.simply.iqrf.dpa.v21x.types.PeripheralInfo;
 import com.microrisc.simply.iqrf.dpa.v21x.types.PeripheralType;
+import com.microrisc.simply.protocol.mapping.ConvertorFactoryMethod;
 import com.microrisc.simply.typeconvertors.PrimitiveConvertor;
 import com.microrisc.simply.typeconvertors.ValueConversionException;
 import org.slf4j.Logger;
@@ -43,6 +44,7 @@ public final class PeripheralInfoConvertor extends PrimitiveConvertor {
     /**
      * @return {@code PeripheralInfoConvertor} instance 
      */
+    @ConvertorFactoryMethod
     static public PeripheralInfoConvertor getInstance() {
         return instance;
     }
