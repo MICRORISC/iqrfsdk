@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 
 <!--
-    Document   : Mapping.xml
+    Document   : UserPeripheralMapping.xml
     Created on : 23.8.2015
     Author     : Martin Strouhal
     
@@ -42,23 +42,8 @@
                         </argument>    
                     </requestArguments>
                     
-                    <responseConvertor>com.microrisc.simply.iqrf.dpa.v22x.examples.user_per.user_map.mydallas.def.DallasTemperatureConvertor</responseConvertor>                        
-                    
-                    
-                       <!-- zvážit, zda by nestačil pouze response a uvnitř specifikace convertoru
-                    <responseArguments>
-                        ID of mapped data in DPA response; in response it could be only one argument!                                             
-                        <argument>                                
-                            Order of argument by which will be sorted
-                            <order>0</order>
-                            <length>2</length>                            
-                            <responseConvertor>com.microrisc.simply.iqrf.dpa.v22x.examples.user_per.user_map.mydallas.def.DallasTemperatureConvertor</responseConvertor>                        
-                        </argument>
-                    </responseArguments>-->
-                 
-                    
-                    
-                    
+                    <!-- Convertor used for response converting -->
+                    <responseConvertor>com.microrisc.simply.iqrf.dpa.v22x.examples.user_per.user_map.mydallas.def.DallasTemperatureConvertor</responseConvertor>                                                                                                                           
                 </method>                                        
             </methods>                                    
         </interface>
