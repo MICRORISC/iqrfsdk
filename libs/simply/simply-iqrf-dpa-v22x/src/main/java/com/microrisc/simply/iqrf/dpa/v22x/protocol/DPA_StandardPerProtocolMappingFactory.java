@@ -15,10 +15,12 @@
  */
 package com.microrisc.simply.iqrf.dpa.v22x.protocol;
 
+import com.microrisc.simply.iqrf.dpa.protocol.DPA_ProtocolProperties;
 import com.microrisc.simply.iqrf.dpa.v22x.devices.Coordinator;
 import com.microrisc.simply.iqrf.dpa.v22x.devices.EEEPROM;
 import com.microrisc.simply.iqrf.dpa.v22x.devices.EEPROM;
 import com.microrisc.simply.iqrf.dpa.v22x.devices.FRC;
+import com.microrisc.simply.iqrf.dpa.v22x.devices.Generic;
 import com.microrisc.simply.iqrf.dpa.v22x.devices.IO;
 import com.microrisc.simply.iqrf.dpa.v22x.devices.LEDG;
 import com.microrisc.simply.iqrf.dpa.v22x.devices.LEDR;
@@ -30,6 +32,8 @@ import com.microrisc.simply.iqrf.dpa.v22x.devices.RAM;
 import com.microrisc.simply.iqrf.dpa.v22x.devices.SPI;
 import com.microrisc.simply.iqrf.dpa.v22x.devices.Thermometer;
 import com.microrisc.simply.iqrf.dpa.v22x.devices.UART;
+import com.microrisc.simply.iqrf.dpa.v22x.init.NetworksFunctionalityToSimplyMapping;
+import com.microrisc.simply.iqrf.dpa.v22x.init.NetworksFunctionalityToSimplyMappingParser;
 import com.microrisc.simply.iqrf.dpa.v22x.typeconvertors.AddressingInfoConvertor;
 import com.microrisc.simply.iqrf.dpa.v22x.typeconvertors.ArrayIO_CommandConvertor;
 import com.microrisc.simply.iqrf.dpa.v22x.typeconvertors.ArrayIO_DirectionSettingsConvertor;
@@ -62,6 +66,7 @@ import com.microrisc.simply.iqrf.typeconvertors.ArrayUns8Convertor;
 import com.microrisc.simply.iqrf.typeconvertors.IntToUns8Convertor;
 import com.microrisc.simply.iqrf.typeconvertors.PrimArrayUns8Convertor;
 import com.microrisc.simply.iqrf.typeconvertors.Uns16Convertor;
+import com.microrisc.simply.iqrf.typeconvertors.Uns8Convertor;
 import com.microrisc.simply.iqrf.typeconvertors.VoidTypeConvertor;
 import com.microrisc.simply.protocol.mapping.CallRequestToPacketMapping;
 import com.microrisc.simply.protocol.mapping.ConstValueToPacketMapping;
@@ -83,6 +88,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import org.apache.commons.configuration.ConfigurationException;
 
 /**
  * Factory for protocol mapping of standard DPA periperals.
@@ -156,6 +163,32 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
         methodMappings.put("2", createPerInfoMapping());
         methodMappings.put("3", createMorePerInfoMapping());
 
+        return new InterfaceToPacketMapping(constMappings, methodMappings);
+    }
+    
+    // Generic interface
+    static private MethodToPacketMapping createGenericSendMapping() {
+        List<ConstValueToPacketMapping> constMapping = new LinkedList<>();
+
+        List<ValueToPacketMapping> argMapping = new LinkedList<>();
+        //PNUM
+        argMapping.add(new ValueToPacketMapping(2, Uns8Convertor.getInstance()));
+        //PCMD
+        argMapping.add(new ValueToPacketMapping(3, Uns8Convertor.getInstance()));
+        //HWPID
+        argMapping.add(new ValueToPacketMapping(4, Uns16Convertor.getInstance()));
+        //USER DATA
+        argMapping.add(new ValueToPacketMapping(6, ArrayUns8Convertor.getInstance()));
+
+        return new MethodToPacketMapping(constMapping, argMapping);
+    }
+
+    static private InterfaceToPacketMapping createRequestGenericMapping() {
+        List<ConstValueToPacketMapping> constMappings = new LinkedList<>();
+
+        Map<String, MethodToPacketMapping> methodMappings = new HashMap<>();
+
+        methodMappings.put("0", createGenericSendMapping());
         return new InterfaceToPacketMapping(constMappings, methodMappings);
     }
 
@@ -1013,6 +1046,7 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
 
         // creating interface mappings
         mappings.put(PeripheralInfoGetter.class, createRequestInfoGetterMapping());
+        mappings.put(Generic.class, createRequestGenericMapping());
         mappings.put(Coordinator.class, createRequestCoordinatorMapping());
         mappings.put(Node.class, createRequestNodeMapping());
         mappings.put(OS.class, createRequestOsMapping());
@@ -1096,6 +1130,37 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
         return new PacketToInterfaceMapping(
                 PeripheralInfoGetter.class, packetValues, methodMappings
         );
+    }
+    
+    // Generic
+    static private PacketToMethodMapping createResponseGenericSend() {
+        List<PacketPositionValues> packetValues = new LinkedList<>();
+        List<Short> possibleResponseId = new LinkedList<>();
+         
+        for (Integer i = 0x80; i < 0xFF; i++) {
+             possibleResponseId.add(i.shortValue());
+        }
+        packetValues.add(new PacketPositionValues(DPA_ProtocolProperties.PCMD_START, possibleResponseId));
+
+        PacketToValueMapping resultMapping = new PacketToValueMapping(8, ArrayUns8Convertor.getInstance());
+        return new PacketToMethodMapping("0", packetValues, resultMapping);
+    }
+
+    static private PacketToInterfaceMapping createResponseGenericMapping() {
+        List<PacketPositionValues> packetValues = new LinkedList<>();
+        List<Short> possiblePNumIds = new LinkedList<>();
+ 
+        for (Integer pnumId = 0x00; pnumId < 0x20; pnumId++) {
+             possiblePNumIds.add(pnumId.shortValue());
+        }
+                
+        packetValues.add(new PacketPositionValues(DPA_ProtocolProperties.PNUM_START, possiblePNumIds));
+
+        Map<String, PacketToMethodMapping> methodMappings = new HashMap<>();
+
+        methodMappings.put("0", createResponseGenericSend());
+
+        return new PacketToInterfaceMapping(Generic.class, packetValues, methodMappings);
     }
 
     // Coordinator
@@ -1912,6 +1977,7 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
 
         // creating interface mappings
         mappings.put(PeripheralInfoGetter.class, createResponseInfoGetterMapping());
+        mappings.put(Generic.class, createResponseGenericMapping());
         mappings.put(Coordinator.class, createResponseCoordinatorMapping());
         mappings.put(Node.class, createResponseIQMeshNodeMapping());
         mappings.put(OS.class, createResponseOsMapping());

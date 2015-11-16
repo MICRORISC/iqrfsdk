@@ -11,6 +11,12 @@
 <implMappings>
     <!-- standard peripheral -->
     <implMapping>
+        <interface>com.microrisc.simply.iqrf.dpa.v22x.devices.Generic</interface>
+        <implClass>com.microrisc.simply.iqrf.dpa.v22x.devices.impl.SimpleGeneric</implClass>
+        <note>Some note here.</note>
+    </implMapping>
+    
+    <implMapping>
         <interface>com.microrisc.simply.iqrf.dpa.v22x.devices.PeripheralInfoGetter</interface>
         <implClass>com.microrisc.simply.iqrf.dpa.v22x.devices.impl.SimplePeripheralInfoGetter</implClass>
         <note>Some note here.</note>

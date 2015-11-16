@@ -21,6 +21,7 @@ import com.microrisc.simply.DeviceObject;
 import com.microrisc.simply.Node;
 import com.microrisc.simply.SimpleDeviceObjectFactory;
 import com.microrisc.simply.init.InitConfigSettings;
+import com.microrisc.simply.iqrf.dpa.v22x.devices.Generic;
 import com.microrisc.simply.iqrf.dpa.v22x.devices.PeripheralInfoGetter;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -63,6 +64,24 @@ public final class NodeFactory {
         );
     }
     
+    /**
+     * Creates and returns generic object for specified node.
+     */
+    private static Generic createGenericObject(String networkId, String nodeId) 
+            throws Exception {
+        Class baseImplClass = _initObjects.getImplClassMapper().getImplClass(
+                Generic.class
+        );
+        
+        if ( _devObjectFactory == null ) {
+            _devObjectFactory = new SimpleDeviceObjectFactory();
+        }
+        
+        return (Generic)_devObjectFactory.getDeviceObject(
+                networkId, nodeId, _initObjects.getConnectionStack().getConnector(),
+                baseImplClass, _initObjects.getConfigSettings().getGeneralSettings()
+        );
+    }
     
     private static DPA_InitObjects<InitConfigSettings<Configuration, Map<String, Configuration>>>
     checkInitObjects(
@@ -107,6 +126,12 @@ public final class NodeFactory {
         
         // put info object into service's map
         services.put(PeripheralInfoGetter.class, (DeviceObject)perInfoObject);
+        
+        // creating generic object
+        Generic genericObject = createGenericObject(networkId, nodeId);
+        
+        // put generic object into service's map
+        services.put(Generic.class, (DeviceObject)genericObject);
         
         for ( int perId : perNumbers ) {
             Class devIface = _initObjects.getPeripheralToDevIfaceMapper().getDeviceInterface(perId);
