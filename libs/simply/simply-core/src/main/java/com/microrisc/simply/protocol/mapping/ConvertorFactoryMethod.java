@@ -15,8 +15,10 @@
  */
 package com.microrisc.simply.protocol.mapping;
 
+import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * Annotation type. Indicates, that the annotated method is usable for get instance of {@link AbstractConvertor}.
@@ -24,5 +26,6 @@ import java.lang.annotation.RetentionPolicy;
  * @author Martin Strouhal
  */
 @Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.METHOD)
 public @interface ConvertorFactoryMethod {
 }
