@@ -39,7 +39,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Factory for protocol mapping of my periperals.
+ * Factory for protocol mapping of my peripherals.
+ * Note: Used only if it's set in Simply properties reference for this class.
+ * In case where is used FileMapper for mapping from File isn't used this class.
  *
  * @author Michal Konopa
  * @author Martin Strouhal

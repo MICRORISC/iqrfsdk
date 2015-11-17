@@ -1,0 +1,86 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : UserPeripheralMapping.xml
+    Created on : 23.8.2015
+    Author     : Martin Strouhal
+    
+    Description:
+    Mapping of user peripherals in simple xml file for Simply framework. This example is showing mapping of MyDallas18B20.
+    
+-->    
+    
+<mapping>
+    <interfaces>
+        <interface>            
+            <!-- Name of interface class which mapping -->
+            <class>com.microrisc.simply.iqrf.dpa.v22x.examples.user_per.user_map.myadc.def.MyPotentiometer</class>
+            
+            <!-- ID of mapped peripheral -->
+            <peripheralId>0x20</peripheralId>
+                                    
+            <methods>
+                <method>
+            
+                    <!-- Method ID in Simply -->
+                    <id>0</id>
+                    <name>GetValue</name>		
+            
+                    <!-- Id of command in DPA -->
+                    <periheralCommandId>0x00</periheralCommandId>
+                    <!-- Internal note: Used for request mainly and secondly for response (id + 128) -->
+            
+                    <requestArguments>                                                                          
+                        <!-- Id of mapped data-->
+                        <!-- In ADC isn't used, only for draft! -->                
+                        <argument>
+                            <!--Order of argument by which will be sorted-->
+                            <order>0</order>
+                            <length></length>
+                            <convertor></convertor>
+                        </argument>    
+                    </requestArguments>
+                    
+                    <!-- Convertor used for response converting -->
+                    <responseConvertor>com.microrisc.simply.iqrf.typeconvertors.Uns16Convertor</responseConvertor>
+                </method>                                        
+            </methods>                                    
+        </interface>
+        
+        <interface>            
+            <!-- Name of interface class which mapping -->
+            <class>com.microrisc.simply.iqrf.dpa.v22x.examples.user_per.user_map.myadc.def.MyPhotoResistor</class>
+            
+            <!-- ID of mapped peripheral -->
+            <peripheralId>0x21</peripheralId>
+                                    
+            <methods>
+                <method>
+            
+                    <!-- Method ID in Simply -->
+                    <id>0</id>
+                    <name>GetValue</name>		
+            
+                    <!-- Id of command in DPA -->
+                    <periheralCommandId>0x00</periheralCommandId>
+                    <!-- Internal note: Used for request mainly and secondly for response (id + 128) -->
+            
+                    <requestArguments>                                                                          
+                        <!-- Id of mapped data-->
+                        <!-- In ADC isn't used, only for draft! -->                
+                        <argument>
+                            <!--Order of argument by which will be sorted-->
+                            <order>0</order>
+                            <length></length>
+                            <convertor></convertor>
+                        </argument>    
+                    </requestArguments>
+                    
+                    <!-- Convertor used for response converting -->
+                    <responseConvertor>com.microrisc.simply.iqrf.typeconvertors.Uns16Convertor</responseConvertor>
+                </method>                                        
+            </methods>                                    
+        </interface>
+
+    </interfaces>
+</mapping>

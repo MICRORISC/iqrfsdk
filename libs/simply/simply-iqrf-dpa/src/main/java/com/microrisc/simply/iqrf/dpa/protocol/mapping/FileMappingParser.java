@@ -187,7 +187,7 @@ public final class FileMappingParser {
         Map<Class, PacketToInterfaceMapping> map = new HashMap<>();
         for (int i = 0; i < listInterfaces.getLength(); i++) {
             Map.Entry<Class, PacketToInterfaceMapping> entry
-                    = createResponseInterfaceMappings(utils.convertNode(listInterfaces.item(0)));
+                    = createResponseInterfaceMappings(utils.convertNode(listInterfaces.item(i)));
             map.put(entry.getKey(), entry.getValue());
         }
         return map;

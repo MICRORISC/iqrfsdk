@@ -35,7 +35,6 @@ public interface MyPhotoResistor
      * Identifiers of this Device Interface's methods.
      */
     enum MethodID implements DeviceInterfaceMethodId {
-
         GET
     }
 
