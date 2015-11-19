@@ -30,31 +30,31 @@
 #define UNO32
 //#define LEONARDO
 
-#define USER_TIMER_PERIOD		1000		// 1000@1ms = 1s
+#define USER_TIMER_PERIOD	1000		// 1000@1ms = 1s
 #define TRUE                    1
 #define FALSE                   0
 
-#define CONFIRMATION		    1
-#define RESPONSE			    2
+#define CONFIRMATION		1
+#define RESPONSE		2
 
-#define NO_WAITING			    0
+#define NO_WAITING		0
 #define CONFIRMATION_WAITING	1
-#define RESPONSE_WAITING		2
+#define RESPONSE_WAITING	2
 
-#define COORDINATOR			    0
-#define NODE1				    1
-#define NODE2				    2
-#define NODE3				    3
-#define NODE4				    4
-#define NODE5				    5
+#define COORDINATOR		0
+#define NODE1			1
+#define NODE2			2
+#define NODE3			3
+#define NODE4			4
+#define NODE5			5
 #define LOCAL                   0xFC
 
-#define SS                      7
+#define SS                      10
 //=========================== variables =======================================
 typedef enum 
 {
     GLED_PULSE,
-	RLED_PULSE
+    RLED_PULSE
 }DPA_RQ;
 
 typedef struct 
@@ -123,9 +123,14 @@ void setup()
 #ifdef __SPI_INTERFACE__
 #ifdef LEONARDO
     pinMode( SS, OUTPUT );
+    digitalWrite( SS, HIGH );
+    
     SPI.begin();
 #endif
 #ifdef UNO32
+    pinMode( SS, OUTPUT );
+    digitalWrite( SS, HIGH );
+
     spi.begin();
     spi.setSpeed(250000);
     spi.setPinSelect(SS);

@@ -49,7 +49,7 @@
 #define NODE5				    5
 #define LOCAL           0xFC
 
-#define SS                      7
+#define SS              10
 //=========================== variables =======================================
 typedef enum 
 {
@@ -123,9 +123,14 @@ void setup()
 #ifdef __SPI_INTERFACE__
 #ifdef LEONARDO
     pinMode( SS, OUTPUT );
+    digitalWrite( SS, HIGH );
+
     SPI.begin();
 #endif
 #ifdef UNO32
+    pinMode( SS, OUTPUT );
+    digitalWrite( SS, HIGH );
+
     spi.begin();
     spi.setSpeed(250000);
     spi.setPinSelect(SS);
@@ -441,3 +446,4 @@ uint8_t DPA_SendSpiByte(uint8_t Tx_Byte)
     return Rx_Byte;
 }
 //=============================================================================
+
