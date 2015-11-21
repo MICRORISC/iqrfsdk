@@ -34,7 +34,9 @@ import java.io.File;
  * 
  * @author Michal Konopa
  * @author Rostislav Spinar
+ * @author Martin Strouhal
  */
+// November (Martin Strouhal) - extended for 2 sleep examples
 public class Sleep {
     // reference to Simply
     private static Simply simply = null;
@@ -74,14 +76,23 @@ public class Sleep {
             printMessageAndExit("OS doesn't exist or is not enabled");
         }
         
+        //sleepEg1(os);
+        sleepEg2(os);
+        
+        // end working with Simply
+        simply.destroy();
+    }
+    
+    private static void sleepEg1(OS os){
         // set of commands available on OS peripheral
-        // time = 5, one unit is 2.097s
+        // time = 300, one unit is 32.768ms 
         // control = 7
         // bit0 = 1 ... wakeup on PIN negative change
         // bit1 = 1 ... run calibration process before going to sleep
         // bit2 = 1 ... green LED flash after wake up
         // bit3 = 0 ... wakeup on PIN positive change
-        SleepInfo sleepInfo = new SleepInfo(5, 0b00000111);
+        // bit4 = 1 ... use unit 32.768ms instead of default 2.097s
+        SleepInfo sleepInfo = new SleepInfo(300, 0b00010111);
         VoidType sleepResult = os.sleep(sleepInfo);
         if (sleepResult == null) {            
             CallRequestProcessingState procState = os.getCallRequestProcessingStateOfLastCall();
@@ -92,8 +103,20 @@ public class Sleep {
                 printMessageAndExit("Entering sleep mode hasn't been processed yet: " + procState);
             }
         }
-        
-        // end working with Simply
-        simply.destroy();
+    }
+    
+    private static void sleepEg2(OS os){       
+       // time in ms; wakeup on PIN negative change; run calibration; green LED flash after wake up; wakeup on PIN positive change
+        SleepInfo sleepInfo = new SleepInfo(5*1000, true, true, true, false);
+        VoidType sleepResult = os.sleep(sleepInfo);
+        if (sleepResult == null) {            
+            CallRequestProcessingState procState = os.getCallRequestProcessingStateOfLastCall();
+            if ( procState == ERROR ) {
+                CallRequestProcessingError error = os.getCallRequestProcessingErrorOfLastCall();
+                printMessageAndExit("Entering sleep mode failed: " + error);
+            } else {
+                printMessageAndExit("Entering sleep mode hasn't been processed yet: " + procState);
+            }
+        }
     }
 }
