@@ -41,7 +41,9 @@ extends DPA_StandardServices, GenericAsyncCallable, MethodIdTransformer {
      */
     enum MethodID implements DeviceInterfaceMethodId {
         READ,
-        WRITE
+        WRITE,
+        EXTENDED_READ,
+        EXTENDED_WRITE
     }
     
     
@@ -64,6 +66,28 @@ extends DPA_StandardServices, GenericAsyncCallable, MethodIdTransformer {
      */
     UUID async_write(int blockNumber, short[] data);
     
+    /**
+     * Sends method call request for reading from peripheral.
+     * @param address (physical) to read data from. The address range for DCTR-7x
+     *        is 0x0000-0x7FFF or 0x0700-0x7FFF at [N] or at [C] devices respectively.
+     * @param length of the data to read in bytes. Allowed range is 0-54 bytes. 
+     *        Reading behind maximum address range is undefined.
+     * @return unique identifier of sent request
+     */
+    UUID async_extendedRead(int address, int length);
+    
+    /**
+     * Sends method call request for writing to peripheral.
+     * @param address (physical) to write data to. The address range for DCTR-7x
+     *        is 0x0000-0x7FFF or 0x0700-0x7FFF at [N] or at [C] devices respectively.
+     * @param data actual data to be written to the memory. Length of the data 
+     *        to write in bytes. Allowed range is 1-54 bytes. Writing to multiple
+     *        adjacent 64 byte pages of the EEPROM chip or behind maximum address
+     *        range by one extended write command is unsupported and undefined.
+     * @return unique identifier of sent request
+     */
+    UUID async_extendedWrite(int address, short[] data);
+    
     
     
     // SYNCHRONOUS WRAPPERS
@@ -84,4 +108,21 @@ extends DPA_StandardServices, GenericAsyncCallable, MethodIdTransformer {
      * @return {@code VoidType} object, if method call has processed allright
      */
     VoidType write(int blockNumber, short[] data);
+    
+        /**
+     * Synchronous wrapper for {@link #async_read(int, int) async_read} method.
+     * @param address number of (zero based) block to read from
+     * @param length length of the data to read (in bytes), must be equal to the block size
+     * @return read data
+     */
+    short[] extendedRead(int address, int length);
+    
+    /**
+     * Synchronous wrapper for {@link #async_write(int, short[])  async_write} method.
+     * @param address number of (zero based) block to write the data into
+     * @param data actual data to be written to the memory, its length must be 
+     *             equal to the block size
+     * @return {@code VoidType} object, if method call has processed allright
+     */
+    VoidType extendedWrite(int address, short[] data);
 }
