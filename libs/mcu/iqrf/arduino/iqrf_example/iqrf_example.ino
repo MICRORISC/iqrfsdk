@@ -69,21 +69,21 @@ const uint8_t ledPin = 13;
 //=========================== init peripherals ================================
 void setup(void)
 {
-	//user led
-	pinMode(ledPin, OUTPUT);
+	  //user led
+	  pinMode(ledPin, OUTPUT);
 	
     //up - PC
     Serial.begin(9600);
 
     //down - IQRF
-	IQRF_Init(MyIqrfRxHandler, MyIqrfTxHandler);
+	  IQRF_Init(MyIqrfRxHandler, MyIqrfTxHandler);
 
-	//info - TR
-	switch( IQRF_GetModuleType() ) {
-		case TR_52D: Serial.println("Module type: TR-52D"); break;
-		case TR_72D: Serial.println("Module type: TR-72D"); break;
-		default : Serial.println("Module type: UNKNOWN"); break;			
-	}
+	  //info - TR
+	  switch( IQRF_GetModuleType() ) {
+		  case TR_52D: Serial.println("Module type: TR-52D"); break;
+		  case TR_72D: Serial.println("Module type: TR-72D"); break;
+		  default : Serial.println("Module type: UNKNOWN"); break;			
+	  }
 
 #ifdef CHIPKIT
     //timing 1ms callback
@@ -91,8 +91,8 @@ void setup(void)
 #endif
 
 #ifdef LEONARDO
-    //MsTimer2::set(1, cb_timer1ms);
-    //MsTimer2::start();
+    MsTimer2::set(1, cb_timer1ms);
+    MsTimer2::start();
 #endif
 
     //clear variables
@@ -107,20 +107,18 @@ void setup(void)
 //================================ main =======================================
 void loop(void)
 {
-	// TR module SPI comunication driver
-	IQRF_Driver();
+	  // TR module SPI comunication driver
+	  IQRF_Driver();
 
-	// Test send data every 5s
-	if(app_vars.appTimerAck) {
-		app_vars.myIqrfTxBuf = (uint8_t *)malloc(sizeof(testBuffer));								// allocate memory for Tx packet
-		if (app_vars.myIqrfTxBuf != NULL){
-			memcpy(app_vars.myIqrfTxBuf, (uint8_t *)&testBuffer, sizeof(testBuffer));  				// copy data from test to IQRF TX packet
-			Serial.println(micros());
-			app_vars.testPktId = IQRF_SendData(app_vars.myIqrfTxBuf, sizeof(testBuffer), 1);		// send data and unallocate data buffer
-			Serial.println(micros());
-		}
-		app_vars.appTimerAck = FALSE;
-	}
+	  // Test send data every 5s
+	  if(app_vars.appTimerAck) {
+		  app_vars.myIqrfTxBuf = (uint8_t *)malloc(sizeof(testBuffer));								          // allocate memory for Tx packet
+		  if (app_vars.myIqrfTxBuf != NULL){
+			  memcpy(app_vars.myIqrfTxBuf, (uint8_t *)&testBuffer, sizeof(testBuffer));  				  // copy data from test to IQRF TX packet
+			  app_vars.testPktId = IQRF_SendData(app_vars.myIqrfTxBuf, sizeof(testBuffer), 1);		// send data and unallocate data buffer
+		  }
+		  app_vars.appTimerAck = FALSE;
+	  }
 }
 /*---------------------------------------------------------------------------*/
 
@@ -138,7 +136,7 @@ uint32_t cb_timer1ms(uint32_t currentTime)
 void cb_timer1ms(void) 
 #endif
 {
-	// app timer, call handler
+	  // app timer, call handler
     if (app_vars.appTimer) 
     {							
         if ((--app_vars.appTimer) == 0) 
@@ -176,12 +174,12 @@ void AppTimerHandler(void)
 **/
 void MyIqrfRxHandler(void)
 {
-	// read and print received data
-	IQRF_GetRxData(app_vars.myIqrfRxBuf, IQRF_GetRxDataSize());
+	  // read and print received data
+	  IQRF_GetRxData(app_vars.myIqrfRxBuf, IQRF_GetRxDataSize());
 						
-	Serial.print("IQRF receive done: ");
-	Serial.write(app_vars.myIqrfRxBuf, IQRF_GetRxDataSize());
-	Serial.println();
+	  Serial.print("IQRF receive done: ");
+	  Serial.write(app_vars.myIqrfRxBuf, IQRF_GetRxDataSize());
+	  Serial.println();
 }
 /*---------------------------------------------------------------------------*/
 
@@ -196,6 +194,7 @@ void MyIqrfRxHandler(void)
 **/
 void MyIqrfTxHandler(UINT8 txPktId, UINT8 txPktResult)
 {
-	Serial.println("IQRF send done");
+	  Serial.println("IQRF send done");
 }
 /*---------------------------------------------------------------------------*/
+

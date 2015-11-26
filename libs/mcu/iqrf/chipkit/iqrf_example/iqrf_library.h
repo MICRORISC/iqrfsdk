@@ -19,14 +19,17 @@
 
 //Target
 #define CHIPKIT
-//#define ARDUINO
+//#define LEONARDO
 
 #ifdef CHIPKIT
 #include <WProgram.h>
 #include <DSPI.h>
 #endif
-#ifdef ARDUINO
+
+#ifdef LEONARDO
 #include <Arduino.h>
+#include <SPI.h>
+//#include <MsTimer2.h>
 #endif
 
 //uint8(16, 32)_t and NULL defines
@@ -65,29 +68,29 @@
 //******************************************************************************
 //		 	SPI status of TR module (see IQRF SPI user manual)
 //******************************************************************************
-#define NO_MODULE			0xFF	// SPI not working (HW error)
-#define SPI_BUSY			0xFE 	// SPI busy in Master disabled mode
-#define SPI_DATA_TRANSFER   0xFD    // SPI data transfer in progress
-#define SPI_DISABLED		0x00	// SPI not working (disabled)
-#define SPI_CRCM_OK			0x3F	// SPI not ready (full buffer, last CRCM ok)
-#define SPI_CRCM_ERR		0x3E	// SPI not ready (full buffer, last CRCM error)
-#define COMMUNICATION_MODE	0x80	// SPI ready (communication mode)
-#define PROGRAMMING_MODE	0x81	// SPI ready (programming mode)
-#define DEBUG_MODE			0x82	// SPI ready (debugging mode)
-#define SPI_SLOW_MODE    	0x83  	// SPI not working in background
-#define SPI_USER_STOP	    0x07    // state after stopSPI();
+#define NO_MODULE			    0xFF	// SPI not working (HW error)
+#define SPI_BUSY			    0xFE 	// SPI busy in Master disabled mode
+#define SPI_DATA_TRANSFER   	0xFD  	// SPI data transfer in progress
+#define SPI_DISABLED		    0x00	// SPI not working (disabled)
+#define SPI_CRCM_OK			    0x3F	// SPI not ready (full buffer, last CRCM ok)
+#define SPI_CRCM_ERR		    0x3E	// SPI not ready (full buffer, last CRCM error)
+#define COMMUNICATION_MODE		0x80	// SPI ready (communication mode)
+#define PROGRAMMING_MODE	  	0x81	// SPI ready (programming mode)
+#define DEBUG_MODE			    0x82	// SPI ready (debugging mode)
+#define SPI_SLOW_MODE    	  	0x83  	// SPI not working in background
+#define SPI_USER_STOP	      	0x07  	// state after stopSPI();
 
 //******************************************************************************
 //		 	SPI commands for TR module (see IQRF SPI user manual)
 //******************************************************************************
-#define SPI_CHECK  			0x00    // Master checks the SPI status of the TR module
-#define SPI_WR_RD 	 		0xF0	// Master reads/writes a packet from/to TR module
-#define SPI_RAM_READ  		0xF1	// Master reads data from ram in debug mode
-#define SPI_EEPROM_READ		0xF2	// Master reads data from eeprom in debug mode
-#define SPI_EEPROM_PGM		0xF3	// Master writes data to eeprom in programming mode
-#define SPI_MODULE_INFO		0xF5	// Master reads Module Info from TR module
-#define SPI_FLASH_PGM		0xF6	// Master writes data to flash in programming mode
-#define SPI_PLUGIN_PGM		0xF9	// Master writes plugin data to flash in programming mode
+#define SPI_CHECK  			  	0x00    // Master checks the SPI status of the TR module
+#define SPI_WR_RD 	 		  	0xF0	// Master reads/writes a packet from/to TR module
+#define SPI_RAM_READ  			0xF1	// Master reads data from ram in debug mode
+#define SPI_EEPROM_READ			0xF2	// Master reads data from eeprom in debug mode
+#define SPI_EEPROM_PGM			0xF3	// Master writes data to eeprom in programming mode
+#define SPI_MODULE_INFO			0xF5	// Master reads Module Info from TR module
+#define SPI_FLASH_PGM		  	0xF6	// Master writes data to flash in programming mode
+#define SPI_PLUGIN_PGM			0xF9	// Master writes plugin data to flash in programming mode
 
 // IQRF TX packet result
 #define IQRF_TX_PKT_OK		1		// packet sent OK
@@ -160,9 +163,9 @@ extern DSPI0    spi;
 * PreCondition: TickInit() for systick timer initialization must be called before     						
 *
 * Input: rx_call_back_fn  - Pointer to callback function. 
-*							Function is called when the driver receives data from the TR module
+*				 Function is called when the driver receives data from the TR module
 *		 tx_call_back_fn  - Pointer to callback function. 
-*							Function is called when the driver sent data to the TR module
+*				 Function is called when the driver sent data to the TR module
 * Output: none
 *
 * Side Effects: function performes initialization of trInfoStruct identification data structure
@@ -380,7 +383,7 @@ void IQRF_GetRxData(UINT8 *userDataBuffer, UINT8 rxDataSize);
 *			2 - TR_72D
 *			8 - TR_54D
 *			9 - TR_55D
-*		   10 - TR_56D
+*		  	10 - TR_56D
 *
 * Note: none
 *
@@ -416,8 +419,8 @@ void IQRF_GetRxData(UINT8 *userDataBuffer, UINT8 rxDataSize);
 *
 * Overview: macro returns TR module comunication status
 *		 	0xFF - NO_MODULE	// SPI not working (HW error)
-*           0xFE - SPI_BUSY		// SPI busi in Master disabled mode
-*           0xFD - SPI_DATA_TRANSFER  // SPI data transfer in progress
+*     		0xFE - SPI_BUSY		// SPI busi in Master disabled mode
+*     		0xFD - SPI_DATA_TRANSFER  // SPI data transfer in progress
 * 			0x00 - SPI_DISABLED	// SPI not working (disabled)
 * 			0x3F - SPI_CRCM_OK	// SPI not ready (full buffer, last CRCM ok)
 * 			0x3E - SPI_CRCM_ERR	// SPI not ready (full buffer, last CRCM error)
@@ -425,7 +428,7 @@ void IQRF_GetRxData(UINT8 *userDataBuffer, UINT8 rxDataSize);
 * 			0x81 - PROGRAMMING_MODE	// SPI ready (programming mode)
 * 			0x82 - DEBUG_MODE	// SPI ready (debugging mode)
 *     		0x83 - SPI_SLOW_MODE// SPI not working in background
-* 	    	0x07 - SPI_USER_STOP// state after stopSPI();
+* 	  		0x07 - SPI_USER_STOP// state after stopSPI();
 *
 * Note: none
 *
@@ -494,9 +497,9 @@ UINT8 IQRF_SPI_Byte(UINT8 Tx_Byte);
  * Prepare SPI packet to packet buffer
  *
  * @param 
- * 		 - spiCmd			- command that I want to send to TR module
- *		 - pDataBuffer		- pointer to a buffer that contains data that I want to send to TR module
- *		 - dataLength		- number of bytes to send 
+ * 		 - spiCmd			      - command that I want to send to TR module
+ *		 - pDataBuffer		  - pointer to a buffer that contains data that I want to send to TR module
+ *		 - dataLength		    - number of bytes to send 
  *		 - unallocationFlag	- if the pDataBuffer is dynamically allocated using malloc function. 
  *							  If you wish to unallocate buffer after data is sent, set the unallocationFlag
  *							  to 1, otherwise to 0

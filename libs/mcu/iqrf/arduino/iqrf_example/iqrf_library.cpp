@@ -42,12 +42,12 @@ UINT8   		IQ_SPI_TxBuf[IQ_PKT_SIZE];
 UINT8   		IQ_SPI_RxBuf[IQ_PKT_SIZE];
 UINT8   		PTYPE, spiStat, repCnt, tmpCnt, pacLen, trInfoReading;
 UINT8   		DLEN, spiIqBusy;
-UINT8			iqrfSpiMasterEnable;
-UINT8			fastIqrfSpiEnable;
-UINT8			txPktId;
-UINT8			txPktIdCnt;
-UINT8			TR_Control_TaskSM = TR_CTRL_READY;
-UINT8			TR_Control_ProgFlag;
+UINT8				iqrfSpiMasterEnable;
+UINT8				fastIqrfSpiEnable;
+UINT8				txPktId;
+UINT8				txPktIdCnt;
+UINT8				TR_Control_TaskSM = TR_CTRL_READY;
+UINT8				TR_Control_ProgFlag;
 DWORD   		iqrfCheckMicros;
 DWORD 			iqrfMicros;
 DWORD 			iqrfSpiByteBytePause;
@@ -111,15 +111,15 @@ void IQRF_Init(IQRF_RX_CALL_BACK rx_call_back_fn, IQRF_TX_CALL_BACK tx_call_back
 
   IQRF_SPIMasterEnable();				// enable SPI master function in driver
 
-  trInfoReading = 2;					// read TR module info
+  trInfoReading = 2;						// read TR module info
   while (trInfoReading) {				// wait for TR module ID reading
-    IQRF_Driver();						// IQRF SPI communication driver
-    TR_Info_Task();						// TR module info reading task
+    IQRF_Driver();							// IQRF SPI communication driver
+    TR_Info_Task();							// TR module info reading task
   }
 
   if (IQRF_GetModuleType() == TR_72D || IQRF_GetModuleType() == TR_76D) {	// if TR72D or TR76D is conected
-    fastIqrfSpiEnable = 1;											        // set fast SPI mode
-    TR_SetByteToByteTime(150);										        // set byte to byte pause to 150us
+    fastIqrfSpiEnable = 1;											                          // set fast SPI mode
+    TR_SetByteToByteTime(150);										                        // set byte to byte pause to 150us
     Serial.println("IQRF_Init - set fast spi");
   }
 
@@ -145,14 +145,14 @@ void IQRF_Init(IQRF_RX_CALL_BACK rx_call_back_fn, IQRF_TX_CALL_BACK tx_call_back
 ***************************************************************************************************/
 void IQRF_Driver(void)
 {
-  if (iqrfSpiMasterEnable) {										// SPI Master enabled
+  if (iqrfSpiMasterEnable) {											      // SPI Master enabled
 
     iqrfMicros = micros();
 
     if (spiIqBusy != IQRF_SPI_MASTER_FREE)							// is anything to send in IQ_SPI_TxBuf?
     {
-      if ((iqrfMicros - iqrfCheckMicros) > iqrfSpiByteBytePause) {	// send 1 byte every defined time interval via SPI
-        iqrfCheckMicros = iqrfMicros;							    // reset counter
+        if ((iqrfMicros - iqrfCheckMicros) > iqrfSpiByteBytePause) {	// send 1 byte every defined time interval via SPI
+        iqrfCheckMicros = iqrfMicros;							                    // reset counter
 
         IQ_SPI_RxBuf[tmpCnt] = IQRF_SPI_Byte(IQ_SPI_TxBuf[tmpCnt]);	// send/receive 1 byte via SPI
         tmpCnt++;													// counts number of send/receive bytes, it must be zeroing on packet preparing
@@ -167,9 +167,9 @@ void IQRF_Driver(void)
 
             spiIqBusy = IQRF_SPI_MASTER_FREE;
           }
-          else {									// CRC error
-            if (--repCnt) {							// rep_cnt - must be set on packet preparing
-              tmpCnt = 0;							// another attempt to send data
+          else {									  // CRC error
+            if (--repCnt) {					// rep_cnt - must be set on packet preparing
+              tmpCnt = 0;						// another attempt to send data
             }
             else {
               if (spiIqBusy == IQRF_SPI_MASTER_WRITE)	iqrf_tx_call_back_fn(txPktId, IQRF_TX_PKT_ERR);
@@ -183,15 +183,15 @@ void IQRF_Driver(void)
     { // no data to send => SPI status will be updated
       if ((iqrfMicros - iqrfCheckMicros) > (MICRO_SECOND / 100)) 	// every 10ms
       {
-        iqrfCheckMicros = iqrfMicros;								// reset counter
+        iqrfCheckMicros = iqrfMicros;				// reset counter
 
-        spiStat = IQRF_SPI_Byte(SPI_CHECK);		// get SPI status of TR module
+        spiStat = IQRF_SPI_Byte(SPI_CHECK);	// get SPI status of TR module
         //digitalWrite(TR_SS_IO, HIGH);			// CS - deactive
 
         if ((spiStat & 0xC0) == 0x40)    		// if the status is dataready
         { // prepare packet to read it
           memset(IQ_SPI_TxBuf, 0, sizeof(IQ_SPI_TxBuf));
-          if (spiStat == 0x40) DLEN = 64;   	// state 0x40 means 64B
+          if (spiStat == 0x40) DLEN = 64;   // state 0x40 means 64B
           else DLEN = spiStat & 0x3F; 			// clear bit 7,6 - rest is length (1 az 63B)
           PTYPE = DLEN;
           IQ_SPI_TxBuf[0] = SPI_WR_RD;
@@ -199,11 +199,11 @@ void IQRF_Driver(void)
           IQ_SPI_TxBuf[DLEN + 2] = GetCRCM();		// CRCM
 
           pacLen = DLEN + 4;						// length of whole packet + (CMD, PTYPE, CRCM, 0)
-          tmpCnt = 0;								// counter of sent bytes
-          repCnt = 1;								// number of attempts to send data
+          tmpCnt = 0;								    // counter of sent bytes
+          repCnt = 1;								    // number of attempts to send data
 
-          spiIqBusy = IQRF_SPI_MASTER_READ;			// reading from buffer COM of TR module
-          spiStat = SPI_DATA_TRANSFER;			  	// current SPI status must be updated
+          spiIqBusy = IQRF_SPI_MASTER_READ;		// reading from buffer COM of TR module
+          spiStat = SPI_DATA_TRANSFER;			  // current SPI status must be updated
         }
 
         if (!spiIqBusy) {							// if TR module ready and no data in module pending
@@ -238,7 +238,7 @@ void IQRF_Driver(void)
       }
     }
   }
-  else TR_Control_Task();									// SPI master is disabled
+  else TR_Control_Task();												// SPI master is disabled
 }
 
 /***************************************************************************************************
@@ -259,7 +259,7 @@ void IQRF_Driver(void)
 ***************************************************************************************************/
 void IQRF_TR_Reset(void)
 {
-  if (iqrfSpiMasterEnable) {				// SPI Master enabled
+  if (iqrfSpiMasterEnable) {					// SPI Master enabled
     TR_Module_OFF();						// TR module OFF
     delay(100);								// RESET pause
     TR_Module_ON();							// TR module ON
@@ -291,10 +291,10 @@ void IQRF_TR_EnterProgMode(void)
 {
   DWORD enterP_millis;
 
-  if (iqrfSpiMasterEnable) {							// SPI Master enabled
+  if (iqrfSpiMasterEnable) {								// SPI Master enabled
 
 #ifdef CHIPKIT
-    spi.end();										    // SPI EE-TR OFF
+    spi.end();										          // SPI EE-TR OFF
 #endif
 
 #ifdef LEONARDO
@@ -304,7 +304,7 @@ void IQRF_TR_EnterProgMode(void)
     IQRF_TR_Reset();
 
     pinMode(TR_SS_IO, OUTPUT);
-    digitalWrite( TR_SS_IO, LOW );						// TR CS - must be low
+    digitalWrite( TR_SS_IO, LOW );					// TR CS - must be low
 
     pinMode(TR_SDO_IO, OUTPUT);							// TR SDO - output
     pinMode(TR_SDI_IO, INPUT);							// TR SDI - input
@@ -449,7 +449,7 @@ void TR_Info_Task(void)
     case TR_INFO_INIT_TASK:
       attempts = 1;										// try enter to programming mode
       idfMode = 0;										// try to read idf in com mode
-      iqrf_rx_call_back_fn = TR_dummy_func_com;			// set call back function to process id data
+      iqrf_rx_call_back_fn = TR_dummy_func_com;			    // set call back function to process id data
       iqrf_tx_call_back_fn = TR_process_id_packet_com;	// set call back function after data were sent
       trInfoStruct.mcuType = MCU_UNKNOWN;
       memset(&dataToModule[0], 0, 16);
@@ -459,8 +459,8 @@ void TR_Info_Task(void)
 
     case TR_INFO_ENTER_PROG_MODE:
       IQRF_TR_EnterProgMode();									// enter prog. mode
-      idfMode = 1;												// try to read idf in pgm mode
-      iqrf_rx_call_back_fn = TR_process_id_packet_pgm;			// set call back function to process id data
+      idfMode = 1;												      // try to read idf in pgm mode
+      iqrf_rx_call_back_fn = TR_process_id_packet_pgm;	// set call back function to process id data
       iqrf_tx_call_back_fn = TR_dummy_func_pgm;					// set call back function after data were sent
       timeoutMilli = millis();
       TR_Info_TaskSM = TR_INFO_SEND_REQUEST;
@@ -470,15 +470,15 @@ void TR_Info_Task(void)
       if (spiStat == COMMUNICATION_MODE && spiIqBusy == 0) 		// only if the IQRF_Driver() is not busy and TR mudule is in communication mode
       { // packet preparing
         TR_SendSpiPacket(SPI_MODULE_INFO, &dataToModule[0], 16, 0);
-        timeoutMilli = millis();				    // initialize timeout timer
-        TR_Info_TaskSM = TR_INFO_WAIT_INFO;			// next state
+        timeoutMilli = millis();				      // initialize timeout timer
+        TR_Info_TaskSM = TR_INFO_WAIT_INFO;		// next state
       }
       else {
         if (spiStat == PROGRAMMING_MODE && spiIqBusy == 0) 		// only if the IQRF_Driver() is not busy and TR mudule is in programming mode
         { // packet preparing
           TR_SendSpiPacket(SPI_MODULE_INFO, &dataToModule[0], 1, 0);
           timeoutMilli = millis();				// initialize timeout timer
-          TR_Info_TaskSM = TR_INFO_WAIT_INFO;	// next state
+          TR_Info_TaskSM = TR_INFO_WAIT_INFO;		// next state
         }
         else {
           if (millis() - timeoutMilli >= MILLI_SECOND / 2) {
@@ -492,17 +492,17 @@ void TR_Info_Task(void)
       }
       break;
 
-    case TR_INFO_WAIT_INFO:						// wait for info data from TR module
+    case TR_INFO_WAIT_INFO:								    // wait for info data from TR module
       if ((trInfoReading == 1) || (millis() - timeoutMilli >= MILLI_SECOND / 2)) {
         if (idfMode == 1) {
-          TR_SendSpiPacket(SPI_EEPROM_PGM, (UINT8 *)&endPgmMode[0], 3, 0);      // send end of PGM mode packet
+          TR_SendSpiPacket(SPI_EEPROM_PGM, (UINT8 *)&endPgmMode[0], 3, 0);        // send end of PGM mode packet
         }
-        TR_Info_TaskSM = TR_INFO_DONE;											// next state
+        TR_Info_TaskSM = TR_INFO_DONE;				// next state
       }
       break;
 
-    case TR_INFO_DONE:									      					// the task is finished
-      if (iqrfPacketBufferInPtr == iqrfPacketBufferOutPtr && spiIqBusy == 0) {	// if no packet is pending to send to TR module
+    case TR_INFO_DONE:									      // the task is finished
+      if (iqrfPacketBufferInPtr == iqrfPacketBufferOutPtr && spiIqBusy == 0) {		// if no packet is pending to send to TR module
         trInfoReading = 0;
       }
       break;
@@ -524,15 +524,15 @@ void TR_Control_Task(void)
   switch (TR_Control_TaskSM) {					// TR control state machine
 
     case TR_CTRL_READY:
-      spiStat = SPI_DISABLED;					// set SPI state DISABLED
+      spiStat = SPI_DISABLED;						// set SPI state DISABLED
       TR_Control_ProgFlag = 0;
       break;
 
     case TR_CTRL_RESET:
-      spiStat = SPI_BUSY;						// set SPI state BUSY
+      spiStat = SPI_BUSY;								// set SPI state BUSY
 
 #ifdef CHIPKIT
-      spi.end();								// SPI EE-TR OFF
+      spi.end();											  // SPI EE-TR OFF
 #endif
 
 #ifdef LEONARDO
@@ -540,21 +540,21 @@ void TR_Control_Task(void)
 #endif
 
       // SPI controller OFF
-      TR_Module_OFF();							// TR module OFF
-      timeoutMilli = millis(); 					// read actual tick
+      TR_Module_OFF();									    // TR module OFF
+      timeoutMilli = millis(); 							// read actual tick
       TR_Control_TaskSM = TR_CTRL_WAIT;			// goto next state
       break;
 
     case TR_CTRL_WAIT:
-      spiStat = SPI_BUSY;									    // set SPI state BUSY
+      spiStat = SPI_BUSY;									                  // set SPI state BUSY
       if (millis() - timeoutMilli >= MILLI_SECOND / 3) {		// wait 300 ms
         TR_Module_ON();									                    // TR module ON
         if (TR_Control_ProgFlag) TR_Control_TaskSM = TR_CTRL_PROG_MODE;   	// goto enter programming mode
         else {
 #ifdef CHIPKIT
-          digitalWrite( TR_SS_IO, HIGH );						// TR CS - HIGH
+          digitalWrite( TR_SS_IO, HIGH );				// TR CS - HIGH
 
-          spi.begin();								          	// SPI controller ON
+          spi.begin();								          // SPI controller ON
           spi.setSpeed( IQRF_SPI_CLK );
           spi.setPinSelect( TR_SS_IO );
 #endif
@@ -562,7 +562,7 @@ void TR_Control_Task(void)
 #ifdef LEONARDO
   		  digitalWrite(TR_SS_IO, HIGH);
 
-  		  SPI.begin();
+        SPI.begin();
 #endif
           TR_Control_TaskSM = TR_CTRL_READY;   	// goto ready state
         }
@@ -572,7 +572,7 @@ void TR_Control_Task(void)
     case TR_CTRL_PROG_MODE:
 
 #ifdef CHIPKIT
-      spi.end();								// SPI EE-TR OFF
+      spi.end();											          // SPI EE-TR OFF
 #endif
 
 #ifdef LEONARDO
@@ -582,10 +582,10 @@ void TR_Control_Task(void)
       IQRF_TR_Reset();
 
       pinMode(TR_SS_IO, OUTPUT);
-      digitalWrite( TR_SS_IO, LOW );			// TR CS - must be low
+      digitalWrite( TR_SS_IO, LOW );						// TR CS - must be low
 
-      pinMode(TR_SDO_IO, OUTPUT);				// TR SDO - output
-      pinMode(TR_SDI_IO, INPUT);				// TR SDI - input
+      pinMode(TR_SDO_IO, OUTPUT);							  // TR SDO - output
+      pinMode(TR_SDI_IO, INPUT);							  // TR SDI - input
 
       timeoutMilli = millis();
 
@@ -596,9 +596,9 @@ void TR_Control_Task(void)
       while ((millis() - timeoutMilli) < (MILLI_SECOND / 2));
 
 #ifdef CHIPKIT
-      digitalWrite( TR_SS_IO, HIGH );				// deselect TR module
+      digitalWrite( TR_SS_IO, HIGH );						// deselect TR module
 
-      spi.begin();									// SPI controller ON
+      spi.begin();										          // SPI controller ON
       spi.setSpeed( IQRF_SPI_CLK );
       spi.setPinSelect( TR_SS_IO );
 #endif
@@ -606,7 +606,7 @@ void TR_Control_Task(void)
 #ifdef LEONARDO
   	  digitalWrite(TR_SS_IO, HIGH);
 
-  	  SPI.begin();
+      SPI.begin();
 #endif
 
       TR_Control_TaskSM = TR_CTRL_READY;   			// goto ready state
@@ -783,3 +783,4 @@ void TR_SetByteToByteTime (UINT16 byteToByteTime)
   iqrfSpiByteBytePause = byteToByteTime;
 }
 //***************************************************************************
+

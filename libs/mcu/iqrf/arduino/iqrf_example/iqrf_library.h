@@ -18,8 +18,8 @@
 #define _IQRFLIBRARY_H
 
 //Target
-#define CHIPKIT
-//#define LEONARDO
+//#define CHIPKIT
+#define LEONARDO
 
 #ifdef CHIPKIT
 #include <WProgram.h>
@@ -41,15 +41,15 @@
 #include <string.h>
 
 #define IQ_PKT_SIZE						68			// size of SPI TX and RX buffer
-#define PACKET_BUFFER_SIZE				32			// size of SPI TX packet buffer
+#define PACKET_BUFFER_SIZE		32			// size of SPI TX packet buffer
 #define IQRF_SPI_CLK					250000		// SPI clk 250kHz
 
 // MCU type of TR module
 #define MCU_UNKNOWN						0
-#define PIC16LF819  					1			// TR-xxx-11A not supported
-#define PIC16LF88   					2			// TR-xxx-21A
+#define PIC16LF819  					1			  // TR-xxx-11A not supported
+#define PIC16LF88   					2			  // TR-xxx-21A
 #define PIC16F886   					3  			// TR-31B, TR-52B, TR-53B
-#define PIC16LF1938   					4  			// TR-52D, TR-54D
+#define PIC16LF1938   				4  			// TR-52D, TR-54D
 
 // TR module types
 #define TR_52D							0
@@ -62,35 +62,35 @@
 #define TR_76D							11
 
 // FCC cerificate
-#define FCC_NOT_CERTIFIED				0
+#define FCC_NOT_CERTIFIED			0
 #define FCC_CERTIFIED					1
 
 //******************************************************************************
 //		 	SPI status of TR module (see IQRF SPI user manual)
 //******************************************************************************
-#define NO_MODULE			    0xFF	// SPI not working (HW error)
-#define SPI_BUSY			    0xFE 	// SPI busy in Master disabled mode
-#define SPI_DATA_TRANSFER   	0xFD  	// SPI data transfer in progress
+#define NO_MODULE			      0xFF	// SPI not working (HW error)
+#define SPI_BUSY			      0xFE 	// SPI busy in Master disabled mode
+#define SPI_DATA_TRANSFER   0xFD  // SPI data transfer in progress
 #define SPI_DISABLED		    0x00	// SPI not working (disabled)
 #define SPI_CRCM_OK			    0x3F	// SPI not ready (full buffer, last CRCM ok)
 #define SPI_CRCM_ERR		    0x3E	// SPI not ready (full buffer, last CRCM error)
-#define COMMUNICATION_MODE		0x80	// SPI ready (communication mode)
-#define PROGRAMMING_MODE	  	0x81	// SPI ready (programming mode)
+#define COMMUNICATION_MODE	0x80	// SPI ready (communication mode)
+#define PROGRAMMING_MODE	  0x81	// SPI ready (programming mode)
 #define DEBUG_MODE			    0x82	// SPI ready (debugging mode)
-#define SPI_SLOW_MODE    	  	0x83  	// SPI not working in background
-#define SPI_USER_STOP	      	0x07  	// state after stopSPI();
+#define SPI_SLOW_MODE    	  0x83  // SPI not working in background
+#define SPI_USER_STOP	      0x07  // state after stopSPI();
 
 //******************************************************************************
 //		 	SPI commands for TR module (see IQRF SPI user manual)
 //******************************************************************************
-#define SPI_CHECK  			  	0x00    // Master checks the SPI status of the TR module
-#define SPI_WR_RD 	 		  	0xF0	// Master reads/writes a packet from/to TR module
-#define SPI_RAM_READ  			0xF1	// Master reads data from ram in debug mode
-#define SPI_EEPROM_READ			0xF2	// Master reads data from eeprom in debug mode
-#define SPI_EEPROM_PGM			0xF3	// Master writes data to eeprom in programming mode
-#define SPI_MODULE_INFO			0xF5	// Master reads Module Info from TR module
-#define SPI_FLASH_PGM		  	0xF6	// Master writes data to flash in programming mode
-#define SPI_PLUGIN_PGM			0xF9	// Master writes plugin data to flash in programming mode
+#define SPI_CHECK  			  0x00  // Master checks the SPI status of the TR module
+#define SPI_WR_RD 	 		  0xF0	// Master reads/writes a packet from/to TR module
+#define SPI_RAM_READ  		0xF1	// Master reads data from ram in debug mode
+#define SPI_EEPROM_READ		0xF2	// Master reads data from eeprom in debug mode
+#define SPI_EEPROM_PGM		0xF3	// Master writes data to eeprom in programming mode
+#define SPI_MODULE_INFO		0xF5	// Master reads Module Info from TR module
+#define SPI_FLASH_PGM		  0xF6	// Master writes data to flash in programming mode
+#define SPI_PLUGIN_PGM		0xF9	// Master writes plugin data to flash in programming mode
 
 // IQRF TX packet result
 #define IQRF_TX_PKT_OK		1		// packet sent OK
@@ -103,7 +103,7 @@
 
 // Pins
 #define TR_RESET_IO  		9
-#define TR_SS_IO 			10
+#define TR_SS_IO 			  10
 #define TR_SDO_IO 			11
 #define TR_SDI_IO 			12
 
@@ -119,7 +119,7 @@ typedef uint16_t UINT16;
 typedef uint32_t UINT32;
 typedef unsigned long DWORD;
 
-typedef void (*IQRF_RX_CALL_BACK)(void);									// SPI RX data callback function type
+typedef void (*IQRF_RX_CALL_BACK)(void);									            // SPI RX data callback function type
 typedef void (*IQRF_TX_CALL_BACK)(UINT8 pktId, UINT8 pktResult);			// SPI TX data callback function type
 
 typedef struct{										// TR module info structure
@@ -164,7 +164,7 @@ extern DSPI0    spi;
 *
 * Input: rx_call_back_fn  - Pointer to callback function. 
 *				 Function is called when the driver receives data from the TR module
-*		 tx_call_back_fn  - Pointer to callback function. 
+*		     tx_call_back_fn  - Pointer to callback function. 
 *				 Function is called when the driver sent data to the TR module
 * Output: none
 *
@@ -236,9 +236,9 @@ void IQRF_TR_EnterProgMode(void);
 *
 * PreCondition: IQRF_Init(rx_call_back_fn, tx_call_back_fn) must be called before and IQRF_Driver() must be called periodicaly
 *
-* Input: pDataBuffer		- pointer to a buffer that contains data that I want to send to TR module
-*		 dataLength			- number of bytes to send 
-*		 unallocationFlag	- if the pDataBuffer is dynamically allocated using malloc function. 
+* Input: pDataBuffer		  - pointer to a buffer that contains data that I want to send to TR module
+*		     dataLength			  - number of bytes to send 
+*		     unallocationFlag	- if the pDataBuffer is dynamically allocated using malloc function. 
 *							  If you whish to unallocate buffer after data is sent, set the unallocationFlag
 *							  to 1, otherwise to 0
 *
@@ -259,14 +259,14 @@ UINT8 IQRF_SendData(UINT8 *pDataBuffer, UINT8 dataLength, UINT8 unallocationFlag
 * PreCondition: IQRF_Init(rx_call_back_fn, tx_call_back_fn) must be called before and IQRF_Driver() must be called periodicaly
 *
 * Input: userDataBuffer		- pointer to my buffer, to which I want to load data received from the TR module
-*		 rxDataSize			- number of bytes I want to read
+*		     rxDataSize			  - number of bytes I want to read
 *
 * Output: none
 *
 * Side Effects: none
 *
 * Overview: function is usually called inside the callback function, whitch is called when the driver
-*			receives data from TR module
+*			      receives data from TR module
 *
 * Note: none
 *
@@ -383,7 +383,7 @@ void IQRF_GetRxData(UINT8 *userDataBuffer, UINT8 rxDataSize);
 *			2 - TR_72D
 *			8 - TR_54D
 *			9 - TR_55D
-*		  	10 - TR_56D
+*		  10 - TR_56D
 *
 * Note: none
 *
@@ -419,16 +419,16 @@ void IQRF_GetRxData(UINT8 *userDataBuffer, UINT8 rxDataSize);
 *
 * Overview: macro returns TR module comunication status
 *		 	0xFF - NO_MODULE	// SPI not working (HW error)
-*     		0xFE - SPI_BUSY		// SPI busi in Master disabled mode
-*     		0xFD - SPI_DATA_TRANSFER  // SPI data transfer in progress
-* 			0x00 - SPI_DISABLED	// SPI not working (disabled)
-* 			0x3F - SPI_CRCM_OK	// SPI not ready (full buffer, last CRCM ok)
-* 			0x3E - SPI_CRCM_ERR	// SPI not ready (full buffer, last CRCM error)
-* 			0x80 - COMMUNICATION_MODE	// SPI ready (communication mode)
-* 			0x81 - PROGRAMMING_MODE	// SPI ready (programming mode)
-* 			0x82 - DEBUG_MODE	// SPI ready (debugging mode)
-*     		0x83 - SPI_SLOW_MODE// SPI not working in background
-* 	  		0x07 - SPI_USER_STOP// state after stopSPI();
+*     0xFE - SPI_BUSY		// SPI busi in Master disabled mode
+*     0xFD - SPI_DATA_TRANSFER  // SPI data transfer in progress
+* 		0x00 - SPI_DISABLED	// SPI not working (disabled)
+* 		0x3F - SPI_CRCM_OK	// SPI not ready (full buffer, last CRCM ok)
+* 		0x3E - SPI_CRCM_ERR	// SPI not ready (full buffer, last CRCM error)
+* 		0x80 - COMMUNICATION_MODE	// SPI ready (communication mode)
+* 		0x81 - PROGRAMMING_MODE	// SPI ready (programming mode)
+* 		0x82 - DEBUG_MODE	// SPI ready (debugging mode)
+*     0x83 - SPI_SLOW_MODE// SPI not working in background
+* 	  0x07 - SPI_USER_STOP// state after stopSPI();
 *
 * Note: none
 *
