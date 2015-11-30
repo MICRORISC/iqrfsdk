@@ -76,7 +76,7 @@ public class SimpleMyPhotoResistor
     public String transform(Object methodId) {
         if (!(methodId instanceof MyPhotoResistor.MethodID)) {
             throw new IllegalArgumentException(
-                    "Method ID must be of type MyADC.MethodID."
+                    "Method ID must be of type MyPhotoResistor.MethodID."
             );
         }
         return methodIdsMap.get((MyPhotoResistor.MethodID) methodId);

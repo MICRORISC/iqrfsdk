@@ -130,5 +130,11 @@
         <interface>com.microrisc.simply.iqrf.dpa.v22x.examples.user_per.user_map.mydallas.def.MyDallas18B20</interface>
         <implClass>com.microrisc.simply.iqrf.dpa.v22x.examples.user_per.user_map.mydallas.def.SimpleMyDallas18B20</implClass>
         <note></note>
+    </implMapping>  
+        
+    <implMapping>
+        <interface>com.microrisc.simply.iqrf.dpa.v22x.examples.user_per.autonetwork_embedded.def.AutonetworkPeripheral</interface>
+        <implClass>com.microrisc.simply.iqrf.dpa.v22x.examples.user_per.autonetwork_embedded.def.SimpleAutonetworkPeripheral</implClass>
+        <note></note>
     </implMapping>    
 </implMappings>
