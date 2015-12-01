@@ -121,7 +121,7 @@ public final class SimpleGeneric
         checkCmdId(cmdId);
         checkData(data);
         return dispatchCall(
-                "0", new Object[]{peripheralId, getRequestHwProfile(), cmdId, data},
+                "0", new Object[]{peripheralId, cmdId, getRequestHwProfile(), data},
                 getDefaultWaitingTimeout()
         );
     }
@@ -134,7 +134,7 @@ public final class SimpleGeneric
         checkCmdId(cmdId);
         checkData(data);
         UUID uid = dispatchCall(
-                "0", new Object[]{peripheralId, getRequestHwProfile(), cmdId, data},
+                "0", new Object[]{peripheralId, cmdId, getRequestHwProfile(), data},
                 getDefaultWaitingTimeout()
         );
         if (uid == null) {
