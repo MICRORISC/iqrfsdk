@@ -1,7 +1,7 @@
 Introduction
 ------------
 
-An IO and SPI library for Raspberry PI ( model B, B+, B2 ) platform. An extension board 
+An IO and SPI library for Raspberry PI ( model B, B+, B2, 2 ) platform. An extension board 
 KON-RASP-01 [1] can be used to interface TR modules to the Raspberry PI.
 
 Also are included examples to demonstrate the library usage. The examples show how 
