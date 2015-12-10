@@ -69,7 +69,7 @@ public class BuildNetwork implements AsynchronousMessagesListener<DPA_Asynchrono
         }
 
         // getting node 1
-        coordinator = network1.getNode("1");
+        coordinator = network1.getNode("0");
         if (coordinator == null) {
             printMessageAndExit("Coordinator doesn't exist");
         }
@@ -137,7 +137,7 @@ public class BuildNetwork implements AsynchronousMessagesListener<DPA_Asynchrono
         }
 
         // writing configuration
-        ram.write(0x0, new short[]{(short)discoveryTXPower, (short)bondingTime, 
+        ram.write(0x00, new short[]{(short)discoveryTXPower, (short)bondingTime, 
             (short)temporaryAddessTimeout, (short) configByte});
                 
         // getting access to asynchronous messaging manager
