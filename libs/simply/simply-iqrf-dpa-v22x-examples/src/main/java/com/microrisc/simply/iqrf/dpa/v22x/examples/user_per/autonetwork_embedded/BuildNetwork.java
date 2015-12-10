@@ -20,10 +20,13 @@ import com.microrisc.simply.Node;
 import com.microrisc.simply.SimplyException;
 import com.microrisc.simply.asynchrony.AsynchronousMessagesListener;
 import com.microrisc.simply.asynchrony.AsynchronousMessagingManager;
+import com.microrisc.simply.di_services.MethodIdTransformer;
 import com.microrisc.simply.iqrf.dpa.DPA_Simply;
 import com.microrisc.simply.iqrf.dpa.asynchrony.DPA_AsynchronousMessage;
 import com.microrisc.simply.iqrf.dpa.asynchrony.DPA_AsynchronousMessageProperties;
 import com.microrisc.simply.iqrf.dpa.v22x.DPA_SimplyFactory;
+import com.microrisc.simply.iqrf.dpa.v22x.devices.Coordinator;
+import com.microrisc.simply.iqrf.dpa.v22x.devices.EEPROM;
 import com.microrisc.simply.iqrf.dpa.v22x.devices.RAM;
 import java.io.File;
 
@@ -69,7 +72,7 @@ public class BuildNetwork implements AsynchronousMessagesListener<DPA_Asynchrono
         }
 
         // getting node 1
-        coordinator = network1.getNode("1");
+        coordinator = network1.getNode("0");
         if (coordinator == null) {
             printMessageAndExit("Coordinator doesn't exist");
         }
@@ -79,7 +82,7 @@ public class BuildNetwork implements AsynchronousMessagesListener<DPA_Asynchrono
         networkBuilder.initAndStartAutonetwork(0x07, 0x08, 0x03, false, true);
 
         try {
-            Thread.sleep(3000);
+            Thread.sleep(30000);
         } catch (InterruptedException ex) {
             System.out.println(ex);
         }
@@ -118,11 +121,8 @@ public class BuildNetwork implements AsynchronousMessagesListener<DPA_Asynchrono
         if (discoveryTXPower < 0 || discoveryTXPower > 7) {
             throw new IllegalArgumentException("TX power must be in interval <0,7>.");
         }
-        if (bondingTime < 4 * 60) {
-            throw new IllegalArgumentException("Nominal bondig time must be longet then ( NumberOfNodes + 4 ) * 60 ms!");
-        }
-        if (temporaryAddessTimeout < 0) {
-            throw new IllegalArgumentException("Node temporary address timeout cannot be negative!");
+        if (temporaryAddessTimeout < 0 || bondingTime < 0) {
+            throw new IllegalArgumentException("Node temporary address timeout and bonding time cannot be negative!");
         }
         
         // prepare config byte form booleans
@@ -130,21 +130,30 @@ public class BuildNetwork implements AsynchronousMessagesListener<DPA_Asynchrono
         configByte <<= 1;
         configByte += (forwardBondedMid == true) ? 1 : 0;
 
+        
         // getting RAM DI
-        RAM ram = coordinator.getDeviceObject(RAM.class);
-        if (ram == null) {
+        EEPROM eeprom = coordinator.getDeviceObject(EEPROM.class);
+        if (eeprom == null) {
             printMessageAndExit("RAM doesn't exist on Coordinator!");
         }
 
         // writing configuration
-        ram.write(0x0, new short[]{(short)discoveryTXPower, (short)bondingTime, 
+        eeprom.write(0x0, new short[]{(short)discoveryTXPower, (short)bondingTime, 
             (short)temporaryAddessTimeout, (short) configByte});
-                
+         
+        
         // getting access to asynchronous messaging manager
         asyncManager = simply.getAsynchronousMessagingManager();
         
         // register the listener of asynchronous messages
         asyncManager.registerAsyncMsgListener(this);
+        
+        
+        // getting RAM DI
+        RAM ram = coordinator.getDeviceObject(RAM.class);
+        if (ram == null) {
+            printMessageAndExit("RAM doesn't exist on Coordinator!");
+        }
         
         // start autonetwork on Coordinator
         ram.write(0x0, new short[]{0x0A});
