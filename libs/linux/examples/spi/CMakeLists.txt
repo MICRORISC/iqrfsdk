@@ -1,0 +1,2 @@
+add_subdirectory(spiiqrf_example_writeread)
+
