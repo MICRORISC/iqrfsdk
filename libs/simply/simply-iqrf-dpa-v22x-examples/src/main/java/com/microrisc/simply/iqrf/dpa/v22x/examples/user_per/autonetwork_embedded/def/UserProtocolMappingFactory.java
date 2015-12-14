@@ -163,7 +163,7 @@ public class UserProtocolMappingFactory implements ProtocolMappingFactory {
         packetValues.add(new PacketPositionValues(4, (short) 0x3F));
         packetValues.add(new PacketPositionValues(5, (short) 0x12));
 
-        PacketToValueMapping resultMapping = new PacketToValueMapping(8, Uns8Convertor.getInstance());
+        PacketToValueMapping resultMapping = new PacketToValueMapping(8, AutonetworkStateConvertor.getInstance());
         return new PacketToMethodMapping("2", packetValues, resultMapping);
     }   
 
