@@ -82,7 +82,7 @@ typedef enum rpi_spi_iqrf_CommonConstants {
  * @return @c BASE_TYPES_OPER_ERROR if an error has occurred during initialization
  *         or if library is already initialized
  */
-extern int rpi_spi_iqrf_init(const char* dev);
+int rpi_spi_iqrf_init(const char* dev);
 
 /**
  * Initializes default SPI device to use.
@@ -91,7 +91,7 @@ extern int rpi_spi_iqrf_init(const char* dev);
  * @return @c BASE_TYPES_OPER_ERROR if an error has occurred during initialization
  *         or if library is already initialized
  */
-extern int rpi_spi_iqrf_initDefault(void);
+int rpi_spi_iqrf_initDefault(void);
 
 /**
  * Returns SPI status of TR module.
@@ -102,7 +102,7 @@ extern int rpi_spi_iqrf_initDefault(void);
  * @return @c RPISPIIQRF_ERROR_BAD_STATUS if returned status value is incorrect
  * @return @c BASE_TYPES_LIB_NOT_INITIALIZED if the library has not been initialized
  */
-extern int rpi_spi_iqrf_getSPIStatus(rpi_spi_iqrf_SPIStatus* spiStatus);
+int rpi_spi_iqrf_getSPIStatus(rpi_spi_iqrf_SPIStatus* spiStatus);
 
 /**
  * Writes specified data into the module.
@@ -113,7 +113,7 @@ extern int rpi_spi_iqrf_getSPIStatus(rpi_spi_iqrf_SPIStatus* spiStatus);
  * @return @c BASE_TYPES_OPER_ERROR if an error has occurred during operation
  * @return @c BASE_TYPES_LIB_NOT_INITIALIZED if the library has not been initialized
  */
-extern int rpi_spi_iqrf_write(void* dataToWrite, unsigned int dataLen);
+int rpi_spi_iqrf_write(void* dataToWrite, unsigned int dataLen);
 
 /**
  * Read specified number of bytes from the module and stores them into specified buffer.
@@ -125,7 +125,7 @@ extern int rpi_spi_iqrf_write(void* dataToWrite, unsigned int dataLen);
  * @return @c RPISPIIQRF_ERROR_CRCS if CRSC of returned data doesn't match
  * @return @c BASE_TYPES_LIB_NOT_INITIALIZED if the library has not been initialized
  */
-extern int rpi_spi_iqrf_read(void* readBuffer, unsigned int dataLen);
+int rpi_spi_iqrf_read(void* readBuffer, unsigned int dataLen);
 
 /**
  * Terminates the library and frees up used resources.
@@ -133,7 +133,7 @@ extern int rpi_spi_iqrf_read(void* readBuffer, unsigned int dataLen);
  * @return @c BASE_TYPES_OPER_ERROR if an error has occurred during operation
  * @return @c BASE_TYPES_LIB_NOT_INITIALIZED if the library has not been initialized
  */
-extern int rpi_spi_iqrf_destroy(void);
+int rpi_spi_iqrf_destroy(void);
 
 /**
  * Returns information about last error or @c NULL, if no error has yet occurred.
