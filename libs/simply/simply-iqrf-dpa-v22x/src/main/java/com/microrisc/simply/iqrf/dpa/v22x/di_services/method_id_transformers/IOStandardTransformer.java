@@ -37,6 +37,7 @@ public final class IOStandardTransformer implements MethodIdTransformer {
         methodIdsMap.put(IO.MethodID.SET_DIRECTION, "1");
         methodIdsMap.put(IO.MethodID.SET_OUTPUT_STATE, "2");
         methodIdsMap.put(IO.MethodID.GET, "3");
+        methodIdsMap.put(IO.MethodID.ASYNC_RESPONSE, "4");
     }
     
     static  {
