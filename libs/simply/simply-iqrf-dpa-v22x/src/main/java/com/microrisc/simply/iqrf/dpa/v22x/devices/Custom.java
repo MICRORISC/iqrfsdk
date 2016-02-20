@@ -65,6 +65,6 @@ public interface Custom
      * @return response data <br> {@code null} if an error has occurred during
      * processing
      */
-    Short[] send(short peripheralId, short cmdId, short[] data);
+    short[] send(short peripheralId, short cmdId, short[] data);
 
 }

@@ -15,12 +15,12 @@
  */
 package com.microrisc.simply.iqrf.dpa.v22x.devices.impl;
 
-import com.microrisc.simply.iqrf.dpa.v22x.devices.Custom;
 import com.microrisc.simply.CallRequestProcessingInfoContainer;
 import com.microrisc.simply.ConnectorService;
 import com.microrisc.simply.di_services.MethodArgumentsChecker;
 import com.microrisc.simply.iqrf.dpa.protocol.DPA_ProtocolProperties;
 import com.microrisc.simply.iqrf.dpa.v22x.DPA_DeviceObject;
+import com.microrisc.simply.iqrf.dpa.v22x.devices.Custom;
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.UUID;
@@ -129,7 +129,7 @@ public final class SimpleCustom
     // SYNCHRONOUS WRAPPERS IMPLEMENTATIONS
     
     @Override
-    public Short[] send(short peripheralId, short cmdId, short[] data) {
+    public short[] send(short peripheralId, short cmdId, short[] data) {
         checkPeripheralId(peripheralId);
         checkCmdId(cmdId);
         checkData(data);
@@ -140,7 +140,7 @@ public final class SimpleCustom
         if (uid == null) {
             return null;
         }
-        Short[] result = getCallResult(uid, Short[].class, getDefaultWaitingTimeout());
+        short[] result = getCallResult(uid, short[].class, getDefaultWaitingTimeout());
         if (result == null) {
             return null;
         }
