@@ -354,7 +354,17 @@
     <logger name="com.microrisc.simply.network.spi.SPINetworkLayer" level="INHERITED">
             <appender-ref ref="FILE" />
     </logger>
-
+    
+    
+    <!-- autonetwork embedded -->
+    
+    <logger name="com.microrisc.simply.iqrf.dpa.v22x.autonetwork.embedded.logic.AutonetworkStateConvertor" level="INHERITED">
+       <appender-ref ref="AUTONETWORK_ALGO_STDOUT" />
+    </logger>
+    
+    <logger name="com.microrisc.simply.iqrf.dpa.v22x.autonetwork.embedded.logic.NetworkBuilder" level="INHERITED">
+       <appender-ref ref="FILE" />
+    </logger>
 
     <!-- root -->
     <root level="debug">

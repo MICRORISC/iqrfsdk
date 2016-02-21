@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.microrisc.simply.iqrf.dpa.v22x.examples.user_per.autonetwork_embedded.def;
+package com.microrisc.simply.iqrf.dpa.v22x.autonetwork.embedded.def;
 
 import com.microrisc.simply.CallRequestProcessingInfoContainer;
 import com.microrisc.simply.ConnectorService;
@@ -52,10 +52,6 @@ public class SimpleAutonetworkPeripheral extends DPA_DeviceObject implements Aut
     ) {
         super(networkId, nodeId, connector, resultsContainer);
     }
-    
-    
-    
-    
     
     @Override
     public UUID call(Object methodId, Object[] args) {
@@ -107,6 +103,14 @@ public class SimpleAutonetworkPeripheral extends DPA_DeviceObject implements Aut
     }
     
     @Override
+    public UUID async_approve(){
+        UUID uid = dispatchCall(
+                "1", new Object[]{getRequestHwProfile()}, getDefaultWaitingTimeout()
+        );
+        return uid;       
+    }
+    
+    @Override
     public VoidType disapprove() {
         UUID uid = dispatchCall(
                 "0", new Object[]{getRequestHwProfile()}, getDefaultWaitingTimeout()
@@ -116,6 +120,14 @@ public class SimpleAutonetworkPeripheral extends DPA_DeviceObject implements Aut
         }
 
         return getCallResult(uid, VoidType.class, getDefaultWaitingTimeout());
+    }
+    
+    @Override
+    public UUID async_disapprove() {
+        UUID uid = dispatchCall(
+                "0", new Object[]{getRequestHwProfile()}, getDefaultWaitingTimeout()
+        );
+        return uid;
     }
     
 }

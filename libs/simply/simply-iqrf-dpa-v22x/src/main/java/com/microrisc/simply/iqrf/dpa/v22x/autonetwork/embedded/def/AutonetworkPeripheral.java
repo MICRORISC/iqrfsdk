@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.microrisc.simply.iqrf.dpa.v22x.examples.user_per.autonetwork_embedded.def;
+package com.microrisc.simply.iqrf.dpa.v22x.autonetwork.embedded.def;
 
 import com.microrisc.simply.DeviceInterface;
 import com.microrisc.simply.DeviceInterfaceMethodId;
@@ -21,6 +21,7 @@ import com.microrisc.simply.di_services.GenericAsyncCallable;
 import com.microrisc.simply.di_services.MethodIdTransformer;
 import com.microrisc.simply.iqrf.dpa.di_services.DPA_StandardServices;
 import com.microrisc.simply.iqrf.types.VoidType;
+import java.util.UUID;
 
 /**
  * AutonetworkPeripheral providing access to Autonetwork-embedded peripheral on
@@ -32,14 +33,38 @@ import com.microrisc.simply.iqrf.types.VoidType;
 public interface AutonetworkPeripheral extends DPA_StandardServices,
         GenericAsyncCallable, MethodIdTransformer {
 
-    /** Identifiers of this Device Interface's methods. */
-    enum MethodID implements DeviceInterfaceMethodId {
-        APPROVE,
-        DISAPPROVE;
-    }
-    
-    VoidType approve();
-    
-    VoidType disapprove();
+   /** Identifiers of this Device Interface's methods. */
+   enum MethodID implements DeviceInterfaceMethodId {
+      APPROVE,
+      DISAPPROVE;
+   }
 
+   /**
+    * Synchronous wrapper for {@link #async_approve() }
+    *
+    * @return {@link VoidType}
+    */
+   VoidType approve();
+
+   /**
+    * Sends method call request for approving node.
+    *
+    * @return unique identifier of sent request
+    */
+   UUID async_approve();
+
+
+   /**
+    * Synchronous wrapper for {@link #async_disapprove() }
+    *
+    * @return {@link VoidType}
+    */
+   VoidType disapprove();
+
+   /**
+    * Sends method call request for disapproving node.
+    *
+    * @return unique identifier of sent request
+    */
+   UUID async_disapprove();
 }
