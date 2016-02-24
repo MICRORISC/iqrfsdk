@@ -68,7 +68,6 @@ implements ProtocolStateMachineListener
 {
     /** Logger. */
     private static final Logger logger = LoggerFactory.getLogger(DPA_ProtocolLayer.class);
-
     
     /**
      * Binds sent requests with theirs time of sending.
@@ -163,9 +162,7 @@ implements ProtocolStateMachineListener
     // static initializer
     static {
         initTimeUnlimitedRequests();
-    }
-    
-    
+    }   
     
     // indicates, wheather the specified request is time unlimited
     private static boolean isTimeUnlimitedRequest(CallRequest request) {
@@ -178,10 +175,21 @@ implements ProtocolStateMachineListener
         
         return unlimRequestInfo.methodIds.contains(request.getMethodId());        
     }
+
+    // indicates, wheather a timeout is defined by user
+    private static boolean isTimeoutDefinedByUserRequest(long procTime) {
+        
+        if (procTime == -1)
+            return false;
+        
+        return true;
+    }
     
     // indicates, wheather a time unlimited request is in process
     private volatile boolean isTimeUnlimitedRequestInProcess = false;
     
+    // indicates, wheather a timeout is defined by user
+    private volatile boolean isTimeoutDefinedByUserRequestInProcess = false;
     
     /** Last sent request. */
     private TimeRequest lastRequest = null;
@@ -468,8 +476,8 @@ implements ProtocolStateMachineListener
      * 3. New {@code TimeRequest} object is created and stored into {@code sentRequest}.
      */
     @Override
-    public void sendRequest(CallRequest request) throws SimplyException {
-        logger.debug("sendRequest - start: request={}", request);
+    public void sendRequest(CallRequest request, long procTime) throws SimplyException {
+        logger.debug("sendRequest - start: request={}, procTime={}", request, procTime);
         
         // conversion to format used by application protocol
         short[] protoMsg = msgConvertor.convertToProtoFormat(request);
@@ -497,6 +505,8 @@ implements ProtocolStateMachineListener
             // broadcast requests are treated as NO TIME UNLIMITED
             if ( request instanceof BroadcastRequest ) {
                 isTimeUnlimitedRequestInProcess = false;
+                isTimeoutDefinedByUserRequestInProcess = false;
+                
                 protoMachine.newRequest(request);
             } else {
                 synchronized ( synchroSentRequest ) {
@@ -507,14 +517,24 @@ implements ProtocolStateMachineListener
                     if ( isTimeUnlimitedRequest(request) ) {
                         isTimeUnlimitedRequestInProcess = true;
                     } else {
-                        isTimeUnlimitedRequestInProcess = false;
-                        protoMachine.newRequest(request);
+                        if ( isTimeoutDefinedByUserRequest(procTime) ) {
+                            isTimeoutDefinedByUserRequestInProcess = true;
+                        } else {
+                            isTimeUnlimitedRequestInProcess = false;
+                            isTimeoutDefinedByUserRequestInProcess = false;
+                            protoMachine.newRequest(request);
+                        }
                     }
-                }    
+                }
             }
         }
       
         logger.debug("sendRequest - end");
+    }
+    
+    @Override
+    public void sendRequest(CallRequest request) throws SimplyException {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
     
     @Override
@@ -582,26 +602,31 @@ implements ProtocolStateMachineListener
                 return;
             }
             
-            if ( !isTimeUnlimitedRequestInProcess ) {
-                synchronized ( synchroSendOrReceive ) {
-                    try {
-                        protoMachine.confirmationReceived(confirmation);
-                    } catch ( IllegalArgumentException ex ) {
-                        logger.error(
-                            "Protocol State Machine not in the WAITING_FOR_CONFIRMATION state: " + ex
-                        );
-                        return;
-                    } catch ( StateTimeoutedException ex ) {
-                        logger.error("Confirmation reception too late. Waiting timeouted.");
-                        return;
-                    }
+            // if not time unlimited
+            if (!isTimeUnlimitedRequestInProcess) {
+                // if not timeout defined by user
+                if (!isTimeoutDefinedByUserRequestInProcess) {
                     
-                    if ( lastRequest.request instanceof BroadcastRequest ) {
-                        processBroadcastConfirmation(confirmation);
+                    synchronized (synchroSendOrReceive) {
+                        try {
+                            protoMachine.confirmationReceived(confirmation);
+                        } catch (IllegalArgumentException ex) {
+                            logger.error(
+                                    "Protocol State Machine not in the WAITING_FOR_CONFIRMATION state: " + ex
+                            );
+                            return;
+                        } catch (StateTimeoutedException ex) {
+                            logger.error("Confirmation reception too late. Waiting timeouted.");
+                            return;
+                        }
+
+                        if (lastRequest.request instanceof BroadcastRequest) {
+                            processBroadcastConfirmation(confirmation);
+                        }
                     }
                 }
             }
-            
+
             logger.debug("onGetData - confirmation arrived: {}", networkData);
             return;
         }
@@ -646,17 +671,21 @@ implements ProtocolStateMachineListener
         }
         
         synchronized ( synchroSendOrReceive ) {
-            if ( !isTimeUnlimitedRequestInProcess ) {
-                try {
-                    protoMachine.responseReceived(networkData.getData());
-                } catch ( IllegalArgumentException ex ) {
-                    logger.error(
-                        "Protocol State Machine not in the WAITING_FOR_RESPONSE state: " + ex
-                    );
-                    return;
-                } catch ( StateTimeoutedException ex ) {
-                    logger.error("Response reception too late. Waiting timeouted.");
-                    return;
+            // if not time unlimited
+            if (!isTimeUnlimitedRequestInProcess) {
+                // if not timeout defined by user
+                if (!isTimeoutDefinedByUserRequestInProcess) {
+                    try {
+                        protoMachine.responseReceived(networkData.getData());
+                    } catch ( IllegalArgumentException ex ) {
+                        logger.error(
+                            "Protocol State Machine not in the WAITING_FOR_RESPONSE state: " + ex
+                        );
+                        return;
+                    } catch ( StateTimeoutedException ex ) {
+                        logger.error("Response reception too late. Waiting timeouted.");
+                        return;
+                    }
                 }
             }
             

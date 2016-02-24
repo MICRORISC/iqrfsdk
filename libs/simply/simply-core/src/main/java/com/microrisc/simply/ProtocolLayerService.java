@@ -37,8 +37,16 @@ public interface ProtocolLayerService {
     
     /**
      * Sends specified call request to protocol layer.
-     * @param request call request to send
+     * @param request call request to send 
      * @throws SimplyException if an error has occured during request sending
      */
     public void sendRequest(CallRequest request) throws SimplyException;
+    
+    /**
+     * Sends specified call request to protocol layer.
+     * @param request call request to send
+     * @param procTime timeout to wait for response 
+     * @throws SimplyException if an error has occured during request sending
+     */
+    public void sendRequest(CallRequest request, long procTime) throws SimplyException;
 }
