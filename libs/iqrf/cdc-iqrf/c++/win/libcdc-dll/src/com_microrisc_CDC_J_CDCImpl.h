@@ -9,6 +9,14 @@ extern "C" {
 #endif
 /*
  * Class:     com_microrisc_cdc_J_CDCImpl
+ * Method:    init
+ * Signature: (Ljava/lang/ClassLoader;)V
+ */
+JNIEXPORT void JNICALL Java_com_microrisc_cdc_J_1CDCImpl_init
+  (JNIEnv *, jclass, jobject);
+
+/*
+ * Class:     com_microrisc_cdc_J_CDCImpl
  * Method:    createCDCImpl
  * Signature: (Ljava/lang/String;)J
  */
@@ -113,7 +121,7 @@ JNIEXPORT void JNICALL Java_com_microrisc_cdc_J_1CDCImpl_stub_1unregisterAsyncLi
 
 /*
  * Class:     com_microrisc_cdc_J_CDCImpl
- * Method:    stub_isReadingStopped
+ * Method:    stub_isReceptionStopped
  * Signature: (J)Z
  */
 JNIEXPORT jboolean JNICALL Java_com_microrisc_cdc_J_1CDCImpl_stub_1isReceptionStopped

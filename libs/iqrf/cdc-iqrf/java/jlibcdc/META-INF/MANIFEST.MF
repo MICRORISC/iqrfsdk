@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: jlibcdc
+Bundle-SymbolicName: jlibcdc
+Bundle-Version: 1.0.0.qualifier
+Export-Package: com.microrisc.cdc
+Bundle-ClassPath: natives/x64/,
+ .
+Bundle-NativeCode: natives/x64/CDCLib_JavaStub.dll; osname=win32; processor=x86_64, *
