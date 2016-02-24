@@ -1,5 +1,5 @@
 /* 
- * Copyright 2014 MICRORISC s.r.o.
+ * Copyright 2016 MICRORISC s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.microrisc.simply.iqrf.dpa.v22x.examples.user_per.autonetwork_embedded.def;
+package com.microrisc.simply.iqrf.dpa.v22x.autonetwork.embedded.def;
 
 import com.microrisc.simply.iqrf.dpa.protocol.PeripheralToDevIfaceMapper;
 import com.microrisc.simply.iqrf.dpa.protocol.PeripheralToDevIfaceMapperFactory;

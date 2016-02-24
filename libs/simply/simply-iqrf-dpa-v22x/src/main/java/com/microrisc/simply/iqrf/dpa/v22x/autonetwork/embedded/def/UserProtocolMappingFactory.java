@@ -1,5 +1,5 @@
 /* 
- * Copyright 2014 MICRORISC s.r.o.
+ * Copyright 2016 MICRORISC s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,11 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.microrisc.simply.iqrf.dpa.v22x.examples.user_per.autonetwork_embedded.def;
+package com.microrisc.simply.iqrf.dpa.v22x.autonetwork.embedded.def;
 
 import com.microrisc.simply.iqrf.dpa.v22x.typeconvertors.DPA_AdditionalInfoConvertor;
 import com.microrisc.simply.iqrf.typeconvertors.Uns16Convertor;
-import com.microrisc.simply.iqrf.typeconvertors.Uns8Convertor;
 import com.microrisc.simply.iqrf.typeconvertors.VoidTypeConvertor;
 import com.microrisc.simply.protocol.mapping.CallRequestToPacketMapping;
 import com.microrisc.simply.protocol.mapping.ConstValueToPacketMapping;
@@ -83,7 +82,7 @@ public class UserProtocolMappingFactory implements ProtocolMappingFactory {
         return new MethodToPacketMapping(constMapping, argMapping);
     }
 
-    static private MethodToPacketMapping createDispproveMapping() {
+    static private MethodToPacketMapping createDisapproveMapping() {
         List<ConstValueToPacketMapping> constMapping = new LinkedList<>();
         constMapping.add(new ConstValueToPacketMapping(3, new short[]{0x00}));
 
@@ -99,7 +98,7 @@ public class UserProtocolMappingFactory implements ProtocolMappingFactory {
 
         Map<String, MethodToPacketMapping> methodMappings = new HashMap<>();
 
-        methodMappings.put("0", createDispproveMapping());
+        methodMappings.put("0", createDisapproveMapping());
         methodMappings.put("1", createApproveMapping());
 
         return new InterfaceToPacketMapping(constMappings, methodMappings);

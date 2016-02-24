@@ -133,8 +133,8 @@
     </implMapping>  
         
     <implMapping>
-        <interface>com.microrisc.simply.iqrf.dpa.v22x.examples.user_per.autonetwork_embedded.def.AutonetworkPeripheral</interface>
-        <implClass>com.microrisc.simply.iqrf.dpa.v22x.examples.user_per.autonetwork_embedded.def.SimpleAutonetworkPeripheral</implClass>
+        <interface>com.microrisc.simply.iqrf.dpa.v22x.autonetwork.embedded.def.AutonetworkPeripheral</interface>
+        <implClass>com.microrisc.simply.iqrf.dpa.v22x.autonetwork.embedded.def.SimpleAutonetworkPeripheral</implClass>
         <note></note>
     </implMapping>    
 </implMappings>

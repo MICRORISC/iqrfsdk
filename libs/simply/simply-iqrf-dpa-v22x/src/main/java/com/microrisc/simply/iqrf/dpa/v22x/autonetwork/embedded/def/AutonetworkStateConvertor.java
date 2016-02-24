@@ -13,16 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.microrisc.simply.iqrf.dpa.v22x.examples.user_per.autonetwork_embedded.def;
+package com.microrisc.simply.iqrf.dpa.v22x.autonetwork.embedded.def;
 
-import static com.microrisc.simply.iqrf.typeconvertors.IntToUns8Convertor.TYPE_SIZE;
 import com.microrisc.simply.typeconvertors.AbstractConvertor;
 import com.microrisc.simply.typeconvertors.ValueConversionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- *
+ * Provides services for converting data between {@link AutonetworkState} and
+ * IQRF proto value.
+ * 
  * @author Martin Strouhal
  */
 public class AutonetworkStateConvertor extends AbstractConvertor {
@@ -48,7 +49,7 @@ public class AutonetworkStateConvertor extends AbstractConvertor {
     public Object toObject(short[] protoValue) throws ValueConversionException {
         logger.debug("toObject - start: protoValue={}", protoValue);
 
-        if (protoValue.length < TYPE_SIZE ) {
+        if (protoValue.length < MINIMAL_TYPE_SIZE ) {
             throw new ValueConversionException(
                 "Argument length doesn't match with type size"
             );
@@ -59,14 +60,14 @@ public class AutonetworkStateConvertor extends AbstractConvertor {
         AutonetworkState state = new AutonetworkState(type);
         
         // adding additional parameters
-        if(protoValue.length > TYPE_SIZE){
+        if(protoValue.length > MINIMAL_TYPE_SIZE){
             for (int i = 1; i < protoValue.length; i++) {
-                state.addAditionalData(protoValue[i]);
+               state.addAdditionalData(protoValue[i]);
+               logger.debug(" toObject - addedAdditionalData ({})", protoValue[i]);
             }
         }
         
         logger.debug("toObject - end: {}", state);
         return state;
     }
-
 }

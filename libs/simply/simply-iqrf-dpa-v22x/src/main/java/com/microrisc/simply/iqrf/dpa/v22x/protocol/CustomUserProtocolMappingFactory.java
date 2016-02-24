@@ -21,6 +21,7 @@ import com.microrisc.simply.iqrf.dpa.v22x.init.NetworksFunctionalityToSimplyMapp
 import com.microrisc.simply.iqrf.dpa.v22x.init.NetworksFunctionalityToSimplyMappingParser;
 import com.microrisc.simply.iqrf.dpa.v22x.typeconvertors.DPA_AdditionalInfoConvertor;
 import com.microrisc.simply.iqrf.typeconvertors.ArrayUns8Convertor;
+import com.microrisc.simply.iqrf.typeconvertors.PrimArrayUns8Convertor;
 import com.microrisc.simply.iqrf.typeconvertors.Uns16Convertor;
 import com.microrisc.simply.iqrf.typeconvertors.Uns8Convertor;
 import com.microrisc.simply.protocol.mapping.CallRequestToPacketMapping;
@@ -156,7 +157,7 @@ public class CustomUserProtocolMappingFactory implements ProtocolMappingFactory 
          }
         packetValues.add(new PacketPositionValues(DPA_ProtocolProperties.PCMD_START, possibleResponseId));
 
-        PacketToValueMapping resultMapping = new PacketToValueMapping(8, ArrayUns8Convertor.getInstance());
+        PacketToValueMapping resultMapping = new PacketToValueMapping(8, PrimArrayUns8Convertor.getInstance());
         return new PacketToMethodMapping("0", packetValues, resultMapping);
     }
 
