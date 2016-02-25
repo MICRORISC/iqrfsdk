@@ -15,7 +15,15 @@
  */
 package com.microrisc.simply.iqrf.dpa.v22x.examples.autonetwork.embedded;
 
+import com.microrisc.simply.Network;
+import com.microrisc.simply.Node;
+import com.microrisc.simply.SimplyException;
+import com.microrisc.simply.iqrf.dpa.DPA_Simply;
+import com.microrisc.simply.iqrf.dpa.v22x.DPA_SimplyFactory;
 import com.microrisc.simply.iqrf.dpa.v22x.autonetwork.embedded.logic.NetworkBuilder;
+import com.microrisc.simply.iqrf.dpa.v22x.devices.LEDG;
+import com.microrisc.simply.iqrf.dpa.v22x.types.LED_State;
+import com.microrisc.simply.iqrf.types.VoidType;
 import java.io.File;
 
 /**
@@ -25,19 +33,68 @@ import java.io.File;
  */
 public class AutonetworkEmbedded {
 
-   
-   public static void main(String[] args) {
-      NetworkBuilder builder = new NetworkBuilder("config" + File.separator + "Simply.properties");
-      
-      builder.startAutonetwork(0x07, 0x08, 0x03, true, new SimpleNodeApprover());
-      
-      try {
-         Thread.sleep(100000);
-      } catch (InterruptedException ex) {
-         System.out.println(ex);
+   /** reference to Simply */
+   private static DPA_Simply simply;
+
+   // prints out specified message, destroys the Simply and exits
+   private static void printMessageAndExit(String message) {
+      System.out.println(message);
+      if (simply != null) {
+         simply.destroy();
       }
-      
-      builder.destroy();
+      System.exit(1);
    }
-   
+
+   public static void main(String[] args) {
+      // creating the Simply instance
+      try {
+         simply = DPA_SimplyFactory.getSimply(
+                 "config" + File.separator + "Simply.properties");
+      } catch (SimplyException ex) {
+         printMessageAndExit("Error while creating Simply: " + ex);
+      }
+
+      // getting network 1
+      Network network1 = simply.getNetwork("1", Network.class);
+      if (network1 == null) {
+         printMessageAndExit("Network 1 doesn't exist");
+      }
+
+      NetworkBuilder builder = new NetworkBuilder(network1, simply.
+              getAsynchronousMessagingManager());
+
+      builder.startAutonetwork(0x07, 0x08, 0x03, true, new SimpleNodeApprover());
+
+      while (builder.getAlgorithmState() != NetworkBuilder.AlgorithmState.FINISHED) {
+         try {
+            Thread.sleep(3000);
+         } catch (InterruptedException ex) {
+            System.out.println(ex);
+         }
+      }
+
+      network1 = builder.getNetwork();
+
+      // getting node 1
+      Node node1 = network1.getNode("1");
+      if (node1 == null) {
+         printMessageAndExit("Node 1 doesn't exist");
+      }
+
+      // getting LEDG interface
+      LEDG ledg = node1.getDeviceObject(LEDG.class);
+      if (ledg == null) {
+         printMessageAndExit("LEDG doesn't exist or is not enabled");
+      }
+
+      // setting state of LEDG to 'ON'
+      VoidType setResult = ledg.set(LED_State.ON);
+      if (setResult == null) {
+         System.out.println("Setting LEDG state ON failed");
+      }
+
+      builder.destroy();
+      simply.destroy();
+   }
+
 }

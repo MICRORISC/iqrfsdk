@@ -17,71 +17,74 @@ package com.microrisc.simply.iqrf.dpa.v22x.autonetwork.embedded.logic;
 
 import com.microrisc.simply.Network;
 import com.microrisc.simply.Node;
-import com.microrisc.simply.SimplyException;
 import com.microrisc.simply.asynchrony.AsynchronousMessagesListener;
 import com.microrisc.simply.asynchrony.AsynchronousMessagingManager;
-import com.microrisc.simply.iqrf.dpa.DPA_Simply;
 import com.microrisc.simply.iqrf.dpa.asynchrony.DPA_AsynchronousMessage;
 import com.microrisc.simply.iqrf.dpa.asynchrony.DPA_AsynchronousMessageProperties;
-import com.microrisc.simply.iqrf.dpa.v22x.DPA_SimplyFactory;
 import com.microrisc.simply.iqrf.dpa.v22x.autonetwork.embedded.def.AutonetworkPeripheral;
 import com.microrisc.simply.iqrf.dpa.v22x.autonetwork.embedded.def.AutonetworkState;
+import com.microrisc.simply.iqrf.dpa.v22x.autonetwork.embedded.def.AutonetworkStateType;
 import com.microrisc.simply.iqrf.dpa.v22x.devices.EEPROM;
 import com.microrisc.simply.iqrf.dpa.v22x.devices.RAM;
 import com.microrisc.simply.iqrf.dpa.v22x.types.RemotelyBondedModuleId;
+import java.util.LinkedList;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Provides funcionality for automatic network building via Autonetwork embedded.
+ * Provides funcionality for automatic network building via Autonetwork
+ * embedded.
  * <p>
  * @author Martin Strouhal
  */
 public class NetworkBuilder implements
         AsynchronousMessagesListener<DPA_AsynchronousMessage> {
 
+   /** Identify actual state of network building. */
+   public static enum AlgorithmState {
+      NON_STARTED, RUNNING, FINISHED;
+   }
+
    /** Logger */
-   private static final Logger log = LoggerFactory.getLogger(
-           NetworkBuilder.class);
+   private static final Logger log = LoggerFactory.getLogger(NetworkBuilder.class);
 
-   // reference to Simply
-   private DPA_Simply simply;
-   // reference to async manager
    private AsynchronousMessagingManager<DPA_AsynchronousMessage, DPA_AsynchronousMessageProperties> asyncManager;
-
-   // reference to Coordinator node
+   private List<AutonetworkStateListener> autonetworkListeners;
    private Node coord;
-   private NodeApprover approver;
    private AutonetworkPeripheral autonetworkPer;
+   private NodeApprover approver;
+   private AlgorithmState alogirthmState = AlgorithmState.NON_STARTED;
+   private AutonetworkBuildingListener buildingListener;
 
-
-   public NetworkBuilder(String configurationFile) {
-      // getting simply
-      try {
-         simply = DPA_SimplyFactory.getSimply(configurationFile);
-      } catch (SimplyException ex) {
-         throw new RuntimeException("Error while creating Simply: " + ex);
+   public NetworkBuilder(
+           Network sourceNetwork,
+           AsynchronousMessagingManager<DPA_AsynchronousMessage, DPA_AsynchronousMessageProperties> asyncManager
+   ) {
+      if (sourceNetwork == null) {
+         throw new RuntimeException("Source network doesn't exist");
       }
-
-      // getting network "1"
-      Network network1 = simply.getNetwork("1", Network.class);
-      if (network1 == null) {
-         throw new RuntimeException("Network 1 doesn't exist");
+      if(asyncManager == null){
+         throw new RuntimeException("Async manager doesn't exist");
       }
 
       // getting coordinator
-      coord = network1.getNode("0");
+      coord = sourceNetwork.getNode("0");
       if (coord == null) {
          throw new RuntimeException("Coordinator doesn't exist");
       }
 
-      // getting access to asynchronous messaging manager
-      asyncManager = simply.getAsynchronousMessagingManager();
-
       // register the listener of asynchronous messages
-      asyncManager.registerAsyncMsgListener(this);
+      this.asyncManager = asyncManager;
+      this.asyncManager.registerAsyncMsgListener(this);
+      
+      autonetworkListeners = new LinkedList<>();
+      // add native listener for dnymaic network building
+      buildingListener = new AutonetworkBuildingListener(sourceNetwork);
+      autonetworkListeners.add(buildingListener);
    }
 
+   
    /**
     * Start autonetwork with specified parameters and bond nodes approved by
     * {@code approver}.
@@ -154,6 +157,7 @@ public class NetworkBuilder implements
 
       // start autonetwork on Coordinator
       ram.write(0x0, new short[]{0x0A});
+      alogirthmState = AlgorithmState.RUNNING;
    }
 
    /**
@@ -174,15 +178,24 @@ public class NetworkBuilder implements
               temporaryAddressTimeout, unbondAndRestart, null);
    }
 
+   
    @Override
    public void onAsynchronousMessage(DPA_AsynchronousMessage message) {
-      System.out.println(message.getMainData());
+      log.debug("onAsynchronousMessage - start: message={}", message);
       if (message.getMainData() instanceof AutonetworkState) {
-         log.info("Autonetwork message: " + message.getMainData());
-      }
-      //TODO call method form interface which providing acces to received network states
+         AutonetworkState actualState = (AutonetworkState)message.getMainData();
+         log.info("Autonetwork message: " + actualState);
 
-      // requeire approving if its's need
+         // checks if algorithm is on the end
+         checkAlgorithmEnd(actualState);
+         
+         // call autonetwork listeners
+         for (AutonetworkStateListener listener: autonetworkListeners) {
+            listener.onAutonetworkState(actualState);
+         }
+      }
+      
+      // if its's need, requeire approving from NodeApprover
       if (message.getMainData() instanceof RemotelyBondedModuleId && approver != null) {
 
          boolean approveResult = approver.approveNode(
@@ -194,10 +207,43 @@ public class NetworkBuilder implements
             autonetworkPer.async_disapprove();
          }
       }
+
+      log.debug("onAsynchronousMessage - end");
+   }
+
+   public AlgorithmState getAlgorithmState() {
+      return alogirthmState;
+   }
+
+   public Network getNetwork() {
+      if (alogirthmState != AlgorithmState.FINISHED) {
+         throw new IllegalStateException("Algorithm is running still!");
+      }
+      return buildingListener.getNetworkCopy();
    }
 
    public void destroy() {
+      log.debug("destroy - start");
       asyncManager.unregisterAsyncMsgListener(this);
-      simply.destroy();
+      for (AutonetworkStateListener autonetworkListener : autonetworkListeners) {
+         autonetworkListener.destroy();
+      }
+      autonetworkListeners.clear();
+      log.debug("destroy - end");
+   }
+
+   // checks if algorithm was succesfully ended
+   private void checkAlgorithmEnd(AutonetworkState state) {
+      if (state.getType() == AutonetworkStateType.S_START) {
+
+         try {
+            if(state.getAdditionalData(1) == 0){
+               alogirthmState = AlgorithmState.FINISHED;
+            }
+         } catch (IllegalArgumentException ex) {
+            log.warn("Received autonetwork message doesn't contain count of remaing waves.");
+         }
+
+      }
    }
 }

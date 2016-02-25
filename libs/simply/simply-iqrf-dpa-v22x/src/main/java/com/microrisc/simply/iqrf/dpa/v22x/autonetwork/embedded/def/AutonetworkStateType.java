@@ -22,32 +22,32 @@ package com.microrisc.simply.iqrf.dpa.v22x.autonetwork.embedded.def;
  */
 public enum AutonetworkStateType {
 
-   // Reports state, number of nodes in the network and number of remaining waves (stored at PeripheralRam[0])
+   /**Reports state, number of nodes in the network and number of remaining waves (stored at PeripheralRam[0]) */
    S_START(0x00, "Autonetwork was started, number of nodes is % and number of remaing waves is %."),
    S_WaitNodesStartPrebonding(0x01,"Waiting on starting for prebonding of nodes."),
-   // reported
+   /** reported */
    S_C_StartPrebonding(0x02, "Prebonding has been started."),
    S_WaitPrebonding(0x03, "Waiting for prebonding of nodes."),
-   // Optionally reports state and lower 2 bytes of MID of node prebonded by coordinator
+   /** Optionally reports state and lower 2 bytes of MID of node prebonded by coordinator */
    S_DisablePrebondingCoordinator(0x04, "Disabling prebonding on coordinator. Optional MID is %, %"), //reported
    S_WaitApproveNodeForCoordinator(0x05, "Waiting for approving nodes on coordinator."),
    S_DisablePrebondingNodes(0x06, "Disabling prebonding of nodes."),
-   // Reports state, address of the node, that provided prebonding and 0
+   /** Reports state, address of the node, that provided prebonding and 0 */
    S_ReadPrebondedMid(0x07, "Reading of prebonded MID. Address of the node that provided prebonding is %"),
-   // Reports state and lower 2 bytes of MID of prebonded node
+   /** Reports state and lower 2 bytes of MID of prebonded node */
    S_WaitReadPrebondedMid(0x08, "Waiting for reading of prebonded MID (%, %)"),
    S_ReadPrebondedMidNext(0x09, "Reading next prebonded MID."),
-   // Reports state, new address of the authorized node and 0
+   /** Reports state, new address of the authorized node and 0 */
    S_Authorize(0x0A, "Authorizating. Address of the authorized node is %"),
    S_WaitAuthorize(0x0B, "Waiting for authorization result."),
    S_AuthorizeNext(0x0C, "Authorizing next."),
-   //reported
+   /** reported */
    S_CheckAuthorized(0x0D, "Checking authorization."),
-   // If node does not response to FRC from S_CheckAuthorized then Reports state, address of the node (its bond is removed at coordinator) and 0
+   /** If node does not response to FRC from S_CheckAuthorized then Reports state, address of the node (its bond is removed at coordinator) and 0 */
    S_CheckAuthorizedLoop(0x0E, "Checking authorization loop. Node % didn't response to FRC checking. Node will be unbonded."),
    S_WaitCheckAuthorizedLoop(0x0F, "Waiting for checking authorization loop."),
    S_CheckAuthorizedNext(0x10, "Checking next authorized."),
-   // Reports state, nodes in the network and number of discovered nodes 
+   /** Reports state, nodes in the network and number of discovered nodes */
    S_Discovery(0x11, "Discovering. Count of nodes in network is % and it was discovered %."),
    S_WaitApproveNodeForNode(0x12, "Waiting for approving node for node."),
    S_ApproveNodeForNodeFinish(0x13, "Approving node for finishing node."),

@@ -21,55 +21,62 @@ import java.util.StringTokenizer;
 
 /**
  * Encapsulates state of Autonetwork machine.
- * 
+ *
  * @author Martin Strouhal
  */
 public class AutonetworkState {
-    
-    private AutonetworkStateType type;
-    private List<Integer> additionalData = new LinkedList<>();
-    
-    /**
-     * Creates a new AutonetworkState with predefined AutonetwrokStateType.
-     * @param type predefined type of state
-     */
-    public AutonetworkState(AutonetworkStateType type){
-        this.type = type;
-    }
-    
-    /**
-     * Add additional data into AutonetworkState.
-     * @param dataToAdd number as integer
-     */
-    public void addAdditionalData(int dataToAdd){
-        additionalData.add(dataToAdd);
-    }
 
-    public int getAdditionalData(int dataIndex) {
-      return additionalData.get(dataIndex);
+   private AutonetworkStateType type;
+   private List<Integer> additionalData = new LinkedList<>();
+
+   /**
+    * Creates a new AutonetworkState with predefined AutonetwrokStateType.
+    *
+    * @param type predefined type of state
+    */
+   public AutonetworkState(AutonetworkStateType type) {
+      this.type = type;
    }
-    
-    public AutonetworkStateType getType(){
-       return type;
-    }
-    
-    @Override
-    public String toString() {
-        // count of parameters which are indetifaceted like %, see AutonetworkStateType
-       int countOfDataInInfo = new StringTokenizer(" " + type.getInfo() + " ",
-               "%").countTokens() - 1;
 
-        // new string containg text value of this object
-        String newString = "";
-        
-        newString += type.getInfo();
-        int additionalDataIndex = 0;
-        while(newString.contains("%") && additionalDataIndex < additionalData.size()){
-            newString = newString.replaceFirst("%", 
-                    additionalData.get(additionalDataIndex++).toString()
-            );
-        }
-        
-        return newString;
-    }
+   /**
+    * Add additional data into AutonetworkState.
+    *
+    * @param dataToAdd number as integer
+    */
+   public void addAdditionalData(int dataToAdd) {
+      additionalData.add(dataToAdd);
+   }
+
+   public int getAdditionalData(int dataIndex) {
+      if (dataIndex < additionalData.size()) {
+         return additionalData.get(dataIndex);
+      } else {
+         throw new IllegalArgumentException("Data index is out of range!");
+      }
+   }
+
+   public AutonetworkStateType getType() {
+      return type;
+   }
+
+   @Override
+   public String toString() {
+      // count of parameters which are indetifaceted like %, see AutonetworkStateType
+      int countOfDataInInfo = new StringTokenizer(" " + type.getInfo() + " ",
+              "%").countTokens() - 1;
+
+      // new string containg text value of this object
+      String newString = "";
+
+      newString += type.getInfo();
+      int additionalDataIndex = 0;
+      while (newString.contains("%") && additionalDataIndex < additionalData.
+              size()) {
+         newString = newString.replaceFirst("%",
+                 additionalData.get(additionalDataIndex++).toString()
+         );
+      }
+
+      return newString;
+   }
 }
