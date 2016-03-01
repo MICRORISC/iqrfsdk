@@ -29,30 +29,36 @@ public class FRC_Configuration {
     public enum FRC_RESPONSE_TIME {
                 
         /** Time 40ms. */
-        TIME_40_MS(40),
+        TIME_40_MS(40, 0b00000000),
         /** Time 320ms. */
-        TIME_320_MS(320),
+        TIME_320_MS(320, 0b00010000),
         /** Time 640ms. */
-        TIME_640_MS(640),
+        TIME_640_MS(640, 0b00100000),
         /** Time 1280ms. */
-        TIME_1280_MS(1280),
+        TIME_1280_MS(1280, 0b00110000),
         /** Time 2560ms. */
-        TIME_2560_MS(2560),
+        TIME_2560_MS(2560, 0b01000000),
         /** Time 5120ms. */
-        TIME_5120_MS(5120),
+        TIME_5120_MS(5120, 0b01010000),
         /** Time 10240ms. */
-        TIME_10240_MS(10240),
+        TIME_10240_MS(10240, 0b01100000),
         /** Time 20480ms. */
-        TIME_20480_MS(20480);
+        TIME_20480_MS(20480, 0b01110000);
 
         private int responseTime;
+        private int idValue;
         
-        private FRC_RESPONSE_TIME(int time){
+        private FRC_RESPONSE_TIME(int time, int idValue){
             this.responseTime = time;
+            this.idValue = idValue;
         }
         
         public int getRepsonseTimeInInt(){
             return responseTime;
+        }
+        
+        public int getIdValue(){
+           return idValue;
         }
         
         /**

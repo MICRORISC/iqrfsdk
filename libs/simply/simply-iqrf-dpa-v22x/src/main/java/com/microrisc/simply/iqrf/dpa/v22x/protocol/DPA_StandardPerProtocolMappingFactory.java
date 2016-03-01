@@ -1948,7 +1948,7 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
         packetValues.add(new PacketPositionValues(3, (short) 0x83));
 
         PacketToValueMapping resultMapping = new PacketToValueMapping(
-                8, 0, VoidTypeConvertor.getInstance()
+                8, 1, FRC_ConfigurationConvertor.getInstance()
         );
         return new PacketToMethodMapping("4", packetValues, resultMapping);
     }    

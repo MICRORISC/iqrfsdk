@@ -54,38 +54,9 @@ public class FRC_ConfigurationConvertor extends AbstractConvertor {
         }
         FRC_Configuration config = (FRC_Configuration)value;
         
-        String stringTime;
-        switch(config.getResponseTime()){
-            case TIME_40_MS:
-                stringTime = "000";
-                break;
-            case TIME_320_MS:
-                stringTime = "001";
-                break;
-            case TIME_640_MS:
-                stringTime = "010";
-                break;
-            case TIME_1280_MS:
-                stringTime = "011";
-                break;
-            case TIME_2560_MS:
-                stringTime = "100";
-                break;
-            case TIME_5120_MS:
-                stringTime = "101";
-                break;
-            case TIME_10240_MS:
-                stringTime = "110";
-                break;
-            case TIME_20480_MS:
-                stringTime = "111";
-                break;
-            default:
-                throw new ValueConversionException("FRC response time is incorrect to conversion.");
-        }
-        stringTime = "0" + stringTime + "0000";
+        short protoVal = (short)config.getResponseTime().getIdValue();
         
-        short[] protoValue = new short[]{Short.parseShort(stringTime, 2)};
+        short[] protoValue = new short[]{protoVal};
         
         logger.debug("toProtoValue - end: {}", protoValue);
         return protoValue;
@@ -93,6 +64,18 @@ public class FRC_ConfigurationConvertor extends AbstractConvertor {
 
     @Override
     public Object toObject(short[] protoValue) throws ValueConversionException {
-        throw new UnsupportedOperationException("Currently not supported");
+       if(protoValue.length != 1){
+          throw new IllegalArgumentException("The length of converted data must be 1!");
+       } 
+       short protoVal = protoValue[0];
+       
+       FRC_Configuration.FRC_RESPONSE_TIME[] values = FRC_Configuration.FRC_RESPONSE_TIME.values();
+       for (FRC_Configuration.FRC_RESPONSE_TIME responseTimeValue : values) {
+          if(responseTimeValue.getIdValue() == protoVal){
+             return new FRC_Configuration(responseTimeValue);
+          }
+       }
+       
+       throw new IllegalArgumentException("For specified value doesn't exist response time!");
     }
 }
