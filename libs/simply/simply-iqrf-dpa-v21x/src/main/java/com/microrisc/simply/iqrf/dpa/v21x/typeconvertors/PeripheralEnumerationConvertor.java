@@ -157,7 +157,8 @@ public final class PeripheralEnumerationConvertor extends PrimitiveConvertor {
         int flags = protoValue[FLAGS_POS];
         
         // dpa protocol version info
-        short protoMinorNumber = getBCD_Code(protoValue[DPA_PROTO_MINOR_VERSION_POS]); 
+        // prevent one bit which describes demo HWP
+        short protoMinorNumber = getBCD_Code((short)(protoValue[DPA_PROTO_MINOR_VERSION_POS] & 0x7F));  
         short protoMajorNumber = getBCD_Code(protoValue[DPA_PROTO_MAJOR_VERSION_POS]);
         
         PeripheralEnumeration.DPA_ProtocolVersion dpaProtoVersion = 
