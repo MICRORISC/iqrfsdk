@@ -3,8 +3,13 @@
 #include <fstream>
 
 #include <iostream>
+#ifdef _DEBUG
 #define DEBUG_TRC(msg) std::cout << std::endl << "{CPPDBG} " << __FUNCTION__ << ":  " << msg << std::endl;
 #define PAR(par)                #par "=\"" << par << "\" "
+#else
+#define DEBUG_TRC(msg)
+#define PAR(par)
+#endif
 
 /** 
  * Pointer to JavaVM instance. It will be used mainly in asynchronous
