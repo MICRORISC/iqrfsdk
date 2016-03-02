@@ -1801,16 +1801,36 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
         );
         return new PacketToMethodMapping("3", packetValues, resultMapping);
     }
-
-    static private PacketToMethodMapping createAsyncResponse(){
+    
+    static private PacketToMethodMapping createEnableAsynchronyRequestSetDirection(){
         List<PacketPositionValues> packetValues = new LinkedList<>();
-        packetValues.add(new PacketPositionValues(3, (short) 0x01));
+        packetValues.add(new PacketPositionValues(3, (short) 0x00));
 
         PacketToValueMapping resultMapping = new PacketToValueMapping(
                 8, PrimArrayUns8Convertor.getInstance()
         );
         return new PacketToMethodMapping("4", packetValues, resultMapping);        
     }
+    
+    static private PacketToMethodMapping createEnableAsynchronyRequestSetOutputState(){
+        List<PacketPositionValues> packetValues = new LinkedList<>();
+        packetValues.add(new PacketPositionValues(3, (short) 0x01));
+
+        PacketToValueMapping resultMapping = new PacketToValueMapping(
+                8, PrimArrayUns8Convertor.getInstance()
+        );
+        return new PacketToMethodMapping("5", packetValues, resultMapping);        
+    }
+    
+    static private PacketToMethodMapping createEnableAsynchronyRequestGet(){
+        List<PacketPositionValues> packetValues = new LinkedList<>();
+        packetValues.add(new PacketPositionValues(3, (short) 0x01));
+
+        PacketToValueMapping resultMapping = new PacketToValueMapping(
+                8, PrimArrayUns8Convertor.getInstance()
+        );
+        return new PacketToMethodMapping("6", packetValues, resultMapping);        
+    } 
     
     static private PacketToInterfaceMapping createResponseIOMapping() {
         List<PacketPositionValues> packetValues = new LinkedList<>();
@@ -1821,7 +1841,10 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
         methodMappings.put("1", createResponseDirection());
         methodMappings.put("2", createResponseIOSet());
         methodMappings.put("3", createResponseIOGet());
-        methodMappings.put("4", createAsyncResponse());
+        /* ASYNCHRONY REQUEST ENABLERS */
+        methodMappings.put("4", createEnableAsynchronyRequestSetDirection());
+        methodMappings.put("5", createEnableAsynchronyRequestSetOutputState());
+        methodMappings.put("6", createEnableAsynchronyRequestGet());
 
         return new PacketToInterfaceMapping(IO.class, packetValues, methodMappings);
     }

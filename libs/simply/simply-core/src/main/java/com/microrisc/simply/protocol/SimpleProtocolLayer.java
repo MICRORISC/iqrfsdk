@@ -244,6 +244,11 @@ public final class SimpleProtocolLayer extends AbstractProtocolLayer {
     }
     
     @Override
+    public void sendRequest(CallRequest request, long procTime) throws SimplyException {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+    
+    @Override
     public void destroy() {
         logger.debug("destroy - start:");
         

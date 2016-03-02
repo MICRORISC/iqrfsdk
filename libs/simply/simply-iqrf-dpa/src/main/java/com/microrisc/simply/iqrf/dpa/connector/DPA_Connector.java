@@ -187,7 +187,7 @@ implements
          * Sends specified DO method call request to protocol layer.
          * @param request DO method call-request
          */
-        private void sendRequestToProtocolLayer(CallRequest request) 
+        private void sendRequestToProtocolLayer(CallRequestToProcess request) 
                 throws SimplyException, InterruptedException 
         {
             logger.debug("sendRequestToProtocolLayer - start: request={}", request);
@@ -202,7 +202,7 @@ implements
                     Thread.sleep(sleepTime);
                 }
                 
-                protocolLayerService.sendRequest(request);
+                protocolLayerService.sendRequest(request.callRequest, request.maxProcTime);
                 sentOK = true;
                
                 lastSendTime = System.currentTimeMillis();                
@@ -587,7 +587,7 @@ implements
                 
                 // sending last request to protocol layer
                 try {
-                    sendRequestToProtocolLayer( lastRequestToProc.callRequest );
+                    sendRequestToProtocolLayer( lastRequestToProc );
                     requestSentOk = true;
                 } catch ( Exception ex ) {
                     // dispatching error
@@ -616,7 +616,7 @@ implements
                     while ( !respArrivedForLastRequest && !isCancelledLastRequest ) {
                         try {
                             if ( lastRequestToProc.maxProcTime == UNLIMITED_MAXIMAL_PROCESSING_TIME ) {
-                                syncMsgfromProtoLayer.wait();
+                                    syncMsgfromProtoLayer.wait();
                             } else {
                                 long startTime = System.nanoTime();
                                 syncMsgfromProtoLayer.wait( timeToWait );
