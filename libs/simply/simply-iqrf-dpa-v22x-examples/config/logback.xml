@@ -1,4 +1,6 @@
 <configuration>
+    
+    <timestamp key="bySecond" datePattern="yyyyMMdd'T'HHmmss"/>
 
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
             <!-- encoders are assigned the type ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
@@ -8,7 +10,7 @@
     </appender>
 
     <appender name="FILE" class="ch.qos.logback.core.FileAppender">
-            <file>Simply.log</file>
+            <file>Simply-${bySecond}.log</file>
             <append>false</append>
             <encoder>
                 <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{40}: %msg%n</pattern>
@@ -153,14 +155,25 @@
 
 
 
-    <!-- iqrf.dpa.v22x package -->
-    
+    <!-- iqrf.dpa.v22x package -->    
     <logger name="com.microrisc.simply.iqrf.dpa.v22x.DPA_DeviceObject" level="INHERITED">
             <appender-ref ref="FILE" />
     </logger>
     
     <!-- iqrf.dpa.v22x.autonetwork package -->
     <logger name="com.microrisc.simply.iqrf.dpa.v22x.autonetwork.AutoNetworkAlgorithmImpl" level="INHERITED">
+            <appender-ref ref="FILE" />
+            <appender-ref ref="AUTONETWORK_ALGO_STDOUT" />
+    </logger>
+    
+    <!-- iqrf.dpa.v22x.autonetwork embedded package -->
+    <logger name="com.microrisc.simply.iqrf.dpa.v22x.autonetwork.embedded.logic.NetworkBuilder" level="INHERITED">
+            <appender-ref ref="FILE" />
+            <appender-ref ref="AUTONETWORK_ALGO_STDOUT" />
+    </logger>
+ 
+    <!-- iqrf.dpa.v22x.autonetwork embedded package -->
+    <logger name="com.microrisc.simply.iqrf.dpa.v22x.autonetwork.embedded.logic.AutonetworkBuilderListener" level="INHERITED">
             <appender-ref ref="FILE" />
             <appender-ref ref="AUTONETWORK_ALGO_STDOUT" />
     </logger>
@@ -175,7 +188,7 @@
             <appender-ref ref="FILE" />
     </logger>
 	
-	<logger name="com.microrisc.simply.iqrf.dpa.v22x.init.NodeFactory" level="INHERITED">
+    <logger name="com.microrisc.simply.iqrf.dpa.v22x.init.NodeFactory" level="INHERITED">
             <appender-ref ref="FILE" />
     </logger>
 

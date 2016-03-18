@@ -112,13 +112,14 @@ public class NetworkBuilder implements
          log.error(txt);
          throw new IllegalArgumentException(txt);
       }
+      
       if (temporaryAddressTimeout < 0 || bondingTime < 0) {
          String txt = "Node temporary address timeout and bonding time cannot be negative!";
          log.error(txt);
          throw new IllegalArgumentException(txt);
       }
 
-      // prepare config byte form booleans
+      // prepare config byte from booleans
       int configByte = (unbondAndRestart == true) ? 1 : 0;
       configByte <<= 1;
       configByte += (forwardBondedMid == true) ? 1 : 0;
@@ -143,9 +144,12 @@ public class NetworkBuilder implements
       }
 
       // writing configuration
-      eeprom.write(0x0, new short[]{(short) discoveryTXPower,
+      eeprom.write(0x00, new short[]
+        {(short) discoveryTXPower,
          (short) bondingTime,
-         (short) temporaryAddressTimeout, (short) configByte});
+         (short) temporaryAddressTimeout, 
+         (short) configByte
+        });
 
       // getting RAM DI
       RAM ram = coord.getDeviceObject(RAM.class);
@@ -156,7 +160,7 @@ public class NetworkBuilder implements
       }
 
       // start autonetwork on Coordinator
-      ram.write(0x0, new short[]{0x0A});
+      ram.write(0x00, new short[]{ 0x0A });
       alogirthmState = AlgorithmState.RUNNING;
    }
 
@@ -177,11 +181,11 @@ public class NetworkBuilder implements
       NetworkBuilder.this.startAutonetwork(discoveryTXPower, bondingTime,
               temporaryAddressTimeout, unbondAndRestart, null);
    }
-
    
    @Override
    public void onAsynchronousMessage(DPA_AsynchronousMessage message) {
       log.debug("onAsynchronousMessage - start: message={}", message);
+      
       if (message.getMainData() instanceof AutonetworkState) {
          AutonetworkState actualState = (AutonetworkState)message.getMainData();
          log.info("Autonetwork message: " + actualState);
@@ -195,7 +199,7 @@ public class NetworkBuilder implements
          }
       }
       
-      // if its's need, requeire approving from NodeApprover
+      // if required approving from NodeApprover
       if (message.getMainData() instanceof RemotelyBondedModuleId && approver != null) {
 
          boolean approveResult = approver.approveNode(
@@ -237,13 +241,12 @@ public class NetworkBuilder implements
       if (state.getType() == AutonetworkStateType.S_START) {
 
          try {
-            if(state.getAdditionalData(1) == 0){
+            if(state.getAdditionalData(1) == 0) {
                alogirthmState = AlgorithmState.FINISHED;
             }
          } catch (IllegalArgumentException ex) {
             log.warn("Received autonetwork message doesn't contain count of remaing waves.");
          }
-
       }
    }
 }
