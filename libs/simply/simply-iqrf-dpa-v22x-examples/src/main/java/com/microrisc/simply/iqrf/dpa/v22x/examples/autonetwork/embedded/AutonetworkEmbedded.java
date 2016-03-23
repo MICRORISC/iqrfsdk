@@ -54,17 +54,29 @@ public class AutonetworkEmbedded {
          printMessageAndExit("Error while creating Simply: " + ex);
       }
 
-      // getting network 1
+      // getting network 1 (with connected coordinator)
       Network network1 = simply.getNetwork("1", Network.class);
       if (network1 == null) {
          printMessageAndExit("Network 1 doesn't exist");
       }
 
-      NetworkBuilder builder = new NetworkBuilder(network1, simply.
-              getAsynchronousMessagingManager());
+      // creating network builder for autonetwork embedded
+      NetworkBuilder builder = new NetworkBuilder(network1, 
+              simply.getAsynchronousMessagingManager()
+      );
 
-      builder.startAutonetwork(0x07, 0x08, 0x03, true, new SimpleNodeApprover());
+      // config params
+      int discoveryTXPower = 0x07;
+      int bondingTime = 0X08;
+      int temporaryAddressTimeout = 0x03;
+      boolean unbondAndRestart = true;
+      
+      // starting autonetworking
+      builder.startAutonetwork(discoveryTXPower, bondingTime, 
+              temporaryAddressTimeout, unbondAndRestart, new SimpleNodeApprover()
+      );
 
+      // sleeping until isn't algorithm finished
       while (builder.getAlgorithmState() != NetworkBuilder.AlgorithmState.FINISHED) {
          try {
             Thread.sleep(3000);
@@ -73,6 +85,8 @@ public class AutonetworkEmbedded {
          }
       }
 
+      // getting cpoy of created dynamic network and replacing previous network, 
+      // which contained only coordinator
       network1 = builder.getNetwork();
 
       // getting node 1
@@ -93,6 +107,7 @@ public class AutonetworkEmbedded {
          System.out.println("Setting LEDG state ON failed");
       }
 
+      // free up used resources
       builder.destroy();
       simply.destroy();
    }
