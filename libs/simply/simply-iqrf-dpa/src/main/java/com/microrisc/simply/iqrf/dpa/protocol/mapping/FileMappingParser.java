@@ -231,9 +231,9 @@ public final class FileMappingParser {
      * @throws Exception if some error has been occured
      */
     private Map.Entry<String, PacketToMethodMapping> createResponseMethodMappings(Element elementMethod, short peripheralId) throws Exception {
-        String methodId = utils.getNode(elementMethod, "id").getTextContent();
+        String methodId = utils.getNode(elementMethod, "periheralCommandId").getTextContent();
 
-        Node nodeMethodId = utils.getNode(elementMethod, "id");
+        Node nodeMethodId = utils.getNode(elementMethod, "periheralCommandId");
         short responseId = utils.parseNumber(nodeMethodId.getTextContent());
         responseId += 0x80; // response identification
         List<PacketPositionValues> positionValues = new LinkedList<>();

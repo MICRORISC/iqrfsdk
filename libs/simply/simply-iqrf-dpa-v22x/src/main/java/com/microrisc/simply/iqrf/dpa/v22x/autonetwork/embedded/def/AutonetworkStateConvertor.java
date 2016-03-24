@@ -15,6 +15,7 @@
  */
 package com.microrisc.simply.iqrf.dpa.v22x.autonetwork.embedded.def;
 
+import com.microrisc.simply.protocol.mapping.ConvertorFactoryMethod;
 import com.microrisc.simply.typeconvertors.AbstractConvertor;
 import com.microrisc.simply.typeconvertors.ValueConversionException;
 import org.slf4j.Logger;
@@ -32,7 +33,8 @@ public class AutonetworkStateConvertor extends AbstractConvertor {
     private static AutonetworkStateConvertor instance = new AutonetworkStateConvertor();
     
     private AutonetworkStateConvertor(){}
-    
+
+    @ConvertorFactoryMethod
     public static AutonetworkStateConvertor getInstance(){
         return instance;
     }
