@@ -24,6 +24,8 @@ import com.microrisc.simply.iqrf.dpa.v22x.devices.OS;
 import com.microrisc.simply.iqrf.dpa.v22x.di_services.method_id_transformers.OSStandardTransformer;
 import com.microrisc.simply.iqrf.dpa.v22x.types.DPA_Request;
 import com.microrisc.simply.iqrf.dpa.v22x.types.HWP_Configuration;
+import com.microrisc.simply.iqrf.dpa.v22x.types.LoadingCodeProperties;
+import com.microrisc.simply.iqrf.dpa.v22x.types.LoadingResult;
 import com.microrisc.simply.iqrf.dpa.v22x.types.OsInfo;
 import com.microrisc.simply.iqrf.dpa.v22x.types.SleepInfo;
 import com.microrisc.simply.iqrf.types.VoidType;
@@ -37,6 +39,7 @@ import java.util.UUID;
  */
 //JUNE-2015 - implemented restart
 //SEPTEMBER 2015 - implemented write HWP config, write HWP config byte
+//MARCH 2016 - implemented load code
 public final class SimpleOS 
 extends DPA_DeviceObject implements OS {
     
@@ -74,6 +77,12 @@ extends DPA_DeviceObject implements OS {
             throw new IllegalArgumentException("Valid address range is "
             + CONFIG_ADDRESS_RANGE_START + " - " + CONFIG_ADDRESS_RANGE_END);
         }
+    }
+    
+    private static void checkLoadingCodeProperties(LoadingCodeProperties prop){
+       if(prop == null){
+          throw new IllegalArgumentException("Properties cannot be null.");
+       }
     }
     
     
@@ -163,7 +172,20 @@ extends DPA_DeviceObject implements OS {
                         new Object[] { getRequestHwProfile(), (HWP_Configuration) args[0] }, 
                         getDefaultWaitingTimeout()
                 ); 
-                //TODO this wite hwp config byte
+            case WRITE_HWP_CONFIGURATION_BYTE:
+                MethodArgumentsChecker.checkArgumentTypes(args, new Class[]{Integer.class, Integer.class});
+                 return dispatchCall(
+                        methodIdStr,
+                        new Object[] { getRequestHwProfile(), (Integer) args[0], (Integer) args[1] }, 
+                        getDefaultWaitingTimeout()
+                ); 
+            case LOAD_CODE:
+                MethodArgumentsChecker.checkArgumentTypes(args, new Class[]{LoadingCodeProperties.class});
+                 return dispatchCall(
+                        methodIdStr,
+                        new Object[] { getRequestHwProfile(), (LoadingCodeProperties) args[0] }, 
+                        getDefaultWaitingTimeout()
+                );
             default:
                 throw new IllegalArgumentException("Unsupported command: " + methodId);
         }
@@ -258,6 +280,14 @@ extends DPA_DeviceObject implements OS {
                 "11", new Object[] { getRequestHwProfile(), address, value }, getDefaultWaitingTimeout() 
         );
     }
+    
+   @Override
+   public UUID async_loadCode(LoadingCodeProperties properties) {
+      checkLoadingCodeProperties(properties);
+      return dispatchCall("12", new Object[]{getRequestHwProfile(),
+         properties}, getDefaultWaitingTimeout()
+      );
+   }
     
     
     // SYNCHRONOUS WRAPPERS IMPLEMENTATIONS
@@ -386,4 +416,16 @@ extends DPA_DeviceObject implements OS {
         }
         return getCallResult(uid, VoidType.class, getDefaultWaitingTimeout() );
     }
+
+   @Override
+   public LoadingResult loadCode(LoadingCodeProperties properties) {
+      checkLoadingCodeProperties(properties);
+      UUID uid = dispatchCall("12", new Object[]{getRequestHwProfile(),
+         properties}, getDefaultWaitingTimeout()
+      );
+      if (uid == null) {
+         return null;
+      }
+      return getCallResult(uid, LoadingResult.class, getDefaultWaitingTimeout());
+   }
 }

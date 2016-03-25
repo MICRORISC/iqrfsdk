@@ -1,5 +1,5 @@
 /* 
- * Copyright 2014 MICRORISC s.r.o.
+ * Copyright 2016 MICRORISC s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,79 +13,114 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.microrisc.simply.iqrf.dpa.v22x.typeconvertors;
 
-import com.microrisc.simply.iqrf.dpa.v22x.types.Thermometer_values;
+import com.microrisc.simply.iqrf.dpa.v22x.types.LoadingCodeProperties;
+import com.microrisc.simply.iqrf.dpa.v22x.types.LoadingCodeProperties.LoadingAction;
+import com.microrisc.simply.iqrf.dpa.v22x.types.LoadingCodeProperties.LoadingContent;
 import com.microrisc.simply.protocol.mapping.ConvertorFactoryMethod;
 import com.microrisc.simply.typeconvertors.PrimitiveConvertor;
 import com.microrisc.simply.typeconvertors.ValueConversionException;
+import java.util.Arrays;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Provides functionality for converting from {@code Thermometer} type values 
- * to {@code Thermometer} objects. 
- * 
- * @author Michal Konopa
+ * Provides functionality for converting from {@link LoadingCodeProperties} type
+ * values to proto values.
+ *
+ * @author Martin Strouhal
  */
-public final class ThermometerValueConvertor extends PrimitiveConvertor {
-    /** Logger. */
-    private static final Logger logger = LoggerFactory.getLogger(ThermometerValueConvertor.class);
-    
-    private ThermometerValueConvertor() {}
-    
-    /** Singleton. */
-    private static final ThermometerValueConvertor instance = new ThermometerValueConvertor();
-    
-    
-    /**
-     * @return {@code ThermometerValueConvertor} instance
-     */
-    @ConvertorFactoryMethod
-    static public ThermometerValueConvertor getInstance() {
-        return instance;
-    }
-    
-    /** Size of returned response. */
-    static public final int TYPE_SIZE = 3;
-    
-    @Override
-    public int getGenericTypeSize() {
-        return TYPE_SIZE;
-    }
-    
-    
-    // postitions of fields
-    static private final int INT_VALUE_POS = 0;
-    
-    static private final int FULL_VALUE_POS = 1;
-    static private final int FULL_VALUE_LENGTH = 2;
-    
-    
+public final class LoadingCodePropertiesConvertor extends PrimitiveConvertor {
 
-    /**
-     * Currently not supported. Throws {@code UnsupportedOperationException }.
-     * @throws UnsupportedOperationException 
-     */
-    @Override
-    public short[] toProtoValue(Object value) throws ValueConversionException {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
+   /** Logger. */
+   private static final Logger logger = LoggerFactory.getLogger(
+           LoadingCodePropertiesConvertor.class);
 
-    @Override
-    public Object toObject(short[] protoValue) throws ValueConversionException {
-        logger.debug("toObject - start: protoValue={}", protoValue);
-        
-        short value = protoValue[INT_VALUE_POS];
-        
-        short[] fullValue = new short[FULL_VALUE_LENGTH];
-        System.arraycopy(protoValue, FULL_VALUE_POS, fullValue, 0, FULL_VALUE_LENGTH);
-        byte fractialPart = (byte)(fullValue[0] & 0x0F);
-        
-        Thermometer_values thermometerValues = new Thermometer_values(value, fractialPart);
-        
-        logger.debug("toObject - end: {}", thermometerValues);
-        return thermometerValues;
-    }
+   private LoadingCodePropertiesConvertor() {
+   }
+
+   /** Singleton. */
+   private static final LoadingCodePropertiesConvertor instance = new LoadingCodePropertiesConvertor();
+
+
+   /**
+    * @return {@code LoadingCodePropertiesConvertor} instance
+    */
+   @ConvertorFactoryMethod
+   static public LoadingCodePropertiesConvertor getInstance() {
+      return instance;
+   }
+
+   /** Size of returned response. */
+   static public final int TYPE_SIZE = 7;
+
+   @Override
+   public int getGenericTypeSize() {
+      return TYPE_SIZE;
+   }
+
+
+   // postitions of fields
+   static private final int FLAGS_VALUE_POS = 0;
+   static private final int ADDRES_VALUE_POS = 1;
+   static private final int LENGTH_VALUE_POS = 3;
+   static private final int CHECKSUM_VALUE_POS = 3;
+
+   
+   @Override
+   public short[] toProtoValue(Object value) throws ValueConversionException {
+      logger.debug("toProtoValue - start: value={}", value);
+
+      if (!(value instanceof LoadingCodeProperties)) {
+         throw new ValueConversionException(
+                 "Value to convert has not proper type.");
+      }
+      
+      LoadingCodeProperties codeProp = (LoadingCodeProperties)value;
+      
+      short[] protoValue = new short[TYPE_SIZE];
+      
+      // FLAGS
+      if(codeProp.getContent() == LoadingContent.IQRF_Plugin){
+         protoValue[FLAGS_VALUE_POS] = 1;
+      }else{
+         protoValue[FLAGS_VALUE_POS] = 0;
+      }
+      protoValue[FLAGS_VALUE_POS] <<= 1;
+      if(codeProp.getAction() == LoadingAction.ComputeAndMatchChecksumWithCodeLoading){
+         protoValue[FLAGS_VALUE_POS]++;
+      }
+      
+      // ADDRESS
+      int address = codeProp.getAddress();
+      protoValue[ADDRES_VALUE_POS+1] = (short) (address & 0xFF); 
+      address >>= 8;
+      protoValue[ADDRES_VALUE_POS] = (short)address; 
+      
+      // LENGTH
+      int length = codeProp.getLength();
+      protoValue[LENGTH_VALUE_POS+1] = (short) (length & 0xFF); 
+      length >>= 8;
+      protoValue[LENGTH_VALUE_POS] = (short)length; 
+      
+      // CHECKSUM
+      int checksum = codeProp.getChecksum();
+      protoValue[CHECKSUM_VALUE_POS+1] = (short) (checksum & 0xFF); 
+      checksum >>= 8;
+      protoValue[CHECKSUM_VALUE_POS] = (short)checksum; 
+      
+      logger.debug("toProtoValue - end: " + Arrays.toString(protoValue));
+      return protoValue;
+   }
+
+   /**
+    * Currently not supported. Throws {@code UnsupportedOperationException }.
+    *
+    * @throws UnsupportedOperationException
+    */
+   @Override
+   public Object toObject(short[] protoValue) throws ValueConversionException {
+      throw new UnsupportedOperationException("Not supported yet.");
+   }
 }
