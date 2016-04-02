@@ -65,7 +65,7 @@ public final class LoadingCodePropertiesConvertor extends PrimitiveConvertor {
    static private final int FLAGS_VALUE_POS = 0;
    static private final int ADDRES_VALUE_POS = 1;
    static private final int LENGTH_VALUE_POS = 3;
-   static private final int CHECKSUM_VALUE_POS = 3;
+   static private final int CHECKSUM_VALUE_POS = 5;
 
    
    @Override
@@ -94,21 +94,21 @@ public final class LoadingCodePropertiesConvertor extends PrimitiveConvertor {
       
       // ADDRESS
       int address = codeProp.getAddress();
-      protoValue[ADDRES_VALUE_POS+1] = (short) (address & 0xFF); 
+      protoValue[ADDRES_VALUE_POS] = (short) (address & 0xFF); 
       address >>= 8;
-      protoValue[ADDRES_VALUE_POS] = (short)address; 
+      protoValue[ADDRES_VALUE_POS+1] = (short)address; 
       
       // LENGTH
       int length = codeProp.getLength();
-      protoValue[LENGTH_VALUE_POS+1] = (short) (length & 0xFF); 
+      protoValue[LENGTH_VALUE_POS] = (short) (length & 0xFF); 
       length >>= 8;
-      protoValue[LENGTH_VALUE_POS] = (short)length; 
+      protoValue[LENGTH_VALUE_POS+1] = (short)length; 
       
       // CHECKSUM
       int checksum = codeProp.getChecksum();
-      protoValue[CHECKSUM_VALUE_POS+1] = (short) (checksum & 0xFF); 
+      protoValue[CHECKSUM_VALUE_POS] = (short) (checksum & 0xFF); 
       checksum >>= 8;
-      protoValue[CHECKSUM_VALUE_POS] = (short)checksum; 
+      protoValue[CHECKSUM_VALUE_POS+1] = (short)checksum; 
       
       logger.debug("toProtoValue - end: " + Arrays.toString(protoValue));
       return protoValue;

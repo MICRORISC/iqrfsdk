@@ -42,4 +42,9 @@ public class LoadingResult {
    public boolean getResult(){
       return result;
    }
+
+   @Override
+   public String toString() {
+      return result ? "Loading was successfull." : "Loading was unsuccessfull.";
+   }
 }

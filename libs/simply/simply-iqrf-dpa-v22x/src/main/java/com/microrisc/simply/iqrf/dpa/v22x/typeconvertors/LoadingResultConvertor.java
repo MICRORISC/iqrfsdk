@@ -23,15 +23,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Provides functionality for converting from {@link LoadingResultConvertor} type
- * values to proto values.
+ * Provides functionality for converting from {@link LoadingResultConvertor}
+ * type values to proto values.
  *
  * @author Martin Strouhal
  */
 public final class LoadingResultConvertor extends PrimitiveConvertor {
 
    /** Logger. */
-   private static final Logger logger = LoggerFactory.getLogger(LoadingResultConvertor.class);
+   private static final Logger logger = LoggerFactory.getLogger(
+           LoadingResultConvertor.class);
 
    private LoadingResultConvertor() {
    }
@@ -71,14 +72,16 @@ public final class LoadingResultConvertor extends PrimitiveConvertor {
    public Object toObject(short[] protoValue) throws ValueConversionException {
       logger.debug("toObject - start: protoValue={}", protoValue);
       LoadingResult result;
-      if(protoValue.length >= TYPE_SIZE){
-         if(protoValue[0] == 1){
+      if (protoValue.length >= TYPE_SIZE) {
+         if (protoValue[0] == 1) {
             result = new LoadingResult(true);
+         } else {
+            result = new LoadingResult(false);
          }
-      }else{
+      } else {
          logger.warn("Length of protoValue is 0 instead of 1.");
+         result = new LoadingResult(false);
       }
-      result = new LoadingResult(false);
       logger.debug("toObject - end: {}", result);
       return result;
    }

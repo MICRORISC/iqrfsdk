@@ -339,6 +339,10 @@
 	<logger name="com.microrisc.simply.iqrf.dpa.v22x.typeconvertors.ThermometerValueConvertor" level="INHERITED">
 		<appender-ref ref="FILE" />
     </logger>
+
+   <logger name="com.microrisc.simply.iqrf.dpa.v22x.typeconvertors.LoadingResultConvertor" level="INHERITED">
+		<appender-ref ref="FILE" />
+    </logger>
         
 	
     <!-- com.microrisc.simply.network.usbcdc package --> 
