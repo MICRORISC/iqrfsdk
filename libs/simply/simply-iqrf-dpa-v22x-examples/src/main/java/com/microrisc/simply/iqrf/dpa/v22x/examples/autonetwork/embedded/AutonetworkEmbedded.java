@@ -20,6 +20,7 @@ import com.microrisc.simply.Node;
 import com.microrisc.simply.SimplyException;
 import com.microrisc.simply.iqrf.dpa.DPA_Simply;
 import com.microrisc.simply.iqrf.dpa.v22x.DPA_SimplyFactory;
+import com.microrisc.simply.iqrf.dpa.v22x.autonetwork.embedded.def.AutonetworkValueType;
 import com.microrisc.simply.iqrf.dpa.v22x.autonetwork.embedded.logic.NetworkBuilder;
 import com.microrisc.simply.iqrf.dpa.v22x.devices.Coordinator;
 import com.microrisc.simply.iqrf.dpa.v22x.devices.LEDG;
@@ -28,16 +29,19 @@ import com.microrisc.simply.iqrf.types.VoidType;
 import java.io.File;
 
 /**
- * Example of using Autonetwork embedded system.
+ * Example of using Autonetwork embedded system. <br>
+ * This example works with allowed autonetwork embedded peripheral and with at
+ * least 2 TR modules with Autonetwork custom handler uploaded.<br>
+ * Second node should turn on after the LED on first node is light on.
  *
  * @author Martin Strouhal
  */
 public class AutonetworkEmbedded {
 
-    /**
-     * reference to Simply
-     */
+    /** reference to Simply */
     private static DPA_Simply simply;
+    /** reference to network */
+    private static Network network1;
 
     // prints out specified message, destroys the Simply and exits
     private static void printMessageAndExit(String message) {
@@ -49,7 +53,6 @@ public class AutonetworkEmbedded {
     }
 
     public static void main(String[] args) {
-
         // creating the Simply instance
         try {
             simply = DPA_SimplyFactory.getSimply(
@@ -59,7 +62,7 @@ public class AutonetworkEmbedded {
         }
 
         // getting network 1
-        Network network1 = simply.getNetwork("1", Network.class);
+        network1 = simply.getNetwork("1", Network.class);
         if (network1 == null) {
             printMessageAndExit("Network 1 doesn't exist");
         }
@@ -82,23 +85,34 @@ public class AutonetworkEmbedded {
             printMessageAndExit("Clearing the coordinator network memory failed");
         }
         
-        NetworkBuilder builder = new NetworkBuilder(network1, simply.
-                getAsynchronousMessagingManager());
+        NetworkBuilder builder = new NetworkBuilder(network1, 
+                simply.getAsynchronousMessagingManager()
+        );
 
         // max. power => 7
         int discoveryTXPower = 7;
-
         // bonding time => 2.56*8 = 20.48 s
         int bondingTime = 8;
-
         // temporary address timeout => 25.6 * 3 = 76.8 s
         int temporaryAddressTimeout = 3;
-
         // yes unbond and restart 0xFE nodes
         boolean unbondAndRestart = true;
+        
+        // optional setting - see default values in constructor of builder
+        builder.setValue(AutonetworkValueType.DISCOVERY_TX_POWER, discoveryTXPower);
+        builder.setValue(AutonetworkValueType.BONDING_TIME, bondingTime);
+        builder.setValue(AutonetworkValueType.TEMPORARY_ADDRESS_TIMEOUT, temporaryAddressTimeout);
+        builder.setValue(AutonetworkValueType.UNBOND_AND_RESTART, unbondAndRestart);
+        
+        // setting of node approver which deciding if should new node bonded
+        builder.setValue(AutonetworkValueType.APPROVER, new SimpleNodeApprover());
+        
+        // start first part algorithm with 2 waves
+        System.out.println("First part:");
+        int countOfWaves = 0x02;
+        builder.startAutonetwork(countOfWaves);
 
-        builder.startAutonetwork(discoveryTXPower, bondingTime, temporaryAddressTimeout, unbondAndRestart, new SimpleNodeApprover());
-
+        // waiting to end of algorithm
         while (builder.getAlgorithmState() != NetworkBuilder.AlgorithmState.FINISHED) {
             try {
                 Thread.sleep(3000);
@@ -107,27 +121,62 @@ public class AutonetworkEmbedded {
             }
         }
 
+        // get actual state of nodes in network
         network1 = builder.getNetwork();
 
-        // getting node 1
-        Node node1 = network1.getNode("1");
-        if (node1 == null) {
-            printMessageAndExit("Node 1 doesn't exist");
+        // light on LED on new node "1"
+        lightOnLED("1");
+
+        // generate 5 seconds time for turn on next unbonded module after 
+        // LED on node 1 was light on
+        try {
+          Thread.sleep(5000);
+       } catch (InterruptedException ex) {
+          System.out.println(ex);
+       }
+
+        
+        System.out.println("Second part:");
+        countOfWaves = 0x0A;
+        builder.startAutonetwork(countOfWaves);
+        
+        // waiting to end algorithm
+        while (builder.getAlgorithmState() != NetworkBuilder.AlgorithmState.FINISHED) {
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException ex) {
+                System.out.println(ex);
+            }
         }
 
-        // getting LEDG interface
-        LEDG ledg = node1.getDeviceObject(LEDG.class);
-        if (ledg == null) {
-            printMessageAndExit("LEDG doesn't exist or is not enabled");
-        }
-
-        // setting state of LEDG to 'ON'
-        VoidType setResult = ledg.set(LED_State.ON);
-        if (setResult == null) {
-            System.out.println("Setting LEDG state ON failed");
-        }
-
+        // get actual state of nodes in network
+        network1 = builder.getNetwork();
+        
+        // light on LED on new node "2"
+        lightOnLED("2");
+        
+        // free up resources
         builder.destroy();
         simply.destroy();
     }
+    
+    private static void lightOnLED(String nodeId) {
+      // getting node with nodeId
+      Node node1 = network1.getNode(nodeId);
+      if (node1 == null) {
+         printMessageAndExit("Node " + nodeId + " doesn't exist");
+      }
+
+      // getting LEDG interface
+      LEDG ledg = node1.getDeviceObject(LEDG.class);
+      if (ledg == null) {
+         printMessageAndExit("LEDG doesn't exist or is not enabled");
+      }
+
+      // setting state of LEDG to 'ON'
+      VoidType setResult = ledg.set(LED_State.ON);
+      if (setResult == null) {
+         System.out.println("Setting LEDG state ON failed");
+      }
+   }
 }

@@ -24,6 +24,7 @@ import com.microrisc.simply.iqrf.dpa.asynchrony.DPA_AsynchronousMessagePropertie
 import com.microrisc.simply.iqrf.dpa.v22x.autonetwork.embedded.def.AutonetworkPeripheral;
 import com.microrisc.simply.iqrf.dpa.v22x.autonetwork.embedded.def.AutonetworkState;
 import com.microrisc.simply.iqrf.dpa.v22x.autonetwork.embedded.def.AutonetworkStateType;
+import com.microrisc.simply.iqrf.dpa.v22x.autonetwork.embedded.def.AutonetworkValueType;
 import com.microrisc.simply.iqrf.dpa.v22x.devices.EEPROM;
 import com.microrisc.simply.iqrf.dpa.v22x.devices.RAM;
 import com.microrisc.simply.iqrf.dpa.v22x.types.RemotelyBondedModuleId;
@@ -33,12 +34,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Provides funcionality for automatic network building via Autonetwork
+ * Provides functionality for automatic network building via Autonetwork
  * embedded.
  * <p>
  * @author Martin Strouhal
  */
-public class NetworkBuilder implements
+public final class NetworkBuilder implements
         AsynchronousMessagesListener<DPA_AsynchronousMessage> {
 
    /** Identify actual state of network building. */
@@ -56,7 +57,39 @@ public class NetworkBuilder implements
    private NodeApprover approver;
    private AlgorithmState alogirthmState = AlgorithmState.NON_STARTED;
    private AutonetworkBuildingListener buildingListener;
+   /** Flag for using approver - when isn't accessible correct peripheral, 
+    * it can't be used. */
+   private boolean disallowedApprover = false;
 
+   /**
+    * Creates and init new instance of {@link NetworkBuilder}.<br>
+    * <b>Default values are used:</b>
+    * <table border="1">
+    *    <tr>
+    *       <th>Value name</th>
+    *       <th>Value</th>
+    *    </tr>
+    *    <tr>
+    *       <td>Discovery TX power</td>
+    *       <td>7</td>
+    *    </tr>
+    *    <tr>
+    *       <td>Bonding time</td>
+    *       <td>8</td>
+    *    </tr>
+    *    <tr>
+    *       <td>Temporary address timeout</td>
+    *       <td>3</td>
+    *    </tr>
+    *    <tr>
+    *       <td>Unbond and restart</td>
+    *       <td>true</td>
+    *    </tr>
+    * </table>
+    * 
+    * @param sourceNetwork which contains at least Coordinator
+    * @param asyncManager for receing async events
+    */
    public NetworkBuilder(
            Network sourceNetwork,
            AsynchronousMessagingManager<DPA_AsynchronousMessage, DPA_AsynchronousMessageProperties> asyncManager
@@ -79,78 +112,75 @@ public class NetworkBuilder implements
       this.asyncManager.registerAsyncMsgListener(this);
       
       autonetworkListeners = new LinkedList<>();
-      // add native listener for dnymaic network building
+      // add native listener for dynmaic network building
       buildingListener = new AutonetworkBuildingListener(sourceNetwork);
       autonetworkListeners.add(buildingListener);
-   }
-
-   
-   /**
-    * Start autonetwork with specified parameters and bond nodes approved by
-    * {@code approver}.
-    *
-    * @param discoveryTXPower discovery TX power in interval  <0,7>
-    * @param bondingTime nominal bonding time in 2.56 s units. Must be longer
-    * then ( NumberOfNodes + 4 ) * 60 ms.
-    * @param temporaryAddressTimeout is node temporary address timeout in 25.6 s
-    * units. Must be long enough the temporary address does not timeout till all
-    * previous nodes are authorized.
-    * @param unbondAndRestart If is set then all nodes with temporary address be
-    * node bonded 0xFE are unbonded and restarted before discovery
-    * @param approver if it's not null, it's determined via this approver if
-    * can, approver can be null - in this case it won't be used
-    */
-   public void startAutonetwork(int discoveryTXPower, int bondingTime,
-           int temporaryAddressTimeout, boolean unbondAndRestart,
-           NodeApprover approver) {
-
-      boolean forwardBondedMid = (approver == null) ? false : true;
-
-      // checking params
-      if (discoveryTXPower < 0 || discoveryTXPower > 7) {
-         String txt = "TX power must be in interval <0,7>.";
-         log.error(txt);
-         throw new IllegalArgumentException(txt);
+      
+      // get peripheral for approver, if isn't accesible than disallow his using
+      autonetworkPer = coord.getDeviceObject(AutonetworkPeripheral.class);
+      if (autonetworkPer == null) {
+         String txt = "Autonetwork peripheral doesn't exist on Coordinator! Approver cannot be used!";
+         log.warn(txt);
+         disallowedApprover = true;
       }
       
-      if (temporaryAddressTimeout < 0 || bondingTime < 0) {
-         String txt = "Node temporary address timeout and bonding time cannot be negative!";
-         log.error(txt);
-         throw new IllegalArgumentException(txt);
-      }
+      // set default values
+      setValue(AutonetworkValueType.DISCOVERY_TX_POWER, 7);
+      setValue(AutonetworkValueType.BONDING_TIME, 8);
+      setValue(AutonetworkValueType.TEMPORARY_ADDRESS_TIMEOUT, 3);
+      setValue(AutonetworkValueType.UNBOND_AND_RESTART, true);
+   }
 
-      // prepare config byte from booleans
-      int configByte = (unbondAndRestart == true) ? 1 : 0;
-      configByte <<= 1;
-      configByte += (forwardBondedMid == true) ? 1 : 0;
-
-      // getting Autonetwork peripheral if it's need
-      if (forwardBondedMid) {
-         autonetworkPer = coord.getDeviceObject(AutonetworkPeripheral.class);
-         if (autonetworkPer == null) {
-            String txt = "Autonetwork peripheral doesn't exist on Coordinator!";
-            log.error(txt);
-            throw new RuntimeException(txt);
+   /**
+    * Sets value of specified type for autonetwork algorithm.
+    * 
+    * @param type of value which should be set
+    * @param value which should be set
+    *
+    * @throws IllegalArgumentException thrown when:
+    * <ul>
+    * <li>{@code value} doesn't have correct data type</li>
+    * <li>or if it's setting approver which can be used because doesn't exist
+    * autonetwork peripheral on coordinator</li>
+    * </ul>
+    */
+   public void setValue(AutonetworkValueType type, Object value) {
+      log.debug("setValue - start");
+      if (type.getDataType().isAssignableFrom(value.getClass())) {
+         if (type.getDataType().equals(Integer.class)) {
+            setNumberValue((int) value, type.getBytePos());
+            log.debug("setValue - end");
+            return;
+         } else if (type.getDataType().equals(Boolean.class)) {
+            setBooleanValue((boolean) value, type.getBytePos(), type.getBitPos());
+            log.debug("setValue - end");
+            return;
+         } else if (NodeApprover.class.isAssignableFrom(value.getClass())){
+            if(disallowedApprover){
+               String txt = "Autonetwork peripheral couldn't get from Coordinator. Approver cannot be used!";
+               log.warn(txt);
+               log.debug("setValue - end: Exception");
+               throw new IllegalArgumentException(txt);
+            } else {
+               this.approver = (NodeApprover) value;
+               setBooleanValue(true, type.getBytePos(), type.getBitPos());
+               log.debug("setValue - end");
+               return;
+            }
          }
-         this.approver = approver;
       }
-
-      // getting RAM DI
-      EEPROM eeprom = coord.getDeviceObject(EEPROM.class);
-      if (eeprom == null) {
-         String txt = "RAM doesn't exist on Coordinator!";
-         log.error(txt);
-         throw new RuntimeException(txt);
-      }
-
-      // writing configuration
-      eeprom.write(0x00, new short[]
-        {(short) discoveryTXPower,
-         (short) bondingTime,
-         (short) temporaryAddressTimeout, 
-         (short) configByte
-        });
-
+      log.debug("setValue - end: Exception - Illegal DataType of config value.");
+      throw new IllegalArgumentException("Illegal DataType of config value.");
+   }
+   
+   /**
+    * Start autonetwork with specified count of waves and bond nodes approved by
+    * {@link NodeApprover} (if was set).
+    * 
+    * @param countOfWaves count of waves
+    *
+    */
+   public void startAutonetwork(int countOfWaves) {
       // getting RAM DI
       RAM ram = coord.getDeviceObject(RAM.class);
       if (ram == null) {
@@ -160,26 +190,8 @@ public class NetworkBuilder implements
       }
 
       // start autonetwork on Coordinator
-      ram.write(0x00, new short[]{ 0x0A });
+      ram.write(0x00, new short[]{(short) countOfWaves});
       alogirthmState = AlgorithmState.RUNNING;
-   }
-
-   /**
-    * Start autonetwork with specified parameters and bond all nodes.
-    *
-    * @param discoveryTXPower discovery TX power in interval  <0,7>
-    * @param bondingTime nominal bonding time in 2.56 s units. Must be longer
-    * then ( NumberOfNodes + 4 ) * 60 ms.
-    * @param temporaryAddressTimeout is node temporary address timeout in 25.6 s
-    * units. Must be long enough the temporary address does not timeout till all
-    * previous nodes are authorized.
-    * @param unbondAndRestart If is set then all nodes with temporary address be
-    * node bonded 0xFE are unbonded and restarted before discovery
-    */
-   public void startAutonetwork(int discoveryTXPower, int bondingTime,
-           int temporaryAddressTimeout, boolean unbondAndRestart) {
-      NetworkBuilder.this.startAutonetwork(discoveryTXPower, bondingTime,
-              temporaryAddressTimeout, unbondAndRestart, null);
    }
    
    @Override
@@ -215,10 +227,18 @@ public class NetworkBuilder implements
       log.debug("onAsynchronousMessage - end");
    }
 
+   /**
+    * Returns actual state of algorithm.
+    * @return actual state, see {@link AlgorithmState}
+    */
    public AlgorithmState getAlgorithmState() {
       return alogirthmState;
    }
 
+   /** 
+    * Create actual copy of built network.
+    * @return copy of actual network
+    */
    public Network getNetwork() {
       if (alogirthmState != AlgorithmState.FINISHED) {
          throw new IllegalStateException("Algorithm is running still!");
@@ -226,6 +246,7 @@ public class NetworkBuilder implements
       return buildingListener.getNetworkCopy();
    }
 
+   /** Free up used resources. */
    public void destroy() {
       log.debug("destroy - start");
       asyncManager.unregisterAsyncMsgListener(this);
@@ -235,7 +256,7 @@ public class NetworkBuilder implements
       autonetworkListeners.clear();
       log.debug("destroy - end");
    }
-
+   
    // checks if algorithm was succesfully ended
    private void checkAlgorithmEnd(AutonetworkState state) {
       if (state.getType() == AutonetworkStateType.S_START) {
@@ -248,5 +269,36 @@ public class NetworkBuilder implements
             log.warn("Received autonetwork message doesn't contain count of remaing waves.");
          }
       }
+   }
+   
+   private void setNumberValue(int value, int pos){
+      // getting EEEPROM DI
+      EEPROM eeprom = coord.getDeviceObject(EEPROM.class);
+      if (eeprom == null) {
+         String txt = "EEEPROM doesn't exist on Coordinator!";
+         log.error(txt);
+         throw new RuntimeException(txt);
+      }
+
+      // writing configuration
+      eeprom.write(pos, new short[]{(short) value});
+      //TODO check result
+   }
+   
+   private void setBooleanValue(boolean value, int bytePos, int bitPos) {
+      // getting EEEPROM DI
+      EEPROM eeprom = coord.getDeviceObject(EEPROM.class);
+      if (eeprom == null) {
+         String txt = "EEEPROM doesn't exist on Coordinator!";
+         log.error(txt);
+         throw new RuntimeException(txt);
+      }
+
+      short shortValue = value == true ? (short) 1 : (short) 0;
+      shortValue <<= bitPos;
+      
+      // writing configuration
+      eeprom.write(bytePos, new short[]{shortValue});
+      //TODO check result
    }
 }
