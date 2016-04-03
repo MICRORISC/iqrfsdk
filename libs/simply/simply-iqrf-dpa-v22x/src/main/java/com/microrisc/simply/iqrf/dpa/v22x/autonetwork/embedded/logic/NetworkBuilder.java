@@ -94,6 +94,8 @@ public final class NetworkBuilder implements
            Network sourceNetwork,
            AsynchronousMessagingManager<DPA_AsynchronousMessage, DPA_AsynchronousMessageProperties> asyncManager
    ) {
+      log.debug("<init> - start: sourceNetwork={}, asyncManager={}", 
+              sourceNetwork, asyncManager);
       if (sourceNetwork == null) {
          throw new RuntimeException("Source network doesn't exist");
       }
@@ -129,6 +131,8 @@ public final class NetworkBuilder implements
       setValue(AutonetworkValueType.BONDING_TIME, 8);
       setValue(AutonetworkValueType.TEMPORARY_ADDRESS_TIMEOUT, 3);
       setValue(AutonetworkValueType.UNBOND_AND_RESTART, true);
+      log.info("Initialization of network builder was completed.");
+      log.debug("<init> - end");
    }
 
    /**
@@ -181,17 +185,20 @@ public final class NetworkBuilder implements
     *
     */
    public void startAutonetwork(int countOfWaves) {
+      log.debug("startAutonetwork - start: countOfWaves={}", countOfWaves);
       // getting RAM DI
       RAM ram = coord.getDeviceObject(RAM.class);
       if (ram == null) {
          String txt = "RAM doesn't exist on Coordinator!";
          log.error(txt);
+         log.debug("startAutonetwork - end: {}", txt);
          throw new RuntimeException(txt);
       }
 
       // start autonetwork on Coordinator
       ram.write(0x00, new short[]{(short) countOfWaves});
       alogirthmState = AlgorithmState.RUNNING;
+      log.debug("startAutonetwork - end");
    }
    
    @Override
@@ -240,10 +247,14 @@ public final class NetworkBuilder implements
     * @return copy of actual network
     */
    public Network getNetwork() {
+      log.debug("getNetwork - start");
       if (alogirthmState != AlgorithmState.FINISHED) {
+         log.debug("getNetwork - end: Algoruthm is running still!");
          throw new IllegalStateException("Algorithm is running still!");
       }
-      return buildingListener.getNetworkCopy();
+      Network network = buildingListener.getNetworkCopy();
+      log.debug("getNetwork - end: {}", network);
+      return network;
    }
 
    /** Free up used resources. */
@@ -259,8 +270,8 @@ public final class NetworkBuilder implements
    
    // checks if algorithm was succesfully ended
    private void checkAlgorithmEnd(AutonetworkState state) {
+      log.debug("checkAlgorithmEnd - start: state={}", state);
       if (state.getType() == AutonetworkStateType.S_START) {
-
          try {
             if(state.getAdditionalData(1) == 0) {
                alogirthmState = AlgorithmState.FINISHED;
@@ -268,10 +279,14 @@ public final class NetworkBuilder implements
          } catch (IllegalArgumentException ex) {
             log.warn("Received autonetwork message doesn't contain count of remaing waves.");
          }
+         log.debug("checkAlgorithmEnd - end: algorithmState={}", alogirthmState);
+      }else{
+         log.debug("checkAlgorithmEnd - end: AutonetworkState doesn't contain information about count of remaing waves.");
       }
    }
    
    private void setNumberValue(int value, int pos){
+      log.debug("setNumberValue - start: value={}, pos={}", value, pos);
       // getting EEEPROM DI
       EEPROM eeprom = coord.getDeviceObject(EEPROM.class);
       if (eeprom == null) {
@@ -283,9 +298,12 @@ public final class NetworkBuilder implements
       // writing configuration
       eeprom.write(pos, new short[]{(short) value});
       //TODO check result
+      log.debug("setNumberValue - end");
    }
    
    private void setBooleanValue(boolean value, int bytePos, int bitPos) {
+      log.debug("setBooleanValue - start: value={}, bytePos={}, bitPos={}", 
+              value, bytePos, bitPos);
       // getting EEEPROM DI
       EEPROM eeprom = coord.getDeviceObject(EEPROM.class);
       if (eeprom == null) {
@@ -300,5 +318,6 @@ public final class NetworkBuilder implements
       // writing configuration
       eeprom.write(bytePos, new short[]{shortValue});
       //TODO check result
+      log.debug("setBooleanValue - end");
    }
 }
