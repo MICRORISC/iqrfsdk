@@ -18,6 +18,11 @@ releases
 zips
 tests
 
+# eclipse
+.classpath
+.project
+.settings/
+
 libs/clouds/cloud-iqrf-examples/target
 
 libs/iqrf/cdc-uart/jssc-examples/versions/1.0.0/target/
