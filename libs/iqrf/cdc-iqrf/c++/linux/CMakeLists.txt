@@ -22,3 +22,4 @@ install(TARGETS ${project} DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
 
 #example build
 add_subdirectory(example)
+add_subdirectory(java)
