@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.microrisc.simply.iqrf.dpa</groupId>
     <artifactId>simply-iqrf-dpa-v22x</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
     
     <name>simply-iqrf-dpa-v22x</name>
@@ -38,9 +38,19 @@
             <version>2.6</version>
         </dependency>
         <dependency>
-            <groupId>${project.groupId}</groupId>
+            <groupId>com.microrisc.simply.iqrf.dpa</groupId>
             <artifactId>simply-iqrf-dpa</artifactId>
-            <version>3.0.0-SNAPSHOT</version>
+            <version>3.1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.microrisc.simply.iqrf</groupId>
+            <artifactId>simply-iqrf</artifactId>
+            <version>2.1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.microrisc.simply</groupId>
+            <artifactId>simply-core</artifactId>
+            <version>2.2.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
     

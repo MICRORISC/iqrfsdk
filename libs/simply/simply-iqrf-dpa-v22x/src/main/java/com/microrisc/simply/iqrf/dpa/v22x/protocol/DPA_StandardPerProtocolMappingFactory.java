@@ -49,6 +49,8 @@ import com.microrisc.simply.iqrf.dpa.v22x.typeconvertors.FRC_DataConvertor;
 import com.microrisc.simply.iqrf.dpa.v22x.typeconvertors.FRC_SelectCommandConvertor;
 import com.microrisc.simply.iqrf.dpa.v22x.typeconvertors.HWP_ConfigurationConvertor;
 import com.microrisc.simply.iqrf.dpa.v22x.typeconvertors.LED_StateConvertor;
+import com.microrisc.simply.iqrf.dpa.v22x.typeconvertors.LoadingCodePropertiesConvertor;
+import com.microrisc.simply.iqrf.dpa.v22x.typeconvertors.LoadingResultConvertor;
 import com.microrisc.simply.iqrf.dpa.v22x.typeconvertors.NodeStatusInfoConvertor;
 import com.microrisc.simply.iqrf.dpa.v22x.typeconvertors.OsInfoConvertor;
 import com.microrisc.simply.iqrf.dpa.v22x.typeconvertors.PWM_ParametersConvertor;
@@ -582,7 +584,7 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
         return new MethodToPacketMapping(constMapping, argMapping);
     }
     
-        static private MethodToPacketMapping createWriteHWPConfigurationByteMapping() {
+   static private MethodToPacketMapping createWriteHWPConfigurationByteMapping() {
         List<ConstValueToPacketMapping> constMapping = new LinkedList<>();
         constMapping.add(new ConstValueToPacketMapping(3, new short[]{0x09}));
 
@@ -593,8 +595,19 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
 
         return new MethodToPacketMapping(constMapping, argMapping);
     }
-    
-    static private InterfaceToPacketMapping createRequestOsMapping() {
+   
+   static private MethodToPacketMapping createLoadCode() {
+      List<ConstValueToPacketMapping> constMapping = new LinkedList<>();
+      constMapping.add(new ConstValueToPacketMapping(3, new short[]{0x0A}));
+
+      List<ValueToPacketMapping> argMapping = new LinkedList<>();
+      argMapping.add(new ValueToPacketMapping(4, Uns16Convertor.getInstance()));
+      argMapping.add(new ValueToPacketMapping(6, LoadingCodePropertiesConvertor.getInstance()));
+
+      return new MethodToPacketMapping(constMapping, argMapping);
+   }
+
+   static private InterfaceToPacketMapping createRequestOsMapping() {
         List<ConstValueToPacketMapping> constMappings = new LinkedList<>();
         constMappings.add(new ConstValueToPacketMapping(2, new short[]{2}));
 
@@ -611,6 +624,7 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
         methodMappings.put("9", createRestartMapping());
         methodMappings.put("10", createWriteHWPConfigurationMapping());
         methodMappings.put("11", createWriteHWPConfigurationByteMapping());
+        methodMappings.put("12", createLoadCode());
 
         return new InterfaceToPacketMapping(constMappings, methodMappings);
     }
@@ -1546,6 +1560,16 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
         return new PacketToMethodMapping("11", packetValues, resultMapping);
     }
     
+    static private PacketToMethodMapping createResponseLoadCode() {
+        List<PacketPositionValues> packetValues = new LinkedList<>();
+        packetValues.add(new PacketPositionValues(3, (short) 0x8A));
+
+        PacketToValueMapping resultMapping = new PacketToValueMapping(
+                8, 1, LoadingResultConvertor.getInstance()
+        );
+        return new PacketToMethodMapping("12", packetValues, resultMapping);
+    }
+    
     static private PacketToInterfaceMapping createResponseOsMapping() {
         List<PacketPositionValues> packetValues = new LinkedList<>();
         packetValues.add(new PacketPositionValues(2, (short) 2));
@@ -1563,6 +1587,7 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
         methodMappings.put("9", createResponseRestart());
         methodMappings.put("10", createResponseWriteHWPConfig());
         methodMappings.put("11", createResponseWriteHWPConfigByte());
+        methodMappings.put("12", createResponseLoadCode());
 
         return new PacketToInterfaceMapping(OS.class, packetValues, methodMappings);
     }
@@ -1801,7 +1826,37 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
         );
         return new PacketToMethodMapping("3", packetValues, resultMapping);
     }
+    
+    static private PacketToMethodMapping createEnableAsynchronyRequestSetDirection(){
+        List<PacketPositionValues> packetValues = new LinkedList<>();
+        packetValues.add(new PacketPositionValues(3, (short) 0x00));
 
+        PacketToValueMapping resultMapping = new PacketToValueMapping(
+                8, PrimArrayUns8Convertor.getInstance()
+        );
+        return new PacketToMethodMapping("4", packetValues, resultMapping);        
+    }
+    
+    static private PacketToMethodMapping createEnableAsynchronyRequestSetOutputState(){
+        List<PacketPositionValues> packetValues = new LinkedList<>();
+        packetValues.add(new PacketPositionValues(3, (short) 0x01));
+
+        PacketToValueMapping resultMapping = new PacketToValueMapping(
+                8, PrimArrayUns8Convertor.getInstance()
+        );
+        return new PacketToMethodMapping("5", packetValues, resultMapping);        
+    }
+    
+    static private PacketToMethodMapping createEnableAsynchronyRequestGet(){
+        List<PacketPositionValues> packetValues = new LinkedList<>();
+        packetValues.add(new PacketPositionValues(3, (short) 0x01));
+
+        PacketToValueMapping resultMapping = new PacketToValueMapping(
+                8, PrimArrayUns8Convertor.getInstance()
+        );
+        return new PacketToMethodMapping("6", packetValues, resultMapping);        
+    } 
+    
     static private PacketToInterfaceMapping createResponseIOMapping() {
         List<PacketPositionValues> packetValues = new LinkedList<>();
         packetValues.add(new PacketPositionValues(2, (short) 9));
@@ -1811,6 +1866,10 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
         methodMappings.put("1", createResponseDirection());
         methodMappings.put("2", createResponseIOSet());
         methodMappings.put("3", createResponseIOGet());
+        /* ASYNCHRONY REQUEST ENABLERS */
+        methodMappings.put("4", createEnableAsynchronyRequestSetDirection());
+        methodMappings.put("5", createEnableAsynchronyRequestSetOutputState());
+        methodMappings.put("6", createEnableAsynchronyRequestGet());
 
         return new PacketToInterfaceMapping(IO.class, packetValues, methodMappings);
     }
@@ -1937,7 +1996,7 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
         packetValues.add(new PacketPositionValues(3, (short) 0x83));
 
         PacketToValueMapping resultMapping = new PacketToValueMapping(
-                8, 0, VoidTypeConvertor.getInstance()
+                8, 1, FRC_ConfigurationConvertor.getInstance()
         );
         return new PacketToMethodMapping("4", packetValues, resultMapping);
     }    

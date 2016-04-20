@@ -13,8 +13,7 @@
     <network>
 		<id>1</id>
 		<type>COM</type>
-		<port>COM5</port>
-               
+		<port>COM5</port>               
 		<note>Some note here.</note>
     </network>
 

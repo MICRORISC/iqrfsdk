@@ -76,7 +76,7 @@ public class SimpleMyPotentiometer
     public String transform(Object methodId) {
         if (!(methodId instanceof MyPotentiometer.MethodID)) {
             throw new IllegalArgumentException(
-                    "Method ID must be of type MyADC.MethodID."
+                    "Method ID must be of type MyPotentiometer.MethodID."
             );
         }
         return methodIdsMap.get((MyPotentiometer.MethodID) methodId);

@@ -22,6 +22,7 @@ import com.microrisc.simply.Node;
 import com.microrisc.simply.Simply;
 import com.microrisc.simply.SimplyException;
 import com.microrisc.simply.errors.CallRequestProcessingError;
+import com.microrisc.simply.errors.CallRequestProcessingErrorType;
 import com.microrisc.simply.iqrf.dpa.DPA_ResponseCode;
 import com.microrisc.simply.iqrf.dpa.v22x.DPA_SimplyFactory;
 import com.microrisc.simply.iqrf.dpa.v22x.devices.Thermometer;
@@ -101,11 +102,17 @@ public class GetTemperature {
                 // general call error
                 CallRequestProcessingError error = thermo.getCallRequestProcessingErrorOfLastCall();
                 
-                // specific call error
-                DPA_AdditionalInfo dpaAddInfo = thermo.getDPA_AdditionalInfoOfLastCall();
-                DPA_ResponseCode dpaResponseCode = dpaAddInfo.getResponseCode();
+                if(error.getErrorType() == CallRequestProcessingErrorType.NETWORK_INTERNAL){
+                  // specific DPA call error
+                  DPA_AdditionalInfo dpaAddInfo = thermo.getDPA_AdditionalInfoOfLastCall();
+                  DPA_ResponseCode dpaResponseCode = dpaAddInfo.getResponseCode();
+                  
+                  printMessageAndExit("Getting temperature failed: " + error + ", DPA error: " + dpaResponseCode);
+                }else{
+                  printMessageAndExit("Getting temperature failed: " + error); 
+                }
                 
-                printMessageAndExit("Getting temperature failed: " + error + ", DPA error: " + dpaResponseCode);
+
             } else {
                 System.out.println("Getting temperature hasn't been processed yet: " + procState);
             }

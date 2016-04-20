@@ -19,7 +19,7 @@ import com.microrisc.simply.DeviceInterface;
 import com.microrisc.simply.DeviceInterfaceMethodId;
 import com.microrisc.simply.di_services.GenericAsyncCallable;
 import com.microrisc.simply.di_services.MethodIdTransformer;
-import com.microrisc.simply.iqrf.dpa.di_services.DPA_StandardServices;
+import com.microrisc.simply.iqrf.dpa.v22x.di_services.DPA_StandardServices;
 import java.util.UUID;
 
 /**
@@ -65,6 +65,6 @@ public interface Custom
      * @return response data <br> {@code null} if an error has occurred during
      * processing
      */
-    Short[] send(short peripheralId, short cmdId, short[] data);
+    short[] send(short peripheralId, short cmdId, short[] data);
 
 }

@@ -57,7 +57,7 @@ extends DPA_DeviceObject implements EEEPROM {
     }
     
     private static int checkAddress(int address){
-        if (address < 0 || address > 0x7FFF) {
+        if (address < 0 || address > 0x3FFF) {
             throw new IllegalArgumentException("Address out of bounds.");
         }
         return address;

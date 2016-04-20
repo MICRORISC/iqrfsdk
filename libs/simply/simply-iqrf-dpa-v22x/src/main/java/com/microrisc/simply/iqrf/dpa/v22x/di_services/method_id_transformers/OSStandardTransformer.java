@@ -44,6 +44,7 @@ public final class OSStandardTransformer implements MethodIdTransformer {
         methodIdsMap.put(OS.MethodID.RESTART, "9");
         methodIdsMap.put(OS.MethodID.WRITE_HWP_CONFIGURATION, "10");
         methodIdsMap.put(OS.MethodID.WRITE_HWP_CONFIGURATION_BYTE, "11");
+        methodIdsMap.put(OS.MethodID.LOAD_CODE, "12");
     }
     
     static  {

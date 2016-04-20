@@ -80,10 +80,13 @@ implements StandardServices
         
         // if proc info is still null, something get wrong in the connector
         if ( procInfo == null ) {
-            throw new IllegalStateException(
-                "Could not get call request processing info from connector for "
-                + "request: " + callId 
+
+            logger.error("{}getCallRequestProcessingInfo is null, check connector: callId={}", 
+                logPrefix, callId
             );
+            
+            return null;
+
         }
         return procInfo;
     }
@@ -242,7 +245,12 @@ implements StandardServices
     public CallRequestProcessingState getCallRequestProcessingState(UUID callId) {
         checkCallId(callId);
         CallRequestProcessingInfo procInfo = getCallRequestProcessingInfo(callId);
-        return procInfo.getState();
+        
+        if(procInfo != null) {
+            return procInfo.getState();
+        }
+        
+        return null;
     }
     
     @Override

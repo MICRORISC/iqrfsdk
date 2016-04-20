@@ -44,9 +44,12 @@ extends DPA_StandardServices, GenericAsyncCallable, MethodIdTransformer {
     enum MethodID implements DeviceInterfaceMethodId {
         SET_DIRECTION,
         SET_OUTPUT_STATE,
-        GET
+        GET,
+        /* ASYNCHRONY REQUEST ENABLERS */
+        ENABLE_ASYNCHRONY_REQUEST_SET_DIRECTION,
+        ENABLE_ASYNCHRONY_REQUEST_SET_OUTPUT_STATE,
+        ENABLE_ASYNCHRONY_REQUEST_GET
     }
-    
     
     // ASYNCHRONOUS METHODS
     

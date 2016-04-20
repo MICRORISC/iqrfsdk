@@ -1,0 +1,98 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : UserPeripheralMappingAutonetwork.xml
+    Created on : 23.3.2016
+    Author     : Martin Strouhal
+    
+    Description:
+    Mapping of user peripherals for Autonetwork with async msg mapping in xml 
+    file for Simply framework.
+    
+-->    
+    
+<mapping>
+   <interfaces>
+
+      <interface>            
+         <!-- Name of interface class which mapping -->
+         <class>com.microrisc.simply.iqrf.dpa.v22x.autonetwork.embedded.def.AutonetworkPeripheral</class>
+            
+         <!-- ID of mapped peripheral -->
+         <peripheralId>0x20</peripheralId>
+                                    
+         <methods>
+               
+            <method>
+               <!-- Method ID in Simply -->
+               <id>0</id>
+               <name>Disapprove</name>		
+            
+               <!-- Id of command in DPA -->
+               <periheralCommandId>0x00</periheralCommandId>
+               <!-- Internal note: Used for request mainly and secondly for response (id + 128) -->
+            
+               <requestArguments>                                                                          
+                  <!-- Id of mapped data-->
+                  <argument>
+                     <!--Order of argument by which will be sorted-->
+                     <order>0</order>
+                     <length>1</length>
+                     <convertor>com.microrisc.simply.iqrf.typeconvertors.Uns16Convertor</convertor>
+                  </argument>    
+               </requestArguments>
+                    
+               <!-- Convertor used for response converting -->
+               <responseConvertor>com.microrisc.simply.iqrf.typeconvertors.VoidTypeConvertor</responseConvertor>
+            </method>                                        
+                
+            <method>
+               <!-- Method ID in Simply -->
+               <id>1</id>
+               <name>Approve</name>		
+            
+               <!-- Id of command in DPA -->
+               <periheralCommandId>0x01</periheralCommandId>
+               <!-- Internal note: Used for request mainly and secondly for response (id + 128) -->
+            
+               <requestArguments>                                                                          
+                  <!-- Id of mapped data-->
+                  <argument>
+                     <!--Order of argument by which will be sorted-->
+                     <order>0</order>
+                     <length>1</length>
+                     <convertor>com.microrisc.simply.iqrf.typeconvertors.Uns16Convertor</convertor>
+                  </argument>    
+               </requestArguments>
+                    
+               <!-- Convertor used for response converting -->
+               <responseConvertor>com.microrisc.simply.iqrf.typeconvertors.VoidTypeConvertor</responseConvertor>
+            </method>   
+                
+            <method>
+               <!-- Method ID in Simply -->
+               <id>2</id>
+               <name>Async msg</name>		
+            
+               <!-- Id of command in DPA -->
+               <periheralCommandId>-128</periheralCommandId>
+               <!-- Internal note: Used for request mainly and secondly for response (id + 128) -->
+            
+               <requestArguments>                                                                          
+                  <!-- Id of mapped data-->
+                  <argument>
+                     <!--Order of argument by which will be sorted-->
+                     <order></order>
+                     <length></length>
+                     <convertor></convertor>
+                  </argument>    
+               </requestArguments>
+                    
+               <!-- Convertor used for response converting -->
+               <responseConvertor>com.microrisc.simply.iqrf.dpa.v22x.autonetwork.embedded.def.AutonetworkStateConvertor</responseConvertor>
+            </method>                                        
+                
+         </methods>                                    
+      </interface>
+   </interfaces>
+</mapping>

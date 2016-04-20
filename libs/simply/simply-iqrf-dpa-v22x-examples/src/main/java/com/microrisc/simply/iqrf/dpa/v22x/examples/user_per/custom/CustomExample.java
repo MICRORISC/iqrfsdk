@@ -76,7 +76,7 @@ public class CustomExample {
         }
 
         // sending command and getting result
-        Short[] result = custom.send((short) 0x20, (short) 0x00, new short[]{});
+        short[] result = custom.send((short) 0x20, (short) 0x00, new short[]{});
         // printing result
         System.out.println(Arrays.toString(result));
 
@@ -95,7 +95,7 @@ public class CustomExample {
         Thread.sleep(3000);
         
         // getting result
-        result = custom.getCallResultInDefaultWaitingTimeout(uuid, Short[].class);
+        result = custom.getCallResultInDefaultWaitingTimeout(uuid, short[].class);
         // printing result
         System.out.println(Arrays.toString(result));
         

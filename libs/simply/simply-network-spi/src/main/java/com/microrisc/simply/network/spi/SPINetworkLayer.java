@@ -29,6 +29,7 @@ import com.microrisc.simply.network.NetworkConnectionStorage;
 import com.microrisc.simply.network.NetworkLayerException;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.logging.Level;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -97,7 +98,17 @@ public final class SPINetworkLayer extends AbstractNetworkLayer {
      * Maximal size of received packets [in bytes].
      */
     private int maxRecvPacketSize;
+    
+    /**
+     * Default maximal number of SPI retries.
+     */
+    public static int MAX_SPI_STATUS_RETRIES = 3;
 
+    /**
+     * Maximal number of SPI retries.
+     */
+    private int maxSpiStatusRetries;
+    
     /**
      * Reading data from SPI.
      */
@@ -136,7 +147,7 @@ public final class SPINetworkLayer extends AbstractNetworkLayer {
 
                     // if new data has received add it into the queue
                     if ( newDataReceived ) {
-                        logger.info("New data from SPI: {}", buffer);
+                        logger.info("New data from SPI: {}", convertDataForLog(buffer));
 
                         synchronized ( threadsSynchro ) {
                             dataFromSPI.add(buffer);
@@ -289,8 +300,10 @@ public final class SPINetworkLayer extends AbstractNetworkLayer {
      */
     public SPINetworkLayer(NetworkConnectionStorage connectionStorage, String portName) {
         super(checkStorage(connectionStorage));
+        
         this.portName = checkPortName(portName);
         this.connectionInfo = new BaseSPIPortConnectionInfo(portName);
+        this.maxSpiStatusRetries = MAX_SPI_STATUS_RETRIES;
     }
 
     @Override
@@ -328,7 +341,7 @@ public final class SPINetworkLayer extends AbstractNetworkLayer {
 
     @Override
     public void sendData(NetworkData networkData) throws NetworkLayerException {
-        logger.debug("sendData - start: networkData={}", networkData);
+        logger.debug("sendData - start: networkData: netId={}, netData={}", networkData.getNetworkId(), convertDataForLog(networkData.getData()));
 
         // get connection info for specified request
         AbstractNetworkConnectionInfo connInfo = connectionStorage.getNetworkConnectionInfo(
@@ -354,21 +367,38 @@ public final class SPINetworkLayer extends AbstractNetworkLayer {
             logger.info("Data will be sent to SPI...");
             
             synchronized (spiSynchro) {
-                // getting slave status
-                SPI_Status spiStatus = spiMaster.getSlaveStatus();
-                logger.info("Writing thread SPI status: {}", spiStatus.getValue());
                 
-                if ( spiStatus.getValue() == SPI_Status.READY_COMM_MODE ) {
-                    // sending some data to device
-                    spiMaster.sendData(networkData.getData());
-                    logger.info("Data successfully sent to SPI");
+                boolean dataSent = false;
+                int attempt = 0;
+                
+                while (attempt++ < maxSpiStatusRetries) {
+                    // have some space before sending another request
+                    Thread.sleep(50);
+                    
+                    // getting slave status
+                    SPI_Status spiStatus = spiMaster.getSlaveStatus();
+                    logger.info("Writing thread SPI status: {}", spiStatus.getValue());
+
+                    if ( spiStatus.getValue() == SPI_Status.READY_COMM_MODE ) {
+                        // sending some data to device
+                        spiMaster.sendData(networkData.getData());
+                        logger.info("Data successfully sent to SPI");
+                        dataSent = true;
+                        break;
+                    }
+                    else {
+                        logger.info("Data not sent to SPI, module is not in READY_COMM_MODE: retries {} ", attempt);
+                    }
                 }
-                else {
-                    logger.info("Data not sent to SPI, module is not in READY_COMM_MODE");
+                
+                if(!dataSent) {
+                    throw new NetworkLayerException(new SPI_Exception("Data has not been sent to the module!"));
                 }
             }
-        } catch (SPI_Exception ex) {
-            throw new NetworkLayerException(ex);
+        } catch (SPI_Exception sex) {
+            throw new NetworkLayerException(sex);
+        } catch (InterruptedException iex) {
+            throw new NetworkLayerException(iex);
         }
     }
 
@@ -384,5 +414,27 @@ public final class SPINetworkLayer extends AbstractNetworkLayer {
         
         logger.info("Destroyed");
         logger.debug("destroy - end");
+    }
+
+    // coverts data to hex values for log
+    private String convertDataForLog(short[] data) {
+
+        String dataString = null;
+
+        // converts to hex for print in log
+        if (logger.isDebugEnabled()) {
+
+            dataString = "[";
+
+            for (int i = 0; i < data.length; i++) {
+                if (i != data.length - 1) {
+                    dataString += String.format("%02X", data[i]) + ".";
+                } else {
+                    dataString += String.format("%02X", data[i]) + "]";
+                }
+            }
+        }
+
+        return dataString;
     }
 }
