@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 MICRORISC s.r.o.
+ * Copyright 2016 MICRORISC s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -283,6 +283,19 @@ void MyDpaLibTimeoutHandler(void) {
 	// ANY USER CODE FOR OPERATION TIMEOUT HANDLING
 	app_vars.cmds++;
 	app_vars.cmds %= 2;
+}
+//=============================================================================
+
+/**
+* DPA deselect module
+*
+* @param   none
+* @return   none
+*
+**/
+void DPA_DeselectTRmodule(void)
+{
+    CS_OUT	|=  CS_PIN;
 }
 //=============================================================================
 

@@ -295,6 +295,20 @@ void MyDpaLibTimeoutHandler(void)
 //=============================================================================
 
 /**
+* DPA deselect module
+*
+* @param   none
+* @return   none
+*
+**/
+void DPA_DeselectTRmodule(void)
+{
+    pinMode( SS, OUTPUT );
+    digitalWrite( SS, HIGH );
+}
+//=============================================================================
+
+/**
 * DPA request to drive ledG peripheral
 *
 * @param 	addr

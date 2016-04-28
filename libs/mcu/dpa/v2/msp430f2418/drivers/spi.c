@@ -7,32 +7,6 @@
 
 #include "spi.h"
 
-//=========================== defines =========================================
-
-// MOSI: P5.1
-#define MOSI_SEL   P5SEL
-#define MOSI_DIR   P5DIR
-#define MOSI_OUT   P5OUT
-#define MOSI_PIN   0x02
-
-// MISO: P5.2
-#define MISO_SEL   P5SEL
-#define MISO_DIR   P5DIR
-#define MISO_OUT   P5OUT
-#define MISO_PIN   0x04
-
-// SCK: P5.3
-#define SCK_SEL    P5SEL
-#define SCK_DIR    P5DIR
-#define SCK_OUT    P5OUT
-#define SCK_PIN    0x08
-
-// CS: P1.5
-#define CS_SEL     P1SEL
-#define CS_DIR     P1DIR
-#define CS_OUT     P1OUT
-#define CS_PIN     0x20
-
 //=========================== variables =======================================
 
 typedef struct {

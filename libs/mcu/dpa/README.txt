@@ -50,6 +50,11 @@ conditions must be met.
 		#define __SPI_INTERFACE__
 		//#define __UART_INTERFACE__
 
+	- select module type
+
+		#define TR7xD
+		// #define TR5xD
+
 	- select the version of DPA framework in the library header file
 		
 		//#define __DPA_LIB_VER_2_0x
@@ -57,8 +62,11 @@ conditions must be met.
 		#define __DPA_LIB_VER_2_2x
 
 	- implement functions to transfer of 1B to TR module via selected communication interface
+	  and deselect module if using SPI interface
 		
 		SPI: 	UINT8 DPA_SendSpiByte(UINT8 Tx_Byte)
+				void DPA_DeselectTRmodule(void)
+
 		UART: 	void DPA_SendUartByte(UINT8 Tx_byte)
 				void DPA_ReceiveUartByte(UINT8 Rx_byte)
 

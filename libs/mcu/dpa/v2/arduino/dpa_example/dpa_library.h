@@ -16,7 +16,7 @@
 
 /*****************************************************************************
  *
- * DPA support library ver.0.91
+ * DPA support library ver.0.92
  *
  *****************************************************************************/
 
@@ -24,7 +24,10 @@
 #define _DPA_LIBRARY_H
 
 #define __SPI_INTERFACE__			// select for comunication via SPI
-//#define __UART_INTERFACE__			// select for comunication via UART
+// #define __UART_INTERFACE__		// select for comunication via UART
+
+#define TR7xD						// select for TR7xD module
+// #define TR5xD					// select for TR5xD module
 
 //uint8(16)_t and NULL defines
 #include <stdint.h>
@@ -37,17 +40,17 @@ typedef uint8_t  UINT8;				// Define DPA.h types
 typedef uint16_t UINT16;
 
 // library status
-#define  DPA_READY	0x00	 	// DPA support library ready
+#define  DPA_READY		0x00	 	// DPA support library ready
 #define  DPA_BUSY		0x01	 	// DPA request processing
 
 typedef struct{
-	  UINT16  	NADR;
+	UINT16  	NADR;
   	UINT8   	PNUM;
   	UINT8   	PCMD;
   	UINT16  	HWPID;
    	UINT8 		ResponseCode;
- 	  UINT8 		DpaValue;
-	  TDpaMessage	DpaMessage;
+ 	UINT8 		DpaValue;
+	TDpaMessage	DpaMessage;
 } T_DPA_PACKET;
 
 typedef void (*T_DPA_ANSWER_HANDLER)(T_DPA_PACKET *DpaAnswer);			// DPA response callback function type

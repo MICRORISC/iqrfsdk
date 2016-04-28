@@ -16,7 +16,7 @@
 
 /*****************************************************************************
  *
- * DPA support library ver.0.91
+ * DPA support library ver.0.92
  *
  *****************************************************************************/
 
@@ -24,7 +24,10 @@
 #define _DPA_LIBRARY_H
 
 #define __SPI_INTERFACE__			// select for comunication via SPI
-// #define __UART_INTERFACE__			// select for comunication via UART
+// #define __UART_INTERFACE__		// select for comunication via UART
+
+#define TR7xD						// select for TR7xD module
+// #define TR5xD					// select for TR5xD module
 
 //uint8(16)_t and NULL defines
 #include <stdint.h>
