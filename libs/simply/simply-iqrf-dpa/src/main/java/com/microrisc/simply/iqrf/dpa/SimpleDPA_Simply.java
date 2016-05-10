@@ -25,6 +25,8 @@ import com.microrisc.simply.asynchrony.AsynchronousMessagingManager;
 import com.microrisc.simply.iqrf.dpa.asynchrony.DPA_AsynchronousMessage;
 import com.microrisc.simply.iqrf.dpa.asynchrony.DPA_AsynchronousMessageProperties;
 import com.microrisc.simply.iqrf.dpa.broadcasting.services.BroadcastServices;
+import com.microrisc.simply.services.Service;
+import java.util.HashMap;
 import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,6 +48,9 @@ extends BaseSimply implements DPA_Simply {
                 DPA_AsynchronousMessage, DPA_AsynchronousMessageProperties
             > asyncManager = null;
     
+    /** Map of services. */
+    private final Map<Class, Service> servicesMap;
+    
     
     /**
      * Creates new DPA Simply object.
@@ -53,6 +58,7 @@ extends BaseSimply implements DPA_Simply {
      * @param networksMap map of networks IDs to networks themselves
      * @param broadcastServices broadcast services implementation object to use
      * @param asyncManager asynchronous messaging manager
+     * @param servicesMap map of services
      */
     public SimpleDPA_Simply(
             ConnectionStack connStack, 
@@ -61,7 +67,8 @@ extends BaseSimply implements DPA_Simply {
             AsynchronousMessagingManager<
                     DPA_AsynchronousMessage, 
                     DPA_AsynchronousMessageProperties
-            > asyncManager
+            > asyncManager,
+            Map<Class, Service> servicesMap
     ) {
         super(connStack, networksMap);
         this.broadcastServices = broadcastServices;
@@ -69,6 +76,7 @@ extends BaseSimply implements DPA_Simply {
         ((AsynchronousMessagesGenerator)connStack.getConnector()).registerListener(
                 (AsynchronousMessagesGeneratorListener) asyncManager
         );
+        this.servicesMap = new HashMap<>(servicesMap);
     }
     
     @Override
@@ -86,6 +94,19 @@ extends BaseSimply implements DPA_Simply {
     }
     
     @Override
+    public <T> T getService(Class<T> service) {
+        if ( servicesMap.containsKey(service)) {
+            return (T)servicesMap.get(service);
+        }
+        return null;
+    }       
+    
+    @Override
+    public Map<Class, Service> getServicesMap() {
+        return new HashMap<>(servicesMap);
+    }
+    
+    @Override
     public void destroy() {
         logger.debug("destroy - start: ");
         
@@ -96,6 +117,8 @@ extends BaseSimply implements DPA_Simply {
         
         super.destroy();
         broadcastServices = null;
+        
+        servicesMap.clear();
         
         logger.info("Destroy complete");
         logger.debug("destroy - end ");

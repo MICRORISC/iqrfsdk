@@ -21,6 +21,7 @@ import com.microrisc.simply.asynchrony.AsynchronousMessagingManager;
 import com.microrisc.simply.iqrf.dpa.asynchrony.DPA_AsynchronousMessage;
 import com.microrisc.simply.iqrf.dpa.asynchrony.DPA_AsynchronousMessageProperties;
 import com.microrisc.simply.iqrf.dpa.broadcasting.services.BroadcastServices;
+import com.microrisc.simply.services.ServicesAccessor;
 
 
 /**
@@ -28,7 +29,7 @@ import com.microrisc.simply.iqrf.dpa.broadcasting.services.BroadcastServices;
  * 
  * @author Michal Konopa
  */
-public interface DPA_Simply extends Simply {
+public interface DPA_Simply extends Simply, ServicesAccessor {
     /**
      * Returns access to broadcast services.
      * @return access to broadcast services

@@ -38,6 +38,8 @@ import com.microrisc.simply.iqrf.dpa.v22x.init.DPA_InitObjectsFactory;
 import com.microrisc.simply.iqrf.dpa.v22x.init.DPA_Initializer;
 import com.microrisc.simply.iqrf.dpa.v22x.init.NodeFactory;
 import com.microrisc.simply.iqrf.dpa.v22x.init.SimpleDPA_InitObjects;
+import com.microrisc.simply.services.Service;
+import java.util.HashMap;
 import java.util.Map;
 import org.apache.commons.configuration.Configuration;
 
@@ -101,6 +103,13 @@ public final class DPA_SimplyFactory {
         return new DPA_AsynchronousMessagingManager();
     }
     
+    // creates map of services
+    // novadays no services are available from Simply object
+    private static Map<Class, Service> createServices() {
+        return new HashMap<>();
+    }
+    
+    
     /**
      * Returns instance of Simply.
      * @param configFile configuration file with setting for creating Simply
@@ -120,6 +129,7 @@ public final class DPA_SimplyFactory {
                 DPA_AsynchronousMessage, 
                 DPA_AsynchronousMessageProperties
         > asyncManager = null;
+        Map<Class, Service> servicesMap = null;
         
         try {
             Configuration configuration = ConfigurationReader.fromFile(configFile);
@@ -130,11 +140,14 @@ public final class DPA_SimplyFactory {
             connStack = initObjects.getConnectionStack();
             broadcastServices = createBroadcastServices(configuration, connStack.getConnector());
             asyncManager = createAsynchronousMessagingManager(connStack.getConnector());
+            servicesMap = createServices();
         } catch ( Exception e ) {
             throw new SimplyException(e);
         }
 
-        dpaSimply = new SimpleDPA_Simply(connStack, networkMap, broadcastServices, asyncManager);
+        dpaSimply = new SimpleDPA_Simply(
+                connStack, networkMap, broadcastServices, asyncManager, servicesMap
+        );
         return dpaSimply;
     }
 }
