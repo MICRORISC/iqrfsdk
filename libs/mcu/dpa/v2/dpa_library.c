@@ -16,7 +16,7 @@
 
 /*****************************************************************************
  *
- * DPA support library ver.0.91
+ * DPA support library ver.0.92
  *
  *****************************************************************************/
 
@@ -33,7 +33,7 @@
 #define SPI_CRCM_OK         0x3F    // SPI not ready (full buffer, last CRCM ok)
 #define SPI_CRCM_ERR        0x3E    // SPI not ready (full buffer, last CRCM error)
 
-#define SPI_STATUS_POOLING_TIME		5		// SPI status pooling time 5ms
+#define SPI_STATUS_POOLING_TIME		10		// SPI status pooling time 10ms
 
 typedef struct{
 	UINT8	DLEN;
@@ -53,6 +53,7 @@ typedef struct{
 T_DPA_SPI_INTERFACE_CONTROL		dpaSpiIfControl;
 
 UINT8 DPA_SendSpiByte(UINT8 Tx_Byte);
+void DPA_DeselectTRmodule(void);
 void DPA_SpiInterfaceDriver(void);
 UINT8 DPA_GetCRCM(void); 	
 
@@ -154,9 +155,17 @@ void DPA_LibraryDriver(void)
 
 	if (dpaControl.timeFlag){							
 		dpaControl.timeFlag = 0;
+
 		if (dpaControl.status == DPA_BUSY || !dpaControl.timeCnt){
 			DPA_SpiInterfaceDriver();
+
+			#ifdef TR5xD
 			dpaControl.timeCnt = SPI_STATUS_POOLING_TIME + 1;
+			#endif
+
+			#ifdef TR7xD
+			dpaControl.timeCnt = (SPI_STATUS_POOLING_TIME * 7) + 1;
+			#endif
 		}
 		dpaControl.timeCnt--;
 	}
@@ -210,14 +219,15 @@ void DPA_SendRequest(T_DPA_PACKET *dpaRequest, UINT8 dataSize)
 UINT16 DPA_GetEstimatedTimeout(void)
 {
 	UINT16 estimatedTimeout;
+    UINT16 responseTimeSlotLength;
 
 	estimatedTimeout = (UINT16)(dpaLibDpaAnswer.DpaMessage.IFaceConfirmation.Hops + 1) * (UINT16)dpaLibDpaAnswer.DpaMessage.IFaceConfirmation.TimeSlotLength * 10;
-	if (dpaLibDpaAnswer.DpaMessage.IFaceConfirmation.TimeSlotLength == 20){
-		estimatedTimeout += ((UINT16)(dpaLibDpaAnswer.DpaMessage.IFaceConfirmation.HopsResponse + 1) * 200 + 40);
-	}
+	if (dpaLibDpaAnswer.DpaMessage.IFaceConfirmation.TimeSlotLength == 20) responseTimeSlotLength = 200;			// DPA in diagnostic mode
 	else{
-		estimatedTimeout += ((UINT16)(dpaLibDpaAnswer.DpaMessage.IFaceConfirmation.HopsResponse + 1) * 50 + 40);
-	}
+		if (dpaLibDpaAnswer.DpaMessage.IFaceConfirmation.TimeSlotLength > 6) responseTimeSlotLength = 100;			// DPA in LP mode
+		else responseTimeSlotLength = 50;																			// DPA in STD mode
+ 	}   
+	estimatedTimeout += ((UINT16)(dpaLibDpaAnswer.DpaMessage.IFaceConfirmation.HopsResponse + 1) * responseTimeSlotLength + 40);
 	return(estimatedTimeout);
 }
 
@@ -241,7 +251,7 @@ UINT16 DPA_GetEstimatedTimeout(void)
 void DPA_SpiInterfaceDriver(void)
 {
 	UINT8 last_spistat;
-	UINT8 tempData = 0;
+	UINT8 tempData;
     
 
 	if (dpaSpiIfControl.direction != SPI_TRANSFER_NONE){			// is anything to send / receive
@@ -308,7 +318,8 @@ void DPA_SpiInterfaceDriver(void)
 		}
 		dpaSpiIfControl.packetCnt++;											// counts number of send/receive bytes
 																	
-		if (dpaSpiIfControl.packetCnt == dpaSpiIfControl.packetLen){			// sent everything ? 				
+		if (dpaSpiIfControl.packetCnt == dpaSpiIfControl.packetLen){			// sent everything ? 	
+			DPA_DeselectTRmodule();			
 			if ((dpaSpiIfControl.spiStat == SPI_CRCM_OK) && (dpaSpiIfControl.CRCS == dpaSpiIfControl.myCRCS)){	// CRC ok ?				
 				if (dpaSpiIfControl.direction == SPI_TRANSFER_READ && dpaControl.dpaAnswerHandler != NULL){
 					dpaControl.dpaAnswerHandler(&dpaLibDpaAnswer);				// call user response handler
@@ -332,6 +343,7 @@ void DPA_SpiInterfaceDriver(void)
 	else{																		// no data to send => SPI status will be updated
 
 		last_spistat = DPA_SendSpiByte(SPI_CHECK);								// get SPI status of TR module
+		DPA_DeselectTRmodule();
 
  		if (dpaSpiIfControl.spiStat != last_spistat){							// the status must be 2x the same			
     		dpaSpiIfControl.spiStat = last_spistat;
@@ -450,7 +462,7 @@ void DPA_ReceiveUartByte(UINT8 Rx_Byte)
 
 void DPA_UartInterfaceDriver(void)
 {
-	UINT8 tempData = 0; 
+	UINT8 tempData; 
 
 	if (dpaUartIfControl.direction != UART_TRANSFER_NONE){										// is anything to send / receive
 

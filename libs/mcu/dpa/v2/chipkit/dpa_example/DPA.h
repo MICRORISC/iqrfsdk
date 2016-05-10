@@ -3,10 +3,14 @@
 // *********************************************************************
 //
 // File:    $RCSfile: DPA.h,v $
-// Version: $Revision: 1.159 $
-// Date:    $Date: 2015/10/19 08:17:25 $
+// Version: $Revision: 1.177 $
+// Date:    $Date: 2016/03/03 09:27:14 $
 //
 // Revision history:
+//   2016/03/03  Release for DPA 2.26
+//   2016/01/21  Release for DPA 2.25
+//   2015/12/01  Release for DPA 2.24
+//   2015/10/23  Release for DPA 2.23
 //   2015/09/25  Release for DPA 2.22
 //   2015/09/03  Release for DPA 2.21
 //   2015/08/05  Release for DPA 2.20
@@ -24,7 +28,7 @@
 //############################################################################################
 
 // DPA version
-#define	DPA_VERSION_MASTER		0x0222
+#define	DPA_VERSION_MASTER		0x0226
 
 #ifdef __CC5X__
 // Compiled only at CC5X
@@ -48,10 +52,12 @@
 #define	CUSTOM_HANDLER_ADDRESS		0x3A20
 
 // Address of the DPA Custom Handler end + 1
-#ifdef TR7xD
+#if defined( TR7xD )
 #define	CUSTOM_HANDLER_ADDRESS_END	0x3D80
-#else
+#elif defined ( TR5xD )
 #define	CUSTOM_HANDLER_ADDRESS_END	0x3D00
+#else
+#error Unsupported DCTR type
 #endif
 
 // DPA API entry function
@@ -153,12 +159,27 @@ typedef struct
 // Maximum number of DPA peripherals per device
 #define MAX_PERIPHERALS				0x70
 
-// Minimal time slot length in 10 ms
-#ifdef DPA_STD
-#define	MIN_TIMESLOT		3		// DPA_STD
+// Timeslots lengths in 10 ms
+#define	MIN_STD_TIMESLOT	3	
+#ifdef TR7xD
+#define	MAX_STD_TIMESLOT	5
 #else
-#define	MIN_TIMESLOT		8		// DPA_LP
+#define	MAX_STD_TIMESLOT	6
 #endif
+
+#define	MIN_LP_TIMESLOT		8
+#define	MAX_LP_TIMESLOT		10
+
+#ifdef DPA_STD
+#define	MIN_TIMESLOT		MIN_STD_TIMESLOT	
+#define	MAX_TIMESLOT		MAX_STD_TIMESLOT
+#else
+#define	MIN_TIMESLOT		MIN_LP_TIMESLOT	
+#define	MAX_TIMESLOT		MAX_LP_TIMESLOT	
+#endif
+
+// Long diagnostics slot time
+#define	LONG_DIAG_TIMESLOT	20 
 
 // Maximum number of DPA PData bytes ( minus 8 = 6B foursome + 8b error code + 8b DpaValue )
 #define DPA_MAX_DATA_LENGTH			( sizeofBufferCOM - sizeof( TDpaIFaceHeader ) - 2 * sizeof( uns8 ) )
@@ -227,6 +248,7 @@ typedef struct
 #define	CMD_OS_SET_MID 7
 #define	CMD_OS_RESTART 8
 #define	CMD_OS_WRITE_CFG_BYTE 9
+#define	CMD_OS_LOAD_CODE 10
 #define	CMD_OS_WRITE_CFG 15
 
 #define	CMD_RAM_READ 0
@@ -237,6 +259,8 @@ typedef struct
 
 #define	CMD_EEEPROM_READ CMD_RAM_READ
 #define	CMD_EEEPROM_WRITE CMD_RAM_WRITE
+#define	CMD_EEEPROM_XREAD ( CMD_RAM_READ + 2 )
+#define	CMD_EEEPROM_XWRITE ( CMD_RAM_WRITE + 2 )
 
 #define	CMD_LED_SET_OFF 0
 #define	CMD_LED_SET_ON 1
@@ -306,7 +330,7 @@ typedef enum
   ERROR_PCMD = 2,
   // Incorrect PNUM or PCMD
   ERROR_PNUM = 3,
-  // Incorrect Address
+  // Incorrect Address value when addressing memory type peripherals
   ERROR_ADDR = 4,
   // Incorrect Data length
   ERROR_DATA_LEN = 5,
@@ -320,6 +344,7 @@ typedef enum
   ERROR_IFACE_CUSTOM_HANDLER = 9,
   // Custom DPA Handler is missing
   ERROR_MISSING_CUSTOM_DPA_HANDLER = 10,
+
   // Beginning of the user code error interval
   ERROR_USER_FROM = 0x80,
   // End of the user code error interval
@@ -355,14 +380,11 @@ typedef enum
   // No HWPID specified
   HWPID_Default = 0,
   // Use this type to override HWPID check
-  HWPID_DoNotCheck = 0xffff
+  HWPID_DoNotCheck = 0xFfFf
 } THWPIDs;
 
 // RAM peripheral block definitions
 #define	PERIPHERAL_RAM_LENGTH		48
-
-// Max. number of byte that can be read/written from/to UART
-#define	PERIPHERAL_UART_MAX_DATA_LENGTH		32
 
 #ifndef COORDINATOR_CUSTOM_HANDLER
 // Start address of EEPROM peripheral in the real EEPROM
@@ -376,8 +398,13 @@ typedef enum
 #define	PERIPHERAL_EEEPROM_START	0x0700
 #endif
 
-// Length of the real serial EEEPROM
+// Length of the real serial EEEPROM from the EEEPROM DPA peripheral point of view
 #define	EEEPROM_REAL_LENGTH					0x0800
+
+// Length of the EEEPROM for extended read/write
+#if defined ( TR7xD )
+#define	EEEPROM_EXTENDED_SIZE				0x4000
+#endif
 
 // Length of the autoexec memory block
 #define	AUTOEXEC_LENGTH						sizeofBufferAUX
@@ -488,7 +515,7 @@ typedef struct
 // Structure returned by CMD_COORDINATOR_DISCOVERY_DATA
 typedef struct
 {
-  uns8	DiscoveryData[16];
+  uns8	DiscoveryData[48];
 } TPerCoordinatorDiscoveryData_Response;
 
 // Structure for CMD_COORDINATOR_BACKUP and CMD_NODE_BACKUP
@@ -527,16 +554,16 @@ typedef struct
 typedef struct
 {
   TDpaIFaceHeader subHeader;
-  uns8			  subPData[DPA_MAX_DATA_LENGTH - sizeof( TDpaIFaceHeader )];
+  uns8	subPData[DPA_MAX_DATA_LENGTH - sizeof( TDpaIFaceHeader )];
 } TPerCoordinatorBridge_Request;
 
 // Structure returned by CMD_COORDINATOR_BRIDGE
 typedef struct
 {
   TDpaIFaceHeader subHeader;
-  uns8			  subRespCode;
-  uns8			  subDpaValue;
-  uns8			  subPData[DPA_MAX_DATA_LENGTH - sizeof( TDpaIFaceHeader ) - 2 * sizeof( uns8 )];
+  uns8	subRespCode;
+  uns8	subDpaValue;
+  uns8	subPData[DPA_MAX_DATA_LENGTH - sizeof( TDpaIFaceHeader ) - 2 * sizeof( uns8 )];
 } TPerCoordinatorBridge_Response;
 
 // Structure for CMD_COORDINATOR_ENABLE_REMOTE_BONDING and CMD_NODE_ENABLE_REMOTE_BONDING
@@ -579,6 +606,7 @@ typedef struct
   uns8	Rssi;
   uns8	SupplyVoltage;
   uns8	Flags;
+  uns8	Reserved;
 } STRUCTATTR TPerOSRead_Response;
 
 // Structure returned by CMD_OS_READ_CFG
@@ -586,7 +614,8 @@ typedef struct
 {
   uns8	Checksum;
   uns8	Configuration[31];
-  uns8	Undocumented[2];
+  uns8	RFPGM;
+  uns8	Undocumented[1];
 } TPerOSReadCfg_Response;
 
 // Structure for CMD_OS_WRITE_CFG
@@ -594,7 +623,7 @@ typedef struct
 {
   uns8	Checksum;
   uns8	Configuration[31];
-  uns8	Undocumented[1];
+  uns8	RFPGM;
 } TPerOSWriteCfg_Request;
 
 // Structure for CMD_OS_WRITE_CFG_BYTE
@@ -604,6 +633,15 @@ typedef struct
   uns8	Value;
 } TPerOSWriteCfgByte_Request;
 
+// Structure for CMD_OS_LOAD_CODE
+typedef struct
+{
+  uns8	Flags;
+  uns16	Address;
+  uns16	Length;
+  uns16	CheckSum;
+} STRUCTATTR TPerOSLoadCode_Request;
+
 // Structure for CMD_OS_SLEEP
 typedef struct
 {
@@ -611,7 +649,7 @@ typedef struct
   uns8	Control;
 } STRUCTATTR TPerOSSleep_Request;
 
-// Structure  for CMD_OS_SET_USEC
+// Structure for CMD_OS_SET_USEC
 typedef struct
 {
   uns16	USEC;
@@ -649,6 +687,33 @@ typedef struct
 
   } ReadWrite;
 } TPerMemoryRequest;
+
+// Structure for general extended memory request
+typedef struct
+{
+  // Address of data to write or read
+  uns16	Address;
+
+  union
+  {
+	// Memory read request
+	struct
+	{
+	  // Length of data to read
+	  uns8	Length;
+	} Read;
+
+	// Size of Address field
+#define	XMEMORY_WRITE_REQUEST_OVERHEAD	( sizeof( uns16 ) )
+
+	// Memory write request
+	struct
+	{
+	  uns8	PData[DPA_MAX_DATA_LENGTH - XMEMORY_WRITE_REQUEST_OVERHEAD];
+	} Write;
+
+  } ReadWrite;
+} STRUCTATTR TPerXMemoryRequest;
 
 // Structure for CMD_IO requests
 typedef struct
@@ -721,11 +786,11 @@ typedef struct
   uns8	FrcData[DPA_MAX_DATA_LENGTH - sizeof( uns8 )];
 } TPerFrcSend_Response;
 
-// Structure for CMD_FRC_SET_PARAMS
+// Structure for request and response of CMD_FRC_SET_PARAMS
 typedef struct
 {
   uns8	FRCresponseTime;
-} TPerFrcSetParams_Request;
+} TPerFrcSetParams_RequestResponse;
 
 // Interface and CMD_COORDINATOR_BRIDGE confirmation structure
 typedef struct
@@ -842,6 +907,9 @@ typedef union
   // Structure for CMD_OS_WRITE_CFG_BYTE
   TPerOSWriteCfgByte_Request PerOSWriteCfgByte_Request;
 
+  // Structure for CMD_OS_LOAD_CODE
+  TPerOSLoadCode_Request PerOSLoadCode_Request;
+
   // Structure for CMD_OS_SLEEP
   TPerOSSleep_Request PerOSSleep_Request;
 
@@ -853,6 +921,9 @@ typedef union
 
   // Structure for general memory request
   TPerMemoryRequest MemoryRequest;
+
+  // Structure for general extended memory request
+  TPerXMemoryRequest XMemoryRequest;
 
   // Structure for CMD_IO requests
   TPerIoDirectionAndSet_Request PerIoDirectionAndSet_Request;
@@ -878,8 +949,8 @@ typedef union
   // Structure for CMD_FRC_SEND_SELECTIVE
   TPerFrcSendSelective_Request PerFrcSendSelective_Request;
 
-  // Structure for CMD_FRC_SET_PARAMS
-  TPerFrcSetParams_Request PerFrcSetParams_Request;
+  // Structure for request and response of CMD_FRC_SET_PARAMS
+  TPerFrcSetParams_RequestResponse PerFrcSetParams_RequestResponse;
 
   // Interface and CMD_COORDINATOR_BRIDGE confirmation structure
   TIFaceConfirmation IFaceConfirmation;
