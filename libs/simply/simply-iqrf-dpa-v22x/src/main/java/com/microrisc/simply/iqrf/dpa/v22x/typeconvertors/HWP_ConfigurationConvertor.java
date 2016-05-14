@@ -31,6 +31,7 @@ import org.slf4j.LoggerFactory;
  * @author Martin Strouhal
  */
 // October 2015 - implemented toProtoValue and added conversion of undocumented byte
+// May 2016 - updated tp DPA 2.27, added RFPGM
 public final class HWP_ConfigurationConvertor extends PrimitiveConvertor {
 
     /** Logger. */
@@ -62,9 +63,11 @@ public final class HWP_ConfigurationConvertor extends PrimitiveConvertor {
     static private final int BAUD_RATE_OF_UART = 0x0B;
     static private final int RFCHANNEL_A_POS = 0x11;
     static private final int RFCHANNEL_B_POS = 0x12;
-    static private final int UNDOCUMENTED_POS = 0x20;
-    static private final int UNDOCUMENTED_RESPONSE_LENGTH = 2;
-    static private final int UNDOCUMENTED_REQUEST_LENGTH = 1;
+    static private final int RFPGM_POS = 0x20;
+    /** Only in response (ReadHWP) */
+    static private final int UNDOCUMENTED_POS = 0x21;
+    /** Only in response (ReadHWP) */
+    static private final int UNDOCUMENTED_RESPONSE_LENGTH = 1;
 
     /**
      * @return {@code HWP_ConfigurationConvertor} instance
@@ -191,15 +194,14 @@ public final class HWP_ConfigurationConvertor extends PrimitiveConvertor {
         protoValue[BAUD_RATE_OF_UART] = (short) (config.getBaudRateOfUARF());
         protoValue[RFCHANNEL_A_POS] = (short) (config.getRFChannelA());
         protoValue[RFCHANNEL_B_POS] = (short) (config.getRFChannelB());
+        protoValue[RFPGM_POS] = (short) (config.getRfpgm());
+        
 
         // calculate checksum
         protoValue[CHECKSUM_POS] = 0x5F;
-        for (int i = 1; i < UNDOCUMENTED_POS; i++) {
+        for (int i = 1; i < RFPGM_POS; i++) {
             protoValue[CHECKSUM_POS] ^= protoValue[i];
         }
-
-        //undocumented byte
-        protoValue[UNDOCUMENTED_POS] = (short) (config.getUndocumented()[0]);
 
         logger.debug("toProtoValue - end: {}", protoValue);
         return protoValue;
@@ -226,6 +228,7 @@ public final class HWP_ConfigurationConvertor extends PrimitiveConvertor {
         int baudRateOfUARF = protoValue[BAUD_RATE_OF_UART] ^ XOR_OPERAND;
         int RFChannelA = protoValue[RFCHANNEL_A_POS] ^ XOR_OPERAND;
         int RFChannelB = protoValue[RFCHANNEL_B_POS] ^ XOR_OPERAND;
+        int rfpgm = protoValue[RFPGM_POS] ^ XOR_OPERAND;
 
         short[] undocumentedByte = getUndocumentedByte(protoValue);
 
@@ -233,7 +236,7 @@ public final class HWP_ConfigurationConvertor extends PrimitiveConvertor {
                 standardPeripherals, configFlags, RFChannelASubNetwork, 
                 RFChannelBSubNetwork, RFOutputPower, RFSignalFilter, 
                 timeoutRecvRFPackets, baudRateOfUARF, RFChannelA, RFChannelB, 
-                undocumentedByte
+                rfpgm, undocumentedByte
         );
 
         logger.debug("toObject - end: {}", hwpConfig);

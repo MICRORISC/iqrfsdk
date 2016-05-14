@@ -121,6 +121,9 @@ public final class OsInfo {
     /** Flags. */
     private final int flags;
     
+    /** Reserved byte for future purpose */
+    private final int reserved;
+    
     
     /**
      * Creates new {@code OsInfo} object.
@@ -132,10 +135,11 @@ public final class OsInfo {
      * @param rssi Rssi
      * @param supplyVoltage supply voltage
      * @param flags flags
+     * @param reserver reserved byte
      */
     public OsInfo(short[] moduleId, int osVersion, MCU_Type mcuType, 
             TR_Type trType, short[] osBuild, int rssi, int supplyVoltage, 
-            int flags
+            int flags, int reserved
     ) {
         this.moduleId = moduleId;
         this.osVersion = osVersion;
@@ -145,6 +149,7 @@ public final class OsInfo {
         this.rssi = rssi;
         this.supplyVoltage = supplyVoltage;
         this.flags = flags;
+        this.reserved = reserved;
     }
 
     /**
@@ -209,6 +214,14 @@ public final class OsInfo {
     public int getFlags() {
         return flags;
     }
+
+   /**
+     * Reserved byte by DPA for future purpose only.
+     * @return undefined value, reservation for future purpose only
+     */
+   public int getReserved() {
+      return reserved;
+   }
     
     @Override
     public String toString() {
@@ -224,6 +237,7 @@ public final class OsInfo {
         strBuilder.append(" RSSI: " + rssi + NEW_LINE);
         strBuilder.append(" Supply voltage: " + supplyVoltage + NEW_LINE);
         strBuilder.append(" Flags: " + flags + NEW_LINE);
+        strBuilder.append(" Reserved: " + reserved + NEW_LINE);
         strBuilder.append("}");
         
         return strBuilder.toString();
@@ -287,6 +301,7 @@ public final class OsInfo {
         strBuilder.append("RSSI: " + rssi + NEW_LINE);
         strBuilder.append("Supply voltage: " + supplyVoltage + NEW_LINE);
         strBuilder.append("Flags: " + flags + NEW_LINE);
+        strBuilder.append("Reserved: " + reserved + NEW_LINE);
         
         return strBuilder.toString();
     }

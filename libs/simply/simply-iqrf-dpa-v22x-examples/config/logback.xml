@@ -279,6 +279,10 @@
     <logger name="com.microrisc.simply.iqrf.dpa.v22x.typeconvertors.HWP_ConfigurationConvertor" level="INHERITED">
             <appender-ref ref="FILE" />
     </logger>
+    
+    <logger name="com.microrisc.simply.iqrf.dpa.v22x.typeconvertors.HWP_ConfigurationByteConvertor" level="INHERITED">
+            <appender-ref ref="FILE" />
+    </logger>
 
     <logger name="com.microrisc.simply.iqrf.dpa.v22x.typeconvertors.IO_CommandConvertor" level="INHERITED">
             <appender-ref ref="FILE" />

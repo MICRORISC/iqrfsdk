@@ -17,14 +17,15 @@ package com.microrisc.simply.iqrf.dpa.v22x.examples.std_per.os;
 
 import com.microrisc.simply.CallRequestProcessingState;
 import static com.microrisc.simply.CallRequestProcessingState.ERROR;
-import com.microrisc.simply.Simply;
-import com.microrisc.simply.SimplyException;
 import com.microrisc.simply.Network;
 import com.microrisc.simply.Node;
+import com.microrisc.simply.Simply;
+import com.microrisc.simply.SimplyException;
 import com.microrisc.simply.errors.CallRequestProcessingError;
 import com.microrisc.simply.iqrf.dpa.v22x.DPA_SimplyFactory;
 import com.microrisc.simply.iqrf.dpa.v22x.devices.OS;
 import com.microrisc.simply.iqrf.dpa.v22x.types.HWP_Configuration;
+import com.microrisc.simply.iqrf.dpa.v22x.types.HWP_ConfigurationByte;
 import com.microrisc.simply.iqrf.types.VoidType;
 import java.io.File;
 
@@ -78,13 +79,13 @@ public class HWPConfiguration {
         }
 
         // rewrite config flags of HWP config and allow using of Custom handler
-        // rewriteConfigFlagByte(os);
+        rewriteConfigFlagByte(os);
 
         // read and print HWP config setting
         HWP_Configuration config = readAndPrintHWPConfig(os);
 
-        // edit config - allow using of Custom handler        
-        config.setConfigFlags(new HWP_Configuration.DPA_ConfigFlags(true, false, false, false, false, false));
+        // edit config - disallow using of Custom handler        
+        config.setConfigFlags(new HWP_Configuration.DPA_ConfigFlags(false, false, false, false, false, false));
 
         //write edited config
         writeHWPConfig(os, config);
@@ -150,7 +151,10 @@ public class HWPConfiguration {
 
     private static void rewriteConfigFlagByte(OS os) {
         // rewrites in HWP configuration value of Conflig flags, where allow using Custom handler and disallow all other
-        VoidType result = os.writeHWPConfigurationByte(0x05, 0b00000001);
+        HWP_ConfigurationByte[] configBytes = new HWP_ConfigurationByte[]{
+           new HWP_ConfigurationByte(0x05, 0b00000001, 0b00000001)
+        };
+        VoidType result = os.writeHWPConfigurationByte(configBytes);
         if (result == null) {
             CallRequestProcessingState procState = os.getCallRequestProcessingStateOfLastCall();
             if (procState == ERROR) {

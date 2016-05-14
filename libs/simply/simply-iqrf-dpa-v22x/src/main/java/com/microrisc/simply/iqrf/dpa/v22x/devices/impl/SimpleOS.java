@@ -24,6 +24,7 @@ import com.microrisc.simply.iqrf.dpa.v22x.devices.OS;
 import com.microrisc.simply.iqrf.dpa.v22x.di_services.method_id_transformers.OSStandardTransformer;
 import com.microrisc.simply.iqrf.dpa.v22x.types.DPA_Request;
 import com.microrisc.simply.iqrf.dpa.v22x.types.HWP_Configuration;
+import com.microrisc.simply.iqrf.dpa.v22x.types.HWP_ConfigurationByte;
 import com.microrisc.simply.iqrf.dpa.v22x.types.LoadingCodeProperties;
 import com.microrisc.simply.iqrf.dpa.v22x.types.LoadingResult;
 import com.microrisc.simply.iqrf.dpa.v22x.types.OsInfo;
@@ -40,6 +41,7 @@ import java.util.UUID;
 //JUNE-2015 - implemented restart
 //SEPTEMBER 2015 - implemented write HWP config, write HWP config byte
 //MARCH 2016 - implemented load code
+//MAY2016 - updated WriteHWPConfigByte
 public final class SimpleOS 
 extends DPA_DeviceObject implements OS {
     
@@ -64,18 +66,6 @@ extends DPA_DeviceObject implements OS {
             throw new IllegalArgumentException(
                     "Invalid key length. Expected: " + MID_KEY_LENGTH
             );
-        }
-    }
-    
-    // range of allowed address used with writing byte to HWP configuration
-    private static final int CONFIG_ADDRESS_RANGE_START = 0x01;
-    private static final int CONFIG_ADDRESS_RANGE_END = 0x1F;
-    
-    private static void checkConfigAddress(int address) {
-        if(address < CONFIG_ADDRESS_RANGE_START 
-                || address > CONFIG_ADDRESS_RANGE_END) {
-            throw new IllegalArgumentException("Valid address range is "
-            + CONFIG_ADDRESS_RANGE_START + " - " + CONFIG_ADDRESS_RANGE_END);
         }
     }
     
@@ -274,10 +264,9 @@ extends DPA_DeviceObject implements OS {
     }
     
     @Override
-    public UUID async_writeHWPConfigurationByte(int address, int value) {
-        checkConfigAddress(address);
+    public UUID async_writeHWPConfigurationByte(HWP_ConfigurationByte[] configBytes) {
         return dispatchCall(
-                "11", new Object[] { getRequestHwProfile(), address, value }, getDefaultWaitingTimeout() 
+                "11", new Object[] { getRequestHwProfile(), configBytes }, getDefaultWaitingTimeout() 
         );
     }
     
@@ -406,10 +395,9 @@ extends DPA_DeviceObject implements OS {
     }
     
     @Override
-    public VoidType writeHWPConfigurationByte(int address, int value) {
-        checkConfigAddress(address);
+    public VoidType writeHWPConfigurationByte(HWP_ConfigurationByte[] configBytes) {
         UUID uid = dispatchCall(
-                "11", new Object[] { getRequestHwProfile(), address, value }, getDefaultWaitingTimeout() 
+                "11", new Object[] { getRequestHwProfile(), configBytes }, getDefaultWaitingTimeout() 
         );
         if ( uid == null ) {
             return null;

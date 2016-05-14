@@ -184,6 +184,9 @@ public final class HWP_Configuration {
 
     /** RF channel B of the main network. Valid numbers depend on used RF band. */
     private int RFChannelB;
+    
+    /** RFPGM. See parameter of setupRFPGM() IQRF OS function. */
+    private int rfpgm;
 
     /** Undocumented byte value, which can be read from module and written again. 
      * (It doesn't matter on module - value can be read from module 1 and and can 
@@ -215,14 +218,15 @@ public final class HWP_Configuration {
      * on used RF band.
      * @param RFChannelB RF channel B of the main network. Valid numbers depend
      * on used RF band.
-     * @param undocumented undocumented byte value, which must be same for write HWP config
-     * as was while reading HWP config
+     * @param rfpgm rfpgm setting
+     * @param undocumented undocumented byte value (it has occurred while 
+     * reading hwp configuration)
      */
     public HWP_Configuration(
             IntegerFastQueryList standardPeripherals, DPA_ConfigFlags configFlags,
             int RFChannelASubNetwork, int RFChannelBSubNetwork, int RFOutputPower,
             int RFSignalFilter, int timeoutRecvRFPackets, int baudRateOfUARF,
-            int RFChannelA, int RFChannelB, short[] undocumented
+            int RFChannelA, int RFChannelB, int rfpgm, short[] undocumented
     ) {
         this.standardPeripherals = standardPeripherals;
         this.configFlags = configFlags;
@@ -234,6 +238,7 @@ public final class HWP_Configuration {
         this.baudRateOfUARF = baudRateOfUARF;
         this.RFChannelA = RFChannelA;
         this.RFChannelB = RFChannelB;
+        this.rfpgm = rfpgm;
         this.undocumented = undocumented;
     }
 
@@ -311,6 +316,13 @@ public final class HWP_Configuration {
         return RFChannelB;
     }
 
+   /**
+     * @return rpfgm value, see {@link HWP_Configuration#rfpgm}
+     */
+   public int getRfpgm() {
+      return rfpgm;
+   }
+
     /**
      * @return undocumented byte value, which must be same for write HWP config
      * as was while reading HWP config
@@ -358,6 +370,10 @@ public final class HWP_Configuration {
     public void setRFChannelB(int RFChannelB) {
         this.RFChannelB = RFChannelB;
     }
+
+   public void setRfpgm(int rfpgm) {
+      this.rfpgm = rfpgm;
+   }
 
     public void setUndocumented(short[] undocumented) {
         this.undocumented = undocumented;
@@ -416,7 +432,8 @@ public final class HWP_Configuration {
                     && baudRateOfUARF == hwp.getBaudRateOfUARF()
                     && configFlags.equals(hwp.getConfigFlags())
                     && standardPeripherals.getList().equals(hwp.getStandardPeripherals().getList())
-                    && timeoutRecvRFPackets == hwp.getTimeoutRecvRFPackets());
+                    && timeoutRecvRFPackets == hwp.getTimeoutRecvRFPackets())
+                    && rfpgm == hwp.getRfpgm();
         }
         return false;
     }

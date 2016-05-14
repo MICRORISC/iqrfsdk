@@ -66,6 +66,7 @@ public final class OsInfoConvertor extends PrimitiveConvertor {
     static private final int RSSI_POS = 8;
     static private final int SUPPLY_VOLTAGE_POS = 9;
     static private final int FLAGS_POS = 10;
+    static private final int RESERVED_POS = 11;
     
     private OsInfo.MCU_Type getMCU_Type(short packetValue) 
             throws ValueConversionException 
@@ -117,8 +118,10 @@ public final class OsInfoConvertor extends PrimitiveConvertor {
         
         int flags = protoValue[FLAGS_POS];
         
+        int reserved = protoValue[RESERVED_POS];
+        
         OsInfo osInfo = new OsInfo(moduleId, osVersion, mcuType, trType, osBuild, rssi, 
-                supplyVoltage, flags
+                supplyVoltage, flags, reserved
         );
         
         logger.debug("toObject - end: {}", osInfo);
