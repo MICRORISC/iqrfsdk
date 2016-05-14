@@ -18,6 +18,8 @@ package com.microrisc.simply.iqrf.dpa.v22x.init;
 import com.microrisc.simply.DeviceObject;
 import com.microrisc.simply.iqrf.dpa.v22x.devices.EEEPROM;
 import com.microrisc.simply.iqrf.dpa.v22x.devices.OS;
+import com.microrisc.simply.iqrf.dpa.v22x.services.node.load_code.LoadCodeService;
+import com.microrisc.simply.iqrf.dpa.v22x.services.node.load_code.SimpleLoadCodeService;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,7 +34,7 @@ public final class NodeServiceFactory {
         abstract T create(Map<Class, DeviceObject> devices);
     }
     
-    /*
+    
     // load code service creator
     private static class LoadCodeServiceCreator extends ServiceCreator<LoadCodeService> {
         @Override
@@ -54,13 +56,13 @@ public final class NodeServiceFactory {
             return new SimpleLoadCodeService(servDevices);
         }
     }
-    */
+    
     
     private static Map<Class, ServiceCreator> creators = null;
     
     private static void initCreators() {
         creators = new HashMap<>();
-        //creators.put(LoadCodeService.class, new LoadCodeServiceCreator());
+        creators.put(LoadCodeService.class, new LoadCodeServiceCreator());
     }
     
     static {

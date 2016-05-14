@@ -16,7 +16,6 @@
 
 package com.microrisc.simply.iqrf.dpa.v22x.init;
 
-import com.microrisc.simply.BaseNode;
 import com.microrisc.simply.DeviceObject;
 import com.microrisc.simply.Node;
 import com.microrisc.simply.SimpleDeviceObjectFactory;
@@ -24,6 +23,7 @@ import com.microrisc.simply.init.InitConfigSettings;
 import com.microrisc.simply.iqrf.dpa.DPA_Node;
 import com.microrisc.simply.iqrf.dpa.DPA_NodeImpl;
 import com.microrisc.simply.iqrf.dpa.v22x.devices.PeripheralInfoGetter;
+import com.microrisc.simply.iqrf.dpa.v22x.services.node.load_code.LoadCodeService;
 import com.microrisc.simply.services.Service;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -150,15 +150,13 @@ public final class NodeFactory {
         }
         
         Map<Class, Service> services = createServices();
-        DPA_Node node = new DPA_NodeImpl(networkId, nodeId, devices, services); 
-        
-        /*
         // load code service
-        LoadCodeService loadCodeService = NodeServiceFactory.createService(LoadCodeService.class, allDevices);
+        LoadCodeService loadCodeService = NodeServiceFactory.createService(LoadCodeService.class, devices);
         if ( loadCodeService != null ) {
             services.put(LoadCodeService.class, loadCodeService);
         }
-        */
+        
+        DPA_Node node = new DPA_NodeImpl(networkId, nodeId, devices, services);
         
         logger.debug("createNode - end: {}", node);
         return node;
