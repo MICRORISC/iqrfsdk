@@ -21,13 +21,13 @@ include_directories(${CMAKE_SOURCE_DIR}/include)
 include_directories(${CMAKE_SOURCE_DIR}/../iqrf/cdc-iqrf/c++/linux/include)
 include_directories(${CMAKE_SOURCE_DIR}/../external/serial/include)
 
-add_library(dpa
+add_library(iqrfdpa
                 SHARED
 		${DPASRC_FILES}
 )
 
-target_link_libraries(dpa
+target_link_libraries(iqrfdpa
                         serial
 )
 
-install(TARGETS dpa DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
+install(TARGETS iqrfdpa DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
