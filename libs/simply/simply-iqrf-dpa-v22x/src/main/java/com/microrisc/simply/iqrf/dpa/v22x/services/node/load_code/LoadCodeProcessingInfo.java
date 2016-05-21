@@ -22,4 +22,19 @@ package com.microrisc.simply.iqrf.dpa.v22x.services.node.load_code;
  * @author Michal Konopa
  */
 public final class LoadCodeProcessingInfo {
+   
+   private String infoMsg;
+   
+   public LoadCodeProcessingInfo(String infoMsg){
+      this.infoMsg = infoMsg;
+   }
+
+   public String getInfoMsg() {
+      return infoMsg;
+   }
+
+   @Override
+   public String toString() {
+      return "LoadCodeProcessingInfo{" + "infoMsg=" + infoMsg + '}';
+   }
 }

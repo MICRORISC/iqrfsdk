@@ -15,9 +15,14 @@
  */
 package com.microrisc.simply.iqrf.dpa.v22x.services.node.load_code;
 
+import com.microrisc.simply.CallRequestProcessingState;
 import com.microrisc.simply.DeviceObject;
+import com.microrisc.simply.errors.CallRequestProcessingError;
+import com.microrisc.simply.iqrf.dpa.protocol.DPA_ProtocolProperties;
 import com.microrisc.simply.iqrf.dpa.v22x.devices.EEEPROM;
 import com.microrisc.simply.iqrf.dpa.v22x.devices.OS;
+import com.microrisc.simply.iqrf.dpa.v22x.di_services.DPA_StandardServices;
+import com.microrisc.simply.iqrf.dpa.v22x.types.DPA_Request;
 import com.microrisc.simply.iqrf.dpa.v22x.types.LoadingCodeProperties;
 import com.microrisc.simply.iqrf.dpa.v22x.types.LoadingResult;
 import com.microrisc.simply.iqrf.types.VoidType;
@@ -26,6 +31,7 @@ import com.microrisc.simply.services.ServiceParameters;
 import com.microrisc.simply.services.ServiceResult;
 import com.microrisc.simply.services.node.BaseService;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -89,17 +95,17 @@ extends BaseService implements LoadCodeService {
         terminateWithFail(String failMsg){
       return new BaseServiceResult<LoadingResult, LoadCodeProcessingInfo>(
               ServiceResult.Status.ERROR,
-              null, new LoadCodeProcessingInfo());
+              new LoadingResult(false), new LoadCodeProcessingInfo(failMsg));
    }
    
    private ServiceResult<LoadingResult, LoadCodeProcessingInfo> 
         terminateSuccessfully(LoadingResult result){
       return new BaseServiceResult<LoadingResult, LoadCodeProcessingInfo>(
               ServiceResult.Status.SUCCESSFULLY_COMPLETED,
-              result, new LoadCodeProcessingInfo());
+              result, new LoadCodeProcessingInfo(result.toString()));
    }
         
-   // returns error msg, if all operations are without error so null is returned
+   @Deprecated
    private String writeDataToMemory(CodeBlock handlerBlock, IntelHex file,
            LoadCodeServiceParameters params){
       EEEPROM eeeprom = getDeviceObject(EEEPROM.class);
@@ -122,6 +128,7 @@ extends BaseService implements LoadCodeService {
                block[i] = 0x34FF;
             }
          }
+         System.out.println(Arrays.toString(block));
 
          // writing code to EEEPROM
          VoidType voidResult = eeeprom.extendedWrite(blockStartAddress, block);
@@ -133,40 +140,62 @@ extends BaseService implements LoadCodeService {
       return null;
    }
    
-  /* private String writeDataToMemoryEffective(CodeBlock hadnerlBlock, LoadCodeServiceParameters params){
+   private void writeDataToMemory(int startAddress, short[][] data) {
+      EEEPROM eeeprom = getDeviceObject(EEEPROM.class);
+      if (eeeprom == null) {
+         throw new RuntimeException("EEEPROM doesn't exist or is not enabled");
+      }
       OS os = getDeviceObject(OS.class);
       if (os == null) {
-         return "OS doesn't exist or is not enabled";
+         throw new RuntimeException("OS doesn't exist or is not enabled");
       }
       
       
-      // specify length of block, which will be written to EEEPROM
-      int blockSize = 32;
-      int blockStartAddress = params.getStartAddress();
-      for (long address = handlerBlock.getAddressStart();
-              address < handlerBlock.getAddressEnd();
-              address += blockSize) 
-      {
-         // preparing code to write into EEEPROM
-         short[] block = new short[blockSize];
-         for (int i = 0; i < blockSize; i++) {
-            block[i] = (short) ((file.getData().get((int) address + i)) & 0xFF);
-            if (address + i > handlerBlock.getAddressEnd()) {
-               block[i] = 0x34FF;
-            }
-         }
+      int actualAddress = startAddress;
+      int index = 0;
+      while(index < data.length){
+         if(data[index].length == 48 && data[index+1].length == 16 ||
+                 data[index].length == 16 && data[index+1].length == 48){
+          
+            DPA_Request firstReq = new DPA_Request(EEEPROM.class,
+                    EEEPROM.MethodID.EXTENDED_WRITE,
+                    new Object[]{actualAddress, data[index]},
+                    DPA_ProtocolProperties.HWPID_Properties.DO_NOT_CHECK);
+            actualAddress += data[index].length;
 
-         // writing code to EEEPROM
-         VoidType voidResult = eeeprom.extendedWrite(blockStartAddress, block);
-         if (voidResult == null) {
-            return "Writing to EEEPROM failed: Writing data hasn't been processed yet";
+            DPA_Request secondReq = new DPA_Request(EEEPROM.class,
+                    EEEPROM.MethodID.EXTENDED_WRITE,
+                    new Object[]{actualAddress+data[index].length, data[index+1]},
+                    DPA_ProtocolProperties.HWPID_Properties.DO_NOT_CHECK);
+            actualAddress += data[index+1].length;
+            
+            VoidType result = os.batch(new DPA_Request[]{firstReq, secondReq});
+            System.out.println("batch");
+            checkResult(os, result);
+            
+            index+=2;
+         }else{
+            VoidType result = eeeprom.extendedWrite(actualAddress, data[index]);
+            System.out.println("direct write extended");
+            checkResult(eeeprom, result);
+            actualAddress+=data[index].length;
+            index++;
          }
-         blockStartAddress += blockSize;
       }
-      return null;
       
    }
- */
+   
+   private void checkResult(DPA_StandardServices peripheral, VoidType result){
+      if(result == null){
+         CallRequestProcessingState procState = peripheral.getCallRequestProcessingStateOfLastCall();
+        if ( procState == CallRequestProcessingState.ERROR ) {
+            CallRequestProcessingError error = peripheral.getCallRequestProcessingErrorOfLastCall();
+            throw new RuntimeException("Exception while writing data to memory " + error);
+        } else {
+            throw new RuntimeException("Exception while writing data to memory " + procState);
+        }
+      }
+   }
    
     /**
      * Creates new Load Code Service object.
@@ -204,10 +233,13 @@ extends BaseService implements LoadCodeService {
       int dataChecksum = calculateChecksum(file, handlerBlock, 1, length);
       System.out.println("Checksum of data is " + Integer.toHexString(dataChecksum));
 
+
+      short[][] dataToWrite = new DataPreparer(handlerBlock, file, params).prepare();
       
-       String error = writeDataToMemory(handlerBlock, file, params);
-       if(error != null){
-          return terminateWithFail(error);
+       try{
+         writeDataToMemory(params.getStartAddress(), dataToWrite);
+       }catch(RuntimeException re){
+          return terminateWithFail(re.getMessage());
        }
       
       // get access to OS peripheral

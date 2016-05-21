@@ -89,6 +89,7 @@ public class LoadCodeServiceExample {
             System.out.println("Code load was NOT successful.");
             // find out details
             LoadCodeProcessingInfo procInfo = serviceResult.getProcessingInfo();
+            System.out.println(procInfo);
             // ...
         }
         
