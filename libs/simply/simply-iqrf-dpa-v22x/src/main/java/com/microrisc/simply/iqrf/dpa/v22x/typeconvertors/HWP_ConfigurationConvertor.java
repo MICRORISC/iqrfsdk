@@ -68,6 +68,12 @@ public final class HWP_ConfigurationConvertor extends PrimitiveConvertor {
     static private final int UNDOCUMENTED_POS = 0x21;
     /** Only in response (ReadHWP) */
     static private final int UNDOCUMENTED_RESPONSE_LENGTH = 1;
+    
+    static private final int RFPGM_SINGLE_CHANNEL_MASK = 0b00000011;
+    static private final int RFPGM_LP_MODE_MASK = 0b00000100;
+    static private final int RFPGM_INVOKE_BY_RESET_MASK = 0b00010000;
+    static private final int RFPGM_AUTOMATIC_TERMINATION_MASK = 0b01000000;
+    static private final int RFPGM_TERMINATION_BY_PIN_MASK = 0b10000000;
 
     /**
      * @return {@code HWP_ConfigurationConvertor} instance
@@ -136,6 +142,28 @@ public final class HWP_ConfigurationConvertor extends PrimitiveConvertor {
         return flags;
     }
 
+    private HWP_Configuration.RFPGM getRFPGMAsObject(short rfpgmByte){
+       boolean singleChannel = (rfpgmByte & RFPGM_SINGLE_CHANNEL_MASK) == RFPGM_SINGLE_CHANNEL_MASK ? true : false;
+       boolean lpMode = (rfpgmByte & RFPGM_LP_MODE_MASK) == RFPGM_LP_MODE_MASK ? true : false;
+       boolean invokeByReset = (rfpgmByte & RFPGM_INVOKE_BY_RESET_MASK) == RFPGM_INVOKE_BY_RESET_MASK ? true : false;
+       boolean automaticTermination = (rfpgmByte & RFPGM_AUTOMATIC_TERMINATION_MASK) == RFPGM_AUTOMATIC_TERMINATION_MASK ? true : false;
+       boolean terminationByPin = (rfpgmByte & RFPGM_TERMINATION_BY_PIN_MASK) == RFPGM_TERMINATION_BY_PIN_MASK ? true : false;
+       
+       return new HWP_Configuration.RFPGM(singleChannel, lpMode, invokeByReset,
+               automaticTermination, terminationByPin);
+    }
+    
+    private short getRFPGMToProtoValue(HWP_Configuration.RFPGM rfpgm){
+      short rfpgmByte = 0;
+      rfpgmByte += rfpgm.isSingleChannel() ? (0xFF & RFPGM_SINGLE_CHANNEL_MASK) : 0;
+      rfpgmByte += rfpgm.isLpMode() ? (0xFF & RFPGM_LP_MODE_MASK) : 0;
+      rfpgmByte += rfpgm.isInvokeRfpgmByReset() ? (0xFF & RFPGM_INVOKE_BY_RESET_MASK) : 0;
+      rfpgmByte += rfpgm.isAutomaticTermination() ? (0xFF & RFPGM_AUTOMATIC_TERMINATION_MASK) : 0;
+      rfpgmByte += rfpgm.isTerminationByPin() ? (0xFF & RFPGM_TERMINATION_BY_PIN_MASK) : 0;
+      
+      return rfpgmByte;
+    }
+    
     /**
      * Get undocumented byte from protoValue.
      * <p>
@@ -194,7 +222,7 @@ public final class HWP_ConfigurationConvertor extends PrimitiveConvertor {
         protoValue[BAUD_RATE_OF_UART] = (short) (config.getBaudRateOfUARF());
         protoValue[RFCHANNEL_A_POS] = (short) (config.getRFChannelA());
         protoValue[RFCHANNEL_B_POS] = (short) (config.getRFChannelB());
-        protoValue[RFPGM_POS] = (short) (config.getRfpgm());
+        protoValue[RFPGM_POS] = getRFPGMToProtoValue(config.getRfpgm());
         
 
         // calculate checksum
@@ -228,8 +256,8 @@ public final class HWP_ConfigurationConvertor extends PrimitiveConvertor {
         int baudRateOfUARF = protoValue[BAUD_RATE_OF_UART] ^ XOR_OPERAND;
         int RFChannelA = protoValue[RFCHANNEL_A_POS] ^ XOR_OPERAND;
         int RFChannelB = protoValue[RFCHANNEL_B_POS] ^ XOR_OPERAND;
-        int rfpgm = protoValue[RFPGM_POS] ^ XOR_OPERAND;
-
+        HWP_Configuration.RFPGM rfpgm = getRFPGMAsObject(protoValue[RFPGM_POS]);
+        
         short[] undocumentedByte = getUndocumentedByte(protoValue);
 
         HWP_Configuration hwpConfig = new HWP_Configuration(

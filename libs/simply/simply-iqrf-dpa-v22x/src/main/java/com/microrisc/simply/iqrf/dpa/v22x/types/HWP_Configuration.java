@@ -142,9 +142,142 @@ public final class HWP_Configuration {
         }
 
     }
+    
+    public static class RFPGM{
+       
+       /** Sets, if receiving on single channel or on dual channel. */
+       private boolean singleChannel;
+       /** Sets, if uploaded TRs uses STD RX mode or LP RX mode */
+       private boolean lpMode;
+       /** Sets, if RFPGM invoking by reset. {@code true} is enabled and
+        * {@code false} is disabled. This bit operates like enableRFPGM or
+        * disableRFPGM functions. */
+       private boolean invokeRfpgmByReset;
+       /** Sets, if RFPGM is automatically terminated after ~1 minute. */
+       private boolean automaticTermination;
+       /** Sets, if it is enabled RFPGM termination by MCU pin RB4. {@code true}
+        * is enabled (default), {@code false} is disabled. If enabled, the
+        * termination is invoked by log. 0 for at least ~0.25 s for single
+        * channel or ~0.5 s for dual channel on one of the dedicated pin(s):
+        * <ul><li> C5 for non-SMT TR modules, e.g. TR-72D </li>
+        * <li>Q12 for SMT TR modules, e.g.TR-76D </li></ul>
+        * This time must be prolonged up to 2 s in case of strong RF noise. */
+       private boolean terminationByPin;
+
+      public RFPGM(boolean singleChannel, boolean lpMode,
+              boolean invokeRfpgmByReset, boolean automaticTermination,
+              boolean terminationByPin) {
+         this.singleChannel = singleChannel;
+         this.lpMode = lpMode;
+         this.invokeRfpgmByReset = invokeRfpgmByReset;
+         this.automaticTermination = automaticTermination;
+         this.terminationByPin = terminationByPin;
+      }
+
+      /** Getter for {@link RFPGM#singleChannel}.
+       * @return true or false
+       */
+      public boolean isSingleChannel() {
+         return singleChannel;
+      }
+
+      /** Setter for {@link RFPGM#singleChannel}.
+       * @param singleChannel - true or false
+       */
+      public void setSingleChannel(boolean singleChannel) {
+         this.singleChannel = singleChannel;
+      }
+
+      /** Getter for {@link RFPGM#lpMode}.
+       * @return true or false
+       */
+      public boolean isLpMode() {
+         return lpMode;
+      }
+
+      /** Setter for {@link RFPGM#lpMode}.
+       * @param lpMode - true or false
+       */
+      public void setLpMode(boolean lpMode) {
+         this.lpMode = lpMode;
+      }
+
+      /** Getter for {@link RFPGM#invokeRfpgmByReset}.
+       * @return true or false
+       */
+      public boolean isInvokeRfpgmByReset() {
+         return invokeRfpgmByReset;
+      }
+
+      /** Setter for {@link RFPGM#invokeRfpgmByReset}.
+       * @param invokeRfpgmByReset - true or false
+       */
+      public void setInvokeRfpgmByReset(boolean invokeRfpgmByReset) {
+         this.invokeRfpgmByReset = invokeRfpgmByReset;
+      }
+
+      /** Getter for {@link RFPGM#automaticTermination}.
+       * @return true or false
+       */
+      public boolean isAutomaticTermination() {
+         return automaticTermination;
+      }
+
+      /** Setter for {@link RFPGM#automaticTermination}.
+       * @param automaticTermination - true or false
+       */
+      public void setAutomaticTermination(boolean automaticTermination) {
+         this.automaticTermination = automaticTermination;
+      }
+
+      /** Getter for {@link RFPGM#terminationByPin}.
+       * @return true or false
+       */
+      public boolean isTerminationByPin() {
+         return terminationByPin;
+      }
+
+      /** Setter for {@link RFPGM#terminationByPin}.
+       * @param terminationByPin - true or false
+       */
+      public void setTerminationByPin(boolean terminationByPin) {
+         this.terminationByPin = terminationByPin;
+      }
+
+      @Override
+      public boolean equals(Object obj) {
+         if (this == obj) {
+            return true;
+         }
+         if (obj == null) {
+            return false;
+         }
+         if (getClass() != obj.getClass()) {
+            return false;
+         }
+         final RFPGM other = (RFPGM) obj;
+         return (this.singleChannel != other.isSingleChannel()
+                 && this.lpMode != other.isLpMode()
+                 && this.invokeRfpgmByReset != other.isInvokeRfpgmByReset()
+                 && this.automaticTermination != other.isAutomaticTermination()
+                 && this.terminationByPin != other.isTerminationByPin());
+      }
+
+      @Override
+      public String toString() {
+         return "RFPGM" + "\n singleChannel=" + singleChannel
+                  + ",\n lpMode=" + lpMode
+                  + ",\n invokeRfpgmByReset=" + invokeRfpgmByReset
+                  + ",\n automaticTermination=" + automaticTermination
+                  + ",\n terminationByPin=" + terminationByPin;
+      }
+    }
 
     /** Various DPA configuration flag bits. */
     private DPA_ConfigFlags configFlags;
+    
+    /** Settings of RFPGM and etc. */
+    private RFPGM rfpgm;
 
     /**
      * RF channel A of the optional subordinate network in case the node also
@@ -184,9 +317,6 @@ public final class HWP_Configuration {
 
     /** RF channel B of the main network. Valid numbers depend on used RF band. */
     private int RFChannelB;
-    
-    /** RFPGM. See parameter of setupRFPGM() IQRF OS function. */
-    private int rfpgm;
 
     /** Undocumented byte value, which can be read from module and written again. 
      * (It doesn't matter on module - value can be read from module 1 and and can 
@@ -226,7 +356,7 @@ public final class HWP_Configuration {
             IntegerFastQueryList standardPeripherals, DPA_ConfigFlags configFlags,
             int RFChannelASubNetwork, int RFChannelBSubNetwork, int RFOutputPower,
             int RFSignalFilter, int timeoutRecvRFPackets, int baudRateOfUARF,
-            int RFChannelA, int RFChannelB, int rfpgm, short[] undocumented
+            int RFChannelA, int RFChannelB, RFPGM rfpgm, short[] undocumented
     ) {
         this.standardPeripherals = standardPeripherals;
         this.configFlags = configFlags;
@@ -319,7 +449,7 @@ public final class HWP_Configuration {
    /**
      * @return rpfgm value, see {@link HWP_Configuration#rfpgm}
      */
-   public int getRfpgm() {
+   public RFPGM getRfpgm() {
       return rfpgm;
    }
 
@@ -371,7 +501,7 @@ public final class HWP_Configuration {
         this.RFChannelB = RFChannelB;
     }
 
-   public void setRfpgm(int rfpgm) {
+   public void setRfpgm(RFPGM rfpgm) {
       this.rfpgm = rfpgm;
    }
 
@@ -395,6 +525,7 @@ public final class HWP_Configuration {
         strBuilder.append(" Baud rate of the UART: " + baudRateOfUARF + NEW_LINE);
         strBuilder.append(" RF channel A of the main network: " + RFChannelA + NEW_LINE);
         strBuilder.append(" RF channel B of the main network: " + RFChannelB + NEW_LINE);
+        strBuilder.append(" RFPGM: " + rfpgm + NEW_LINE);
         strBuilder.append("}");
 
         return strBuilder.toString();
@@ -415,6 +546,7 @@ public final class HWP_Configuration {
         strBuilder.append("Baud rate of the UART: " + baudRateOfUARF + NEW_LINE);
         strBuilder.append("RF channel A of the main network: " + RFChannelA + NEW_LINE);
         strBuilder.append("RF channel B of the main network: " + RFChannelB + NEW_LINE);
+        strBuilder.append("RFPGM: " + rfpgm + NEW_LINE);
 
         return strBuilder.toString();
     }
@@ -432,8 +564,8 @@ public final class HWP_Configuration {
                     && baudRateOfUARF == hwp.getBaudRateOfUARF()
                     && configFlags.equals(hwp.getConfigFlags())
                     && standardPeripherals.getList().equals(hwp.getStandardPeripherals().getList())
-                    && timeoutRecvRFPackets == hwp.getTimeoutRecvRFPackets())
-                    && rfpgm == hwp.getRfpgm();
+                    && timeoutRecvRFPackets == hwp.getTimeoutRecvRFPackets()
+                    && rfpgm.equals(hwp.getRfpgm()));
         }
         return false;
     }
