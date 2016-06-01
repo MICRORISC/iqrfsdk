@@ -72,15 +72,29 @@ public class LoadCodeServiceExample {
         }
         
         // loading code
+        
+        /*
         ServiceResult<LoadingResult, LoadCodeProcessingInfo> serviceResult 
             = loadCodeService.loadCode( 
                     new LoadCodeServiceParameters(
                         "D:\\Plocha\\IQRF_OS307_7xD\\Examples\\DPA\\CustomDpaHandlerExamples\\hex\\CustomDpaHandler-FRC-Minimalistic-7xD-V224-151201.hex", 
-                        0xFFFFFF, 0x0000,
+                        0x0000,
                         LoadingCodeProperties.LoadingAction.ComputeAndMatchChecksumWithoutCodeLoading,
-                        LoadingCodeProperties.LoadingContent.CustomDPAHandler 
+                        LoadingCodeProperties.LoadingContent.Hex 
                     )
             );
+        */
+        
+        ServiceResult<LoadingResult, LoadCodeProcessingInfo> serviceResult 
+            = loadCodeService.loadCode( 
+                    new LoadCodeServiceParameters(
+                        "D:\\Plocha\\IQRF_OS308_7xD\\Examples\\DPA\\StartUp\\DemoPlug-ins\\CustomDpaHandler-ChangeIQRFOS-7xD-V226-160303.iqrf", 
+                        0x0000,
+                        LoadingCodeProperties.LoadingAction.ComputeAndMatchChecksumWithoutCodeLoading,
+                        LoadingCodeProperties.LoadingContent.IQRF_Plugin
+                    )
+            );
+        
         
         // getting results
         if ( serviceResult.getStatus() == ServiceResult.Status.SUCCESSFULLY_COMPLETED ) {

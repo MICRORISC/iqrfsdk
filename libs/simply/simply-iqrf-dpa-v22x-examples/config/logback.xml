@@ -387,6 +387,19 @@
        <appender-ref ref="FILE" />
     </logger>
 
+
+
+    <!-- load code service -->
+    
+    <logger name="com.microrisc.simply.iqrf.dpa.v22x.services.node.load_code.DataPreparer" level="INHERITED">
+       <appender-ref ref="FILE" />
+    </logger>
+    
+    <logger name="com.microrisc.simply.iqrf.dpa.v22x.services.node.load_code.SimpleLoadCodeService" level="INHERITED">
+       <appender-ref ref="FILE" />
+    </logger>
+
+
     <!-- root -->
     <root level="debug">
         <!-- appender-ref ref="STDOUT" / -->

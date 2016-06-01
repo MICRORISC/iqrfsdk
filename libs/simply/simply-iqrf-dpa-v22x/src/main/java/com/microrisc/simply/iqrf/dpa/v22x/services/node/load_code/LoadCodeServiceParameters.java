@@ -16,6 +16,7 @@
 package com.microrisc.simply.iqrf.dpa.v22x.services.node.load_code;
 
 import com.microrisc.simply.iqrf.dpa.v22x.types.LoadingCodeProperties;
+import java.io.File;
 
 /**
  * Parameters of Load Code Service.
@@ -26,14 +27,8 @@ public final class LoadCodeServiceParameters {
     // source file full name
     private String fileName;
     
-    // size of code to load
-    private int codeSize;
-    
     // start address on which will be saved data into memory
     private int startAddress;
-    
-    // properties of code to load
-    //private LoadingCodeProperties codeProps;
     
     // loading action
     private LoadingCodeProperties.LoadingAction loadingAction;
@@ -51,18 +46,14 @@ public final class LoadCodeServiceParameters {
             throw new IllegalArgumentException("File name cannot be empty.");
         }
         
-        // TODO: add checking of valid file name and valid file path
+        File f = new File(fileName);
+        if(!f.exists()) {
+           throw new IllegalArgumentException("File doesn't exist!");
+        }
         
         return fileName;
     }
-    
-    private int checkCodeSize(int codeSize) {
-        if ( codeSize < 0 ) {
-            throw new IllegalArgumentException("Code size must be nonnegative.");
-        }
-        return codeSize;
-    }
-    
+        
     private int checkStartAddress(int startAddress){
        if(startAddress < 0){
           throw new IllegalArgumentException("Start address must be between ");
@@ -87,20 +78,10 @@ public final class LoadCodeServiceParameters {
         }
         return loadingContent;
     }
-    
-    /*
-    private LoadingCodeProperties checkCodeProps(LoadingCodeProperties props) {
-        if ( props == null ) {
-            throw new IllegalArgumentException("Properties of code to load cannot be null.");
-        }
-        return props;
-    }
-    */
-    
+        
     /**
      * Creates object of parameters for Load Code Service.
      * @param fileName full source file name including path  
-     * @param codeSize size of code to load
      * @param startAddress start address on which will be saved data into memory
      * @param loadingAction type of action to do
      * @param loadingContent type of content to load
@@ -112,12 +93,11 @@ public final class LoadCodeServiceParameters {
      *          - {@code loadingContent} is {@code null}
      */
     public LoadCodeServiceParameters( 
-            String fileName, int codeSize, int startAddress,
+            String fileName, int startAddress,
             LoadingCodeProperties.LoadingAction loadingAction,
             LoadingCodeProperties.LoadingContent loadingContent
     ) {
         this.fileName = checkFileName(fileName);
-        this.codeSize = checkCodeSize(codeSize);
         this.startAddress = checkStartAddress(startAddress);
         this.loadingAction = checkLoadingAction(loadingAction);
         this.loadingContent = checkLoadingContent(loadingContent);
@@ -136,20 +116,6 @@ public final class LoadCodeServiceParameters {
      */
     public void setFileName(String fileName) {
         this.fileName = checkFileName(fileName);
-    }
-
-    /**
-     * @return the size of code to load
-     */
-    public int getCodeSize() {
-        return codeSize;
-    }
-
-    /**
-     * @param codeSize size of code to load
-     */
-    public void setCodeSize(int codeSize) {
-        this.codeSize = checkCodeSize(codeSize);
     }
 
     /**
@@ -193,5 +159,4 @@ public final class LoadCodeServiceParameters {
     public void setLoadingContent(LoadingCodeProperties.LoadingContent loadingContent) {
         this.loadingContent = checkLoadingContent(loadingContent);
     }
-
 }

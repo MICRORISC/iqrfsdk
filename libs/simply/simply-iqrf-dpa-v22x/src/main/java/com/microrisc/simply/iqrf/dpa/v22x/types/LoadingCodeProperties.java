@@ -34,7 +34,7 @@ public class LoadingCodeProperties {
 
    /** Identify code image which is loading. */
    public enum LoadingContent {
-      CustomDPAHandler,
+      Hex,
       IQRF_Plugin;
    }
 
