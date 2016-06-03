@@ -22,8 +22,6 @@ import com.microrisc.simply.iqrf.dpa.protocol.DPA_ProtocolProperties;
 import com.microrisc.simply.iqrf.dpa.v22x.devices.EEEPROM;
 import com.microrisc.simply.iqrf.dpa.v22x.devices.OS;
 import com.microrisc.simply.iqrf.dpa.v22x.di_services.DPA_StandardServices;
-import com.microrisc.simply.iqrf.dpa.v22x.services.node.load_code.hex.CodeBlock;
-import com.microrisc.simply.iqrf.dpa.v22x.services.node.load_code.hex.IntelHex;
 import com.microrisc.simply.iqrf.dpa.v22x.types.DPA_Request;
 import com.microrisc.simply.iqrf.dpa.v22x.types.LoadingCodeProperties;
 import com.microrisc.simply.iqrf.dpa.v22x.types.LoadingResult;

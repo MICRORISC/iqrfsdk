@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.microrisc.simply.iqrf.dpa.v22x.services.node.load_code.hex;
+package com.microrisc.simply.iqrf.dpa.v22x.services.node.load_code;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -29,30 +29,53 @@ import java.util.List;
  *
  * @author Martin Strouhal
  */
-public final class IntelHex {
+final class IntelHex {
 
    private ByteBuffer data;
-
    private final List<CodeBlock> codeBlocks = new ArrayList<>();
-
    private int offset = 0;
 
+   /**
+    * Creates instance of {@link IntelHex} with predefined buffer size.
+    * @param dataSize size of buffer
+    */
    public IntelHex(int dataSize) {
       data = ByteBuffer.allocate(dataSize);
    }
 
+   /**
+    * Sets size of buffer via allocate method.
+    * 
+    * @param dataSize size of buffer
+    */
    public void setSizeData(int dataSize) {
       data = ByteBuffer.allocate(dataSize);
    }
 
+   /**
+    * Returns buffer with parsed data accroding to parsed {@link CodeBlocks codeblocks}.
+    * @return buffer as {@link ByteBuffer}
+    */
    public ByteBuffer getData() {
       return data;
    }
 
+   /**
+    * Returns all parsed {@link CodeBlock codeblocks}.
+    * @return List of {@link CodeBlock}
+    */
    public List<CodeBlock> getCodeBlocks() {
       return codeBlocks;
    }
 
+   /**
+    * Parse file into the buffer and {@link CodeBlock}
+    *
+    * @param file which will be parsed
+    * @throws FileSystemException if some problem with reading and parsing is
+    * occurred
+    * @throws IOException if some error with file is occurred
+    */
    public void parseIntelHex(String file) throws FileSystemException,
            IOException {
 
@@ -63,6 +86,13 @@ public final class IntelHex {
       }
    }
 
+   /**
+    * Parse line in hex file as record according his type.
+    * .
+    * @param line from hex file
+    * @param lineIndex index of line
+    * @throws FileSystemException throws if record is corrupted
+    */
    private void parseLine(String line, Integer lineIndex) throws
            FileSystemException {
       line = line.trim();
@@ -80,11 +110,11 @@ public final class IntelHex {
       }
 
       byte recordType = 0;
-      byte byteCount = ParseSubStringHexByte(line, 1);
-      byte lineAddressH = ParseSubStringHexByte(line, 3);
-      byte lineAddressL = ParseSubStringHexByte(line, 5);
-      recordType = ParseSubStringHexByte(line, 7);
-      byte checksum = (byte) (byteCount + lineAddressH + lineAddressL + recordType + ParseSubStringHexByte(
+      byte byteCount = parseSubStringHexByte(line, 1);
+      byte lineAddressH = parseSubStringHexByte(line, 3);
+      byte lineAddressL = parseSubStringHexByte(line, 5);
+      recordType = parseSubStringHexByte(line, 7);
+      byte checksum = (byte) (byteCount + lineAddressH + lineAddressL + recordType + parseSubStringHexByte(
               line, byteCount * 2 + 9));
 
       int realAddress = -1;
@@ -106,7 +136,7 @@ public final class IntelHex {
 
          case 0x02:
          case 0x04:
-            offset = ((ParseSubStringHexByte(line, 9) & 0xFF) << 8) + (ParseSubStringHexByte(
+            offset = ((parseSubStringHexByte(line, 9) & 0xFF) << 8) + (parseSubStringHexByte(
                     line, 11) & 0xFF);
             offset *= recordType == 0x02 ? 16 : 65536;
             break;
@@ -124,7 +154,7 @@ public final class IntelHex {
       }
 
       for (int i = 0; i < byteCount; i++) {
-         byte b = ParseSubStringHexByte(line, i * 2 + 9);
+         byte b = parseSubStringHexByte(line, i * 2 + 9);
          checksum += (byte) b;
          if (useBytes) {
             data.put((b));
@@ -138,7 +168,14 @@ public final class IntelHex {
       }
    }
 
-   private byte ParseSubStringHexByte(String text, int pos) {
+   /**
+    * Parse hex number on the specified position.
+    * 
+    * @param text from it will be parsed number
+    * @param pos is position in text
+    * @return parsed number
+    */
+   private byte parseSubStringHexByte(String text, int pos) {
       return (byte) Integer.parseInt(text.substring(pos, pos + 2), 16);
    }
 

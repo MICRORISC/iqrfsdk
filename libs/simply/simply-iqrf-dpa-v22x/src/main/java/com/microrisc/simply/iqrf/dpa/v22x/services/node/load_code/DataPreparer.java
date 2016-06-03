@@ -15,8 +15,6 @@
  */
 package com.microrisc.simply.iqrf.dpa.v22x.services.node.load_code;
 
-import com.microrisc.simply.iqrf.dpa.v22x.services.node.load_code.hex.CodeBlock;
-import com.microrisc.simply.iqrf.dpa.v22x.services.node.load_code.hex.IntelHex;
 import java.nio.ShortBuffer;
 import java.util.Arrays;
 import java.util.LinkedList;
