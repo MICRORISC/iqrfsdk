@@ -25,7 +25,7 @@ import java.util.Scanner;
  *
  * @author Martin Strouhal
  */
-public class IQRFParser {
+final class IQRFParser {
 
    /** Count of chars on one line */
    private static final int LINE_LENGTH = 40;
