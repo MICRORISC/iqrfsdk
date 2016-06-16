@@ -4,7 +4,7 @@
     <groupId>com.microrisc.cdc</groupId>
     <artifactId>jlibcdc</artifactId>
     <packaging>jar</packaging>
-    <version>1.0.0</version>
+    <version>1.1.0</version>
     
     <name>jlibcdc</name>
     <description>CDC library.</description>
