@@ -22,7 +22,13 @@ import com.microrisc.simply.SimplyException;
 import com.microrisc.simply.iqrf.dpa.broadcasting.BroadcastRequest;
 import com.microrisc.simply.iqrf.dpa.v22x.types.DPA_Confirmation;
 import com.microrisc.simply.iqrf.RF_Mode;
+import com.microrisc.simply.iqrf.dpa.v22x.devices.FRC;
+import com.microrisc.simply.iqrf.dpa.v22x.di_services.method_id_transformers.FRCStandardTransformer;
 import com.microrisc.simply.iqrf.dpa.v22x.init.DeterminetedNetworkConfig;
+import com.microrisc.simply.iqrf.dpa.v22x.protocol.timing.FRC_TimingParams;
+import com.microrisc.simply.iqrf.dpa.v22x.protocol.timing.TimingParams;
+import com.microrisc.simply.iqrf.dpa.v22x.types.FRC_Command;
+import com.microrisc.simply.iqrf.dpa.v22x.types.FRC_Configuration;
 import com.microrisc.simply.iqrf.dpa.v22x.types.OsInfo.TR_Type;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -60,10 +66,12 @@ final class ProtocolStateMachine implements ManageableObject {
     
     private static class NewRequestEvent extends Event {
         CallRequest request;
+        TimingParams timingParams;
         boolean countWithConfirmation = false;
         
-        NewRequestEvent( CallRequest request) {
+        NewRequestEvent( CallRequest request, TimingParams timingParams) {
             this.request = request;
+            this.timingParams = timingParams;
         }
     }
     
@@ -159,6 +167,7 @@ final class ProtocolStateMachine implements ManageableObject {
     private volatile long baseTimeToWaitForResponse = BASE_TIME_TO_WAIT_FOR_RESPONSE_DEFAULT;
     
     
+    
     private static long countTimeslotLengthForSTD_Mode(
             TR_Type.TR_TypeSeries trSeries, int responseDataLength) {
         if(trSeries == TR_Type.TR_TypeSeries.TR72x){
@@ -223,7 +232,132 @@ final class ProtocolStateMachine implements ManageableObject {
         return timeToWaitForConfirmation;
     }
     
+    
+    // base class for all waiting time for response counters 
+    private static abstract class WaitingTimeForResponseCounter {
+        
+       // counts and returns waiting time 
+       public abstract long count(CallRequest request, TimingParams timingParams);
+    } 
+    
+    // computes waiting time for FRC requests 
+    private static class FRC_WaitingTimeForResponseCounter extends WaitingTimeForResponseCounter {
+        
+        // FRC mode
+        static enum FRC_Mode {
+            STANDARD,
+            ADVANCED
+        }
+        
+        // maximal lenth of data for sending in standard FRC mode
+        private static final int STANDARD_FRC_MAX_DATA_LENGTH = 2;
+        
+        // determines the called method from FRC Device Interface
+        private static FRC.MethodID getCalledFRCMethod(String methodId) {
+            for ( FRC.MethodID method : FRC.MethodID.values() ) {
+                if ( FRCStandardTransformer.getInstance().transform(method).equals(methodId)) {
+                    return method;
+                }
+            }
+            return null;
+        }
+        
+        // determines and returns FRC Mode
+        private static FRC_Mode getFRC_Mode(FRC_Command command, FRC.MethodID method) {
+            switch ( method ) {
+                case SEND:
+                case SEND_SELECTIVE:
+                    return (command.getUserData().length <= STANDARD_FRC_MAX_DATA_LENGTH)? 
+                            FRC_Mode.STANDARD : FRC_Mode.ADVANCED;
+                default:
+                    return FRC_Mode.STANDARD;
+            }
+        }
+        
+        // returns FRC_Command argument 
+        private static FRC_Command getFRC_Command(Object[] args) {
+            for ( Object arg : args ) {
+                if ( arg instanceof FRC_Command ) {
+                    return (FRC_Command)arg;
+                }
+            }
+            return null;
+        }
+          
+        // counts waiting time according to specified parameters
+        private static long countWaitingTime(
+            FRC_Mode frcMode, FRC_TimingParams timingParams
+        ) {
+            FRC_Configuration.FRC_RESPONSE_TIME coordWaitingTime = timingParams.getResponseTime();
+            int coordWaitingTimeInInt = coordWaitingTime.getRepsonseTimeInInt();
+            
+            switch ( frcMode ) {
+                case STANDARD:
+                    return timingParams.getBondedNodesNum() * 130 + coordWaitingTimeInInt + 250;
+                case ADVANCED:
+                    if ( timingParams.getRfMode() == null ) {
+                        throw new IllegalStateException("RF mode uknown.");
+                    }
+                    
+                    switch ( timingParams.getRfMode() ) {
+                        case STD:
+                            return timingParams.getBondedNodesNum() * 150 
+                                    + coordWaitingTimeInInt + 290;
+                        case LP:
+                            return timingParams.getBondedNodesNum() * 200 
+                                    + coordWaitingTimeInInt + 390;
+                        default:
+                            throw new IllegalStateException("RF mode not supported: " + timingParams.getRfMode());
+                    }
+                default:
+                    throw new IllegalStateException("FRC Mode not supported: " + frcMode); 
+            }
+        }
+        
+        @Override
+        public long count(CallRequest request, TimingParams timingParams) {
+            if ( !(timingParams instanceof FRC_TimingParams) ) {
+                throw new IllegalArgumentException(
+                    "Timing parameters has not correct type. "
+                    + "Expected: " + FRC_TimingParams.class
+                    + "found: " + timingParams.getClass()
+                );
+            }
+            
+            FRC.MethodID calledMethod = getCalledFRCMethod(request.getMethodId());
+            if ( calledMethod == null ) {
+                throw new IllegalStateException("FRC method not found.");
+            }
+            
+            FRC_Command command = getFRC_Command(request.getArgs());
+            if ( command == null ) {
+                throw new IllegalStateException("FRC command not found.");
+            }
+            
+            FRC_Mode frcMode = getFRC_Mode(command, calledMethod);
+            
+            return countWaitingTime(frcMode, (FRC_TimingParams)timingParams);
+        }
+    }
+    
     private long countWaitingTimeForResponse() {
+         
+        // counting for special cases
+        WaitingTimeForResponseCounter waitingTimeForRespCounter 
+            = waitingTimeForResponseCounters.get(request.getDeviceInterface());
+        if ( waitingTimeForRespCounter != null ) {
+            long waitingTime = 0;
+            try {
+                waitingTime = waitingTimeForRespCounter.count(request, timingParams);
+                return waitingTime;
+            } catch ( Exception e ) {
+                logger.error(
+                    "Error during counting of waiting time for a response: {}. "
+                    + "Waiting time will be counted as in usual case.", e.toString());
+            }
+        }
+        
+        // usual case
         long requestRoutingTime = 0;
         if ( countWithConfirmation ) {
             requestRoutingTime = (confirmation.getHops() + 1) * confirmation.getTimeslotLength() * 10;
@@ -385,6 +519,7 @@ final class ProtocolStateMachine implements ManageableObject {
             synchronized ( synchroNewEvent ) {
                 if ( newEvent instanceof NewRequestEvent ) {
                     request = ((NewRequestEvent)newEvent).request;
+                    timingParams = ((NewRequestEvent)newEvent).timingParams; 
                     countWithConfirmation = ((NewRequestEvent)newEvent).countWithConfirmation;
                     if ( ((NewRequestEvent)newEvent).request instanceof BroadcastRequest ) {
                         willWaitForResponse = false;
@@ -545,8 +680,20 @@ final class ProtocolStateMachine implements ManageableObject {
         logger.debug("terminateWaitingTimeCounter - end");
     }
     
+    private void initWaitingTimeForResponseCounters() {
+        waitingTimeForResponseCounters = new HashMap<>();
+        waitingTimeForResponseCounters.put(FRC.class, new FRC_WaitingTimeForResponseCounter());
+    }
+    
+    
     // request
     private CallRequest request = null;
+    
+    // timing parameters for actual request
+    private TimingParams timingParams = null;
+    
+    // waiting time for response counters
+    private Map<Class, WaitingTimeForResponseCounter> waitingTimeForResponseCounters;
     
     // time of reception of a confirmation
     private long confirmRecvTime = -1;
@@ -606,6 +753,7 @@ final class ProtocolStateMachine implements ManageableObject {
         waitingTimeCounter = new WaitingTimeCounter();
         logger.info("Protocol machine successfully created.");
         this.networkConfigMap = new HashMap<>();
+        initWaitingTimeForResponseCounters();
     }
     
     /**
@@ -733,9 +881,11 @@ final class ProtocolStateMachine implements ManageableObject {
     /**
      * Informs the machine, that new request has been sent.
      * @param request sent request
+     * @param timingParams timing parameters
      */
-    synchronized public void newRequest(CallRequest request) {
-        logger.debug("newRequest - start: request={}", request);
+    synchronized public void newRequest(CallRequest request, TimingParams timingParams) 
+    {
+        logger.debug("newRequest - start: request={}, timingParams={}", request, timingParams);
         
         // actual state must be FREE FOR SEND
         synchronized ( synchroActualState ) {
@@ -748,7 +898,7 @@ final class ProtocolStateMachine implements ManageableObject {
         
         // signaling that new event has come in and what is the next expected state
         synchronized ( synchroNewEvent ) {
-            newEvent = new NewRequestEvent(request);
+            newEvent = new NewRequestEvent(request, timingParams);
             if ( !(request instanceof BroadcastRequest) ) {
                 if ( isRequestForCoordinator(request) ) {
                     ((NewRequestEvent)newEvent).countWithConfirmation = false;

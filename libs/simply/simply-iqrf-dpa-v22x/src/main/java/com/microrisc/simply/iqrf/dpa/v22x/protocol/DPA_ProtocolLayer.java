@@ -39,6 +39,7 @@ import com.microrisc.simply.iqrf.dpa.v22x.di_services.method_id_transformers.FRC
 import com.microrisc.simply.iqrf.dpa.v22x.typeconvertors.DPA_ConfirmationConvertor;
 import com.microrisc.simply.iqrf.dpa.v22x.types.DPA_Confirmation;
 import com.microrisc.simply.iqrf.dpa.v22x.init.DeterminetedNetworkConfig;
+import com.microrisc.simply.iqrf.dpa.v22x.protocol.timing.TimingParamsStorage;
 import com.microrisc.simply.network.BaseNetworkData;
 import com.microrisc.simply.protocol.AbstractProtocolLayer;
 import com.microrisc.simply.protocol.CallRequestComparator;
@@ -68,6 +69,9 @@ implements ProtocolStateMachineListener
 {
     /** Logger. */
     private static final Logger logger = LoggerFactory.getLogger(DPA_ProtocolLayer.class);
+    
+    
+    
     
     /**
      * Binds sent requests with theirs time of sending.
@@ -200,6 +204,12 @@ implements ProtocolStateMachineListener
     /** Synchronization object for {@code sentRequest} data structure. */
     private final Object synchroSentRequest = new Object();
    
+    // timing parameters manager
+    private TimingParamsStorage timingParamsStorage;
+    
+    // for storing of request for timing params storage 
+    private CallRequest requestForTiming = null;
+    
     
     /**
      * For ensuring that sending a request to connected network together with 
@@ -354,6 +364,7 @@ implements ProtocolStateMachineListener
             synchronized ( synchroListener ) {
                 listener.onGetMessage(message);
             }
+            timingParamsStorage.updateTimingParams(requestForTiming, (BaseCallResponse)message);
         }
         
         logger.debug("processResponse - end");
@@ -441,6 +452,7 @@ implements ProtocolStateMachineListener
         super(networkLayerService, msgConvertor);
         protoMachine = new ProtocolStateMachine();
         initTimeUnlimitedRequests();
+        timingParamsStorage = new TimingParamsStorage();
     }    
     
     @Override
@@ -507,7 +519,7 @@ implements ProtocolStateMachineListener
                 isTimeUnlimitedRequestInProcess = false;
                 isTimeoutDefinedByUserRequestInProcess = false;
                 
-                protoMachine.newRequest(request);
+                protoMachine.newRequest(request, timingParamsStorage.getTimingParams(request));
             } else {
                 synchronized ( synchroSentRequest ) {
                     sentRequests.add( lastRequest );
@@ -522,7 +534,10 @@ implements ProtocolStateMachineListener
                         } else {
                             isTimeUnlimitedRequestInProcess = false;
                             isTimeoutDefinedByUserRequestInProcess = false;
-                            protoMachine.newRequest(request);
+                            protoMachine.newRequest(request, timingParamsStorage.getTimingParams(request));
+                            
+                            // for timing parameters storage
+                            requestForTiming = request;
                         }
                     }
                 }
@@ -561,6 +576,8 @@ implements ProtocolStateMachineListener
         protoMachine.unregisterListener();
         protoMachine.destroy();
         protoMachine = null;
+        
+        timingParamsStorage = null;
         
         logger.info("Destroyed");
         logger.debug("destroy - end");
