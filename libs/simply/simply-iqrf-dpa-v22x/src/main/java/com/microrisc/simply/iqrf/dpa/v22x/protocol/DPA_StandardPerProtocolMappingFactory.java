@@ -47,6 +47,7 @@ import com.microrisc.simply.iqrf.dpa.v22x.typeconvertors.FRC_CommandConvertor;
 import com.microrisc.simply.iqrf.dpa.v22x.typeconvertors.FRC_ConfigurationConvertor;
 import com.microrisc.simply.iqrf.dpa.v22x.typeconvertors.FRC_DataConvertor;
 import com.microrisc.simply.iqrf.dpa.v22x.typeconvertors.FRC_SelectCommandConvertor;
+import com.microrisc.simply.iqrf.dpa.v22x.typeconvertors.HWP_ConfigurationByteConvertor;
 import com.microrisc.simply.iqrf.dpa.v22x.typeconvertors.HWP_ConfigurationConvertor;
 import com.microrisc.simply.iqrf.dpa.v22x.typeconvertors.LED_StateConvertor;
 import com.microrisc.simply.iqrf.dpa.v22x.typeconvertors.LoadingCodePropertiesConvertor;
@@ -590,8 +591,7 @@ public final class DPA_StandardPerProtocolMappingFactory implements ProtocolMapp
 
         List<ValueToPacketMapping> argMapping = new LinkedList<>();
         argMapping.add(new ValueToPacketMapping(4, Uns16Convertor.getInstance()));        
-        argMapping.add(new ValueToPacketMapping(6, IntToUns8Convertor.getInstance()));
-        argMapping.add(new ValueToPacketMapping(7, IntToUns8Convertor.getInstance()));
+        argMapping.add(new ValueToPacketMapping(6, HWP_ConfigurationByteConvertor.getInstance()));
 
         return new MethodToPacketMapping(constMapping, argMapping);
     }

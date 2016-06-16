@@ -16,12 +16,15 @@
 
 package com.microrisc.simply.iqrf.dpa.v22x.init;
 
-import com.microrisc.simply.BaseNode;
 import com.microrisc.simply.DeviceObject;
 import com.microrisc.simply.Node;
 import com.microrisc.simply.SimpleDeviceObjectFactory;
 import com.microrisc.simply.init.InitConfigSettings;
+import com.microrisc.simply.iqrf.dpa.DPA_Node;
+import com.microrisc.simply.iqrf.dpa.DPA_NodeImpl;
 import com.microrisc.simply.iqrf.dpa.v22x.devices.PeripheralInfoGetter;
+import com.microrisc.simply.iqrf.dpa.v22x.services.node.load_code.LoadCodeService;
+import com.microrisc.simply.services.Service;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -85,6 +88,15 @@ public final class NodeFactory {
     }
     
     /**
+     * Creates node services and returns them.
+     * @return node services
+     */
+    private static Map<Class, Service> createServices() {
+        Map<Class, Service> services = new HashMap<>();
+        return services;
+    }
+    
+    /**
      * Creates and returns new node with specified peripherals.
      * @param networkId ID of network the node belongs to
      * @param nodeId ID of node to create
@@ -92,21 +104,21 @@ public final class NodeFactory {
      * @return new node
      * @throws java.lang.Exception if an error has occured during node creation
      */
-    public static Node createNode(String networkId, String nodeId, Set<Integer> perNumbers) 
+    public static DPA_Node createNode(String networkId, String nodeId, Set<Integer> perNumbers) 
             throws Exception 
     {
         logger.debug("createNode - start: networkId={}, nodeId={}, perNumbers={}",
                 networkId, nodeId, Arrays.toString(perNumbers.toArray( new Integer[0] ))
         );
         
-        // node services
-        Map<Class, DeviceObject> services = new HashMap<>();
+        // node devices
+        Map<Class, DeviceObject> devices = new HashMap<>();
         
         // creating Peripheral Information object
         PeripheralInfoGetter perInfoObject = createPerInfoObject(networkId, nodeId);
         
         // put info object into service's map
-        services.put(PeripheralInfoGetter.class, (DeviceObject)perInfoObject);
+        devices.put(PeripheralInfoGetter.class, (DeviceObject)perInfoObject);
         
         for ( int perId : perNumbers ) {
             Class devIface = _initObjects.getPeripheralToDevIfaceMapper().getDeviceInterface(perId);
@@ -134,10 +146,17 @@ public final class NodeFactory {
             );
             
             // put object into service's map
-            services.put(devIface, newDeviceObj);
+            devices.put(devIface, newDeviceObj);
         }
         
-        Node node = new BaseNode(networkId, nodeId, services); 
+        Map<Class, Service> services = createServices();
+        // load code service
+        LoadCodeService loadCodeService = NodeServiceFactory.createService(LoadCodeService.class, devices);
+        if ( loadCodeService != null ) {
+            services.put(LoadCodeService.class, loadCodeService);
+        }
+        
+        DPA_Node node = new DPA_NodeImpl(networkId, nodeId, devices, services);
         
         logger.debug("createNode - end: {}", node);
         return node;

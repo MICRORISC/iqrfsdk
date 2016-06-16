@@ -26,6 +26,8 @@ import com.microrisc.simply.connector.response_waiting.ResponseWaitingConnector;
 import com.microrisc.simply.init.AbstractInitializer;
 import com.microrisc.simply.init.InitConfigSettings;
 import com.microrisc.simply.iqrf.RF_Mode;
+import com.microrisc.simply.iqrf.dpa.DPA_NetworkImpl;
+import com.microrisc.simply.iqrf.dpa.DPA_Node;
 import com.microrisc.simply.iqrf.dpa.protocol.DPA_ProtocolProperties;
 import com.microrisc.simply.iqrf.dpa.v22x.devices.Coordinator;
 import com.microrisc.simply.iqrf.dpa.v22x.devices.OS;
@@ -264,7 +266,7 @@ extends
      * @param nodeId node ID
      * @return node for specified nodeId
      */
-    Node createNode(String networkId, String nodeId) throws Exception {
+    private DPA_Node createNode(String networkId, String nodeId) throws Exception {
         logger.debug("createNode - start: networkId={}, nodeId={}", networkId, nodeId);
         System.out.println("Creating node " + nodeId + ":");
         
@@ -274,7 +276,7 @@ extends
         Set<Integer> peripheralNumbers = getPeripheralNumbers(perInfoObject);
         System.out.println("Peripherals: " + Arrays.toString(peripheralNumbers.toArray( new Integer[0])) );
         
-        Node node = NodeFactory.createNode(networkId, nodeId, peripheralNumbers);
+        DPA_Node node = NodeFactory.createNode(networkId, nodeId, peripheralNumbers);
         
         System.out.println("Node created\n");
         logger.debug("createNode - end: {}", node);
@@ -283,7 +285,7 @@ extends
     }
     
     // Creates and returns map of nodes, which are bonded to specified coordinator.
-    private Map<String, Node> createBondedNodes(String networkId, List<Integer> bondedNodesIds) 
+    private Map<String, DPA_Node> createBondedNodes(String networkId, List<Integer> bondedNodesIds) 
             throws Exception {
         logger.debug("createBondedNodes - start: networkId={}, master={}", 
                 networkId, Arrays.toString(bondedNodesIds.toArray( new Integer[0] ))
@@ -292,13 +294,13 @@ extends
         // for new line in the printed output
         System.out.println();        
         
-        Map<String, Node> nodesMap = new HashMap<>();
+        Map<String, DPA_Node> nodesMap = new HashMap<>();
         for ( Integer bondedNodeId : bondedNodesIds ) {
             if ( bondedNodeId > DPA_ProtocolProperties.NADR_Properties.IQMESH_NODE_ADDRESS_MAX ) {
                 continue;
             }
             
-            Node bondedNode = null;
+            DPA_Node bondedNode = null;
             try {
                 bondedNode = createNode(networkId, String.valueOf(bondedNodeId));
             } catch ( Exception e ) {
@@ -351,14 +353,14 @@ extends
         );
 
         // creating master node
-        Node masterNode = createNode(networkId, "0");
+        DPA_Node masterNode = createNode(networkId, "0");
         logger.info("Master node created");
         
         //determine config depending on each network and set to use in protocol layer
         determineAndUseNetworkConfig(networkId, masterNode);
         
         // map of nodes of this network
-        Map<String, Node> nodesMap = null;
+        Map<String, DPA_Node> nodesMap = null;
         
         // checking, if coordinator is present at the master
         Coordinator masterCoord = masterNode.getDeviceObject(Coordinator.class);
@@ -369,7 +371,7 @@ extends
             );
             nodesMap = new HashMap<>();
             nodesMap.put("0", masterNode);
-            return new BaseNetwork(networkId, nodesMap);
+            return new DPA_NetworkImpl(networkId, nodesMap);
         }
         
         EnumerationConfiguration enumConfig = dpaInitConfig.getEnumerationConfiguration();
@@ -407,14 +409,14 @@ extends
         // creating nodes bonded to the Master node
         nodesMap = createBondedNodes(networkId, bondedNodesIds);
         nodesMap.put("0", masterNode);
-        Network network = new BaseNetwork(networkId, nodesMap);
+        Network network = new DPA_NetworkImpl(networkId, nodesMap);
         
         logger.debug("createEnumeratedNetwork - end: {}", network);
         return network;
     }
     
     // creates nodes map from specified fixed mapping
-    private Map<String, Node> createNodesFromNetworkFuncMapping(
+    private Map<String, DPA_Node> createNodesFromNetworkFuncMapping(
             String networkId, Map<String, Set<Integer>> networkMapping, Set<Integer> bondedNodesIds
     ) throws SimplyException, Exception 
     {
@@ -427,7 +429,7 @@ extends
             throw new SimplyException("Configuration for fixed initialization not found.");
         }
         
-        Map<String, Node> nodesMap = new HashMap<>();
+        Map<String, DPA_Node> nodesMap = new HashMap<>();
         for ( Map.Entry<String, Set<Integer>> nodeMappingEntry : networkMapping.entrySet() ) {
             int nodeId = Integer.parseInt(nodeMappingEntry.getKey());
             // coordinator was already created
@@ -443,7 +445,7 @@ extends
             System.out.println("Creating node " + nodeId + ":");
             System.out.println("Peripherals: " + Arrays.toString(nodeMappingEntry.getValue().toArray( new Integer[0])) );
             
-            Node node = NodeFactory.createNode(
+            DPA_Node node = NodeFactory.createNode(
                     networkId, nodeMappingEntry.getKey(), nodeMappingEntry.getValue()
             );
             nodesMap.put(nodeMappingEntry.getKey(), node);
@@ -476,7 +478,7 @@ extends
         }
         
         // creating master node
-        Node masterNode = NodeFactory.createNode(networkId, "0", networkMapping.get("0"));
+        DPA_Node masterNode = NodeFactory.createNode(networkId, "0", networkMapping.get("0"));
         logger.info("Master node created");                        
         
         //determine config depending on each network and set to use in protocol layer
@@ -522,11 +524,11 @@ extends
         }
         
         // creating nodes bonded to the Master node
-        Map<String, Node> nodesMap = createNodesFromNetworkFuncMapping(
+        Map<String, DPA_Node> nodesMap = createNodesFromNetworkFuncMapping(
                 networkId, networkMapping, new HashSet<>(bondedNodesIds)
         );
         nodesMap.put("0", masterNode);
-        Network network = new BaseNetwork(networkId, nodesMap);
+        Network network = new DPA_NetworkImpl(networkId, nodesMap);
         
         logger.debug("createFixedNetwork - end: {}", network);
         return network;

@@ -22,6 +22,7 @@ import com.microrisc.simply.di_services.MethodIdTransformer;
 import com.microrisc.simply.iqrf.dpa.v22x.di_services.DPA_StandardServices;
 import com.microrisc.simply.iqrf.dpa.v22x.types.DPA_Request;
 import com.microrisc.simply.iqrf.dpa.v22x.types.HWP_Configuration;
+import com.microrisc.simply.iqrf.dpa.v22x.types.HWP_ConfigurationByte;
 import com.microrisc.simply.iqrf.dpa.v22x.types.LoadingCodeProperties;
 import com.microrisc.simply.iqrf.dpa.v22x.types.LoadingResult;
 import com.microrisc.simply.iqrf.dpa.v22x.types.OsInfo;
@@ -165,12 +166,10 @@ public interface OS
     * Sends method call request for writing one byte value to HWP configuration
     * into module memory.
     *
-    * @param address of the item at configuration memory block. The valid
-    * address range is 0x010x1F.
-    * @param value of configuration item
+    * @param configBytes config bytes to write
     * @return unique identifier of sent request
     */
-   UUID async_writeHWPConfigurationByte(int address, int value);
+   UUID async_writeHWPConfigurationByte(HWP_ConfigurationByte[] configByte);
 
    /**
     * Loads previously stored code in external memory to MCU Flash memory.
@@ -272,12 +271,10 @@ public interface OS
     * Synchronous wrapper for {@link
     * #async_readHWPConfigurationByte() async_writeHWPConfiguration} method.
     *
-    * @param address of the item at configuration memory block. The valid
-    * address range is 0x010x1F.
-    * @param value of configuration item
+    * @param configBytes config bytes to write
     * @return {@code VoidType} object, if method call has processed allright
     */
-   VoidType writeHWPConfigurationByte(int address, int value);
+   VoidType writeHWPConfigurationByte(HWP_ConfigurationByte[] configBytes);
 
    /**
     * Synchronous wrapper for {@link

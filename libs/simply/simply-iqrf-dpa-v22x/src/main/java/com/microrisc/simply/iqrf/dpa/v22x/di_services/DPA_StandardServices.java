@@ -18,7 +18,7 @@ package com.microrisc.simply.iqrf.dpa.v22x.di_services;
 
 import com.microrisc.simply.di_services.StandardServices;
 import com.microrisc.simply.iqrf.dpa.di_services.HwProfileService;
-
+  
 /**
  * DPA Standard services for Device Interfaces
  * 

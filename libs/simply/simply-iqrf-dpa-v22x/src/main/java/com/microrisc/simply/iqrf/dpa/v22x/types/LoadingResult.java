@@ -20,7 +20,7 @@ package com.microrisc.simply.iqrf.dpa.v22x.types;
  * 
  * @author Martin Strouhal
  */
-public class LoadingResult {
+public final class LoadingResult {
    
    private boolean result;
    
@@ -45,6 +45,6 @@ public class LoadingResult {
 
    @Override
    public String toString() {
-      return result ? "Loading was successfull." : "Loading was unsuccessfull.";
+      return "Successfully loading = " + result;
    }
 }

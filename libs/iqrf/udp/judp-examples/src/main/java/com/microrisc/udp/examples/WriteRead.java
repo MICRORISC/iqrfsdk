@@ -99,7 +99,11 @@ public final class WriteRead {
                 try {
                     socket.receive(packet);
                 } catch ( SocketException e ) {
-                    System.err.println("Socket error: " + e);
+                    if(stopFlag) {
+                        System.out.println("Socket closed.");
+                    } else {
+                        System.err.println("Socket error: " + e);
+                    }
                     continue;
                 } catch ( UnknownHostException e ) {
                     System.err.println("Uknown host error: " + e);

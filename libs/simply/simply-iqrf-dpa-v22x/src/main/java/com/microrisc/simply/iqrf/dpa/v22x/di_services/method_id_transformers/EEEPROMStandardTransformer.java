@@ -36,6 +36,8 @@ public final class EEEPROMStandardTransformer implements MethodIdTransformer {
     private static void initMethodIdsMap() {
         methodIdsMap.put(EEEPROM.MethodID.READ, "1");
         methodIdsMap.put(EEEPROM.MethodID.WRITE, "2");
+        methodIdsMap.put(EEEPROM.MethodID.EXTENDED_READ, "3");
+        methodIdsMap.put(EEEPROM.MethodID.EXTENDED_WRITE, "4");
     }
     
     static  {
