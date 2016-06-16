@@ -640,19 +640,24 @@ implements ProtocolStateMachineListener
             return;
         }
         
-        // is async message or not?
+        // is the incomming message the asynchronous one or not?
         synchronized ( synchroSentRequest ) {
-            BaseCallResponse response = (BaseCallResponse)message;
-            TimeRequest causeRequest = getCauseRequest(response);
+            if ( message instanceof BaseCallResponse ) {
+                BaseCallResponse response = (BaseCallResponse)message;
+                TimeRequest causeRequest = getCauseRequest(response);
             
-            // is NOT async
-            if ( causeRequest != null ) {
-                response.setRequestId(causeRequest.request.getId());
-                sentRequests.remove(causeRequest);
+                if ( causeRequest != null ) {
+                    response.setRequestId(causeRequest.request.getId());
+                    sentRequests.remove(causeRequest);
+                } else {
+                    logger.error("Cause request not found for response: {}", response);
+                    return;
+                }
             }
-            // is async
+            
+            // handled as asychronous
             else {
-                logger.info("No cause request found, message={} handled as asynchronous", message); 
+                logger.info("Message={} handled as asynchronous", message); 
                 
                 BaseAsynchronousMessage asyncMsg = new DPA_AsynchronousMessage(
                     message.getMainData(), message.getAdditionalData(), 
